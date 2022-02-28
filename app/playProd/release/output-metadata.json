@@ -1,0 +1,72 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "org.thoughtcrime.securesms",
+  "variantName": "playProdRelease",
+  "elements": [
+    {
+      "type": "UNIVERSAL",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 97600,
+      "versionName": "5.28.3",
+      "outputFile": "Signal-Android-play-prod-universal-release-5.28.3.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "arm64-v8a"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 97602,
+      "versionName": "5.28.3",
+      "outputFile": "Signal-Android-play-prod-arm64-v8a-release-5.28.3.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "x86_64"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 97604,
+      "versionName": "5.28.3",
+      "outputFile": "Signal-Android-play-prod-x86_64-release-5.28.3.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "x86"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 97603,
+      "versionName": "5.28.3",
+      "outputFile": "Signal-Android-play-prod-x86-release-5.28.3.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "armeabi-v7a"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 97601,
+      "versionName": "5.28.3",
+      "outputFile": "Signal-Android-play-prod-armeabi-v7a-release-5.28.3.apk"
+    }
+  ],
+  "elementType": "File"
+}

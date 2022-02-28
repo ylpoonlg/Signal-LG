@@ -6,7 +6,7 @@
     android:id="@+id/constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:windowBackground">
+    android:background="@color/signal_background_primary">
 
     <ViewStub
         android:id="@+id/voice_note_player"
@@ -260,8 +260,8 @@
                 android:layout_marginBottom="20dp"
                 android:contentDescription="@string/conversation_list_fragment__open_camera_description"
                 android:focusable="true"
-                android:tint="@color/signal_icon_tint_secondary"
-                app:backgroundTint="@color/conversation_list_camera_button_background"
+                android:tint="@color/core_white"
+                app:backgroundTint="#FF9800"
                 app:srcCompat="@drawable/ic_camera_solid_white_24" />
 
             <org.thoughtcrime.securesms.components.registration.PulsingFloatingActionButton
@@ -273,7 +273,7 @@
                 android:contentDescription="@string/conversation_list_fragment__fab_content_description"
                 android:focusable="true"
                 android:tint="@color/core_white"
-                app:backgroundTint="@color/core_ultramarine"
+                app:backgroundTint="#FF5722"
                 app:srcCompat="@drawable/ic_compose_solid_24" />
 
             <ViewStub
