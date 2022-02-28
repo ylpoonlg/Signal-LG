@@ -2,6 +2,7 @@ package org.thoughtcrime.securesms.conversation.ui.error;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,8 +27,7 @@ import com.annimon.stream.Stream;
 
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.R;
-import org.thoughtcrime.securesms.VerifyIdentityActivity;
-import org.thoughtcrime.securesms.database.IdentityDatabase;
+import org.thoughtcrime.securesms.verify.VerifyIdentityActivity;
 import org.thoughtcrime.securesms.database.MmsSmsDatabase;
 import org.thoughtcrime.securesms.database.model.IdentityRecord;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
@@ -78,9 +78,9 @@ public final class SafetyNumberChangeDialog extends DialogFragment implements Sa
     fragment.show(fragmentManager, SAFETY_NUMBER_DIALOG);
   }
 
-  public static void show(@NonNull FragmentActivity fragmentActivity, @NonNull MessageRecord messageRecord) {
+  public static void show(@NonNull Context context, @NonNull FragmentManager fragmentManager, @NonNull MessageRecord messageRecord) {
     List<String> ids = Stream.of(messageRecord.getIdentityKeyMismatches())
-                             .map(mismatch -> mismatch.getRecipientId(fragmentActivity).serialize())
+                             .map(mismatch -> mismatch.getRecipientId(context).serialize())
                              .distinct()
                              .toList();
 
@@ -91,7 +91,7 @@ public final class SafetyNumberChangeDialog extends DialogFragment implements Sa
     arguments.putInt(CONTINUE_TEXT_RESOURCE_EXTRA, R.string.safety_number_change_dialog__send_anyway);
     SafetyNumberChangeDialog fragment = new SafetyNumberChangeDialog();
     fragment.setArguments(arguments);
-    fragment.show(fragmentActivity.getSupportFragmentManager(), SAFETY_NUMBER_DIALOG);
+    fragment.show(fragmentManager, SAFETY_NUMBER_DIALOG);
   }
 
   public static void showForCall(@NonNull FragmentManager fragmentManager, @NonNull RecipientId recipientId) {

@@ -11,12 +11,12 @@ import org.whispersystems.libsignal.InvalidMessageException;
 import org.whispersystems.libsignal.util.guava.Optional;
 import org.whispersystems.signalservice.api.messages.shared.SharedContact;
 import org.whispersystems.signalservice.api.push.ACI;
+import org.whispersystems.signalservice.api.push.ServiceId;
 import org.whispersystems.signalservice.api.push.SignalServiceAddress;
 import org.whispersystems.signalservice.api.util.OptionalUtil;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Represents a decrypted Signal Service data message.
@@ -42,6 +42,7 @@ public class SignalServiceDataMessage {
   private final Optional<RemoteDelete>                  remoteDelete;
   private final Optional<GroupCallUpdate>               groupCallUpdate;
   private final Optional<Payment>                       payment;
+  private final Optional<StoryContext>                  storyContext;
 
   /**
    * Construct a SignalServiceDataMessage.
@@ -55,14 +56,26 @@ public class SignalServiceDataMessage {
    * @param expiresInSeconds Number of seconds in which the message should disappear after being seen.
    */
   SignalServiceDataMessage(long timestamp,
-                           SignalServiceGroup group, SignalServiceGroupV2 groupV2,
+                           SignalServiceGroup group,
+                           SignalServiceGroupV2 groupV2,
                            List<SignalServiceAttachment> attachments,
-                           String body, boolean endSession, int expiresInSeconds,
-                           boolean expirationUpdate, byte[] profileKey, boolean profileKeyUpdate,
-                           Quote quote, List<SharedContact> sharedContacts, List<Preview> previews,
-                           List<Mention> mentions, Sticker sticker, boolean viewOnce, Reaction reaction, RemoteDelete remoteDelete,
+                           String body,
+                           boolean endSession,
+                           int expiresInSeconds,
+                           boolean expirationUpdate,
+                           byte[] profileKey,
+                           boolean profileKeyUpdate,
+                           Quote quote,
+                           List<SharedContact> sharedContacts,
+                           List<Preview> previews,
+                           List<Mention> mentions,
+                           Sticker sticker,
+                           boolean viewOnce,
+                           Reaction reaction,
+                           RemoteDelete remoteDelete,
                            GroupCallUpdate groupCallUpdate,
-                           Payment payment)
+                           Payment payment,
+                           StoryContext storyContext)
   {
     try {
       this.group = SignalServiceGroupContext.createOptional(group, groupV2);
@@ -84,6 +97,7 @@ public class SignalServiceDataMessage {
     this.remoteDelete     = Optional.fromNullable(remoteDelete);
     this.groupCallUpdate  = Optional.fromNullable(groupCallUpdate);
     this.payment          = Optional.fromNullable(payment);
+    this.storyContext     = Optional.fromNullable(storyContext);
 
     if (attachments != null && !attachments.isEmpty()) {
       this.attachments = Optional.of(attachments);
@@ -236,6 +250,10 @@ public class SignalServiceDataMessage {
     return payment;
   }
 
+  public Optional<StoryContext> getStoryContext() {
+    return storyContext;
+  }
+
   public Optional<byte[]> getGroupId() {
     byte[] groupId = null;
 
@@ -273,6 +291,7 @@ public class SignalServiceDataMessage {
     private RemoteDelete         remoteDelete;
     private GroupCallUpdate      groupCallUpdate;
     private Payment              payment;
+    private StoryContext         storyContext;
 
     private Builder() {}
 
@@ -400,6 +419,11 @@ public class SignalServiceDataMessage {
       return this;
     }
 
+    public Builder withStoryContext(StoryContext storyContext) {
+      this.storyContext = storyContext;
+      return this;
+    }
+
     public SignalServiceDataMessage build() {
       if (timestamp == 0) timestamp = System.currentTimeMillis();
       return new SignalServiceDataMessage(timestamp, group, groupV2, attachments, body, endSession,
@@ -407,7 +431,8 @@ public class SignalServiceDataMessage {
                                           profileKeyUpdate, quote, sharedContacts, previews,
                                           mentions, sticker, viewOnce, reaction, remoteDelete,
                                           groupCallUpdate,
-                                          payment);
+                                          payment,
+                                          storyContext);
     }
   }
 
@@ -586,17 +611,17 @@ public class SignalServiceDataMessage {
   }
 
   public static class Mention {
-    private final ACI aci;
-    private final int start;
-    private final int length;
+    private final ServiceId aci;
+    private final int       start;
+    private final int       length;
 
-    public Mention(ACI aci, int start, int length) {
+    public Mention(ServiceId aci, int start, int length) {
       this.aci    = aci;
       this.start  = start;
       this.length = length;
     }
 
-    public ACI getAci() {
+    public ServiceId getAci() {
       return aci;
     }
 
@@ -649,6 +674,24 @@ public class SignalServiceDataMessage {
 
     public Optional<PaymentNotification> getPaymentNotification() {
       return paymentNotification;
+    }
+  }
+
+  public static class StoryContext {
+    private final ACI  authorAci;
+    private final long sentTimestamp;
+
+    public StoryContext(ACI authorAci, long sentTimestamp) {
+      this.authorAci     = authorAci;
+      this.sentTimestamp = sentTimestamp;
+    }
+
+    public ACI getAuthorAci() {
+      return authorAci;
+    }
+
+    public long getSentTimestamp() {
+      return sentTimestamp;
     }
   }
 }

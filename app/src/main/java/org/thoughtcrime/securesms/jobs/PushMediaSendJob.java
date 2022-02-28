@@ -41,7 +41,6 @@ import org.whispersystems.signalservice.api.messages.SendMessageResult;
 import org.whispersystems.signalservice.api.messages.SignalServiceAttachment;
 import org.whispersystems.signalservice.api.messages.SignalServiceDataMessage;
 import org.whispersystems.signalservice.api.messages.SignalServiceDataMessage.Preview;
-import org.whispersystems.signalservice.api.messages.multidevice.SignalServiceSyncMessage;
 import org.whispersystems.signalservice.api.messages.shared.SharedContact;
 import org.whispersystems.signalservice.api.push.SignalServiceAddress;
 import org.whispersystems.signalservice.api.push.exceptions.ProofRequiredException;
@@ -63,8 +62,8 @@ public class PushMediaSendJob extends PushSendJob {
 
   private long messageId;
 
-  public PushMediaSendJob(long messageId, @NonNull Recipient recipient) {
-    this(constructParameters(recipient, true), messageId);
+  public PushMediaSendJob(long messageId, @NonNull Recipient recipient, boolean hasMedia) {
+    this(constructParameters(recipient, hasMedia), messageId);
   }
 
   private PushMediaSendJob(Job.Parameters parameters, long messageId) {
@@ -75,15 +74,15 @@ public class PushMediaSendJob extends PushSendJob {
   @WorkerThread
   public static void enqueue(@NonNull Context context, @NonNull JobManager jobManager, long messageId, @NonNull Recipient recipient) {
     try {
-      if (!recipient.hasServiceIdentifier()) {
-        throw new AssertionError();
+      if (!recipient.hasServiceId()) {
+        throw new AssertionError("No ServiceId!");
       }
 
       MessageDatabase      database            = SignalDatabase.mms();
       OutgoingMediaMessage message             = database.getOutgoingMessage(messageId);
       Set<String>          attachmentUploadIds = enqueueCompressingAndUploadAttachmentsChains(jobManager, message);
 
-      jobManager.add(new PushMediaSendJob(messageId, recipient), attachmentUploadIds, recipient.getId().toQueueKey());
+      jobManager.add(new PushMediaSendJob(messageId, recipient, attachmentUploadIds.size() > 0), attachmentUploadIds, recipient.getId().toQueueKey());
 
     } catch (NoSuchMessageException | MmsException e) {
       Log.w(TAG, "Failed to enqueue message.", e);
@@ -226,11 +225,9 @@ public class PushMediaSendJob extends PushSendJob {
                                                                                             .asExpirationUpdate(message.isExpirationUpdate())
                                                                                             .build();
 
-      if (Util.equals(SignalStore.account().getAci(), address.getAci())) {
-        Optional<UnidentifiedAccessPair> syncAccess  = UnidentifiedAccessUtil.getAccessForSync(context);
-        SignalServiceSyncMessage         syncMessage = buildSelfSendSyncMessage(context, mediaMessage, syncAccess);
-
-        SendMessageResult result = messageSender.sendSyncMessage(syncMessage, syncAccess);
+      if (Util.equals(SignalStore.account().getAci(), address.getServiceId())) {
+        Optional<UnidentifiedAccessPair> syncAccess = UnidentifiedAccessUtil.getAccessForSync(context);
+        SendMessageResult                result     = messageSender.sendSyncMessage(mediaMessage);
         SignalDatabase.messageLog().insertIfPossible(messageRecipient.getId(), message.getSentTimeMillis(), result, ContentHint.RESENDABLE, new MessageId(messageId, true));
         return syncAccess.isPresent();
       } else {

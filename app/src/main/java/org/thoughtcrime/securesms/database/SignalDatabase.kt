@@ -221,6 +221,11 @@ open class SignalDatabase(private val context: Application, databaseSecret: Data
       get() = instance!!.rawWritableDatabase.inTransaction()
 
     @JvmStatic
+    fun runPostSuccessfulTransaction(dedupeKey: String, task: Runnable) {
+      instance!!.signalReadableDatabase.runPostSuccessfulTransaction(dedupeKey, task)
+    }
+
+    @JvmStatic
     fun databaseFileExists(context: Context): Boolean {
       return context.getDatabasePath(DATABASE_NAME).exists()
     }
@@ -238,6 +243,7 @@ open class SignalDatabase(private val context: Application, databaseSecret: Data
         instance!!.sms.deleteAbandonedMessages()
         instance!!.mms.deleteAbandonedMessages()
         instance!!.mms.trimEntriesForExpiredMessages()
+        instance!!.reactionDatabase.deleteAbandonedReactions()
         instance!!.rawWritableDatabase.execSQL("DROP TABLE IF EXISTS key_value")
         instance!!.rawWritableDatabase.execSQL("DROP TABLE IF EXISTS megaphone")
         instance!!.rawWritableDatabase.execSQL("DROP TABLE IF EXISTS job_spec")
@@ -286,6 +292,17 @@ open class SignalDatabase(private val context: Application, databaseSecret: Data
           instance!!.rawWritableDatabase,
           listener
         )
+      }
+    }
+
+    @JvmStatic
+    fun runInTransaction(operation: Runnable) {
+      instance!!.signalWritableDatabase.beginTransaction()
+      try {
+        operation.run()
+        instance!!.signalWritableDatabase.setTransactionSuccessful()
+      } finally {
+        instance!!.signalWritableDatabase.endTransaction()
       }
     }
 
@@ -380,8 +397,8 @@ open class SignalDatabase(private val context: Application, databaseSecret: Data
       get() = instance!!.pendingRetryReceiptDatabase
 
     @get:JvmStatic
-    @get:JvmName("preKeys")
-    val preKeys: OneTimePreKeyDatabase
+    @get:JvmName("oneTimePreKeys")
+    val oneTimePreKeys: OneTimePreKeyDatabase
       get() = instance!!.preKeyDatabase
 
     @get:Deprecated("This only exists to migrate from legacy storage. There shouldn't be any new usages.")

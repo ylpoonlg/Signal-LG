@@ -21,13 +21,11 @@ import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -73,6 +71,7 @@ import org.thoughtcrime.securesms.sharing.ShareActivity;
 import org.thoughtcrime.securesms.util.AttachmentUtil;
 import org.thoughtcrime.securesms.util.DateUtils;
 import org.thoughtcrime.securesms.util.FullscreenHelper;
+import org.thoughtcrime.securesms.util.MediaUtil;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask;
 import org.thoughtcrime.securesms.util.SaveAttachmentTask.Attachment;
 import org.thoughtcrime.securesms.util.StorageUtil;
@@ -534,7 +533,7 @@ public final class MediaPreviewActivity extends PassphraseRequiredActivity
   }
 
   public static boolean isContentTypeSupported(final String contentType) {
-    return contentType != null && (contentType.startsWith("image/") || contentType.startsWith("video/"));
+    return MediaUtil.isImageType(contentType) || MediaUtil.isVideoType(contentType);
   }
 
   @Override
@@ -556,9 +555,15 @@ public final class MediaPreviewActivity extends PassphraseRequiredActivity
 
       int mediaPosition = Objects.requireNonNull(data.second);
 
-      CursorPagerAdapter adapter = new CursorPagerAdapter(getSupportFragmentManager(),this, cursor, mediaPosition, leftIsRecent);
-      mediaPager.setAdapter(adapter);
-      adapter.setActive(true);
+      CursorPagerAdapter oldAdapter = (CursorPagerAdapter) mediaPager.getAdapter();
+      if (oldAdapter == null) {
+        CursorPagerAdapter adapter = new CursorPagerAdapter(getSupportFragmentManager(), this, cursor, mediaPosition, leftIsRecent);
+        mediaPager.setAdapter(adapter);
+        adapter.setActive(true);
+      } else {
+        oldAdapter.setCursor(cursor, mediaPosition);
+        oldAdapter.setActive(true);
+      }
 
       viewModel.setCursor(this, cursor, leftIsRecent);
 
@@ -714,10 +719,10 @@ public final class MediaPreviewActivity extends PassphraseRequiredActivity
     private final Map<Integer, MediaPreviewFragment> mediaFragments = new HashMap<>();
 
     private final Context context;
-    private final Cursor  cursor;
     private final boolean leftIsRecent;
 
     private boolean active;
+    private Cursor  cursor;
     private int     autoPlayPosition;
 
     CursorPagerAdapter(@NonNull FragmentManager fragmentManager,
@@ -736,6 +741,11 @@ public final class MediaPreviewActivity extends PassphraseRequiredActivity
     public void setActive(boolean active) {
       this.active = active;
       notifyDataSetChanged();
+    }
+
+    public void setCursor(@NonNull Cursor cursor, int autoPlayPosition) {
+      this.cursor           = cursor;
+      this.autoPlayPosition = autoPlayPosition;
     }
 
     @Override

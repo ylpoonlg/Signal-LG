@@ -106,13 +106,14 @@ public class OutgoingCallActionProcessor extends DeviceAwareActionProcessor {
       webRtcInteractor.getCallManager().proceed(activePeer.getCallId(),
                                                 context,
                                                 videoState.getLockableEglBase().require(),
-                                                SignalStore.internalValues().audioProcessingMethod(),
+                                                AudioProcessingMethodSelector.get(),
                                                 videoState.requireLocalSink(),
                                                 callParticipant.getVideoSink(),
                                                 videoState.requireCamera(),
                                                 iceServers,
                                                 isAlwaysTurn,
                                                 NetworkUtil.getCallingBandwidthMode(context),
+                                                null,
                                                 currentState.getCallSetupState(activePeer).isEnableVideoOnCreate());
     } catch (CallException e) {
       return callFailure(currentState, "Unable to proceed with call: ", e);
@@ -149,7 +150,7 @@ public class OutgoingCallActionProcessor extends DeviceAwareActionProcessor {
 
     try {
       byte[] remoteIdentityKey = WebRtcUtil.getPublicKeyBytes(receivedAnswerMetadata.getRemoteIdentityKey());
-      byte[] localIdentityKey  = WebRtcUtil.getPublicKeyBytes(IdentityKeyUtil.getIdentityKey(context).serialize());
+      byte[] localIdentityKey  = WebRtcUtil.getPublicKeyBytes(SignalStore.account().getAciIdentityKey().getPublicKey().serialize());
 
       webRtcInteractor.getCallManager().receivedAnswer(callMetadata.getCallId(), callMetadata.getRemoteDevice(), answerMetadata.getOpaque(), remoteIdentityKey, localIdentityKey);
     } catch (CallException | InvalidKeyException e) {

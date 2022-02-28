@@ -154,7 +154,7 @@ public final class SignalCallManager implements CallManager.Observer, GroupCall.
     serviceExecutor.execute(() -> {
       if (needsToSetSelfUuid) {
         try {
-          callManager.setSelfUuid(Recipient.self().requireAci().uuid());
+          callManager.setSelfUuid(Recipient.self().requireServiceId().uuid());
           needsToSetSelfUuid = false;
         } catch (CallException e) {
           Log.w(TAG, "Unable to set self UUID on CallManager", e);
@@ -492,6 +492,11 @@ public final class SignalCallManager implements CallManager.Observer, GroupCall.
     }
   }
 
+  @Override 
+  public void onAudioLevels(Remote remote, int capturedLevel, int receivedLevel) {
+    // TODO: Implement audio level handling for direct calls.
+  }
+
   @Override
   public void onCallConcluded(@Nullable Remote remote) {
     if (!(remote instanceof RemotePeer)) {
@@ -611,7 +616,7 @@ public final class SignalCallManager implements CallManager.Observer, GroupCall.
       }
       try {
         messageSender.sendCallMessage(RecipientUtil.toSignalServiceAddress(context, recipient),
-                                      UnidentifiedAccessUtil.getAccessFor(context, recipient),
+                                      recipient.isSelf() ? Optional.absent() : UnidentifiedAccessUtil.getAccessFor(context, recipient),
                                       callMessage);
       } catch (UntrustedIdentityException e) {
         Log.i(TAG, "sendOpaqueCallMessage onFailure: ", e);
@@ -754,6 +759,11 @@ public final class SignalCallManager implements CallManager.Observer, GroupCall.
   }
 
   @Override
+  public void onAudioLevels(@NonNull GroupCall groupCall) {
+    // TODO: Implement audio level handling for group calls.
+  }
+
+  @Override
   public void onRemoteDeviceStatesChanged(@NonNull GroupCall groupCall) {
     process((s, p) -> p.handleGroupRemoteDeviceStateChanged(s));
   }
@@ -847,11 +857,11 @@ public final class SignalCallManager implements CallManager.Observer, GroupCall.
 
   public void updateGroupCallUpdateMessage(@NonNull RecipientId groupId, @Nullable String groupCallEraId, @NonNull Collection<UUID> joinedMembers, boolean isCallFull) {
     SignalExecutors.BOUNDED.execute(() -> SignalDatabase.sms().insertOrUpdateGroupCall(groupId,
-                                                                                                          Recipient.self().getId(),
-                                                                                                          System.currentTimeMillis(),
-                                                                                                          groupCallEraId,
-                                                                                                          joinedMembers,
-                                                                                                          isCallFull));
+                                                                                       Recipient.self().getId(),
+                                                                                       System.currentTimeMillis(),
+                                                                                       groupCallEraId,
+                                                                                       joinedMembers,
+                                                                                       isCallFull));
   }
 
   public void sendCallMessage(@NonNull final RemotePeer remotePeer,

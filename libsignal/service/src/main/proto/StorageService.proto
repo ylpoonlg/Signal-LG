@@ -94,12 +94,13 @@ message GroupV1Record {
 }
 
 message GroupV2Record {
-  bytes  masterKey           = 1;
-  bool   blocked             = 2;
-  bool   whitelisted         = 3;
-  bool   archived            = 4;
-  bool   markedUnread        = 5;
-  uint64 mutedUntilTimestamp = 6;
+  bytes  masterKey                    = 1;
+  bool   blocked                      = 2;
+  bool   whitelisted                  = 3;
+  bool   archived                     = 4;
+  bool   markedUnread                 = 5;
+  uint64 mutedUntilTimestamp          = 6;
+  bool   dontNotifyForMentionsIfMuted = 7;
 }
 
 message Payments {
@@ -128,27 +129,28 @@ message AccountRecord {
     }
   }
 
-           bytes                  profileKey             = 1;
-           string                 givenName              = 2;
-           string                 familyName             = 3;
-           string                 avatarUrlPath          = 4;
-           bool                   noteToSelfArchived     = 5;
-           bool                   readReceipts           = 6;
-           bool                   sealedSenderIndicators = 7;
-           bool                   typingIndicators       = 8;
-           bool                   proxiedLinkPreviews    = 9;
-           bool                   noteToSelfMarkedUnread = 10;
-           bool                   linkPreviews           = 11;
-           PhoneNumberSharingMode phoneNumberSharingMode = 12;
-           bool                   unlistedPhoneNumber    = 13;
-  repeated PinnedConversation     pinnedConversations    = 14;
-           bool                   preferContactAvatars   = 15;
-           Payments               payments               = 16;
-           uint32                 universalExpireTimer   = 17;
-           bool                   primarySendsSms        = 18;
-           string                 e164                   = 19;
-  repeated string                 preferredReactionEmoji = 20;
-           bytes                  subscriberId           = 21;
-           string                 subscriberCurrencyCode = 22;
-           bool                   displayBadgesOnProfile = 23;
+           bytes                  profileKey                    = 1;
+           string                 givenName                     = 2;
+           string                 familyName                    = 3;
+           string                 avatarUrlPath                 = 4;
+           bool                   noteToSelfArchived            = 5;
+           bool                   readReceipts                  = 6;
+           bool                   sealedSenderIndicators        = 7;
+           bool                   typingIndicators              = 8;
+           bool                   proxiedLinkPreviews           = 9;
+           bool                   noteToSelfMarkedUnread        = 10;
+           bool                   linkPreviews                  = 11;
+           PhoneNumberSharingMode phoneNumberSharingMode        = 12;
+           bool                   unlistedPhoneNumber           = 13;
+  repeated PinnedConversation     pinnedConversations           = 14;
+           bool                   preferContactAvatars          = 15;
+           Payments               payments                      = 16;
+           uint32                 universalExpireTimer          = 17;
+           bool                   primarySendsSms               = 18;
+           string                 e164                          = 19;
+  repeated string                 preferredReactionEmoji        = 20;
+           bytes                  subscriberId                  = 21;
+           string                 subscriberCurrencyCode        = 22;
+           bool                   displayBadgesOnProfile        = 23;
+           bool                   subscriptionManuallyCancelled = 24;
 }

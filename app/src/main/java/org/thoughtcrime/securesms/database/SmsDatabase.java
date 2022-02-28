@@ -44,6 +44,7 @@ import org.thoughtcrime.securesms.database.model.databaseprotos.ProfileChangeDet
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
 import org.thoughtcrime.securesms.groups.GroupMigrationMembershipChange;
 import org.thoughtcrime.securesms.jobs.TrimThreadJob;
+import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.mms.IncomingMediaMessage;
 import org.thoughtcrime.securesms.mms.MmsException;
 import org.thoughtcrime.securesms.mms.OutgoingMediaMessage;
@@ -272,8 +273,8 @@ public class SmsDatabase extends MessageDatabase {
   }
 
   private @NonNull SqlUtil.Query buildMeaningfulMessagesQuery(long threadId) {
-    String query = THREAD_ID + " = ? AND (NOT " + TYPE + " & ? AND " + TYPE + " != ? AND " + TYPE + " != ? AND " + TYPE + " & " + GROUP_V2_LEAVE_BITS + " != " + GROUP_V2_LEAVE_BITS + ")";
-    return SqlUtil.buildQuery(query, threadId, IGNORABLE_TYPESMASK_WHEN_COUNTING, Types.PROFILE_CHANGE_TYPE, Types.CHANGE_NUMBER_TYPE);
+    String query = THREAD_ID + " = ? AND (NOT " + TYPE + " & ? AND " + TYPE + " != ? AND " + TYPE + " != ? AND " + TYPE + " != ? AND " + TYPE + " & " + GROUP_V2_LEAVE_BITS + " != " + GROUP_V2_LEAVE_BITS + ")";
+    return SqlUtil.buildQuery(query, threadId, IGNORABLE_TYPESMASK_WHEN_COUNTING, Types.PROFILE_CHANGE_TYPE, Types.CHANGE_NUMBER_TYPE, Types.BOOST_REQUEST_TYPE);
   }
 
   @Override
@@ -392,6 +393,7 @@ public class SmsDatabase extends MessageDatabase {
 
       threadId = getThreadIdForMessage(id);
 
+      SignalDatabase.reactions().deleteReactions(new MessageId(id, false));
       SignalDatabase.threads().update(threadId, false);
       SignalDatabase.messageLog().deleteAllRelatedToMessage(id, false);
 
@@ -481,18 +483,18 @@ public class SmsDatabase extends MessageDatabase {
   }
 
   @Override
-  public @NonNull Set<ThreadUpdate> incrementReceiptCount(SyncMessageId messageId, long timestamp, @NonNull ReceiptType receiptType) {
+  public @NonNull Set<MessageUpdate> incrementReceiptCount(SyncMessageId messageId, long timestamp, @NonNull ReceiptType receiptType) {
     if (receiptType == ReceiptType.VIEWED) {
       return Collections.emptySet();
     }
 
-    SQLiteDatabase    database      = databaseHelper.getSignalWritableDatabase();
-    Set<ThreadUpdate> threadUpdates = new HashSet<>();
+    SQLiteDatabase     database       = databaseHelper.getSignalWritableDatabase();
+    Set<MessageUpdate> messageUpdates = new HashSet<>();
 
     try (Cursor cursor = database.query(TABLE_NAME, new String[] {ID, THREAD_ID, RECIPIENT_ID, TYPE, DELIVERY_RECEIPT_COUNT, READ_RECEIPT_COUNT, RECEIPT_TIMESTAMP},
-                              DATE_SENT + " = ?", new String[] {String.valueOf(messageId.getTimetamp())},
-                              null, null, null, null)) {
-
+                                        DATE_SENT + " = ?", new String[] {String.valueOf(messageId.getTimetamp())},
+                                        null, null, null, null))
+    {
       while (cursor.moveToNext()) {
         if (Types.isOutgoingMessageType(CursorUtil.requireLong(cursor, TYPE))) {
           RecipientId theirRecipientId = messageId.getRecipientId();
@@ -512,30 +514,29 @@ public class SmsDatabase extends MessageDatabase {
                              ID + " = ?",
                              SqlUtil.buildArgs(updatedTimestamp, id));
 
-            threadUpdates.add(new ThreadUpdate(threadId, !isFirstIncrement));
+            messageUpdates.add(new MessageUpdate(threadId, new MessageId(id, false)));
           }
         }
       }
 
-      if (threadUpdates.isEmpty() && receiptType == ReceiptType.DELIVERY) {
+      if (messageUpdates.isEmpty() && receiptType == ReceiptType.DELIVERY) {
         earlyDeliveryReceiptCache.increment(messageId.getTimetamp(), messageId.getRecipientId(), timestamp);
       }
 
-      return threadUpdates;
+      return messageUpdates;
     }
   }
 
   @Override
-  public List<Pair<Long, Long>> setTimestampRead(SyncMessageId messageId, long proposedExpireStarted, @NonNull Map<Long, Long> threadToLatestRead) {
-    SQLiteDatabase         database = databaseHelper.getSignalWritableDatabase();
-    List<Pair<Long, Long>> expiring = new LinkedList<>();
-    Cursor                 cursor   = null;
+  @NonNull MmsSmsDatabase.TimestampReadResult setTimestampRead(SyncMessageId messageId, long proposedExpireStarted, @NonNull Map<Long, Long> threadToLatestRead) {
+    SQLiteDatabase         database   = databaseHelper.getSignalWritableDatabase();
+    List<Pair<Long, Long>> expiring   = new LinkedList<>();
+    String[]               projection = new String[] {ID, THREAD_ID, RECIPIENT_ID, TYPE, EXPIRES_IN, EXPIRE_STARTED};
+    String                 query      = DATE_SENT + " = ?";
+    String[]               args       = SqlUtil.buildArgs(messageId.getTimetamp());
+    List<Long>             threads    = new LinkedList<>();
 
-    try {
-      cursor = database.query(TABLE_NAME, new String[] {ID, THREAD_ID, RECIPIENT_ID, TYPE, EXPIRES_IN, EXPIRE_STARTED},
-                              DATE_SENT + " = ?", new String[] {String.valueOf(messageId.getTimetamp())},
-                              null, null, null, null);
-
+    try (Cursor cursor = database.query(TABLE_NAME, projection, query, args, null, null, null)) {
       while (cursor.moveToNext()) {
         RecipientId theirRecipientId = messageId.getRecipientId();
         RecipientId outRecipientId   = RecipientId.from(cursor.getLong(cursor.getColumnIndexOrThrow(RECIPIENT_ID)));
@@ -558,21 +559,17 @@ public class SmsDatabase extends MessageDatabase {
             expiring.add(new Pair<>(id, expiresIn));
           }
 
-          database.update(TABLE_NAME, contentValues, ID_WHERE, new String[] {cursor.getLong(cursor.getColumnIndexOrThrow(ID)) + ""});
+          database.update(TABLE_NAME, contentValues, ID_WHERE, SqlUtil.buildArgs(id));
 
-          SignalDatabase.threads().updateReadState(threadId);
-          SignalDatabase.threads().setLastSeen(threadId);
-          notifyConversationListeners(threadId);
+          threads.add(threadId);
 
           Long latest = threadToLatestRead.get(threadId);
           threadToLatestRead.put(threadId, (latest != null) ? Math.max(latest, messageId.getTimetamp()) : messageId.getTimetamp());
         }
       }
-    } finally {
-      if (cursor != null) cursor.close();
     }
 
-    return expiring;
+    return new MmsSmsDatabase.TimestampReadResult(expiring, threads);
   }
 
   @Override
@@ -595,9 +592,10 @@ public class SmsDatabase extends MessageDatabase {
   }
 
   private List<MarkedMessageInfo> setMessagesRead(String where, String[] arguments) {
-    SQLiteDatabase          database  = databaseHelper.getSignalWritableDatabase();
-    List<MarkedMessageInfo> results   = new LinkedList<>();
-    Cursor                  cursor    = null;
+    SQLiteDatabase          database         = databaseHelper.getSignalWritableDatabase();
+    List<MarkedMessageInfo> results          = new LinkedList<>();
+    Cursor                  cursor           = null;
+    RecipientId             releaseChannelId = SignalStore.releaseChannelValues().getReleaseChannelRecipientId();
 
     database.beginTransaction();
     try {
@@ -614,7 +612,9 @@ public class SmsDatabase extends MessageDatabase {
           SyncMessageId  syncMessageId  = new SyncMessageId(recipientId, dateSent);
           ExpirationInfo expirationInfo = new ExpirationInfo(messageId, expiresIn, expireStarted, false);
 
-          results.add(new MarkedMessageInfo(threadId, syncMessageId, new MessageId(messageId, false), expirationInfo));
+          if (!recipientId.equals(releaseChannelId)) {
+            results.add(new MarkedMessageInfo(threadId, syncMessageId, new MessageId(messageId, false), expirationInfo));
+          }
         }
       }
 
@@ -719,11 +719,11 @@ public class SmsDatabase extends MessageDatabase {
 
       if (!peerEraIdSameAsPrevious && !Util.isEmpty(peekGroupCallEraId)) {
         Recipient self     = Recipient.self();
-        boolean   markRead = peekJoinedUuids.contains(self.requireAci().uuid()) || self.getId().equals(sender);
+        boolean   markRead = peekJoinedUuids.contains(self.requireServiceId().uuid()) || self.getId().equals(sender);
 
         byte[] updateDetails = GroupCallUpdateDetails.newBuilder()
                                                      .setEraId(Util.emptyIfNull(peekGroupCallEraId))
-                                                     .setStartedCallUuid(Recipient.resolved(sender).requireAci().toString())
+                                                     .setStartedCallUuid(Recipient.resolved(sender).requireServiceId().toString())
                                                      .setStartedCallTimestamp(timestamp)
                                                      .addAllInCallUuids(Stream.of(peekJoinedUuids).map(UUID::toString).toList())
                                                      .setIsCallFull(isCallFull)
@@ -800,7 +800,7 @@ public class SmsDatabase extends MessageDatabase {
       if (!sameEraId && !Util.isEmpty(messageGroupCallEraId)) {
         byte[] updateDetails = GroupCallUpdateDetails.newBuilder()
                                                      .setEraId(Util.emptyIfNull(messageGroupCallEraId))
-                                                     .setStartedCallUuid(Recipient.resolved(sender).requireAci().toString())
+                                                     .setStartedCallUuid(Recipient.resolved(sender).requireServiceId().toString())
                                                      .setStartedCallTimestamp(timestamp)
                                                      .addAllInCallUuids(Collections.emptyList())
                                                      .setIsCallFull(false)
@@ -849,7 +849,7 @@ public class SmsDatabase extends MessageDatabase {
       }
 
       GroupCallUpdateDetails groupCallUpdateDetails = GroupCallUpdateDetailsUtil.parse(record.getBody());
-      boolean                containsSelf           = peekJoinedUuids.contains(Recipient.self().requireAci().uuid());
+      boolean                containsSelf           = peekJoinedUuids.contains(Recipient.self().requireServiceId().uuid());
 
       sameEraId = groupCallUpdateDetails.getEraId().equals(peekGroupCallEraId) && !Util.isEmpty(peekGroupCallEraId);
 
@@ -1073,6 +1073,21 @@ public class SmsDatabase extends MessageDatabase {
                        SignalDatabase.threads().update(threadId, true);
                        notifyConversationListeners(threadId);
                      });
+  }
+
+  @Override
+  public void insertBoostRequestMessage(@NonNull RecipientId recipientId, long threadId) {
+    ContentValues values = new ContentValues();
+    values.put(RECIPIENT_ID, recipientId.serialize());
+    values.put(ADDRESS_DEVICE_ID, 1);
+    values.put(DATE_RECEIVED, System.currentTimeMillis());
+    values.put(DATE_SENT, System.currentTimeMillis());
+    values.put(READ, 1);
+    values.put(TYPE, Types.BOOST_REQUEST_TYPE);
+    values.put(THREAD_ID, threadId);
+    values.putNull(BODY);
+
+    getWritableDatabase().insert(TABLE_NAME, null, values);
   }
 
   @Override

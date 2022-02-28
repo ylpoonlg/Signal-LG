@@ -24,6 +24,7 @@ import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
 import org.thoughtcrime.securesms.events.CallParticipant;
 import org.thoughtcrime.securesms.events.WebRtcViewModel;
 import org.thoughtcrime.securesms.groups.GroupId;
+import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.notifications.profiles.NotificationProfile;
 import org.thoughtcrime.securesms.notifications.profiles.NotificationProfiles;
 import org.thoughtcrime.securesms.recipients.Recipient;
@@ -214,7 +215,7 @@ public abstract class WebRtcActionProcessor {
 
     try {
       byte[] remoteIdentityKey = WebRtcUtil.getPublicKeyBytes(receivedOfferMetadata.getRemoteIdentityKey());
-      byte[] localIdentityKey  = WebRtcUtil.getPublicKeyBytes(IdentityKeyUtil.getIdentityKey(context).serialize());
+      byte[] localIdentityKey  = WebRtcUtil.getPublicKeyBytes(SignalStore.account().getAciIdentityKey().getPublicKey().serialize());
 
       webRtcInteractor.getCallManager().receivedOffer(callMetadata.getCallId(),
                                                       callMetadata.getRemotePeer(),
@@ -222,8 +223,8 @@ public abstract class WebRtcActionProcessor {
                                                       offerMetadata.getOpaque(),
                                                       messageAgeSec,
                                                       WebRtcUtil.getCallMediaTypeFromOfferType(offerMetadata.getOfferType()),
-                                                      1,
-                                                      true,
+                                                      SignalStore.account().getDeviceId(),
+                                                      SignalStore.account().isPrimaryDevice(),
                                                       remoteIdentityKey,
                                                       localIdentityKey);
     } catch (CallException | InvalidKeyException e) {
@@ -685,7 +686,7 @@ public abstract class WebRtcActionProcessor {
     try {
       webRtcInteractor.getCallManager().receivedCallMessage(opaqueMessageMetadata.getUuid(),
                                                             opaqueMessageMetadata.getRemoteDeviceId(),
-                                                            1,
+                                                            SignalStore.account().getDeviceId(),
                                                             opaqueMessageMetadata.getOpaque(),
                                                             opaqueMessageMetadata.getMessageAgeSeconds());
     } catch (CallException e) {

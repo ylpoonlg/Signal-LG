@@ -87,6 +87,8 @@
   <string name="BlockUnblockDialog_group_members_will_be_able_to_add_you">Grupi liikmetel on võimalik sind sellesse gruppi uuesti lisada.</string>
   <string name="BlockUnblockDialog_you_will_be_able_to_call_and_message_each_other">Teil on võimalik üksteisele sõnumeid saata ja helistada ning sinu nimi ja foto jagatakse teistega.</string>
   <string name="BlockUnblockDialog_blocked_people_wont_be_able_to_call_you_or_send_you_messages">Blokeeritud isikutel pole võimalik sulle helistada ega sõnumeid saata.</string>
+  <!--Message shown on block dialog when blocking the Signal release notes recipient-->
+  <!--Message shown on unblock dialog when unblocking the Signal release notes recipient-->
   <string name="BlockUnblockDialog_unblock_s">Kas eemaldada %1$sblokeering?</string>
   <string name="BlockUnblockDialog_block">Blokeeri</string>
   <string name="BlockUnblockDialog_block_and_leave">Blokeeri ja lahku</string>
@@ -295,6 +297,7 @@
   <string name="ConversationFragment_your_safety_number_with_s_changed">Sinu turvanumber kasutajaga %s on muutunud</string>
   <string name="ConversationFragment_your_safety_number_with_s_changed_likey_because_they_reinstalled_signal">Sinu turvanumber kasutajaga %s on muutunud tõenäoliselt seepärast, et nad paigaldasid Signali uuesti või muutsid seadmeid. Uue turvanumbri kinnitamiseks klõpsa Kontrolli. See on valikuline tegevus.</string>
   <!--Message shown to indicate which notification profile is on/active-->
+  <string name="ConversationFragment__s_on">%1$s aktiivne</string>
   <plurals name="ConversationListFragment_delete_selected_conversations">
     <item quantity="one">Kustutad valitud vestluse?</item>
     <item quantity="other">Kustutad valitud vestlused?</item>
@@ -322,6 +325,14 @@
     <item quantity="one">Lugemata</item>
     <item quantity="other">Lugemata</item>
   </plurals>
+  <plurals name="ConversationListFragment_pin_plural">
+    <item quantity="one">Kinnita</item>
+    <item quantity="other">Kinnita</item>
+  </plurals>
+  <plurals name="ConversationListFragment_unpin_plural">
+    <item quantity="one">Eemalda</item>
+    <item quantity="other">Eemalda</item>
+  </plurals>
   <plurals name="ConversationListFragment_mute_plural">
     <item quantity="one">Vaigista</item>
     <item quantity="other">Vaigista</item>
@@ -335,6 +346,10 @@
     <item quantity="one">Arhiveeri</item>
     <item quantity="other">Arhiveeri</item>
   </plurals>
+  <plurals name="ConversationListFragment_unarchive_plural">
+    <item quantity="one">Ennista</item>
+    <item quantity="other">Ennista</item>
+  </plurals>
   <plurals name="ConversationListFragment_delete_plural">
     <item quantity="one">Kustuta</item>
     <item quantity="other">Kustuta</item>
@@ -345,8 +360,10 @@
     <item quantity="other">%d valitud</item>
   </plurals>
   <!--Show in conversation list overflow menu to open selection bottom sheet-->
+  <string name="ConversationListFragment__notification_profile">Teavitusprofiil</string>
   <!--Tooltip shown after you have created your first notification profile-->
   <!--Message shown in top toast to indicate the named profile is on-->
+  <string name="ConversationListFragment__s_on">%1$s aktiivne</string>
   <!--ConversationListItem-->
   <string name="ConversationListItem_key_exchange_message">Võtmevahetussõnum</string>
   <!--ConversationListItemAction-->
@@ -392,6 +409,8 @@
   <string name="BackupsPreferenceFragment__learn_more">Rohkem infot</string>
   <string name="BackupsPreferenceFragment__in_progress">Töötamine…</string>
   <string name="BackupsPreferenceFragment__d_so_far">Siiani %1$d…</string>
+  <!--Show percentage of completion of backup-->
+  <string name="BackupsPreferenceFragment__s_so_far">%1$s/ %% …</string>
   <string name="BackupsPreferenceFragment_signal_requires_external_storage_permission_in_order_to_create_backups">Signal vajab varukoopiate loomiseks välismälu õigust, ent see on püsivalt keelatud. Palun jätka rakenduse seadetes, vali \"Load\" ning luba \"Mäluruum\".</string>
   <!--CustomDefaultPreference-->
   <string name="CustomDefaultPreference_using_custom">Kasutan kohandatud: %s</string>
@@ -427,9 +446,6 @@
   <string name="DeviceListItem_today">Täna</string>
   <!--DocumentView-->
   <string name="DocumentView_unnamed_file">Nimetu fail</string>
-  <!--GroupCallingMegaphone-->
-  <string name="GroupCallingMegaphone__introducing_group_calls">Tutvustame grupikõnesid</string>
-  <string name="GroupCallingMegaphone__open_a_new_group_to_start">Uue krüptitud grupikõne alustamiseks vajuta \\"Uus grupp\\"</string>
   <!--DozeReminder-->
   <string name="DozeReminder_optimize_for_missing_play_services">Optimeeri puuduvate Play teenuste jaoks</string>
   <string name="DozeReminder_this_device_does_not_support_play_services_tap_to_disable_system_battery">See seade ei toeta Play teenuseid. Koputa, et keelata süsteemi aku optimeerimine, kuna see ei lase Signalil sõnumeid hankida, kui seade on ebaaktiivne.</string>
@@ -546,10 +562,6 @@
   <string name="LeaveGroupDialog_choose_new_admin">Vali uus administraator</string>
   <string name="LeaveGroupDialog_before_you_leave_you_must_choose_at_least_one_new_admin_for_this_group">Enne lahkumist pead valima sellele grupile vähemalt ühe uue administraatori.</string>
   <string name="LeaveGroupDialog_choose_admin">Vali administraator</string>
-  <!--LinkPreviewsMegaphone-->
-  <string name="LinkPreviewsMegaphone_disable">Keela</string>
-  <string name="LinkPreviewsMegaphone_preview_any_link">Iga lingi eelvaade</string>
-  <string name="LinkPreviewsMegaphone_you_can_now_retrieve_link_previews_directly_from_any_website">Sa saad nüüd hankida lingieelvaated otse mistahes saidilt, mida sõnumina saadad.</string>
   <!--LinkPreviewView-->
   <string name="LinkPreviewView_no_link_preview_available">Lingieelvaade puudub</string>
   <string name="LinkPreviewView_this_group_link_is_not_active">See grupilink ei ole aktiivne</string>
@@ -772,6 +784,7 @@
   <!--InviteActivity-->
   <string name="InviteActivity_share">Jaga</string>
   <string name="InviteActivity_share_with_contacts">Jaga kontaktidega</string>
+  <string name="InviteActivity_share_via">Jaga kasutades…</string>
   <string name="InviteActivity_cancel">Tühista</string>
   <string name="InviteActivity_sending">Saatmine…</string>
   <string name="InviteActivity_invitations_sent">Kutsed saadetud!</string>
@@ -829,6 +842,10 @@
     <item quantity="one">Kustuta</item>
     <item quantity="other">Kustuta</item>
   </plurals>
+  <plurals name="MediaOverviewActivity_d_selected_s">
+    <item quantity="one">%1$d valis (%2$s)</item>
+    <item quantity="other">%1$d valis (%2$s)</item>
+  </plurals>
   <string name="MediaOverviewActivity_file">Fail</string>
   <string name="MediaOverviewActivity_audio">Audio</string>
   <string name="MediaOverviewActivity_video">Video</string>
@@ -839,8 +856,6 @@
   <string name="MediaOverviewActivity_sent_by_s_to_s">Saadetud %1$s poolt kontaktile %2$s</string>
   <string name="MediaOverviewActivity_sent_by_you_to_s">Saadetud sinu poolt kontaktile %1$s</string>
   <!--Megaphones-->
-  <string name="Megaphones_introducing_reactions">Tutvustame reaktsioone</string>
-  <string name="Megaphones_tap_and_hold_any_message_to_quicky_share_how_you_feel">Koputa ja hoia mistahes sõnumit, et kiirelt oma emotsiooni jagada.</string>
   <string name="Megaphones_remind_me_later">Tuleta hiljem meelde</string>
   <string name="Megaphones_verify_your_signal_pin">Kinnita Signali PIN-kood</string>
   <string name="Megaphones_well_occasionally_ask_you_to_verify_your_pin">Palume aeg-ajalt sul PIN-koodi kinnitada, et see sulle meelde jääks.</string>
@@ -952,6 +967,7 @@
   <string name="MessageRecord_s_made_s_an_admin">%1$s tegi kasutaja %2$s administraatoriks.</string>
   <string name="MessageRecord_s_made_you_an_admin">%1$s tegi sind administraatoriks.</string>
   <string name="MessageRecord_you_revoked_admin_privileges_from_s">Sa tühistasid kasutaja %1$s administraatoriõigused.</string>
+  <string name="MessageRecord_s_revoked_your_admin_privileges">%1$s tühistas sinu administraatoriõigused.</string>
   <string name="MessageRecord_s_revoked_admin_privileges_from_s">%1$s tühistas kasutaja %2$s administraatoriõigused.</string>
   <string name="MessageRecord_s_is_now_an_admin">%1$s on nüüd administraator.</string>
   <string name="MessageRecord_you_are_now_an_admin">Sa oled nüüd administraator.</string>
@@ -1061,6 +1077,8 @@
   <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified">Sa märkisid oma turvanumbri kontaktiga %s mittekinnitatuks</string>
   <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified_from_another_device">Sa märkisid teisest seadmest oma turvanumbri kontaktiga %s mittekinnitatuks</string>
   <string name="MessageRecord_a_message_from_s_couldnt_be_delivered">Sõnumit kasutajalt %s ei õnnestunud edastada</string>
+  <!--Update item message shown in the release channel when someone is already a sustainer so we ask them if they want to boost.-->
+  <!--Update item message shown in the release channel when someone is not a sustainer so we ask them to consider becoming one-->
   <!--Group Calling update messages-->
   <string name="MessageRecord_s_started_a_group_call_s">%1$s alustas grupikõne · %2$s</string>
   <string name="MessageRecord_s_is_in_the_group_call_s">%1$s on selles grupikõnes · %2$s</string>
@@ -1214,6 +1232,9 @@
   <string name="RedPhone_number_not_registered">Number pole registreeritud!</string>
   <string name="RedPhone_the_number_you_dialed_does_not_support_secure_voice">Number, kuhu helistasid ei toeta turvalist kõnet!</string>
   <string name="RedPhone_got_it">Selge</string>
+  <!--Valentine\'s Day Megaphone-->
+  <!--Title text for the Valentine\'s Day donation megaphone. The placeholder will always be a heart emoji. Needs to be a placeholder for Android reasons.-->
+  <!--Body text for the Valentine\'s Day donation megaphone.-->
   <!--WebRtcCallActivity-->
   <string name="WebRtcCallActivity__tap_here_to_turn_on_your_video">Klõpsa siia enda video käivitamiseks</string>
   <string name="WebRtcCallActivity__to_call_s_signal_needs_access_to_your_camera">Signal vajab kasutajale %1$s helistamiseks juurdepääsu seadme kaamerale</string>
@@ -1233,9 +1254,23 @@
   <string name="WebRtcCallView__joining">Liitumine…</string>
   <string name="WebRtcCallView__disconnected">Ühendus katkestatud</string>
   <string name="WebRtcCallView__signal_will_ring_s">Signal helistab isikule %1$s</string>
+  <string name="WebRtcCallView__signal_will_ring_s_and_s">Signal helistab isikutele %1$s ja %2$s</string>
+  <plurals name="WebRtcCallView__signal_will_ring_s_s_and_d_others">
+    <item quantity="one">Signal helistab isikutele %1$s, %2$s ja %3$d muule</item>
+    <item quantity="other">Signal helistab isikutele %1$s, %2$s ja %3$d muule</item>
+  </plurals>
+  <string name="WebRtcCallView__s_will_be_notified">%1$ssaab teavituse</string>
+  <string name="WebRtcCallView__s_and_s_will_be_notified">%1$s ja %2$s saavad teavituse</string>
+  <string name="WebRtcCallView__ringing_s">Helistan isikule %1$s</string>
+  <string name="WebRtcCallView__ringing_s_and_s">Helistan isikutele %1$s ja %2$s</string>
+  <plurals name="WebRtcCallView__ringing_s_s_and_d_others">
+    <item quantity="one">Helistan isikutele %1$s, %2$s ja %3$d muu</item>
+    <item quantity="other">Helistan isikutele %1$s, %2$s ja %3$d muud</item>
+  </plurals>
   <string name="WebRtcCallView__s_is_calling_you">%1$s helistab sulle</string>
   <string name="WebRtcCallView__no_one_else_is_here">Kedagi teist pole siin</string>
   <string name="WebRtcCallView__s_is_in_this_call">%1$s on selles kõnes</string>
+  <string name="WebRtcCallView__s_are_in_this_call">%1$s on selles kõnes</string>
   <string name="WebRtcCallView__s_and_s_are_in_this_call">%1$s ja %2$s on selles kõnes</string>
   <string name="WebRtcCallView__s_is_presenting">%1$s esitleb</string>
   <plurals name="WebRtcCallView__s_s_and_d_others_are_in_this_call">
@@ -1245,6 +1280,7 @@
   <string name="WebRtcCallView__flip">Pööra</string>
   <string name="WebRtcCallView__speaker">Valjuhääldi</string>
   <string name="WebRtcCallView__camera">Kaamera</string>
+  <string name="WebRtcCallView__unmute">Eemalda vaigistus</string>
   <string name="WebRtcCallView__mute">Vaigista</string>
   <string name="WebRtcCallView__ring">Helista</string>
   <string name="WebRtcCallView__end_call">Lõpeta kõne</string>
@@ -1294,6 +1330,7 @@
   <string name="RegistrationActivity_terms_and_privacy">Tingimused ja privaatsuspoliitika</string>
   <string name="RegistrationActivity_rate_limited_to_service">Oled sooritanud liiga palju selle numbri registreerimise katseid. Palun proovi hiljem uuesti.</string>
   <string name="RegistrationActivity_unable_to_connect_to_service">Teenusega ei saadud ühendust. Palun kontrolli võrguühendust ja proovi uuesti.</string>
+  <string name="RegistrationActivity_non_standard_number_format">Ebastandardne numbriformaat</string>
   <plurals name="RegistrationActivity_debug_log_hint">
     <item quantity="one">Sa oled silumislogi saatmisest %d sammu kaugusel.</item>
     <item quantity="other">Sa oled silumislogi saatmisest %d sammu kaugusel.</item>
@@ -1539,6 +1576,8 @@
   <string name="NotificationChannel_voice_notes">Häälmärkmed</string>
   <string name="NotificationChannel_contact_joined_signal">Kontakt liitus Signaliga</string>
   <string name="NotificationChannels__no_activity_available_to_open_notification_channel_settings">Teavituste kanali sätete avamiseks pole tegevusi.</string>
+  <!--Notification channel name for showing persistent background connection on devices without push notifications-->
+  <!--Notification channel name for showing call status information (like connection, ongoing, etc.) Not ringing.-->
   <!--ProfileEditNameFragment-->
   <!--QuickResponseService-->
   <string name="QuickResponseService_quick_response_unavailable_when_Signal_is_locked">Kiirvastus pole saadaval, kui Signal on lukustatud!</string>
@@ -1568,6 +1607,7 @@
   <string name="UnauthorizedReminder_device_no_longer_registered">Seade ei ole enam registreeritud</string>
   <string name="UnauthorizedReminder_this_is_likely_because_you_registered_your_phone_number_with_Signal_on_a_different_device">Tõenäoliselt seepärast, et sa registreerisid oma telefoninumbri Signalis erinevas seadmes. Klõpsa uuesti registreerimiseks.</string>
   <!--WebRtcCallActivity-->
+  <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone">Kõnele vastamiseks anna Signalile juurdepääs mikrofonile.</string>
   <string name="WebRtcCallActivity_to_answer_the_call_from_s_give_signal_access_to_your_microphone">Et vastata %s kõnele, anna Signalile juurdepääs oma mikrofonile.</string>
   <string name="WebRtcCallActivity_signal_requires_microphone_and_camera_permissions_in_order_to_make_or_receive_calls">Signal vajab mikrofoni ja kaamera lubasid, et teha ja vastu võtta kõnesid, ent need on püsivalt keelatud. Palun jätka rakenduse seadetes, vali \"Load\" ja luba \"Mikrofon\" ning \"Kaamera\".</string>
   <string name="WebRtcCallActivity__answered_on_a_linked_device">Vastatud ühendatud seadmes.</string>
@@ -1666,6 +1706,9 @@
   <string name="ConversationUpdateItem_no_groups_in_common_review_requests_carefully">Ühiseid gruppe pole. Vaata taotlused hoolikalt üle.</string>
   <string name="ConversationUpdateItem_no_contacts_in_this_group_review_requests_carefully">Selles grupis pole kontakte. Kontrolli taotlusti tähelepanelikult.</string>
   <string name="ConversationUpdateItem_view">Näita</string>
+  <!--Update item button text to show to boost a feature-->
+  <string name="ConversationUpdateItem_signal_boost">Signalile hoogu</string>
+  <!--Update item button text to show to become a sustainer in the release notes channel-->
   <!--audio_view-->
   <string name="audio_view__play_pause_accessibility_description">Esita … Peata</string>
   <string name="audio_view__download_accessibility_description">Laadi alla</string>
@@ -1682,6 +1725,7 @@
   <string name="conversation_fragment__scroll_to_the_bottom_content_description">Keri alla</string>
   <!--BubbleOptOutTooltip-->
   <!--Message to inform the user of what Android chat bubbles are-->
+  <string name="BubbleOptOutTooltip__description">Mullid on Androidi funktsionaalsus, mida saad Signali vestlustes välja lülitada.</string>
   <!--Button to dismiss the tooltip for opting out of using Android bubbles-->
   <string name="BubbleOptOutTooltip__not_now">Mitte praegu</string>
   <!--Button to move to the system settings to control the use of Android bubbles-->
@@ -2213,18 +2257,33 @@
   <string name="conversation_callable_secure__menu_call">Signali kõne</string>
   <string name="conversation_callable_secure__menu_video">Signali videokõne</string>
   <!--conversation_context-->
-  <string name="conversation_context__menu_message_details">Sõnumi andmed</string>
-  <string name="conversation_context__menu_copy_text">Kopeeri tekst</string>
-  <string name="conversation_context__menu_delete_message">Kustuta sõnum</string>
-  <string name="conversation_context__menu_forward_message">Edasta sõnum</string>
-  <string name="conversation_context__menu_resend_message">Saada sõnum uuesti</string>
-  <string name="conversation_context__menu_reply_to_message">Vasta sõnumile</string>
-  <!--conversation_context_reacction-->
-  <string name="conversation_context__reaction_multi_select">Vali mitu</string>
+  <!--Heading which shows how many messages are currently selected-->
+  <plurals name="conversation_context__s_selected">
+    <item quantity="one">%d valitud</item>
+    <item quantity="other">%d valitud</item>
+  </plurals>
   <!--conversation_context_image-->
-  <string name="conversation_context_image__save_attachment">Salvesta manus</string>
+  <!--Button to save a message attachment (image, file etc.)-->
+  <string name="conversation_context_image__save_attachment">Salvesta</string>
   <!--conversation_expiring_off-->
   <string name="conversation_expiring_off__disappearing_messages">Kaduvad sõnumid</string>
+  <!--conversation_selection-->
+  <!--Button to view detailed information for a message-->
+  <string name="conversation_selection__menu_message_details">Teave</string>
+  <!--Button to copy a message\'s text to the clipboard-->
+  <string name="conversation_selection__menu_copy">Kopeeri</string>
+  <!--Button to delete a message-->
+  <string name="conversation_selection__menu_delete">Kustuta</string>
+  <!--Button to forward a message to another person or group chat-->
+  <string name="conversation_selection__menu_forward">Edasta</string>
+  <!--Button to reply to a message-->
+  <string name="conversation_selection__menu_reply">Vasta</string>
+  <!--Button to save a message attachment (image, file etc.)-->
+  <string name="conversation_selection__menu_save">Salvesta</string>
+  <!--Button to retry sending a message-->
+  <string name="conversation_selection__menu_resend_message">Saada uuesti</string>
+  <!--Button to select a message and enter selection mode-->
+  <string name="conversation_selection__menu_multi_select">Vali</string>
   <!--conversation_expiring_on-->
   <!--conversation_insecure-->
   <string name="conversation_insecure__invite">Kutsu</string>
@@ -2303,6 +2362,7 @@
   <string name="Insights__title">Pilguheit</string>
   <string name="InsightsDashboardFragment__title">Pilguheit</string>
   <string name="InsightsDashboardFragment__signal_protocol_automatically_protected">Signali protokoll kaitses automaatselt %1$d%% väljuvat sõnumit %2$d päeva jooksul. Vestlused Signali kasutajate vahel on alati otspunktkrüpteeritud.</string>
+  <string name="InsightsDashboardFragment__spread_the_word">Levita sõna</string>
   <string name="InsightsDashboardFragment__not_enough_data">Pole piisavalt andmeid</string>
   <string name="InsightsDashboardFragment__your_insights_percentage_is_calculated_based_on">Sinu Pilguheidu protsent on arvutatud %1$d päeva väljuvate sõnumite põhjal, mis ei ole haihtunud ega kustutatud.</string>
   <string name="InsightsDashboardFragment__start_a_conversation">Alusta vestlust</string>
@@ -2407,16 +2467,6 @@
   <string name="KbsMegaphone__create_a_pin">Loo PIN-kood</string>
   <string name="KbsMegaphone__pins_keep_information_thats_stored_with_signal_encrytped">PIN-koodid hoiavad Signalis salvestatud teabe krüptituna</string>
   <string name="KbsMegaphone__create_pin">Loo PIN-kood</string>
-  <!--Research Megaphone-->
-  <string name="ResearchMegaphone_tell_signal_what_you_think">Räägi Signalile, mida sa arvad</string>
-  <string name="ResearchMegaphone_to_make_signal_the_best_messaging_app_on_the_planet">Tahame kuulda sinult tagasisidet, et teha Signal planeedi parimaks suhtlusrakenduseks.</string>
-  <string name="ResearchMegaphone_learn_more">Rohkem infot</string>
-  <string name="ResearchMegaphone_dismiss">Tühista</string>
-  <string name="ResearchMegaphoneDialog_signal_research">Signali uurimus</string>
-  <string name="ResearchMegaphoneDialog_we_believe_in_privacy"><![CDATA[<p><b>Me usume privaatsusse.</b></p><p>Signal ei jälita sind ega kogu sinu andmeid. Signali täiustamisel kõigi jaoks sõltume kasutaja tagasisidest <b>ja ootame seda ka sinult.</b></p><p>Teostame küsitlust, et saada aru, kuidas sa Signalit kasutad. Meie küsitlus ei kogu sind identifitseerivaid andmeid. Kui oled huvitatud lisaks tagasiside andmisest, siis on sul võimalus sisestada kontaktinfo.</p><p>Kui sul on paar minutit aega ja tagasisidet, mida jagada, siis sooviksime seda sinult kuulda.</p>]]></string>
-  <string name="ResearchMegaphoneDialog_take_the_survey">Osale küsitluses</string>
-  <string name="ResearchMegaphoneDialog_no_thanks">Tänan, ei</string>
-  <string name="ResearchMegaphoneDialog_the_survey_is_hosted_by_alchemer_at_the_secure_domain">Seda küsitlust teostab Alchemer turvalises domeenis surveys.signalusers.org</string>
   <!--transport_selection_list_item-->
   <string name="transport_selection_list_item__transport_icon">Transpordi ikoon</string>
   <string name="ConversationListFragment_loading">Laadimine…</string>
@@ -2466,7 +2516,7 @@
   <string name="BackupDialog_verify">Kinnita</string>
   <string name="BackupDialog_you_successfully_entered_your_backup_passphrase">Sisestasid varukoopia salasõna edukalt</string>
   <string name="BackupDialog_passphrase_was_not_correct">Salasõna ei olnud õige</string>
-  <string name="LocalBackupJob_creating_backup">Varukoopia loomine…</string>
+  <string name="LocalBackupJob_creating_signal_backup">Signali varukoopia loomine…</string>
   <string name="LocalBackupJobApi29_backup_failed">Varundamine ebaõnnestus</string>
   <string name="LocalBackupJobApi29_your_backup_directory_has_been_deleted_or_moved">Sinu varukoopiate kataloog on kustutatud või teisaldatud.</string>
   <string name="LocalBackupJobApi29_your_backup_file_is_too_large">Sinu varukoopia fail on sellele kettale salvestamiseks liiga suur.</string>
@@ -2575,6 +2625,7 @@
   <!--DeviceTransferFragment-->
   <string name="DeviceTransfer__transferring_data">Andmete ülekandmine</string>
   <string name="DeviceTransfer__d_messages_so_far">%1$d sõnumit siiani…</string>
+  <!--Filled in with total percentage of messages transferred-->
   <string name="DeviceTransfer__cancel">Loobu</string>
   <string name="DeviceTransfer__try_again">Proovi uuesti</string>
   <string name="DeviceTransfer__stop_transfer_question">Kas peatada ülekanne?</string>
@@ -2707,11 +2758,17 @@
   <string name="DeleteAccountFragment__failed_to_delete_local_data">Kohalike andmete kustutamine ei õnnestunud. Andmeid saab käsitsi kustutada süsteemi rakenduse sätetest.</string>
   <string name="DeleteAccountFragment__launch_app_settings">Käivita rakenduse sätted</string>
   <!--Title of progress dialog shown when a user deletes their account and the process is leaving all groups-->
+  <string name="DeleteAccountFragment__leaving_groups">Gruppidest lahkumine…</string>
   <!--Title of progress dialog shown when a user deletes their account and the process has left all groups-->
+  <string name="DeleteAccountFragment__deleting_account">Konto kustutamine…</string>
   <!--Message of progress dialog shown when a user deletes their account and the process is leaving groups-->
+  <string name="DeleteAccountFragment__depending_on_the_number_of_groups">Sõltuvalt teie gruppide arvust võib selleks kuluda mõni minut</string>
   <!--Message of progress dialog shown when a user deletes their account and the process has left all groups-->
+  <string name="DeleteAccountFragment__deleting_all_user_data_and_resetting">Kasutajaandmete kustutamine ja rakenduse lähtestamine</string>
   <!--Title of error dialog shown when a network error occurs during account deletion-->
+  <string name="DeleteAccountFragment__account_not_deleted">Konto pole kustutatud</string>
   <!--Message of error dialog shown when a network error occurs during account deletion-->
+  <string name="DeleteAccountFragment__there_was_a_problem">Kustutamisprotsessi käigus tekkis tõrge. Kontrolli enda võrguühendust ja proovi uuesti.</string>
   <!--DeleteAccountCountryPickerFragment-->
   <string name="DeleteAccountCountryPickerFragment__search_countries">Otsi riikidest</string>
   <!--CreateGroupActivity-->
@@ -2841,7 +2898,9 @@
   <string name="AccountSettingsFragment__change_phone_number">Muuda telefoninumbrit</string>
   <!--ChangeNumberFragment-->
   <string name="ChangeNumberFragment__continue">Jätka</string>
-  <string name="ChangeNumber__your_phone_number_has_been_changed">Sinu telefoninumber on muudetud.</string>
+  <!--Message shown on dialog after your number has been changed successfully.-->
+  <!--Confirmation button to dismiss number changed dialog-->
+  <string name="ChangeNumber__okay">Sobib</string>
   <!--ChangeNumberEnterPhoneNumberFragment-->
   <string name="ChangeNumberEnterPhoneNumberFragment__change_number">Numbri muutmine</string>
   <string name="ChangeNumberEnterPhoneNumberFragment__your_old_number">Sinu vana number</string>
@@ -2857,6 +2916,7 @@
   <string name="ChangeNumberVerifyFragment__change_number">Muuda numbrit</string>
   <string name="ChangeNumberVerifyFragment__verifying_s">Kinnitamine: %1$s</string>
   <!--ChangeNumberConfirmFragment-->
+  <string name="ChangeNumberConfirmFragment__change_number">Muuda numbrit</string>
   <string name="ChangeNumberConfirmFragment__edit_number">Muuda numbrit</string>
   <!--ChangeNumberRegistrationLockFragment-->
   <!--ChangeNumberPinDiffersFragment-->
@@ -2865,7 +2925,14 @@
   <string name="ChangeNumberPinDiffersFragment__update_pin">Uuenda PIN-koodi</string>
   <string name="ChangeNumberPinDiffersFragment__keep_old_pin_question">Kas jätta vana PIN-kood alles?</string>
   <!--ChangeNumberLockActivity-->
+  <!--Info message shown to user if something crashed the app during the change number attempt and we were unable to confirm the change so we force them into this screen to check before letting them use the app-->
+  <!--Dialog title shown if we were able to confirm your change number status (meaning we now know what the server thinks our number is) after a crash during the regular flow-->
+  <!--Dialog message shown if we were able to confirm your change number status (meaning we now know what the server thinks our number is) after a crash during the regular flow-->
+  <!--Dialog title shown if we were not able to confirm your phone number with the server and thus cannot let leave the change flow yet after a crash during the regular flow-->
+  <!--Dialog message shown when we can\'t verify the phone number on the server, only shown if there was a network error communicating with the server after a crash during the regular flow-->
+  <!--Dialog button to retry confirming the number on the server-->
   <string name="ChangeNumberLockActivity__retry">Proovi uuesti</string>
+  <!--Dialog button shown to leave the app when in the unconfirmed change status after a crash in the regular flow-->
   <string name="ChangeNumberLockActivity__leave">Lahku</string>
   <string name="ChangeNumberLockActivity__submit_debug_log">Postita silumisinfo</string>
   <!--ChatsSettingsFragment-->
@@ -2879,11 +2946,15 @@
   <string name="NotificationsSettingsFragment__notify_when">Teavita kui…</string>
   <string name="NotificationsSettingsFragment__contact_joins_signal">Kontakt liitub Signaliga</string>
   <!--Notification preference header-->
+  <string name="NotificationsSettingsFragment__notification_profiles">Teavitusprofiilid</string>
   <!--Notification preference option header-->
+  <string name="NotificationsSettingsFragment__profiles">Profiilid</string>
   <!--Notification preference summary text-->
   <!--NotificationProfilesFragment-->
   <!--Title for notification profiles screen that shows all existing profiles-->
+  <string name="NotificationProfilesFragment__notification_profiles">Teavitusprofiilid</string>
   <!--Button text to create a notification profile-->
+  <string name="NotificationProfilesFragment__create_profile">Loo profiil</string>
   <!--PrivacySettingsFragment-->
   <string name="PrivacySettingsFragment__blocked">Blokeeritud</string>
   <string name="PrivacySettingsFragment__d_contacts">%1$d kontakti</string>
@@ -3134,6 +3205,7 @@
   <string name="BadgeSelectionFragment__select_badges">Vali märgid</string>
   <string name="SelectFeaturedBadgeFragment__preview">Eelvaade</string>
   <string name="SelectFeaturedBadgeFragment__select_a_badge">Vali märk</string>
+  <string name="ImageView__badge">Märk</string>
   <string name="SubscribeFragment__signal_is_powered_by_people_like_you">Signalit loovad sinusugused inimesed.</string>
   <string name="SubscribeFragment__currency">Rahaühik</string>
   <string name="SubscribeFragment__more_payment_options">Rohkem maksevõimalusi</string>
@@ -3142,38 +3214,79 @@
   <string name="SubscribeFragment__confirm">Kinnita</string>
   <string name="SubscribeFragment__update">Uuenda</string>
   <string name="Subscription__s_per_month">%s/month</string>
+  <string name="Subscription__s_per_month_dot_renews_s">%1$s/kuu · Uueneb %2$s</string>
+  <string name="Subscription__s_per_month_dot_expires_s">%1$s/kuu · Aegub %2$s</string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__thanks_for_the_boost">Aitäh hooandmise eest!</string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__display_on_profile">Kuva profiilil</string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__done">Tehtud</string>
+  <string name="ManageDonationsFragment__my_support">Minu toetus</string>
+  <string name="ManageDonationsFragment__manage_subscription">Tellimuse haldamine</string>
   <string name="ManageDonationsFragment__badges">Märgid</string>
+  <string name="ManageDonationsFragment__subscription_faq">Tellimuse KKK</string>
   <string name="BoostFragment__give_signal_a_boost">Anna Signalile hoogu</string>
   <string name="Boost__enter_custom_amount">Sisesta kohandatud summa</string>
   <string name="MySupportPreference__add_a_signal_boost">Lisa Signalile hoogu</string>
   <string name="MySupportPreference__s_per_month">%1$s/kuu</string>
+  <string name="MySupportPreference__renews_s">Uueneb %1$s</string>
   <!--Displayed on "My Support" screen when user badge failed to be added to their account-->
+  <string name="MySupportPreference__couldnt_add_badge_s">Märgi lisamine ei õnnestunud. %1$s</string>
+  <string name="MySupportPreference__please_contact_support">Palun võta ühendust kasutajatoega.</string>
+  <string name="ExpiredBadgeBottomSheetDialogFragment__your_badge_has_expired">Sinu märk on aegunud</string>
+  <string name="ExpiredBadgeBottomSheetDialogFragment__badge_expired">Märk on aegunud</string>
+  <string name="ExpiredBadgeBottomSheetDialogFragment__subscription_cancelled">Tellimus tühistatud</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__not_now">Mitte praegu</string>
+  <!--Copy displayed when badge expires after user inactivity-->
+  <!--Copy displayed when badge expires after payment failure-->
+  <string name="ExpiredBadgeBottomSheetDialogFragment__renew_subscription">Uuenda tellimust</string>
   <string name="Subscription__contact_support">Võta ühendust kasutajatoega</string>
+  <string name="Subscription__earn_a_s_badge">Omanda %1$s märk</string>
   <!--Displayed in notification when user payment fails to process on Stripe-->
   <!--Displayed on "My Support" screen when user subscription payment method failed.-->
+  <string name="DonationsErrors__couldnt_add_badge">Märgi lisamine ei õnnestunud</string>
+  <string name="DonationsErrors__google_pay_unavailable">Google Pay pole saadaval</string>
   <string name="NetworkFailure__retry">Proovi uuesti</string>
+  <!--Stripe decline code generic_failure-->
+  <!--Stripe decline code verify on Google Pay and try again-->
+  <!--Stripe decline code learn more action label-->
+  <string name="DeclineCode__learn_more">Rohkem infot</string>
+  <!--Stripe decline code contact issuer-->
+  <!--Stripe decline code purchase not supported-->
+  <!--Stripe decline code your card has expired-->
+  <!--Stripe decline code go to google pay action label-->
+  <!--Stripe decline code incorrect card number-->
+  <!--Stripe decline code incorrect cvc-->
+  <!--Stripe decline code insufficient funds-->
+  <!--Stripe decline code incorrect expiration month-->
+  <!--Stripe decline code incorrect expiration year-->
+  <!--Stripe decline code issuer not available-->
+  <!--Stripe decline code processing error-->
   <!--Title of create notification profile screen-->
+  <string name="EditNotificationProfileFragment__name_your_profile">Lisa profiilile nimi</string>
   <!--Hint text for create/edit notification profile name-->
   <string name="EditNotificationProfileFragment__profile_name">Profiilinimi</string>
   <!--Name has a max length, this shows how many characters are used out of the max-->
   <string name="EditNotificationProfileFragment__count">%1$d/%2$d</string>
-  <!--Call to action button once the profile is named to continue to the next create step-->
+  <!--Call to action button to continue to the next step-->
   <string name="EditNotificationProfileFragment__next">Edasi</string>
+  <!--Call to action button once the profile is named to create the profile and continue to the customization steps-->
+  <string name="EditNotificationProfileFragment__create">Loo</string>
   <!--Call to action button once the profile name is edited-->
   <string name="EditNotificationProfileFragment__save">Salvesta</string>
   <!--Title of edit notification profile screen-->
+  <string name="EditNotificationProfileFragment__edit_this_profile">Muuda seda profiili</string>
   <!--Error message shown when attempting to create or edit a profile name to an existing profile name-->
+  <string name="EditNotificationProfileFragment__a_profile_with_this_name_already_exists">Sellise nimega profiil on juba olemas</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
   <string name="EditNotificationProfileFragment__work">Töö</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
+  <string name="EditNotificationProfileFragment__sleep">Magamine</string>
+  <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
+  <string name="EditNotificationProfileFragment__driving">Sõiduki juhtimine</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
-  <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
+  <string name="EditNotificationProfileFragment__focus">Fookus</string>
   <!--Error message shown when attempting to next/save without a profile name-->
+  <string name="EditNotificationProfileFragment__profile_must_have_a_name">Nimi peab olema</string>
   <!--Title for add recipients to notification profile screen in create flow-->
   <!--Description of what the user should be doing with this screen-->
   <!--Button text that launches the contact picker to select from-->
@@ -3181,11 +3294,15 @@
   <string name="SelectRecipientsFragment__add">Lisa</string>
   <!--Notification profiles home fragment, shown when no profiles have been created yet-->
   <!--Header shown above list of all notification profiles-->
+  <string name="NotificationProfilesFragment__profiles">Profiilid</string>
   <!--Button that starts the create new notification profile flow-->
+  <string name="NotificationProfilesFragment__new_profile">Uus profiil</string>
   <!--Profile active status, indicating the current profile is on for an unknown amount of time-->
   <string name="NotificationProfilesFragment__on">Sees</string>
   <!--Button use to permanently delete a notification profile-->
+  <string name="NotificationProfileDetails__delete_profile">Kustuta profiil</string>
   <!--Snakbar message shown when removing a recipient from a profile-->
+  <string name="NotificationProfileDetails__s_removed">\"%1$s\" eemaldatud.</string>
   <!--Snackbar button text that will undo the recipient remove-->
   <string name="NotificationProfileDetails__undo">Võta tagasi</string>
   <!--Dialog message shown to confirm deleting a profile-->
@@ -3193,6 +3310,7 @@
   <string name="NotificationProfileDetails__delete">Kustuta</string>
   <!--Title/accessibility text for edit icon to edit profile emoji/name-->
   <!--Schedule description if all days are selected-->
+  <string name="NotificationProfileDetails__everyday">Iga päev</string>
   <!--Profile status on if it is the active profile-->
   <string name="NotificationProfileDetails__on">Sees</string>
   <!--Profile status on if it is not the active profile-->
@@ -3201,6 +3319,7 @@
   <string name="NotificationProfileDetails__s_to_s">%1$s saajale %2$s</string>
   <!--Section header for exceptions to the notification profile-->
   <!--Profile exception to allow all calls through the profile restrictions-->
+  <string name="NotificationProfileDetails__allow_all_calls">Luba kõik kõned</string>
   <!--Profile exception to allow all @mentions through the profile restrictions-->
   <!--Section header for showing schedule information-->
   <!--If member list is long, will truncate the list and show an option to then see all when tapped-->
@@ -3234,16 +3353,19 @@
   <!--Descriptor text shown to indicate you can add a schedule later since you did not add one during create flow-->
   <!--Descriptor text shown to indicate your profile will follow the schedule set during create flow-->
   <!--Button text shown in profile selection bottom sheet to create a new profile-->
+  <string name="NotificationProfileSelection__new_profile">Uus profiil</string>
   <!--Manual enable option to manually enable a profile for 1 hour-->
   <!--Manual enable option to manually enable a profile until a set time (currently 6pm or 8am depending on what is next)-->
   <string name="NotificationProfileSelection__until_s">kuni %1$s</string>
   <!--Option to view profile details-->
   <!--Descriptor text indicating how long a profile will be on when there is a time component associated with it-->
   <!--Title for notification profile megaphone-->
+  <string name="NotificationProfilesMegaphone__notification_profiles">Teavitusprofiilid</string>
   <!--Description for notification profile megaphone-->
   <!--Call to action button to create a profile from megaphone-->
   <!--Button to dismiss notification profile megaphone-->
   <string name="NotificationProfilesMegaphone__not_now">Mitte praegu</string>
   <!--Displayed in a toast when we fail to open the ringtone picker-->
+  <!--Description shown for the Signal Release Notes channel-->
   <!--EOF-->
 </resources>

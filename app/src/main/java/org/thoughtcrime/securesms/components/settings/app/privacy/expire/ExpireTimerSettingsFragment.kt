@@ -21,6 +21,7 @@ import org.thoughtcrime.securesms.util.ExpirationUtil
 import org.thoughtcrime.securesms.util.ViewUtil
 import org.thoughtcrime.securesms.util.livedata.ProcessState
 import org.thoughtcrime.securesms.util.livedata.distinctUntilChanged
+import org.thoughtcrime.securesms.util.navigation.safeNavigate
 
 /**
  * Depending on the arguments, can be used to set the universal expire timer, set expire timer
@@ -102,20 +103,20 @@ class ExpireTimerSettingsFragment : DSLSettingsFragment(
       val values: Array<Int> = resources.getIntArray(R.array.ExpireTimerSettingsFragment__values).toTypedArray()
 
       var hasCustomValue = true
-      labels.zip(values).forEach { (label, value) ->
+      labels.zip(values).forEach { (label, seconds) ->
         radioPref(
           title = DSLSettingsText.from(label),
-          isChecked = state.currentTimer == value,
-          onClick = { viewModel.select(value) }
+          isChecked = state.currentTimer == seconds,
+          onClick = { viewModel.select(seconds) }
         )
-        hasCustomValue = hasCustomValue && state.currentTimer != value
+        hasCustomValue = hasCustomValue && state.currentTimer != seconds
       }
 
       radioPref(
         title = DSLSettingsText.from(R.string.ExpireTimerSettingsFragment__custom_time),
         summary = if (hasCustomValue) DSLSettingsText.from(ExpirationUtil.getExpirationDisplayValue(requireContext(), state.currentTimer)) else null,
         isChecked = hasCustomValue,
-        onClick = { NavHostFragment.findNavController(this@ExpireTimerSettingsFragment).navigate(R.id.action_expireTimerSettingsFragment_to_customExpireTimerSelectDialog) }
+        onClick = { NavHostFragment.findNavController(this@ExpireTimerSettingsFragment).safeNavigate(R.id.action_expireTimerSettingsFragment_to_customExpireTimerSelectDialog) }
       )
     }
   }

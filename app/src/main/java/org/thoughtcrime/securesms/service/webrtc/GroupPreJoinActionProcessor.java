@@ -45,7 +45,8 @@ public class GroupPreJoinActionProcessor extends GroupActionProcessor {
     GroupCall groupCall = webRtcInteractor.getCallManager().createGroupCall(groupId,
                                                                             SignalStore.internalValues().groupCallingServer(),
                                                                             new byte[0],
-                                                                            SignalStore.internalValues().audioProcessingMethod(),
+                                                                            null,
+                                                                            AudioProcessingMethodSelector.get(),
                                                                             webRtcInteractor.getGroupCallObserver());
 
     try {
@@ -113,7 +114,7 @@ public class GroupPreJoinActionProcessor extends GroupActionProcessor {
     }
 
     List<Recipient> callParticipants = Stream.of(peekInfo.getJoinedMembers())
-                                             .map(uuid -> Recipient.externalPush(context, ACI.from(uuid), null, false))
+                                             .map(uuid -> Recipient.externalPush(ACI.from(uuid), null, false))
                                              .toList();
 
     WebRtcServiceStateBuilder.CallInfoStateBuilder builder = currentState.builder()

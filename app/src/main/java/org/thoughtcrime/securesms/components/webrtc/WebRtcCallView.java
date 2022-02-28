@@ -96,8 +96,8 @@ public class WebRtcCallView extends ConstraintLayout {
   private PictureInPictureGestureHelper pictureInPictureGestureHelper;
   private ImageView                     hangup;
   private TextView                      hangupLabel;
-  private View                          answerWithAudio;
-  private View                          answerWithAudioLabel;
+  private View                          answerWithoutVideo;
+  private View                          answerWithoutVideoLabel;
   private View                          topGradient;
   private View                          footerGradient;
   private View                          startCallControls;
@@ -178,8 +178,8 @@ public class WebRtcCallView extends ConstraintLayout {
     ringToggleLabel               = findViewById(R.id.call_screen_audio_ring_toggle_label);
     hangup                        = findViewById(R.id.call_screen_end_call);
     hangupLabel                   = findViewById(R.id.call_screen_end_call_label);
-    answerWithAudio               = findViewById(R.id.call_screen_answer_with_audio);
-    answerWithAudioLabel          = findViewById(R.id.call_screen_answer_with_audio_label);
+    answerWithoutVideo            = findViewById(R.id.call_screen_answer_without_video);
+    answerWithoutVideoLabel       = findViewById(R.id.call_screen_answer_without_video_label);
     topGradient                   = findViewById(R.id.call_screen_header_gradient);
     footerGradient                = findViewById(R.id.call_screen_footer_gradient);
     startCallControls             = findViewById(R.id.call_screen_start_call_controls);
@@ -226,6 +226,7 @@ public class WebRtcCallView extends ConstraintLayout {
     incomingCallViews.add(decline);
     incomingCallViews.add(declineLabel);
     incomingCallViews.add(footerGradient);
+    incomingCallViews.add(incomingRingStatus);
 
     adjustableMarginsSet.add(micToggle);
     adjustableMarginsSet.add(cameraDirectionToggle);
@@ -254,7 +255,7 @@ public class WebRtcCallView extends ConstraintLayout {
     decline.setOnClickListener(v -> runIfNonNull(controlsListener, ControlsListener::onDenyCallPressed));
 
     answer.setOnClickListener(v -> runIfNonNull(controlsListener, ControlsListener::onAcceptCallPressed));
-    answerWithAudio.setOnClickListener(v -> runIfNonNull(controlsListener, ControlsListener::onAcceptCallWithVoiceOnlyPressed));
+    answerWithoutVideo.setOnClickListener(v -> runIfNonNull(controlsListener, ControlsListener::onAcceptCallWithVoiceOnlyPressed));
 
     pictureInPictureGestureHelper   = PictureInPictureGestureHelper.applyTo(smallLocalRenderFrame);
     pictureInPictureExpansionHelper = new PictureInPictureExpansionHelper();
@@ -285,7 +286,7 @@ public class WebRtcCallView extends ConstraintLayout {
 
     rotatableControls.add(hangup);
     rotatableControls.add(answer);
-    rotatableControls.add(answerWithAudio);
+    rotatableControls.add(answerWithoutVideo);
     rotatableControls.add(audioToggle);
     rotatableControls.add(micToggle);
     rotatableControls.add(videoToggle);
@@ -589,23 +590,19 @@ public class WebRtcCallView extends ConstraintLayout {
     if (webRtcControls.displayIncomingCallButtons()) {
       visibleViewSet.addAll(incomingCallViews);
 
-      incomingRingStatus.setVisibility(VISIBLE);
-      incomingRingStatus.setText(R.string.WebRtcCallView__signal_call);
+      incomingRingStatus.setText(webRtcControls.displayAnswerWithoutVideo() ? R.string.WebRtcCallView__signal_video_call: R.string.WebRtcCallView__signal_call);
 
       answer.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.webrtc_call_screen_answer));
     }
 
-    if (webRtcControls.displayAnswerWithAudio()) {
-      visibleViewSet.add(answerWithAudio);
-      visibleViewSet.add(answerWithAudioLabel);
-
-      incomingRingStatus.setVisibility(VISIBLE);
-      incomingRingStatus.setText(R.string.WebRtcCallView__signal_video_call);
+    if (webRtcControls.displayAnswerWithoutVideo()) {
+      visibleViewSet.add(answerWithoutVideo);
+      visibleViewSet.add(answerWithoutVideoLabel);
 
       answer.setImageDrawable(AppCompatResources.getDrawable(getContext(), R.drawable.webrtc_call_screen_answer_with_video));
     }
 
-    if (!webRtcControls.displayIncomingCallButtons() && !webRtcControls.displayAnswerWithAudio()){
+    if (!webRtcControls.displayIncomingCallButtons()){
       incomingRingStatus.setVisibility(GONE);
     }
 
@@ -934,8 +931,10 @@ public class WebRtcCallView extends ConstraintLayout {
     constraintSet.applyTo(parent);
 
     if (showSmallHeader) {
+      smallHeaderConstraints.setVisibility(incomingRingStatus.getId(), visibleViewSet.contains(incomingRingStatus) ? View.VISIBLE : View.GONE);
       smallHeaderConstraints.applyTo(toolbar);
     } else {
+      largeHeaderConstraints.setVisibility(incomingRingStatus.getId(), visibleViewSet.contains(incomingRingStatus) ? View.VISIBLE : View.GONE);
       largeHeaderConstraints.applyTo(toolbar);
     }
   }

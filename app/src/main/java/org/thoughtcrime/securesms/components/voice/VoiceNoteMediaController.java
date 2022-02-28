@@ -16,6 +16,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
@@ -50,7 +51,7 @@ public class VoiceNoteMediaController implements DefaultLifecycleObserver {
   private static final String TAG = Log.tag(VoiceNoteMediaController.class);
 
   private MediaBrowserCompat                            mediaBrowser;
-  private AppCompatActivity                             activity;
+  private FragmentActivity                              activity;
   private ProgressEventHandler                          progressEventHandler;
   private MutableLiveData<VoiceNotePlaybackState>       voiceNotePlaybackState = new MutableLiveData<>(VoiceNotePlaybackState.NONE);
   private LiveData<Optional<VoiceNotePlayerView.State>> voiceNotePlayerViewState;
@@ -58,7 +59,7 @@ public class VoiceNoteMediaController implements DefaultLifecycleObserver {
 
   private final MediaControllerCompatCallback mediaControllerCompatCallback = new MediaControllerCompatCallback();
 
-  public VoiceNoteMediaController(@NonNull AppCompatActivity activity) {
+  public VoiceNoteMediaController(@NonNull FragmentActivity activity) {
     this.activity     = activity;
     this.mediaBrowser = new MediaBrowserCompat(activity,
                                                new ComponentName(activity, VoiceNotePlaybackService.class),
@@ -185,6 +186,27 @@ public class VoiceNoteMediaController implements DefaultLifecycleObserver {
       extras.putLong(EXTRA_THREAD_ID, threadId);
       extras.putDouble(EXTRA_PROGRESS, progress);
       extras.putBoolean(EXTRA_PLAY_SINGLE, singlePlayback);
+
+      getMediaController().getTransportControls().playFromUri(audioSlideUri, extras);
+    }
+  }
+
+  /**
+   * Tells the Media service to resume playback of a given audio slide. If the audio slide is not
+   * currently paused, playback will be started from the beginning.
+   *
+   * @param audioSlideUri  The Uri of the desired audio slide
+   * @param messageId      The Message id of the given audio slide
+   */
+  public void resumePlayback(@NonNull Uri audioSlideUri, long messageId) {
+    if (isCurrentTrack(audioSlideUri)) {
+      getMediaController().getTransportControls().play();
+    } else {
+      Bundle extras = new Bundle();
+      extras.putLong(EXTRA_MESSAGE_ID, messageId);
+      extras.putLong(EXTRA_THREAD_ID, -1L);
+      extras.putDouble(EXTRA_PROGRESS, 0.0);
+      extras.putBoolean(EXTRA_PLAY_SINGLE, true);
 
       getMediaController().getTransportControls().playFromUri(audioSlideUri, extras);
     }

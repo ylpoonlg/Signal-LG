@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import org.thoughtcrime.securesms.crypto.storage.SignalSenderKeyStore;
 import org.thoughtcrime.securesms.database.SignalDatabase;
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
+import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.whispersystems.libsignal.SignalProtocolAddress;
 import org.whispersystems.signalservice.api.SignalSessionLock;
@@ -21,7 +22,7 @@ public final class SenderKeyUtil {
    */
   public static void rotateOurKey(@NonNull Context context, @NonNull DistributionId distributionId) {
     try (SignalSessionLock.Lock unused = ReentrantSessionLock.INSTANCE.acquire()) {
-      ApplicationDependencies.getSenderKeyStore().deleteAllFor(Recipient.self().requireServiceId(), distributionId);
+      ApplicationDependencies.getProtocolStore().aci().senderKeys().deleteAllFor(SignalStore.account().requireAci().toString(), distributionId);
       SignalDatabase.senderKeyShared().deleteAllFor(distributionId);
     }
   }
@@ -30,7 +31,7 @@ public final class SenderKeyUtil {
    * Gets when the sender key session was created, or -1 if it doesn't exist.
    */
   public static long getCreateTimeForOurKey(@NonNull Context context, @NonNull DistributionId distributionId) {
-    SignalProtocolAddress address = new SignalProtocolAddress(Recipient.self().requireServiceId(), SignalServiceAddress.DEFAULT_DEVICE_ID);
+    SignalProtocolAddress address = new SignalProtocolAddress(SignalStore.account().requireAci().toString(), SignalStore.account().getDeviceId());
     return SignalDatabase.senderKeys().getCreatedTime(address, distributionId);
   }
 
@@ -39,7 +40,7 @@ public final class SenderKeyUtil {
    */
   public static void clearAllState(@NonNull Context context) {
     try (SignalSessionLock.Lock unused = ReentrantSessionLock.INSTANCE.acquire()) {
-      ApplicationDependencies.getSenderKeyStore().deleteAll();
+      ApplicationDependencies.getProtocolStore().aci().senderKeys().deleteAll();
       SignalDatabase.senderKeyShared().deleteAll();
     }
   }

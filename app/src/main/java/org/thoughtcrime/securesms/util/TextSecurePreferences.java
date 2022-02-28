@@ -60,7 +60,6 @@ public class TextSecurePreferences {
   public  static final String ENABLE_MANUAL_MMS_PREF           = "pref_enable_manual_mms";
 
   private static final String LAST_VERSION_CODE_PREF           = "last_version_code";
-  private static final String LAST_EXPERIENCE_VERSION_PREF     = "last_experience_version_code";
   public  static final String RINGTONE_PREF                    = "pref_key_ringtone";
   public  static final String VIBRATE_PREF                     = "pref_key_vibrate";
   private static final String NOTIFICATION_PREF                = "pref_key_enable_notifications";
@@ -90,12 +89,10 @@ public class TextSecurePreferences {
   private static final String SHOW_INVITE_REMINDER_PREF        = "pref_show_invite_reminder";
   public  static final String MESSAGE_BODY_TEXT_SIZE_PREF      = "pref_message_body_text_size";
 
-  private static final String SIGNED_PREKEY_REGISTERED_PREF    = "pref_signed_prekey_registered";
   private static final String WIFI_SMS_PREF                    = "pref_wifi_sms";
 
   private static final String RATING_LATER_PREF                = "pref_rating_later";
   private static final String RATING_ENABLED_PREF              = "pref_rating_enabled";
-  private static final String SIGNED_PREKEY_FAILURE_COUNT_PREF = "pref_signed_prekey_failure_count";
 
   public  static final String REPEAT_ALERTS_PREF               = "pref_repeat_alerts";
   public  static final String NOTIFICATION_PRIVACY_PREF        = "pref_notification_privacy";
@@ -127,10 +124,6 @@ public class TextSecurePreferences {
   public static final String CALL_NOTIFICATIONS_PREF = "pref_call_notifications";
   public static final String CALL_RINGTONE_PREF      = "pref_call_ringtone";
   public static final String CALL_VIBRATE_PREF       = "pref_call_vibrate";
-
-  private static final String NEXT_PRE_KEY_ID          = "pref_next_pre_key_id";
-  private static final String ACTIVE_SIGNED_PRE_KEY_ID = "pref_active_signed_pre_key_id";
-  private static final String NEXT_SIGNED_PRE_KEY_ID   = "pref_next_signed_pre_key_id";
 
   public  static final String BACKUP                      = "pref_backup";
   public  static final String BACKUP_ENABLED              = "pref_backup_enabled";
@@ -229,6 +222,31 @@ public class TextSecurePreferences {
   private static final String[] stringSetPreferencesToBackup = {MEDIA_DOWNLOAD_MOBILE_PREF,
                                                                 MEDIA_DOWNLOAD_WIFI_PREF,
                                                                 MEDIA_DOWNLOAD_ROAMING_PREF};
+
+  public static long getPreferencesToSaveToBackupCount(@NonNull Context context) {
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    long              count       = 0;
+
+    for (String booleanPreference : booleanPreferencesToBackup) {
+      if (preferences.contains(booleanPreference)) {
+        count++;
+      }
+    }
+
+    for (String stringPreference : stringPreferencesToBackup) {
+      if (preferences.contains(stringPreference)) {
+        count++;
+      }
+    }
+
+    for (String stringSetPreference : stringSetPreferencesToBackup) {
+      if (preferences.contains(stringSetPreference)) {
+        count++;
+      }
+    }
+
+    return count;
+  }
 
   public static List<BackupProtos.SharedPreference> getPreferencesToSaveToBackup(@NonNull Context context) {
     SharedPreferences                   preferences  = PreferenceManager.getDefaultSharedPreferences(context);
@@ -376,30 +394,6 @@ public class TextSecurePreferences {
     return getLongPreference(context, BACKUP_TIME, -1);
   }
 
-  public static int getNextPreKeyId(@NonNull Context context) {
-    return getIntegerPreference(context, NEXT_PRE_KEY_ID, new SecureRandom().nextInt(Medium.MAX_VALUE));
-  }
-
-  public static void setNextPreKeyId(@NonNull Context context, int value) {
-    setIntegerPrefrence(context, NEXT_PRE_KEY_ID, value);
-  }
-
-  public static int getNextSignedPreKeyId(@NonNull Context context) {
-    return getIntegerPreference(context, NEXT_SIGNED_PRE_KEY_ID, new SecureRandom().nextInt(Medium.MAX_VALUE));
-  }
-
-  public static void setNextSignedPreKeyId(@NonNull Context context, int value) {
-    setIntegerPrefrence(context, NEXT_SIGNED_PRE_KEY_ID, value);
-  }
-
-  public static int getActiveSignedPreKeyId(@NonNull Context context) {
-    return getIntegerPreference(context, ACTIVE_SIGNED_PRE_KEY_ID, -1);
-  }
-
-  public static void setActiveSignedPreKeyId(@NonNull Context context, int value) {
-    setIntegerPrefrence(context, ACTIVE_SIGNED_PRE_KEY_ID, value);;
-  }
-
   public static void setNeedsSqlCipherMigration(@NonNull Context context, boolean value) {
     setBooleanPreference(context, NEEDS_SQLCIPHER_MIGRATION, value);
     EventBus.getDefault().post(new SqlCipherMigrationConstraintObserver.SqlCipherNeedsMigrationEvent());
@@ -539,14 +533,6 @@ public class TextSecurePreferences {
     return getBooleanPreference(context, MULTI_DEVICE_PROVISIONED_PREF, false);
   }
 
-  public static void setSignedPreKeyFailureCount(Context context, int value) {
-    setIntegerPrefrence(context, SIGNED_PREKEY_FAILURE_COUNT_PREF, value);
-  }
-
-  public static int getSignedPreKeyFailureCount(Context context) {
-    return getIntegerPreference(context, SIGNED_PREKEY_FAILURE_COUNT_PREF, 0);
-  }
-
   @Deprecated
   public static NotificationPrivacyPreference getNotificationPrivacy(Context context) {
     return new NotificationPrivacyPreference(getStringPreference(context, NOTIFICATION_PRIVACY_PREF, "all"));
@@ -585,14 +571,6 @@ public class TextSecurePreferences {
       Log.w(TAG, e);
       return 0;
     }
-  }
-
-  public static boolean isSignedPreKeyRegistered(Context context) {
-    return getBooleanPreference(context, SIGNED_PREKEY_REGISTERED_PREF, false);
-  }
-
-  public static void setSignedPreKeyRegistered(Context context, boolean value) {
-    setBooleanPreference(context, SIGNED_PREKEY_REGISTERED_PREF, value);
   }
 
   @Deprecated
@@ -789,18 +767,10 @@ public class TextSecurePreferences {
     return getIntegerPreference(context, LAST_VERSION_CODE_PREF, Util.getCanonicalVersionCode());
   }
 
-  public static void setLastVersionCode(Context context, int versionCode) throws IOException {
+  public static void setLastVersionCode(Context context, int versionCode) {
     if (!setIntegerPrefrenceBlocking(context, LAST_VERSION_CODE_PREF, versionCode)) {
-      throw new IOException("couldn't write version code to sharedpreferences");
+      throw new AssertionError("couldn't write version code to sharedpreferences");
     }
-  }
-
-  public static int getLastExperienceVersionCode(Context context) {
-    return getIntegerPreference(context, LAST_EXPERIENCE_VERSION_PREF, 0);
-  }
-
-  public static void setLastExperienceVersionCode(Context context, int versionCode) {
-    setIntegerPrefrence(context, LAST_EXPERIENCE_VERSION_PREF, versionCode);
   }
 
   /**

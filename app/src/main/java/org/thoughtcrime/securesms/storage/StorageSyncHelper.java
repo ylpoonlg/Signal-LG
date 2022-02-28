@@ -111,8 +111,7 @@ public final class StorageSyncHelper {
                                                     .map(recipientDatabase::getRecordForSync)
                                                     .toList();
 
-    SignalAccountRecord account = new SignalAccountRecord.Builder(self.getStorageServiceId())
-                                                         .setUnknownFields(record != null ? record.getSyncExtras().getStorageProto() : null)
+    SignalAccountRecord account = new SignalAccountRecord.Builder(self.getStorageServiceId(), record != null ? record.getSyncExtras().getStorageProto() : null)
                                                          .setProfileKey(self.getProfileKey())
                                                          .setGivenName(self.getProfileName().getGivenName())
                                                          .setFamilyName(self.getProfileName().getFamilyName())
@@ -134,6 +133,7 @@ public final class StorageSyncHelper {
                                                          .setDefaultReactions(SignalStore.emojiValues().getReactions())
                                                          .setSubscriber(StorageSyncModels.localToRemoteSubscriber(SignalStore.donationsValues().getSubscriber()))
                                                          .setDisplayBadgesOnProfile(SignalStore.donationsValues().getDisplayBadgesOnProfile())
+                                                         .setSubscriptionManuallyCancelled(SignalStore.donationsValues().isUserManuallyCancelled())
                                                          .build();
 
     return SignalStorageRecord.forAccount(account);
@@ -158,6 +158,13 @@ public final class StorageSyncHelper {
     SignalStore.settings().setUniversalExpireTimer(update.getNew().getUniversalExpireTimer());
     SignalStore.emojiValues().setReactions(update.getNew().getDefaultReactions());
     SignalStore.donationsValues().setDisplayBadgesOnProfile(update.getNew().isDisplayBadgesOnProfile());
+
+    if (update.getNew().isSubscriptionManuallyCancelled()) {
+      SignalStore.donationsValues().markUserManuallyCancelled();
+      SignalStore.donationsValues().setUnexpectedSubscriptionCancelationReason(null);
+    } else {
+      SignalStore.donationsValues().clearUserManuallyCancelled();
+    }
 
     Subscriber subscriber = StorageSyncModels.remoteToLocalSubscriber(update.getNew().getSubscriber());
     if (subscriber != null) {

@@ -90,6 +90,8 @@
   <string name="BlockUnblockDialog_group_members_will_be_able_to_add_you">Grup üyeleri sizi bu gruba tekrar ekleyebilecekler.</string>
   <string name="BlockUnblockDialog_you_will_be_able_to_call_and_message_each_other">Birbirinizi arayıp ileti gönderebileceksiniz ve adınızla fotonuz onlarla paylaşılacak.</string>
   <string name="BlockUnblockDialog_blocked_people_wont_be_able_to_call_you_or_send_you_messages">Engellenen kişiler sizi arayamayacaklar veya ileti gönderemeyecekler.</string>
+  <!--Message shown on block dialog when blocking the Signal release notes recipient-->
+  <!--Message shown on unblock dialog when unblocking the Signal release notes recipient-->
   <string name="BlockUnblockDialog_unblock_s">%1$s engeli kaldırılsın mı?</string>
   <string name="BlockUnblockDialog_block">Engelle</string>
   <string name="BlockUnblockDialog_block_and_leave">Engelle ve Ayrıl</string>
@@ -361,6 +363,7 @@
     <item quantity="other">%d seçili</item>
   </plurals>
   <!--Show in conversation list overflow menu to open selection bottom sheet-->
+  <string name="ConversationListFragment__notification_profile">Bildirim profili</string>
   <!--Tooltip shown after you have created your first notification profile-->
   <string name="ConversationListFragment__turn_your_notification_profile_on_or_off_here">Bildirim profilinizi buradan açın veya kapatın.</string>
   <!--Message shown in top toast to indicate the named profile is on-->
@@ -410,6 +413,8 @@
   <string name="BackupsPreferenceFragment__learn_more">Dahasını öğrenin</string>
   <string name="BackupsPreferenceFragment__in_progress">Devam ediyor…</string>
   <string name="BackupsPreferenceFragment__d_so_far">Şu ana kadar %1$d…</string>
+  <!--Show percentage of completion of backup-->
+  <string name="BackupsPreferenceFragment__s_so_far">Şu ana kadar %1$s%% …</string>
   <string name="BackupsPreferenceFragment_signal_requires_external_storage_permission_in_order_to_create_backups">Signal, yedek oluşturabilmek için Depolama iznine ihtiyaç duyar, fakat bu izin kalıcı olarak reddedilmiş. Lütfen uygulama ayarları menüsüne girip \"İzinler\" kısmını seçin, ve \"Depolama\"yı etkinleştirin.</string>
   <!--CustomDefaultPreference-->
   <string name="CustomDefaultPreference_using_custom">Özelleştirilmiş \'%s\' kullanılıyor</string>
@@ -445,9 +450,6 @@
   <string name="DeviceListItem_today">Bugün</string>
   <!--DocumentView-->
   <string name="DocumentView_unnamed_file">İsimsiz dosya</string>
-  <!--GroupCallingMegaphone-->
-  <string name="GroupCallingMegaphone__introducing_group_calls">Karşınızda Grup Aramaları</string>
-  <string name="GroupCallingMegaphone__open_a_new_group_to_start">Ücretsiz ve şifreli grup araması başlatmak için yeni bir Grup açın.</string>
   <!--DozeReminder-->
   <string name="DozeReminder_optimize_for_missing_play_services">Eksik Google Play Hizmetleri için optimize et</string>
   <string name="DozeReminder_this_device_does_not_support_play_services_tap_to_disable_system_battery">Bu cihaz Play Hizmetlerini desteklemiyor. Signal etkin değilken ileti almasını engelleyebilecek pil iyileştirmelerini devre dışı bırakmak için dokunun.</string>
@@ -565,10 +567,6 @@
   <string name="LeaveGroupDialog_choose_new_admin">Yeni yönetici seç</string>
   <string name="LeaveGroupDialog_before_you_leave_you_must_choose_at_least_one_new_admin_for_this_group">Ayrılmadan önce, bu gruba yeni bir yönetici seçmek zorundasınız.</string>
   <string name="LeaveGroupDialog_choose_admin">Yönetici seçin</string>
-  <!--LinkPreviewsMegaphone-->
-  <string name="LinkPreviewsMegaphone_disable">Devre dışı bırak</string>
-  <string name="LinkPreviewsMegaphone_preview_any_link">Tüm bağlantıları önizle</string>
-  <string name="LinkPreviewsMegaphone_you_can_now_retrieve_link_previews_directly_from_any_website">Şimdi, gönderdiğiniz iletiler için doğrudan web sitelerinden bağlantı önizlemelerini alabilirsiniz.</string>
   <!--LinkPreviewView-->
   <string name="LinkPreviewView_no_link_preview_available">Bağlantı önizlemesi mevcut değil</string>
   <string name="LinkPreviewView_this_group_link_is_not_active">Grup bağlantısı etkin değil</string>
@@ -865,8 +863,6 @@
   <string name="MediaOverviewActivity_sent_by_s_to_s">%1$s tarafından --&gt; %2$s </string>
   <string name="MediaOverviewActivity_sent_by_you_to_s">%1$s kişisine gönderdikleriniz</string>
   <!--Megaphones-->
-  <string name="Megaphones_introducing_reactions">Karşınızda Karşılıklar</string>
-  <string name="Megaphones_tap_and_hold_any_message_to_quicky_share_how_you_feel">Nasıl hissettiğinizi hızlıca paylaşmak için herhangi bir iletinin üzerine dokunup basılı tutun.</string>
   <string name="Megaphones_remind_me_later">Daha sonra hatırlat</string>
   <string name="Megaphones_verify_your_signal_pin">Signal PIN\'inizi doğrulayın</string>
   <string name="Megaphones_well_occasionally_ask_you_to_verify_your_pin">PIN\'inizi hatırlamanız için arada sırada doğrulamanızı isteyeceğiz.</string>
@@ -1090,7 +1086,8 @@
   <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified">%s ile olan güvenlik numaranızı doğrulanmamış olarak işaretlediniz.</string>
   <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified_from_another_device">%s ile olan güvenlik numaranızı başka bir cihazdan doğrulanmamış olarak işaretlediniz. </string>
   <string name="MessageRecord_a_message_from_s_couldnt_be_delivered">%s tarafından gelen bir ileti teslim edilemedi</string>
-  <string name="MessageRecord_s_changed_their_number_to_a_new_number">%1$s numarasını değiştirdi.</string>
+  <!--Update item message shown in the release channel when someone is already a sustainer so we ask them if they want to boost.-->
+  <!--Update item message shown in the release channel when someone is not a sustainer so we ask them to consider becoming one-->
   <!--Group Calling update messages-->
   <string name="MessageRecord_s_started_a_group_call_s">%1$s grup araması başlattı · %2$s</string>
   <string name="MessageRecord_s_is_in_the_group_call_s">%1$s grup görüşmesinde· %2$s</string>
@@ -1244,6 +1241,10 @@
   <string name="RedPhone_number_not_registered">Numara kayıtlı değil!</string>
   <string name="RedPhone_the_number_you_dialed_does_not_support_secure_voice">Aradığınız numara güvenli ses sistemini desteklemiyor!</string>
   <string name="RedPhone_got_it">Anladım</string>
+  <!--Valentine\'s Day Megaphone-->
+  <!--Title text for the Valentine\'s Day donation megaphone. The placeholder will always be a heart emoji. Needs to be a placeholder for Android reasons.-->
+  <string name="ValentinesDayMegaphone_happy_heart_day">Kutlu 💜 Olsun!</string>
+  <!--Body text for the Valentine\'s Day donation megaphone.-->
   <!--WebRtcCallActivity-->
   <string name="WebRtcCallActivity__tap_here_to_turn_on_your_video">Görüntünüzü açmak için buraya dokunun</string>
   <string name="WebRtcCallActivity__to_call_s_signal_needs_access_to_your_camera">%1$s ile arama yapmanız için, Signal\'in kameranıza erişime ihtiyacı var</string>
@@ -1299,6 +1300,7 @@
   <string name="WebRtcCallView__flip">Döndür</string>
   <string name="WebRtcCallView__speaker">Hoparlör</string>
   <string name="WebRtcCallView__camera">Kamera</string>
+  <string name="WebRtcCallView__unmute">Sesi aç</string>
   <string name="WebRtcCallView__mute">Sessiz</string>
   <string name="WebRtcCallView__ring">Ara</string>
   <string name="WebRtcCallView__end_call">Aramayı sonlandır</string>
@@ -1599,6 +1601,10 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <string name="NotificationChannel_voice_notes">Sesli Notlar</string>
   <string name="NotificationChannel_contact_joined_signal">Kişi Signal\'e katıldı</string>
   <string name="NotificationChannels__no_activity_available_to_open_notification_channel_settings">Bildirim kanal ayarlarını açmak için mevcut bir faaliyet yok</string>
+  <!--Notification channel name for showing persistent background connection on devices without push notifications-->
+  <string name="NotificationChannel_background_connection">Arkaplan bağlantısı</string>
+  <!--Notification channel name for showing call status information (like connection, ongoing, etc.) Not ringing.-->
+  <string name="NotificationChannel_call_status">Arama durumu</string>
   <!--ProfileEditNameFragment-->
   <!--QuickResponseService-->
   <string name="QuickResponseService_quick_response_unavailable_when_Signal_is_locked">Signal kilitliyken hızlı cevap kullanılamaz!</string>
@@ -1628,6 +1634,7 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <string name="UnauthorizedReminder_device_no_longer_registered">Cihaz artık kayıtlı değil</string>
   <string name="UnauthorizedReminder_this_is_likely_because_you_registered_your_phone_number_with_Signal_on_a_different_device">Bunun nedeni büyük olasılıkla telefon numaranızın farklı bir cihazda Signal\'e kaydedilmiş olmasıdır. Tekrar kaydetmek için dokunun.</string>
   <!--WebRtcCallActivity-->
+  <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone">Aramayı yanıtlamak için Signal\'e mikrofon erişim izni verin.</string>
   <string name="WebRtcCallActivity_to_answer_the_call_from_s_give_signal_access_to_your_microphone">%s tarafından gelen aramayı yanıtlamak için, Signal\'in mikrofonunuza erişmesine izin verin.</string>
   <string name="WebRtcCallActivity_signal_requires_microphone_and_camera_permissions_in_order_to_make_or_receive_calls">Signal, arama yapmak ve almak için Mikrofon ve Kamera iznine ihtiyaç duyar, fakat bu izin kalıcı olarak reddedilmiş. Lütfen uygulama ayarları menüsüne girip \"İzinler\" kısmını seçin, \"Mikrofon\" ve \"Kamera\"yı etkinleştirin.</string>
   <string name="WebRtcCallActivity__answered_on_a_linked_device">Bağlı cihazdan yanıtlandı.</string>
@@ -1727,6 +1734,10 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <string name="ConversationUpdateItem_no_contacts_in_this_group_review_requests_carefully">Bu grupta kişilerinizden kimse yok. İstekleri dikkatlice gözden geçirin.</string>
   <string name="ConversationUpdateItem_view">Görüntüle</string>
   <string name="ConversationUpdateItem_the_disappearing_message_time_will_be_set_to_s_when_you_message_them">Kişiye ileti gönderdiğinizde kaybolan ileti süresi %1$s olarak ayarlanacaktır.</string>
+  <!--Update item button text to show to boost a feature-->
+  <string name="ConversationUpdateItem_signal_boost">Signal Arttırma</string>
+  <!--Update item button text to show to become a sustainer in the release notes channel-->
+  <string name="ConversationUpdateItem_become_a_sustainer">Destekçi Ol</string>
   <!--audio_view-->
   <string name="audio_view__play_pause_accessibility_description">Oynat … Durdur</string>
   <string name="audio_view__download_accessibility_description">İndir</string>
@@ -2328,18 +2339,33 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <string name="conversation_callable_secure__menu_call">Signal araması</string>
   <string name="conversation_callable_secure__menu_video">Görüntülü Signal araması</string>
   <!--conversation_context-->
-  <string name="conversation_context__menu_message_details">İleti ayrıntıları</string>
-  <string name="conversation_context__menu_copy_text">Metni kopyala</string>
-  <string name="conversation_context__menu_delete_message">İletiyi sil</string>
-  <string name="conversation_context__menu_forward_message">İletiyi yönlendir</string>
-  <string name="conversation_context__menu_resend_message">İletiyi tekrar gönder</string>
-  <string name="conversation_context__menu_reply_to_message">İletiyi yanıtla</string>
-  <!--conversation_context_reacction-->
-  <string name="conversation_context__reaction_multi_select">Çoklu seçim</string>
+  <!--Heading which shows how many messages are currently selected-->
+  <plurals name="conversation_context__s_selected">
+    <item quantity="one">%d seçili</item>
+    <item quantity="other">%d seçili</item>
+  </plurals>
   <!--conversation_context_image-->
-  <string name="conversation_context_image__save_attachment">Eklentiyi kaydet</string>
+  <!--Button to save a message attachment (image, file etc.)-->
+  <string name="conversation_context_image__save_attachment">Kaydet</string>
   <!--conversation_expiring_off-->
   <string name="conversation_expiring_off__disappearing_messages">Kaybolan iletiler</string>
+  <!--conversation_selection-->
+  <!--Button to view detailed information for a message-->
+  <string name="conversation_selection__menu_message_details">Bilgi</string>
+  <!--Button to copy a message\'s text to the clipboard-->
+  <string name="conversation_selection__menu_copy">Kopyala</string>
+  <!--Button to delete a message-->
+  <string name="conversation_selection__menu_delete">Sil</string>
+  <!--Button to forward a message to another person or group chat-->
+  <string name="conversation_selection__menu_forward">Yönlendir</string>
+  <!--Button to reply to a message-->
+  <string name="conversation_selection__menu_reply">Cevapla</string>
+  <!--Button to save a message attachment (image, file etc.)-->
+  <string name="conversation_selection__menu_save">Kaydet</string>
+  <!--Button to retry sending a message-->
+  <string name="conversation_selection__menu_resend_message">Yeniden gönder</string>
+  <!--Button to select a message and enter selection mode-->
+  <string name="conversation_selection__menu_multi_select">Seç</string>
   <!--conversation_expiring_on-->
   <!--conversation_insecure-->
   <string name="conversation_insecure__invite">Davet et</string>
@@ -2523,16 +2549,6 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <string name="KbsMegaphone__create_a_pin">PIN oluştur</string>
   <string name="KbsMegaphone__pins_keep_information_thats_stored_with_signal_encrytped">PIN\'ler Signal\'de depolanan verileri şifreli olarak tutar.</string>
   <string name="KbsMegaphone__create_pin">PIN oluştur</string>
-  <!--Research Megaphone-->
-  <string name="ResearchMegaphone_tell_signal_what_you_think">Signal\'e ne düşündüğünüzü söyleyin</string>
-  <string name="ResearchMegaphone_to_make_signal_the_best_messaging_app_on_the_planet">Signal\'i gezegendeki en iyi ileti uygulaması yapmak için geri bildiriminizi duymaktan memnuniyet duyarız.</string>
-  <string name="ResearchMegaphone_learn_more">Dahasını öğrenin</string>
-  <string name="ResearchMegaphone_dismiss">Kapat</string>
-  <string name="ResearchMegaphoneDialog_signal_research">Signal Araştırması</string>
-  <string name="ResearchMegaphoneDialog_we_believe_in_privacy"><![CDATA[<p><b>Gizliliğe inanıyoruz.</b></p><p>Signal sizi takip etmez veya verilerinizi toplamaz. Signal\'i herkes için geliştirmek için, kullanıcı geri bildirimlerine güveniyoruz, <b>ve sizinkini çok isteriz.</b></p><p>Signal\'i nasıl kullandığınızı anlamak için bir anket yapıyoruz.  Anketimiz sizi tanımlayacak herhangi bir veri toplamaz. Daha fazla geri bildirim paylaşmakla ilgileniyorsanız, iletişim bilgilerinizi sağlama seçeneğiniz vardır.</p><p>Birkaç dakikanız ve geri bildiriminiz varsa, sizden haber almaktan memnuniyet duyarız.</p>]]></string>
-  <string name="ResearchMegaphoneDialog_take_the_survey">Anketi doldur</string>
-  <string name="ResearchMegaphoneDialog_no_thanks">Hayır teşekkürler</string>
-  <string name="ResearchMegaphoneDialog_the_survey_is_hosted_by_alchemer_at_the_secure_domain">Anket, Alchemer tarafından güvenli bir alan adı olan surveys.signalusers.org adresinde barındırılmaktadır.</string>
   <!--transport_selection_list_item-->
   <string name="transport_selection_list_item__transport_icon">Ulaştırma simgesi</string>
   <string name="ConversationListFragment_loading">Yükleniyor…</string>
@@ -2582,7 +2598,7 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <string name="BackupDialog_verify">Doğrula</string>
   <string name="BackupDialog_you_successfully_entered_your_backup_passphrase">Yedek parolanızı doğru girdiniz</string>
   <string name="BackupDialog_passphrase_was_not_correct">Parolanız doğru değil</string>
-  <string name="LocalBackupJob_creating_backup">Yedek oluşturuluyor…</string>
+  <string name="LocalBackupJob_creating_signal_backup">Signal yedeği yaratılıyor…</string>
   <string name="LocalBackupJobApi29_backup_failed">Yedekleme başarısız oldu</string>
   <string name="LocalBackupJobApi29_your_backup_directory_has_been_deleted_or_moved">Yedekleme dizininiz silindi veya taşındı.</string>
   <string name="LocalBackupJobApi29_your_backup_file_is_too_large">Yedek dosyası bu sürücüde saklanmak için çok büyük.</string>
@@ -2704,6 +2720,8 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <string name="DeviceTransfer__transferring_data">Veri aktarılıyor</string>
   <string name="DeviceTransfer__keep_both_devices_near_each_other">Her iki aygıtı birbirine yakın tutun. Aygıtları kapatmayın ve Signal\'i açık tutun. Aktarımlar uçtan uça şifrelidir.</string>
   <string name="DeviceTransfer__d_messages_so_far">Şimdiye kadar %1$d ileti…</string>
+  <!--Filled in with total percentage of messages transferred-->
+  <string name="DeviceTransfer__s_of_messages_so_far">Şu ana kadar %1$s%% ileti…</string>
   <string name="DeviceTransfer__cancel">İptal</string>
   <string name="DeviceTransfer__try_again">Tekrar dene</string>
   <string name="DeviceTransfer__stop_transfer_question">Aktarımı durdur?</string>
@@ -3026,7 +3044,9 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <!--ChangeNumberFragment-->
   <string name="ChangeNumberFragment__use_this_to_change_your_current_phone_number_to_a_new_phone_number">Geçerli telefon numaranızı yeni bir telefon numarasına değiştirmek için bunu kullanın. Bu değişikliği geri alamazsınız.devam etmeden önce, yeni numaranızın SMS veya arama alabildiğinden emin olun.</string>
   <string name="ChangeNumberFragment__continue">Devam Et</string>
-  <string name="ChangeNumber__your_phone_number_has_been_changed">Telefon numaranız değişti.</string>
+  <!--Message shown on dialog after your number has been changed successfully.-->
+  <!--Confirmation button to dismiss number changed dialog-->
+  <string name="ChangeNumber__okay">Tamam</string>
   <!--ChangeNumberEnterPhoneNumberFragment-->
   <string name="ChangeNumberEnterPhoneNumberFragment__change_number">Numarayı Değiştir</string>
   <string name="ChangeNumberEnterPhoneNumberFragment__your_old_number">Eski numaranız</string>
@@ -3055,12 +3075,19 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <string name="ChangeNumberPinDiffersFragment__update_pin">PIN\'i güncelle</string>
   <string name="ChangeNumberPinDiffersFragment__keep_old_pin_question">Eski PIN dursun mu?</string>
   <!--ChangeNumberLockActivity-->
+  <!--Info message shown to user if something crashed the app during the change number attempt and we were unable to confirm the change so we force them into this screen to check before letting them use the app-->
   <string name="ChangeNumberLockActivity__it_looks_like_you_tried_to_change_your_number_but_we_were_unable_to_determine_if_it_was_successful_rechecking_now">Numaranızı değiştirmeye çalıştınız gibi gözüküyor ama başarıyla değişip değişmediğini bilemedik.\n\nTekrar bakıyoruz…</string>
+  <!--Dialog title shown if we were able to confirm your change number status (meaning we now know what the server thinks our number is) after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__change_status_confirmed">Değişiklik durumu doğrulandı</string>
+  <!--Dialog message shown if we were able to confirm your change number status (meaning we now know what the server thinks our number is) after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__your_number_has_been_confirmed_as_s">Numaranız %1$s olarak doğrulandı. Eğer bu yeni numaranız değilse lütfen numara değiştirme sürecini yeniden başlatın.</string>
+  <!--Dialog title shown if we were not able to confirm your phone number with the server and thus cannot let leave the change flow yet after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__change_status_unconfirmed">Değişiklik durumunu doğrulanamadı</string>
+  <!--Dialog message shown when we can\'t verify the phone number on the server, only shown if there was a network error communicating with the server after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__we_could_not_determine_the_status_of_your_change_number_request">Numara değişikliği talebinizin durumunu belirleyemedik.\n\n(Hata: %1$s)</string>
+  <!--Dialog button to retry confirming the number on the server-->
   <string name="ChangeNumberLockActivity__retry">Tekrar dene</string>
+  <!--Dialog button shown to leave the app when in the unconfirmed change status after a crash in the regular flow-->
   <string name="ChangeNumberLockActivity__leave">Ayrıl</string>
   <string name="ChangeNumberLockActivity__submit_debug_log">Hata ayıklama günlüğünü gönder</string>
   <!--ChatsSettingsFragment-->
@@ -3078,6 +3105,7 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <!--Notification preference option header-->
   <string name="NotificationsSettingsFragment__profiles">Profiller</string>
   <!--Notification preference summary text-->
+  <string name="NotificationsSettingsFragment__create_a_profile_to_receive_notifications_only_from_people_and_groups_you_choose">Sadece seçtiğiniz kişi ve gruplardan bildirim almak için bir profil yaratın.</string>
   <!--NotificationProfilesFragment-->
   <!--Title for notification profiles screen that shows all existing profiles-->
   <string name="NotificationProfilesFragment__notification_profiles">Bildirim Profilleri</string>
@@ -3408,9 +3436,12 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__become_a_sustainer">Destekçi Ol</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__add_a_boost">Boost Ekle</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__not_now">Şimdi değil</string>
-  <string name="ExpiredBadgeBottomSheetDialogFragment__your_sustainer">Destekçi aboneliğin otomatik olarak iptal edildi, çünkü uzun süredir aktif değilsin. %1$s rozetin artık profilinde görülebilir değil.</string>
+  <!--Copy displayed when badge expires after user inactivity-->
+  <string name="ExpiredBadgeBottomSheetDialogFragment__your_sustainer_subscription_was_automatically">Destekçi aboneliğin otomatik olarak iptal edildi, çünkü uzun süredir aktif değilsin. %1$s rozetin artık profilinde görülebilir değil.</string>
+  <!--Copy displayed when badge expires after payment failure-->
   <string name="ExpiredBadgeBottomSheetDialogFragment__you_can">Signal\'ı kullanmaya devam edebilirsin ama uygulamaya destek olmak ve rozetini tekrar etkinleştirmek için şimdi yenile.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__renew_subscription">Aboneliği yenile</string>
+  <string name="CantProcessSubscriptionPaymentBottomSheetDialogFragment__dont_show_this_again">Bunu bir daha gösterme</string>
   <string name="Subscription__please_contact_support_for_more_information">Daha fazla bilgi için lütfen bizimle iletişime geçin.</string>
   <string name="Subscription__contact_support">Destekle İletişime Geçin</string>
   <string name="Subscription__earn_a_s_badge">Bir %1$s rozeti kazanın</string>
@@ -3419,7 +3450,7 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <string name="DonationsErrors__error_processing_payment">Ödemenin işlenmesinde hata</string>
   <!--Displayed on "My Support" screen when user subscription payment method failed.-->
   <string name="DonationsErrors__error_processing_payment_s">Ödemenin işlenmesinde hata. %1$s</string>
-  <string name="DonationsErrors__your_badge_could_not_be_added">Rozetin hesabına eklenemedi ama ödediğin ücret alınmış olabilir. Lütfen destek ekibiyle iletişime geç.</string>
+  <string name="DonationsErrors__your_badge_could_not_be_added">Rozetiniz hesabınıza eklenemedi fakat ücret ödenmiş olabilir. Lütfen destek ekibiyle iletişime geçin.</string>
   <string name="DonationsErrors__your_payment">Ödemeniz işlenemedi ve sizden ödeme alınmadı. Lütfen tekrar deneyin.</string>
   <string name="DonationsErrors__still_processing">İşlem sürüyor</string>
   <string name="DonationsErrors__couldnt_add_badge">Rozet eklenemedi</string>
@@ -3430,30 +3461,52 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <string name="DonationsErrors__failed_to_cancel_subscription">Abonelik iptal edilemedi</string>
   <string name="DonationsErrors__subscription_cancellation_requires_an_internet_connection">Abonelik iptali için internet bağlantısı gerekir.</string>
   <string name="ViewBadgeBottomSheetDialogFragment__your_device_doesn_t_support_google_pay_so_you_can_t_subscribe_to_earn_a_badge_you_can_still_support_signal_by_making_a_donation_on_our_website">Cihazın Google Pay\'i desteklemiyor, bu yüzden abone olup rozet kazanamazsın. Yine de websitemizden bağışta bulunarak Signal\'ı destekleyebilirsin.</string>
-  <string name="NetworkFailure__network_error_check_your_connection_and_try_again">Ağ hatası. Bağlantını kontrol edip tekrar dene.</string>
+  <string name="NetworkFailure__network_error_check_your_connection_and_try_again">Ağ hatası. Bağlantınızı kontrol edip tekrar deneyin.</string>
   <string name="NetworkFailure__retry">Tekrar dene</string>
+  <!--Stripe decline code generic_failure-->
+  <!--Stripe decline code verify on Google Pay and try again-->
+  <!--Stripe decline code learn more action label-->
+  <string name="DeclineCode__learn_more">Dahasını öğrenin</string>
+  <!--Stripe decline code contact issuer-->
+  <!--Stripe decline code purchase not supported-->
+  <!--Stripe decline code your card has expired-->
+  <!--Stripe decline code go to google pay action label-->
+  <string name="DeclineCode__go_to_google_pay">Google Pay\'e git</string>
+  <!--Stripe decline code incorrect card number-->
+  <!--Stripe decline code incorrect cvc-->
+  <!--Stripe decline code insufficient funds-->
+  <!--Stripe decline code incorrect expiration month-->
+  <!--Stripe decline code incorrect expiration year-->
+  <!--Stripe decline code issuer not available-->
+  <!--Stripe decline code processing error-->
   <!--Title of create notification profile screen-->
-  <string name="EditNotificationProfileFragment__name_your_profile">Profilinizi isimlendirin</string>
+  <string name="EditNotificationProfileFragment__name_your_profile">Profilinizi adlandırın</string>
   <!--Hint text for create/edit notification profile name-->
   <string name="EditNotificationProfileFragment__profile_name">Profil adı</string>
   <!--Name has a max length, this shows how many characters are used out of the max-->
   <string name="EditNotificationProfileFragment__count">%1$d/%2$d</string>
-  <!--Call to action button once the profile is named to continue to the next create step-->
+  <!--Call to action button to continue to the next step-->
   <string name="EditNotificationProfileFragment__next">İleri</string>
+  <!--Call to action button once the profile is named to create the profile and continue to the customization steps-->
+  <string name="EditNotificationProfileFragment__create">Oluştur</string>
   <!--Call to action button once the profile name is edited-->
   <string name="EditNotificationProfileFragment__save">Kaydet</string>
   <!--Title of edit notification profile screen-->
   <string name="EditNotificationProfileFragment__edit_this_profile">Profili düzenleyin</string>
   <!--Error message shown when attempting to create or edit a profile name to an existing profile name-->
-  <string name="EditNotificationProfileFragment__a_profile_with_this_name_already_exists">Bu isimle bir profil mevcut</string>
+  <string name="EditNotificationProfileFragment__a_profile_with_this_name_already_exists">Bu ada sahip bir profil zaten mevcut</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
   <string name="EditNotificationProfileFragment__work">İş</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
-  <string name="EditNotificationProfileFragment__sleep">uyku</string>
+  <string name="EditNotificationProfileFragment__sleep">Uyku</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
+  <string name="EditNotificationProfileFragment__driving">Araç sürme</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
+  <string name="EditNotificationProfileFragment__downtime">Dinlenme</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
+  <string name="EditNotificationProfileFragment__focus">Odaklanma</string>
   <!--Error message shown when attempting to next/save without a profile name-->
+  <string name="EditNotificationProfileFragment__profile_must_have_a_name">Bir ad olmalı</string>
   <!--Title for add recipients to notification profile screen in create flow-->
   <string name="AddAllowedMembers__allowed_notifications">İzin verilen bildirimler</string>
   <!--Description of what the user should be doing with this screen-->
@@ -3473,7 +3526,7 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <!--Button use to permanently delete a notification profile-->
   <string name="NotificationProfileDetails__delete_profile">Profili sil</string>
   <!--Snakbar message shown when removing a recipient from a profile-->
-  <string name="NotificationProfileDetails__s_removed">\"%1$s\" kaldırıldı.</string>
+  <string name="NotificationProfileDetails__s_removed">\"%1$s\" çıkarıldı.</string>
   <!--Snackbar button text that will undo the recipient remove-->
   <string name="NotificationProfileDetails__undo">Geri al</string>
   <!--Dialog message shown to confirm deleting a profile-->
@@ -3497,18 +3550,19 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <!--Profile exception to allow all @mentions through the profile restrictions-->
   <string name="NotificationProfileDetails__notify_for_all_mentions">Tüm bahsetmeleri bildir</string>
   <!--Section header for showing schedule information-->
-  <string name="NotificationProfileDetails__schedule">Zamanlama</string>
+  <string name="NotificationProfileDetails__schedule">Zamanlayıcı</string>
   <!--If member list is long, will truncate the list and show an option to then see all when tapped-->
   <string name="NotificationProfileDetails__see_all">Tümünü gör</string>
   <!--Title for add schedule to profile in create flow-->
-  <string name="EditNotificationProfileSchedule__add_a_schedule">Zamanlama ekle</string>
+  <string name="EditNotificationProfileSchedule__add_a_schedule">Zamanlayıcı ekle</string>
   <!--Descriptor text indicating what the user can do with this screen-->
+  <string name="EditNotificationProfileSchedule__set_up_a_schedule_to_enable_this_notification_profile_automatically">Bu bildirim profilini otomatik olarak etkinleştirmek için zamanlayıcı ayarlayın</string>
   <!--Text shown next to toggle switch to enable/disable schedule-->
-  <string name="EditNotificationProfileSchedule__schedule">Zamanlama</string>
+  <string name="EditNotificationProfileSchedule__schedule">Zamanlayıcı</string>
   <!--Label for showing the start time for the schedule-->
-  <string name="EditNotificationProfileSchedule__start">Başlat</string>
+  <string name="EditNotificationProfileSchedule__start">Başlangıç</string>
   <!--Label for showing the end time for the schedule-->
-  <string name="EditNotificationProfileSchedule__end">Son</string>
+  <string name="EditNotificationProfileSchedule__end">Bitiş</string>
   <!--First letter of Sunday-->
   <string name="EditNotificationProfileSchedule__sunday_first_letter">P</string>
   <!--First letter of Monday-->
@@ -3548,8 +3602,9 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <!--Button text shown in profile selection bottom sheet to create a new profile-->
   <string name="NotificationProfileSelection__new_profile">Yeni profil</string>
   <!--Manual enable option to manually enable a profile for 1 hour-->
+  <string name="NotificationProfileSelection__for_1_hour">1 saatliğine</string>
   <!--Manual enable option to manually enable a profile until a set time (currently 6pm or 8am depending on what is next)-->
-  <string name="NotificationProfileSelection__until_s">%1$s tarihine kadar</string>
+  <string name="NotificationProfileSelection__until_s">Saat %1$s olana kadar</string>
   <!--Option to view profile details-->
   <string name="NotificationProfileSelection__view_settings">Ayarları görüntüle</string>
   <!--Descriptor text indicating how long a profile will be on when there is a time component associated with it-->
@@ -3564,5 +3619,6 @@ Geçersiz protokol sürümünde anahtar değişim iletisi alındı.</string>
   <string name="NotificationProfilesMegaphone__not_now">Şimdi değil</string>
   <!--Displayed in a toast when we fail to open the ringtone picker-->
   <string name="NotificationSettingsFragment__failed_to_open_picker">Seçicinin açılmasında hata oldu.</string>
+  <!--Description shown for the Signal Release Notes channel-->
   <!--EOF-->
 </resources>

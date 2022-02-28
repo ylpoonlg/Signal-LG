@@ -90,6 +90,10 @@
   <string name="BlockUnblockDialog_group_members_will_be_able_to_add_you">Os membros do grupo serão capazes de o adicionar novamente a este grupo.</string>
   <string name="BlockUnblockDialog_you_will_be_able_to_call_and_message_each_other">Poderão enviar mensagens e telefonar uns aos outros, o seu nome e fotografia serão partilhados com eles.</string>
   <string name="BlockUnblockDialog_blocked_people_wont_be_able_to_call_you_or_send_you_messages">As pessoas bloqueadas não serão capazes de lhe ligar ou enviar-lhe mensagens.</string>
+  <!--Message shown on block dialog when blocking the Signal release notes recipient-->
+  <string name="BlockUnblockDialog_block_getting_signal_updates_and_news">Bloquear a obtenção de atualizações e novidades do Signal.</string>
+  <!--Message shown on unblock dialog when unblocking the Signal release notes recipient-->
+  <string name="BlockUnblockDialog_resume_getting_signal_updates_and_news">Retomar a obtenção de atualizações e novidades do Signal.</string>
   <string name="BlockUnblockDialog_unblock_s">Desbloquear %1$s?</string>
   <string name="BlockUnblockDialog_block">Bloquear</string>
   <string name="BlockUnblockDialog_block_and_leave">Bloquear e abandonar</string>
@@ -411,6 +415,8 @@
   <string name="BackupsPreferenceFragment__learn_more">Saber mais</string>
   <string name="BackupsPreferenceFragment__in_progress">Em progresso…</string>
   <string name="BackupsPreferenceFragment__d_so_far">%1$d até ao momento…</string>
+  <!--Show percentage of completion of backup-->
+  <string name="BackupsPreferenceFragment__s_so_far">%1$s%% até agora…</string>
   <string name="BackupsPreferenceFragment_signal_requires_external_storage_permission_in_order_to_create_backups">O Signal requer permissão de acesso ao armazenamento externo para criar cópias de segurança, mas esta foi negada permanentemente. Por favor, aceda às definições das aplicações do seu telemóvel, selecione a aplicação Signal e nas \"Permissões\" ative \"Armazenamento\".</string>
   <!--CustomDefaultPreference-->
   <string name="CustomDefaultPreference_using_custom">Usar a opção personalizada: %s</string>
@@ -446,9 +452,6 @@
   <string name="DeviceListItem_today">Hoje</string>
   <!--DocumentView-->
   <string name="DocumentView_unnamed_file">Ficheiro sem nome</string>
-  <!--GroupCallingMegaphone-->
-  <string name="GroupCallingMegaphone__introducing_group_calls">Introdução às \'Chamadas de grupo\'</string>
-  <string name="GroupCallingMegaphone__open_a_new_group_to_start">Abra um \'Novo grupo\' para iniciar uma chamada de grupo encriptada e gratuita</string>
   <!--DozeReminder-->
   <string name="DozeReminder_optimize_for_missing_play_services">Otimizar para os \"Play Services\" em falta.</string>
   <string name="DozeReminder_this_device_does_not_support_play_services_tap_to_disable_system_battery">Este dispositivo não suporta os Play Services. Toque para desativar o sistema de otimização de bateria que impede o Signal de recolher mensagens enquanto inativo.</string>
@@ -566,10 +569,6 @@
   <string name="LeaveGroupDialog_choose_new_admin">Escolha um novo administrador</string>
   <string name="LeaveGroupDialog_before_you_leave_you_must_choose_at_least_one_new_admin_for_this_group">Antes de abandonar, deverá escolher pelo menos um administrador para este grupo.</string>
   <string name="LeaveGroupDialog_choose_admin">Escolher administrador</string>
-  <!--LinkPreviewsMegaphone-->
-  <string name="LinkPreviewsMegaphone_disable">Desativar</string>
-  <string name="LinkPreviewsMegaphone_preview_any_link">Pré-visualizar todas as hiperligações</string>
-  <string name="LinkPreviewsMegaphone_you_can_now_retrieve_link_previews_directly_from_any_website">Agora pode recuperar pré-visualizações de hiperligações diretamente a partir de qualquer website para as mensagens que enviar.</string>
   <!--LinkPreviewView-->
   <string name="LinkPreviewView_no_link_preview_available">Pré-visualização de hiperligação indisponível</string>
   <string name="LinkPreviewView_this_group_link_is_not_active">Este link de grupo não se encontra ativo</string>
@@ -866,8 +865,6 @@
   <string name="MediaOverviewActivity_sent_by_s_to_s">Enviado por %1$s para %2$s</string>
   <string name="MediaOverviewActivity_sent_by_you_to_s">Enviado por si para %1$s</string>
   <!--Megaphones-->
-  <string name="Megaphones_introducing_reactions">Introdução às reações</string>
-  <string name="Megaphones_tap_and_hold_any_message_to_quicky_share_how_you_feel">Toque e mantenha em qualquer mensagem para partilhar rapidamente o que sente.</string>
   <string name="Megaphones_remind_me_later">Lembrar-me mais tarde</string>
   <string name="Megaphones_verify_your_signal_pin">Verifique o seu PIN do Signal</string>
   <string name="Megaphones_well_occasionally_ask_you_to_verify_your_pin">Iremos ocasionalmente pedir-lhe para verificar o seu PIN para que não se esqueça dele.</string>
@@ -1091,7 +1088,11 @@
   <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified">Marcou como não verificado o seu número de segurança com %s</string>
   <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified_from_another_device">Marcou como não verificado o seu número de segurança com %s a partir de outro dispositivo</string>
   <string name="MessageRecord_a_message_from_s_couldnt_be_delivered">Não pode ser entregue uma mensagem de %s</string>
-  <string name="MessageRecord_s_changed_their_number_to_a_new_number">%1$s alterou o número de telemóvel para um novo número.</string>
+  <string name="MessageRecord_s_changed_their_phone_number">%1$s alterou o seu número de telefone.</string>
+  <!--Update item message shown in the release channel when someone is already a sustainer so we ask them if they want to boost.-->
+  <string name="MessageRecord_like_this_new_feature_say_thanks_with_a_boost">Gosta deste recurso? Diga obrigado Apoiando-nos.</string>
+  <!--Update item message shown in the release channel when someone is not a sustainer so we ask them to consider becoming one-->
+  <string name="MessageRecord_signal_is_powered_by_people_like_you_become_a_sustainer_today">O Signal é apoiado por pessoas como você. Torne-se num apoiante hoje mesmo.</string>
   <!--Group Calling update messages-->
   <string name="MessageRecord_s_started_a_group_call_s">%1$s iniciou uma chamada em grupo · %2$s</string>
   <string name="MessageRecord_s_is_in_the_group_call_s">%1$s está na chamada de grupo · %2$s</string>
@@ -1120,6 +1121,7 @@
   <string name="MessageRequestBottomView_unblock">Desbloquear</string>
   <string name="MessageRequestBottomView_do_you_want_to_let_s_message_you_they_wont_know_youve_seen_their_messages_until_you_accept">Permite que %1$s lhe envie mensagens e que seja partilhado o seu nome e fotografia com ele(a)? Ele(a) não saberá que viu a mensagem dele(a) até que aceite.</string>
   <string name="MessageRequestBottomView_do_you_want_to_let_s_message_you_wont_receive_any_messages_until_you_unblock_them">Permite que %1$s lhe envie mensagens e que seja partilhado o seu nome e fotografia com ele(a)? Ele(a) não irá receber nenhuma mensagem até que o(a) desbloqueie.</string>
+  <string name="MessageRequestBottomView_get_updates_and_news_from_s_you_wont_receive_any_updates_until_you_unblock_them">Obter atualizações e novidades a partir de %1$s? Não receberá nenhuma atualização até que as desbloqueie.</string>
   <string name="MessageRequestBottomView_continue_your_conversation_with_this_group_and_share_your_name_and_photo">Continuar a sua conversa com este grupo e partilhar o seu nome e fotografia com os seus membros?</string>
   <string name="MessageRequestBottomView_upgrade_this_group_to_activate_new_features">Faça o upgrade deste grupo para ativar os recursos novos como @menções e os administradores. Os membros que não partilharam os seus nomes ou fotografias neste grupo serão convidados a juntarem-se.</string>
   <string name="MessageRequestBottomView_this_legacy_group_can_no_longer_be_used">Este \'Grupo legado\' deixou de poder ser utilizado porque é demasiadamente grande. O tamanho máximo do grupo é de %1$d.</string>
@@ -1244,6 +1246,11 @@
   <string name="RedPhone_number_not_registered">Número não registado!</string>
   <string name="RedPhone_the_number_you_dialed_does_not_support_secure_voice">O número que marcou não suporta chamadas de voz seguras!</string>
   <string name="RedPhone_got_it">Entendido</string>
+  <!--Valentine\'s Day Megaphone-->
+  <!--Title text for the Valentine\'s Day donation megaphone. The placeholder will always be a heart emoji. Needs to be a placeholder for Android reasons.-->
+  <string name="ValentinesDayMegaphone_happy_heart_day">Bom dia 💜!</string>
+  <!--Body text for the Valentine\'s Day donation megaphone.-->
+  <string name="ValentinesDayMegaphone_show_your_affection">Mostre o seu afeto ao tornar-se num apoiante do Signal.</string>
   <!--WebRtcCallActivity-->
   <string name="WebRtcCallActivity__tap_here_to_turn_on_your_video">Toque aqui para ativar a sua câmara</string>
   <string name="WebRtcCallActivity__to_call_s_signal_needs_access_to_your_camera">Para telefonar a %1$s, o Signal necessita de aceder à sua câmara</string>
@@ -1299,6 +1306,7 @@
   <string name="WebRtcCallView__flip">Girar</string>
   <string name="WebRtcCallView__speaker">Altifalante</string>
   <string name="WebRtcCallView__camera">Câmara</string>
+  <string name="WebRtcCallView__unmute">Alertar</string>
   <string name="WebRtcCallView__mute">Silenciar</string>
   <string name="WebRtcCallView__ring">Ligar</string>
   <string name="WebRtcCallView__end_call">Terminar chamada</string>
@@ -1512,7 +1520,7 @@
   <string name="UsernameEditFragment_usernames_cannot_begin_with_a_number">Os nomes de utilizadores não podem começar com um número.</string>
   <string name="UsernameEditFragment_username_is_invalid">Nome de utilizador inválido.</string>
   <string name="UsernameEditFragment_usernames_must_be_between_a_and_b_characters">Os nomes de utilizadores devem ter entre %1$d e %2$d caracteres.</string>
-  <string name="UsernameEditFragment_usernames_on_signal_are_optional">Os nomes de utilizadores no Signal são opcionais. Se escolher criar um nome de utilizador, os outros utilizadores do Signal serão capazes de encontrá-lo através desse nome de utilizador e contactá-lo sem saber o seu número de telemóvel.</string>
+  <string name="UsernameEditFragment_usernames_on_signal_are_optional">Os nomes de utilizadores no Signal são opcionais. Se escolher criar um nome de utilizador, os outros utilizadores do Signal serão capazes de encontrá-lo através desse nome de utilizador e contactá-lo sem saber o seu número de telefone.</string>
   <plurals name="UserNotificationMigrationJob_d_contacts_are_on_signal">
     <item quantity="one">%d contacto está no Signal!</item>
     <item quantity="other">%d contactos estão no Signal!</item>
@@ -1601,6 +1609,10 @@
   <string name="NotificationChannel_voice_notes">Notas de voz</string>
   <string name="NotificationChannel_contact_joined_signal">Um contacto juntou-se ao Signal</string>
   <string name="NotificationChannels__no_activity_available_to_open_notification_channel_settings">Sem atividade disponível para abrir as definições do canal de notificações.</string>
+  <!--Notification channel name for showing persistent background connection on devices without push notifications-->
+  <string name="NotificationChannel_background_connection">Ligação em segundo plano</string>
+  <!--Notification channel name for showing call status information (like connection, ongoing, etc.) Not ringing.-->
+  <string name="NotificationChannel_call_status">Estado da chamada</string>
   <!--ProfileEditNameFragment-->
   <!--QuickResponseService-->
   <string name="QuickResponseService_quick_response_unavailable_when_Signal_is_locked">A resposta rápida encontra-se indisponível enquanto o Signal estiver bloqueado!</string>
@@ -1630,6 +1642,7 @@
   <string name="UnauthorizedReminder_device_no_longer_registered">O dispositivo deixou de estar registado.</string>
   <string name="UnauthorizedReminder_this_is_likely_because_you_registered_your_phone_number_with_Signal_on_a_different_device">Isto é possivelmente devido a ter registado o seu número de telefone com o Signal noutro dispositivo. Toque para voltar a registar.</string>
   <!--WebRtcCallActivity-->
+  <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone">Para poder atender a chamada, conceda ao Signal o acesso ao seu microfone.</string>
   <string name="WebRtcCallActivity_to_answer_the_call_from_s_give_signal_access_to_your_microphone">Para poder atender a chamada de %s, conceda ao Signal o acesso ao microfone.</string>
   <string name="WebRtcCallActivity_signal_requires_microphone_and_camera_permissions_in_order_to_make_or_receive_calls">O Signal requer permissões de acesso ao microfone e à câmara, para efectuar e receber chamadas, mas estas foram negadas permanentemente. Por favor, aceda às definições das aplicações do seu telemóvel, selecione a aplicação Signal e, em \"Permissões\" ative o \"Microfone\" e a \"Câmara\".</string>
   <string name="WebRtcCallActivity__answered_on_a_linked_device">Atendida num dispositivo associado.</string>
@@ -1729,6 +1742,10 @@
   <string name="ConversationUpdateItem_no_contacts_in_this_group_review_requests_carefully">Sem contactos neste grupo. Reveja os pedidos com cuidado.</string>
   <string name="ConversationUpdateItem_view">Ver</string>
   <string name="ConversationUpdateItem_the_disappearing_message_time_will_be_set_to_s_when_you_message_them">O tempo para a destruição de mensagens será definido para %1$s quando você enviar mensagens.</string>
+  <!--Update item button text to show to boost a feature-->
+  <string name="ConversationUpdateItem_signal_boost">Apoiar o Signal</string>
+  <!--Update item button text to show to become a sustainer in the release notes channel-->
+  <string name="ConversationUpdateItem_become_a_sustainer">Torne-se num Apoiante</string>
   <!--audio_view-->
   <string name="audio_view__play_pause_accessibility_description">Play … Pausa</string>
   <string name="audio_view__download_accessibility_description">Download</string>
@@ -1894,7 +1911,7 @@
   <!--recipients_panel-->
   <string name="recipients_panel__to"><small>Introduza um nome ou número</small></string>
   <!--verify_display_fragment-->
-  <string name="verify_display_fragment__to_verify_the_security_of_your_end_to_end_encryption_with_s"><![CDATA[Para verificar a segurança da sua encriptação ponta-a-ponta com %s, compare os números acima com o dispositivo da outra pessoa. Também pode digitalizar o código no telemóvel da outra pessoa. <a href="https://signal.org/redirect/safety-numbers">Mais informações.</a>]]></string>
+  <string name="verify_display_fragment__to_verify_the_security_of_your_end_to_end_encryption_with_s"><![CDATA[Para verificar a segurança da sua encriptação ponta-a-ponta com %s, compare os números acima com o dispositivo da outra pessoa. Também pode digitalizar o código no telefone da outra pessoa. <a href="https://signal.org/redirect/safety-numbers">Mais informações.</a>]]></string>
   <string name="verify_display_fragment__tap_to_scan">Toque para ler</string>
   <string name="verify_display_fragment__successful_match">Correspondência bem sucedida</string>
   <string name="verify_display_fragment__failed_to_verify_safety_number">Falha o verificar o número de segurança</string>
@@ -2062,7 +2079,7 @@
   <string name="preferences__advanced">Avançado</string>
   <string name="preferences__donate_to_signal">Doar ao Signal</string>
   <string name="preferences__subscription">Assinatura</string>
-  <string name="preferences__become_a_signal_sustainer">Torne-se num apoiante do Signal</string>
+  <string name="preferences__become_a_signal_sustainer">Torne-se num Apoiante do Signal</string>
   <string name="preferences__signal_boost">Apoiar o Signal</string>
   <string name="preferences__privacy">Privacidade</string>
   <string name="preferences__mms_user_agent">Agente do utilizador de MMS</string>
@@ -2330,18 +2347,33 @@
   <string name="conversation_callable_secure__menu_call">Chamada Signal</string>
   <string name="conversation_callable_secure__menu_video">Videochamada do Signal</string>
   <!--conversation_context-->
-  <string name="conversation_context__menu_message_details">Detalhes da mensagem</string>
-  <string name="conversation_context__menu_copy_text">Copiar texto</string>
-  <string name="conversation_context__menu_delete_message">Eliminar mensagem</string>
-  <string name="conversation_context__menu_forward_message">Reencaminhar mensagem</string>
-  <string name="conversation_context__menu_resend_message">Reenviar mensagem</string>
-  <string name="conversation_context__menu_reply_to_message">Responder à mensagem</string>
-  <!--conversation_context_reacction-->
-  <string name="conversation_context__reaction_multi_select">Selecionar vários(as)</string>
+  <!--Heading which shows how many messages are currently selected-->
+  <plurals name="conversation_context__s_selected">
+    <item quantity="one">%d selecionada</item>
+    <item quantity="other">%d selecionadas</item>
+  </plurals>
   <!--conversation_context_image-->
-  <string name="conversation_context_image__save_attachment">Guardar anexo</string>
+  <!--Button to save a message attachment (image, file etc.)-->
+  <string name="conversation_context_image__save_attachment">Guardar</string>
   <!--conversation_expiring_off-->
   <string name="conversation_expiring_off__disappearing_messages">Destruição de mensagens</string>
+  <!--conversation_selection-->
+  <!--Button to view detailed information for a message-->
+  <string name="conversation_selection__menu_message_details">Info</string>
+  <!--Button to copy a message\'s text to the clipboard-->
+  <string name="conversation_selection__menu_copy">Copiar</string>
+  <!--Button to delete a message-->
+  <string name="conversation_selection__menu_delete">Eliminar</string>
+  <!--Button to forward a message to another person or group chat-->
+  <string name="conversation_selection__menu_forward">Reencaminhar</string>
+  <!--Button to reply to a message-->
+  <string name="conversation_selection__menu_reply">Responder</string>
+  <!--Button to save a message attachment (image, file etc.)-->
+  <string name="conversation_selection__menu_save">Guardar</string>
+  <!--Button to retry sending a message-->
+  <string name="conversation_selection__menu_resend_message">Reenviar</string>
+  <!--Button to select a message and enter selection mode-->
+  <string name="conversation_selection__menu_multi_select">Selecionar</string>
   <!--conversation_expiring_on-->
   <!--conversation_insecure-->
   <string name="conversation_insecure__invite">Convidar</string>
@@ -2484,7 +2516,7 @@
   <string name="KbsReminderDialog__incorrect_pin_try_again">PIN incorreto. Tente novamente.</string>
   <!--AccountLockedFragment-->
   <string name="AccountLockedFragment__account_locked">Conta bloqueada</string>
-  <string name="AccountLockedFragment__your_account_has_been_locked_to_protect_your_privacy">A sua conta foi bloqueada para proteger a sua privacidade e segurança. Após %1$d dias de inatividade  ser-lhe-á permitido voltar a registar este número de telemóvel sem necessitar do seu PIN. Todo o conteúdo será eliminado.</string>
+  <string name="AccountLockedFragment__your_account_has_been_locked_to_protect_your_privacy">A sua conta foi bloqueada para proteger a sua privacidade e segurança. Após %1$d dias de inatividade, ser-lhe-á permitido voltar a registar este número de telefone sem necessitar do seu PIN. Todo o conteúdo será eliminado.</string>
   <string name="AccountLockedFragment__next">Seguinte</string>
   <string name="AccountLockedFragment__learn_more">Saber mais</string>
   <!--KbsLockFragment-->
@@ -2525,16 +2557,6 @@
   <string name="KbsMegaphone__create_a_pin">Criar um PIN</string>
   <string name="KbsMegaphone__pins_keep_information_thats_stored_with_signal_encrytped">Os PIN\'s guardam a informação armazenada com a encriptação do Signal.</string>
   <string name="KbsMegaphone__create_pin">Criar PIN</string>
-  <!--Research Megaphone-->
-  <string name="ResearchMegaphone_tell_signal_what_you_think">Diga ao Signal o que acha</string>
-  <string name="ResearchMegaphone_to_make_signal_the_best_messaging_app_on_the_planet">Para poder transformar o Signal na melhor aplicação de mensagens do planeta, gostaríamos de obter o seu feedback.</string>
-  <string name="ResearchMegaphone_learn_more">Saber mais</string>
-  <string name="ResearchMegaphone_dismiss">Ignorar</string>
-  <string name="ResearchMegaphoneDialog_signal_research">Pesquisa Signal</string>
-  <string name="ResearchMegaphoneDialog_we_believe_in_privacy"><![CDATA[<p><b>Acreditamos na privacidade.</b></p><p>O Signal não rastreia ou recolhe os seus dados. Para melhorar o Signal para todos, dependemos do feedback dos seus utilizadores, <b>e nós adoramos os seus.</b></p></p>Estamos a lançar um questionário para perceber como é que utiliza o Signal. O nosso questionário não recolhe nenhuns dados que o possam identificar. Se está interessado em partilhar a sua opinião adicional tem a opção para fornecer a informação de contacto.</p><p>Se tiver alguns minutos e comentários para dar iríamos adorar ouvi-lo.</p>]]></string>
-  <string name="ResearchMegaphoneDialog_take_the_survey">Preencher o questionário</string>
-  <string name="ResearchMegaphoneDialog_no_thanks">Não, obrigado</string>
-  <string name="ResearchMegaphoneDialog_the_survey_is_hosted_by_alchemer_at_the_secure_domain">O inquérito tem o host da Alchemer no domínio seguro surveys.signalusers.org</string>
   <!--transport_selection_list_item-->
   <string name="transport_selection_list_item__transport_icon">Ícone de transporte</string>
   <string name="ConversationListFragment_loading">A carregar…</string>
@@ -2584,7 +2606,7 @@
   <string name="BackupDialog_verify">Verificar</string>
   <string name="BackupDialog_you_successfully_entered_your_backup_passphrase">Introduziu com sucesso a sua frase-chave de segurança</string>
   <string name="BackupDialog_passphrase_was_not_correct">Frase-chave incorreta</string>
-  <string name="LocalBackupJob_creating_backup">A criar cópia de segurança…</string>
+  <string name="LocalBackupJob_creating_signal_backup">A criar cópia de segurança…</string>
   <string name="LocalBackupJobApi29_backup_failed">Falha ao fazer cópia de segurança</string>
   <string name="LocalBackupJobApi29_your_backup_directory_has_been_deleted_or_moved">A sua diretoria da cópia de segurança foi eliminada ou movida.</string>
   <string name="LocalBackupJobApi29_your_backup_file_is_too_large">O seu ficheiro de cópia de segurança é demasiado grande para ser guardada neste volume.</string>
@@ -2598,13 +2620,13 @@
   <string name="RegistrationActivity_incorrect_code">Código Incorrecto</string>
   <string name="BackupUtil_never">Nunca</string>
   <string name="BackupUtil_unknown">Desconhecido</string>
-  <string name="preferences_app_protection__see_my_phone_number">Ver o meu número de telemóvel</string>
-  <string name="preferences_app_protection__find_me_by_phone_number">Encontrar-me através do número de telemóvel</string>
+  <string name="preferences_app_protection__see_my_phone_number">Ver o meu número de telefone</string>
+  <string name="preferences_app_protection__find_me_by_phone_number">Encontrar-me através do número de telefone</string>
   <string name="PhoneNumberPrivacy_everyone">Todos</string>
   <string name="PhoneNumberPrivacy_my_contacts">Os meus contactos</string>
   <string name="PhoneNumberPrivacy_nobody">Ninguém</string>
-  <string name="PhoneNumberPrivacy_everyone_see_description">O seu número de telemóvel ficará visível para todas as pessoas e grupos com quem troque mensagens.</string>
-  <string name="PhoneNumberPrivacy_everyone_find_description">Qualquer pessoa que tenha o seu número de telemóvel nos seus contactos irá vê-lo como contacto no Signal. As outras pessoas poderão encontrá-lo através da pesquisa.</string>
+  <string name="PhoneNumberPrivacy_everyone_see_description">O seu número de telefone ficará visível para todas as pessoas e grupos com quem troque mensagens.</string>
+  <string name="PhoneNumberPrivacy_everyone_find_description">Qualquer pessoa que tenha o seu número de telefone nos seus contactos irá vê-lo como contacto no Signal. As outras pessoas poderão encontrá-lo através da pesquisa.</string>
   <string name="preferences_app_protection__screen_lock">Bloqueio de ecrã</string>
   <string name="preferences_app_protection__lock_signal_access_with_android_screen_lock_or_fingerprint">Bloqueie o acesso ao Signal utilizando o bloqueio de ecrã do Android ou a impressão digital</string>
   <string name="preferences_app_protection__screen_lock_inactivity_timeout">Bloqueio de ecrã devido a inatividade</string>
@@ -2613,7 +2635,7 @@
   <string name="preferences_app_protection__change_your_pin">Alterar o seu PIN</string>
   <string name="preferences_app_protection__pin_reminders">Lembretes de PIN</string>
   <string name="preferences_app_protection__pins_keep_information_stored_with_signal_encrypted">Os PINs mantém encriptada a informação guardada no Signal de forma a que apenas você lhe possa aceder. O seu perfil, definições e contactos serão restaurados quando reinstalar o Signal.</string>
-  <string name="preferences_app_protection__add_extra_security_by_requiring_your_signal_pin_to_register">Adicione uma segurança extra ao pedir o seu PIN do Signal para registar o seu número de telemóvel novamente com o Signal.</string>
+  <string name="preferences_app_protection__add_extra_security_by_requiring_your_signal_pin_to_register">Adicione uma segurança extra ao pedir o seu PIN do Signal para registar o seu número de telefone novamente com o Signal.</string>
   <string name="preferences_app_protection__reminders_help_you_remember_your_pin">Os lembretes ajudam-no a lembrar-se do seu PIN, pois ele não pode ser recuperado. Este, ser-lhe-á solicitado com menos frequência ao longo do tempo.</string>
   <string name="preferences_app_protection__turn_off">Desativar</string>
   <string name="preferences_app_protection__confirm_pin">Confirmar PIN</string>
@@ -2706,6 +2728,8 @@
   <string name="DeviceTransfer__transferring_data">A transferir dados</string>
   <string name="DeviceTransfer__keep_both_devices_near_each_other">Mantenha ambos o dispositivos próximos um do outro. Não desligue os dispositivos e mantenha o Signal aberto. As transferÊncia são encriptadas ponta-a-ponta.</string>
   <string name="DeviceTransfer__d_messages_so_far">%1$d mensagens até ao momento…</string>
+  <!--Filled in with total percentage of messages transferred-->
+  <string name="DeviceTransfer__s_of_messages_so_far">%1$s%% das mensagens até ao momento…</string>
   <string name="DeviceTransfer__cancel">Cancelar</string>
   <string name="DeviceTransfer__try_again">Tentar novamente</string>
   <string name="DeviceTransfer__stop_transfer_question">Parar transferência?</string>
@@ -2849,7 +2873,7 @@
   <string name="DeleteAccountFragment__delete_s_in_your_payments_account">Eliminar %1$s na sua conta de pagamentos</string>
   <string name="DeleteAccountFragment__no_country_code">Sem código de país especificado</string>
   <string name="DeleteAccountFragment__no_number">Sem número especificado</string>
-  <string name="DeleteAccountFragment__the_phone_number">O número de telemóvel que introduziu não coincide com as suas contas.</string>
+  <string name="DeleteAccountFragment__the_phone_number">O número de telefone que introduziu não coincide com as suas contas.</string>
   <string name="DeleteAccountFragment__are_you_sure">Deseja realmente eliminar a sua conta?</string>
   <string name="DeleteAccountFragment__this_will_delete_your_signal_account">Isto irá eliminar a sua conta do Signal e repor a aplicação. A aplicação irá encerrar depois do processo estar completo.</string>
   <string name="DeleteAccountFragment__failed_to_delete_account">Falha ao eliminar conta. Tem alguma ligação à rede?</string>
@@ -3024,29 +3048,32 @@
   <string name="AccountSettingsFragment__account">Conta</string>
   <string name="AccountSettingsFragment__youll_be_asked_less_frequently">Ser-lhe-á pedido menos frequentemente ao longo do tempo</string>
   <string name="AccountSettingsFragment__require_your_signal_pin">Exija o seu PIN do Signal para registar novamente o seu número de telefone com o Signal.</string>
-  <string name="AccountSettingsFragment__change_phone_number">Alterar o número de telemóvel</string>
+  <string name="AccountSettingsFragment__change_phone_number">Alterar o número de telefone</string>
   <!--ChangeNumberFragment-->
-  <string name="ChangeNumberFragment__use_this_to_change_your_current_phone_number_to_a_new_phone_number">Utilize isto para alterar o seu número atual para um número de telemóvel novo. Não pode desfazer esta alteração.\n\nAntes de continuar, assegure-se que o seu número novo pode receber SMS ou chamadas.</string>
+  <string name="ChangeNumberFragment__use_this_to_change_your_current_phone_number_to_a_new_phone_number">Utilize isto para alterar o seu número atual para um número de telefone novo. Não pode desfazer esta alteração.\n\nAntes de continuar, assegure-se que o seu número novo pode receber SMS ou chamadas.</string>
   <string name="ChangeNumberFragment__continue">Continuar</string>
-  <string name="ChangeNumber__your_phone_number_has_been_changed">O seu número de telemóvel foi alterado.</string>
+  <!--Message shown on dialog after your number has been changed successfully.-->
+  <string name="ChangeNumber__your_phone_number_has_changed_to_s">O seu número de telefone foi alterado para %1$s</string>
+  <!--Confirmation button to dismiss number changed dialog-->
+  <string name="ChangeNumber__okay">Ok</string>
   <!--ChangeNumberEnterPhoneNumberFragment-->
   <string name="ChangeNumberEnterPhoneNumberFragment__change_number">Alterar número</string>
   <string name="ChangeNumberEnterPhoneNumberFragment__your_old_number">O seu número antigo</string>
-  <string name="ChangeNumberEnterPhoneNumberFragment__old_phone_number">Número de telemóvel antigo</string>
+  <string name="ChangeNumberEnterPhoneNumberFragment__old_phone_number">Número de telefone antigo</string>
   <string name="ChangeNumberEnterPhoneNumberFragment__your_new_number">O seu número novo</string>
-  <string name="ChangeNumberEnterPhoneNumberFragment__new_phone_number">Número de telemóvel novo</string>
-  <string name="ChangeNumberEnterPhoneNumberFragment__the_phone_number_you_entered_doesnt_match_your_accounts">O número de telemóvel que introduziu não coincide com as suas contas.</string>
+  <string name="ChangeNumberEnterPhoneNumberFragment__new_phone_number">Número de telefone novo</string>
+  <string name="ChangeNumberEnterPhoneNumberFragment__the_phone_number_you_entered_doesnt_match_your_accounts">O número de telefone que introduziu não coincide com as suas contas.</string>
   <string name="ChangeNumberEnterPhoneNumberFragment__you_must_specify_your_old_number_country_code">Deverá especificar o código do país do seu número antigo</string>
-  <string name="ChangeNumberEnterPhoneNumberFragment__you_must_specify_your_old_phone_number">Deverá especificar o seu número de telemóvel antigo</string>
+  <string name="ChangeNumberEnterPhoneNumberFragment__you_must_specify_your_old_phone_number">Deverá especificar o seu número de telefone antigo</string>
   <string name="ChangeNumberEnterPhoneNumberFragment__you_must_specify_your_new_number_country_code">Deverá especificar o código do país do seu número novo</string>
-  <string name="ChangeNumberEnterPhoneNumberFragment__you_must_specify_your_new_phone_number">Deverá especificar o seu número de telemóvel novo</string>
+  <string name="ChangeNumberEnterPhoneNumberFragment__you_must_specify_your_new_phone_number">Deverá especificar o seu número de telefone novo</string>
   <!--ChangeNumberVerifyFragment-->
   <string name="ChangeNumberVerifyFragment__change_number">Alterar número</string>
   <string name="ChangeNumberVerifyFragment__verifying_s">A verificar %1$s</string>
   <string name="ChangeNumberVerifyFragment__captcha_required">Captcha necessário</string>
   <!--ChangeNumberConfirmFragment-->
   <string name="ChangeNumberConfirmFragment__change_number">Alterar número</string>
-  <string name="ChangeNumberConfirmFragment__you_are_about_to_change_your_phone_number_from_s_to_s">Está prestes a alterar p seu número de telemóvel de %1$s para %2$s.\n\n\Antes de prosseguir, confirme que o número abaixo se encontra correto.</string>
+  <string name="ChangeNumberConfirmFragment__you_are_about_to_change_your_phone_number_from_s_to_s">Está prestes a alterar o seu número de telefone de %1$s para %2$s.\n\n\Antes de prosseguir, confirme que o número abaixo se encontra correto.</string>
   <string name="ChangeNumberConfirmFragment__edit_number">Editar número</string>
   <!--ChangeNumberRegistrationLockFragment-->
   <string name="ChangeNumberRegistrationLockFragment__signal_change_number_need_help_with_pin_for_android_v2_pin">Alterar o número do Signal - Necessita de ajuda com o PIN para Android (v2 PIN)</string>
@@ -3057,12 +3084,19 @@
   <string name="ChangeNumberPinDiffersFragment__update_pin">Atualizar PIN</string>
   <string name="ChangeNumberPinDiffersFragment__keep_old_pin_question">Manter o PIN antigo?</string>
   <!--ChangeNumberLockActivity-->
-  <string name="ChangeNumberLockActivity__it_looks_like_you_tried_to_change_your_number_but_we_were_unable_to_determine_if_it_was_successful_rechecking_now">Parece que você tentou mudar o seu número de telemóvel. Aguardamos a confirmação de que a mudança foi bem-sucedida.\n\nA verificar agora…</string>
+  <!--Info message shown to user if something crashed the app during the change number attempt and we were unable to confirm the change so we force them into this screen to check before letting them use the app-->
+  <string name="ChangeNumberLockActivity__it_looks_like_you_tried_to_change_your_number_but_we_were_unable_to_determine_if_it_was_successful_rechecking_now">Parece que você tentou mudar o seu número de telefone. Aguardamos a confirmação de que a mudança foi bem-sucedida.\n\nA verificar agora…</string>
+  <!--Dialog title shown if we were able to confirm your change number status (meaning we now know what the server thinks our number is) after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__change_status_confirmed">Estado da alteração confirmado</string>
+  <!--Dialog message shown if we were able to confirm your change number status (meaning we now know what the server thinks our number is) after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__your_number_has_been_confirmed_as_s">Seu número foi confirmado como %1$s. Se esse não for o seu novo número, refaça o processo de alteração de número.</string>
+  <!--Dialog title shown if we were not able to confirm your phone number with the server and thus cannot let leave the change flow yet after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__change_status_unconfirmed">Estado da alteração não confirmado</string>
+  <!--Dialog message shown when we can\'t verify the phone number on the server, only shown if there was a network error communicating with the server after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__we_could_not_determine_the_status_of_your_change_number_request">Não foi possível determinar o estado do seu pedido de alteração de número.\n\n(Erro: %1$s)</string>
+  <!--Dialog button to retry confirming the number on the server-->
   <string name="ChangeNumberLockActivity__retry">Tentar novamente</string>
+  <!--Dialog button shown to leave the app when in the unconfirmed change status after a crash in the regular flow-->
   <string name="ChangeNumberLockActivity__leave">Abandonar</string>
   <string name="ChangeNumberLockActivity__submit_debug_log">Enviar relatório de erros</string>
   <!--ChatsSettingsFragment-->
@@ -3080,6 +3114,7 @@
   <!--Notification preference option header-->
   <string name="NotificationsSettingsFragment__profiles">Perfis</string>
   <!--Notification preference summary text-->
+  <string name="NotificationsSettingsFragment__create_a_profile_to_receive_notifications_only_from_people_and_groups_you_choose">Crie um perfil para receber notificações apenas das pessoas e dos grupos de que você deseja receber.</string>
   <!--NotificationProfilesFragment-->
   <!--Title for notification profiles screen that shows all existing profiles-->
   <string name="NotificationProfilesFragment__notification_profiles">Perfis de notificações</string>
@@ -3178,7 +3213,7 @@
   <string name="AddAProfilePhotoMegaphone__not_now">Agora não</string>
   <string name="AddAProfilePhotoMegaphone__add_photo">Adicionar fotografia</string>
   <!--BecomeASustainerMegaphone-->
-  <string name="BecomeASustainerMegaphone__become_a_sustainer">Torne-se num apoiante</string>
+  <string name="BecomeASustainerMegaphone__become_a_sustainer">Torne-se num Apoiante</string>
   <string name="BecomeASustainerMegaphone__signal_is_powered">Signal é assegurado por pessoas como você. Contribua e receba um crachá no perfil.</string>
   <string name="BecomeASustainerMegaphone__no_thanks">Não, obrigado</string>
   <string name="BecomeASustainerMegaphone__contribute">Contribuir</string>
@@ -3348,7 +3383,7 @@
   <string name="SelectFeaturedBadgeFragment__select_a_badge">Selecione um crachá</string>
   <string name="SelectFeaturedBadgeFragment__you_must_select_a_badge">Deverá selecionar um crachá</string>
   <string name="SelectFeaturedBadgeFragment__failed_to_update_profile">Falha ao atualizar o perfil</string>
-  <string name="ViewBadgeBottomSheetDialogFragment__become_a_sustainer">Torne-se num apoiante</string>
+  <string name="ViewBadgeBottomSheetDialogFragment__become_a_sustainer">Torne-se num Apoiante</string>
   <string name="ImageView__badge">Crachá</string>
   <string name="SubscribeFragment__signal_is_powered_by_people_like_you">O Signal é feito por pessoas como você.</string>
   <string name="SubscribeFragment__support_technology_that_is_built_for_you">Apoie a tecnologia desenvolvida para si (não para os seus dados) juntando-se à comunidade de pessoas que a sustentam.</string>
@@ -3378,7 +3413,7 @@
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__youve_earned_s_badge_help_signal">Você ganhou o crachá %s! Ajude o Signal a aumentar a conscientização exibindo este crachá no seu perfil. </string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__youve_earned_a_boost_badge_help_signal">Você ganhou um crachá de Apoio! Ajude o Signal a aumentar a conscientização exibindo este crachá no seu perfil. </string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__you_can_also">Também pode</string>
-  <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__become_a_montly_sustainer">torne-se num apoiante do Signal.</string>
+  <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__become_a_montly_sustainer">torne-se num Apoiante do Signal.</string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__display_on_profile">Exibir no perfil</string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__make_featured_badge">Definir como crachá de destaque</string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__done">Concluído</string>
@@ -3406,13 +3441,19 @@
   <string name="ExpiredBadgeBottomSheetDialogFragment__subscription_cancelled">Subscrição cancelada</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__your_boost_badge_has_expired">O seu crachá de Apoio expirou e deixou de ser visível para os outras pessoas através do seu perfil.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__you_can_reactivate">Pode reativar o seu crachá de Apoio por mais 30 dias com uma contribuição única.</string>
-  <string name="ExpiredBadgeBottomSheetDialogFragment__to_continue_supporting_technology">Para continuar a suportar a tecnologia que foi construída para si, considere ser um apoiante mensal.</string>
+  <string name="ExpiredBadgeBottomSheetDialogFragment__to_continue_supporting_technology">Para continuar a suportar a tecnologia que foi construída para si, considere ser um Apoiante mensal.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__become_a_sustainer">Torne-se num Apoiante</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__add_a_boost">Apoiar o Signal</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__not_now">Agora não</string>
-  <string name="ExpiredBadgeBottomSheetDialogFragment__your_sustainer">A sua assinatura de Apoiante foi cancelada automaticamente porque se encontra inativo à muito tempo. O seu crachá %1$s deixou de estar visível no seu perfil.</string>
+  <!--Copy displayed when badge expires after user inactivity-->
+  <string name="ExpiredBadgeBottomSheetDialogFragment__your_sustainer_subscription_was_automatically">A sua classificação de Apoiante foi cancelada automaticamente porque se encontra inativo à muito tempo. O seu crachá %1$s deixou de estar visível no seu perfil.</string>
+  <!--Copy displayed when badge expires after payment failure-->
+  <string name="ExpiredBadgeBottomSheetDialogFragment__your_sustainer_subscription_was_canceled">A sua assinatura de Apoiante foi cancelada porque o seu pagamento não pode ser processado. O seu crachá deixou de estar visível no seu perfil.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__you_can">Pode continuar a utilizar o Signal mas, para apoiar a aplicação e reativar o seu crachá, renove agora.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__renew_subscription">Renovar assinatura</string>
+  <string name="CantProcessSubscriptionPaymentBottomSheetDialogFragment__cant_process_subscription_payment">Não foi possível processar o pagamento da sua assinatura</string>
+  <string name="CantProcessSubscriptionPaymentBottomSheetDialogFragment__were_having_trouble">Estamos com problemas para receber o seu pagamento do Apoiante do Signal. Verifique se a forma de pagamento se encontra atualizada. Se não estiver, atualize-a no Google Pay. O Signal tentará processar o pagamento novamente dentro de alguns dias. </string>
+  <string name="CantProcessSubscriptionPaymentBottomSheetDialogFragment__dont_show_this_again">Não exibir isto novamente</string>
   <string name="Subscription__please_contact_support_for_more_information">Por favor, contacte o \'Suporte\' para mais informações.</string>
   <string name="Subscription__contact_support">Contactar o Suporte</string>
   <string name="Subscription__earn_a_s_badge">Ganhe um crachá %1$s</string>
@@ -3434,14 +3475,44 @@
   <string name="ViewBadgeBottomSheetDialogFragment__your_device_doesn_t_support_google_pay_so_you_can_t_subscribe_to_earn_a_badge_you_can_still_support_signal_by_making_a_donation_on_our_website">Seu aparelho não é compatível com Google Pay, como tal você não pode subscrever para ganhar um crachá. Você ainda pode apoiar o Signal fazendo uma doação no nosso site.</string>
   <string name="NetworkFailure__network_error_check_your_connection_and_try_again">Erro na rede. Verifique a sua ligação e tente novamente.</string>
   <string name="NetworkFailure__retry">Tentar novamente</string>
+  <!--Stripe decline code generic_failure-->
+  <string name="DeclineCode__try_another_payment_method_or_contact_your_bank">Tente outro método de pagamento ou contacte o seu banco para mais informações.</string>
+  <!--Stripe decline code verify on Google Pay and try again-->
+  <string name="DeclineCode__verify_your_payment_method_is_up_to_date_in_google_pay_and_try_again">Confirme que o seu método de pagamento se encontra atualizado no Google Pay e tente de novo.</string>
+  <!--Stripe decline code learn more action label-->
+  <string name="DeclineCode__learn_more">Saber mais</string>
+  <!--Stripe decline code contact issuer-->
+  <string name="DeclineCode__verify_your_payment_method_is_up_to_date_in_google_pay_and_try_again_if_the_problem">Confirme que o seu método de pagamento se encontra atualizado no Google Pay e tente novamente. Se o problema continuar, contacte o sue banco.</string>
+  <!--Stripe decline code purchase not supported-->
+  <string name="DeclineCode__your_card_does_not_support_this_type_of_purchase">O seu cartão não suporta este tipo de compra. Experimente outro método de pagamento.</string>
+  <!--Stripe decline code your card has expired-->
+  <string name="DeclineCode__your_card_has_expired">O seu cartão expirou. Atualize o seu método de pagamento no Google Pay e tente novamente.</string>
+  <!--Stripe decline code go to google pay action label-->
+  <string name="DeclineCode__go_to_google_pay">Ir para o Google Pay</string>
+  <!--Stripe decline code incorrect card number-->
+  <string name="DeclineCode__your_card_number_is_incorrect">O número do seu cartão encontra-se incorreto. Atualize-o no Google Pay e tente novamente.</string>
+  <!--Stripe decline code incorrect cvc-->
+  <string name="DeclineCode__your_cards_cvc_number_is_incorrect">O número CVC do seu cartão encontra-se incorreto. Atualize-o no Google Pay e tente de novo.</string>
+  <!--Stripe decline code insufficient funds-->
+  <string name="DeclineCode__your_card_does_not_have_sufficient_funds">O seu cartão não tem fundos suficientes para concluir esta compra. Tente outra forma de pagamento. </string>
+  <!--Stripe decline code incorrect expiration month-->
+  <string name="DeclineCode__the_expiration_month">O mês da validade da sua forma de pagamento encontra-se incorreto. Atualize-o no Google Pay e tente novamente. </string>
+  <!--Stripe decline code incorrect expiration year-->
+  <string name="DeclineCode__the_expiration_year">O ano da validade da sua forma de pagamento encontra-se incorreto. Atualize-o no Google Pay e tente novamente. </string>
+  <!--Stripe decline code issuer not available-->
+  <string name="DeclineCode__try_completing_the_payment_again">Experimente completar novamente o pagamento ou contacte o seu banco para mais informações.</string>
+  <!--Stripe decline code processing error-->
+  <string name="DeclineCode__try_again">Experimente novamente ou contacte o seu banco para mais informações.</string>
   <!--Title of create notification profile screen-->
   <string name="EditNotificationProfileFragment__name_your_profile">Nomeie o seu perfil</string>
   <!--Hint text for create/edit notification profile name-->
   <string name="EditNotificationProfileFragment__profile_name">Nome de perfil</string>
   <!--Name has a max length, this shows how many characters are used out of the max-->
   <string name="EditNotificationProfileFragment__count">%1$d/%2$d</string>
-  <!--Call to action button once the profile is named to continue to the next create step-->
+  <!--Call to action button to continue to the next step-->
   <string name="EditNotificationProfileFragment__next">Seguinte</string>
+  <!--Call to action button once the profile is named to create the profile and continue to the customization steps-->
+  <string name="EditNotificationProfileFragment__create">Criar</string>
   <!--Call to action button once the profile name is edited-->
   <string name="EditNotificationProfileFragment__save">Guardar</string>
   <!--Title of edit notification profile screen-->
@@ -3509,6 +3580,7 @@
   <!--Title for add schedule to profile in create flow-->
   <string name="EditNotificationProfileSchedule__add_a_schedule">Adicionar uma agenda</string>
   <!--Descriptor text indicating what the user can do with this screen-->
+  <string name="EditNotificationProfileSchedule__set_up_a_schedule_to_enable_this_notification_profile_automatically">Defina um horário para ativar automaticamente este perfil de notificação.</string>
   <!--Text shown next to toggle switch to enable/disable schedule-->
   <string name="EditNotificationProfileSchedule__schedule">Agenda</string>
   <!--Label for showing the start time for the schedule-->
@@ -3554,6 +3626,7 @@
   <!--Button text shown in profile selection bottom sheet to create a new profile-->
   <string name="NotificationProfileSelection__new_profile">Perfil novo</string>
   <!--Manual enable option to manually enable a profile for 1 hour-->
+  <string name="NotificationProfileSelection__for_1_hour">Durante 1 hora</string>
   <!--Manual enable option to manually enable a profile until a set time (currently 6pm or 8am depending on what is next)-->
   <string name="NotificationProfileSelection__until_s">Até %1$s</string>
   <!--Option to view profile details-->
@@ -3570,5 +3643,7 @@
   <string name="NotificationProfilesMegaphone__not_now">Agora não</string>
   <!--Displayed in a toast when we fail to open the ringtone picker-->
   <string name="NotificationSettingsFragment__failed_to_open_picker">Falha ao abrir o seletor.</string>
+  <!--Description shown for the Signal Release Notes channel-->
+  <string name="ReleaseNotes__signal_release_notes_and_news">Notas e novidades de lançamento do Signal</string>
   <!--EOF-->
 </resources>

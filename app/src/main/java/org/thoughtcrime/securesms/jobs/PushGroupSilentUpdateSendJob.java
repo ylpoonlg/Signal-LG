@@ -74,8 +74,8 @@ public final class PushGroupSilentUpdateSendJob extends BaseJob {
 
     Set<RecipientId> recipients = Stream.concat(Stream.of(memberUuids), Stream.of(pendingUuids))
                                         .filter(uuid -> !UuidUtil.UNKNOWN_UUID.equals(uuid))
-                                        .filter(uuid -> !Recipient.self().requireAci().uuid().equals(uuid))
-                                        .map(uuid -> Recipient.externalPush(context, ACI.from(uuid), null, false))
+                                        .filter(uuid -> !Recipient.self().requireServiceId().uuid().equals(uuid))
+                                        .map(uuid -> Recipient.externalPush(ACI.from(uuid), null, false))
                                         .filter(recipient -> recipient.getRegistered() != RecipientDatabase.RegisteredState.NOT_REGISTERED)
                                         .map(Recipient::getId)
                                         .collect(Collectors.toSet());
@@ -130,9 +130,15 @@ public final class PushGroupSilentUpdateSendJob extends BaseJob {
       throw new NotPushRegisteredException();
     }
 
-    GroupId.V2      groupId        = GroupId.v2(GroupUtil.requireMasterKey(groupContextV2.getMasterKey().toByteArray()));
-    List<Recipient> destinations   = Stream.of(recipients).map(Recipient::resolved).toList();
-    List<Recipient> completions    = deliver(destinations, groupId);
+    GroupId.V2 groupId = GroupId.v2(GroupUtil.requireMasterKey(groupContextV2.getMasterKey().toByteArray()));
+
+    if (Recipient.externalGroupExact(context, groupId).isBlocked()) {
+      Log.i(TAG, "Not updating group state for blocked group " + groupId);
+      return;
+    }
+
+    List<Recipient> destinations = Stream.of(recipients).map(Recipient::resolved).toList();
+    List<Recipient> completions  = deliver(destinations, groupId);
 
     for (Recipient completion : completions) {
       recipients.remove(completion.getId());

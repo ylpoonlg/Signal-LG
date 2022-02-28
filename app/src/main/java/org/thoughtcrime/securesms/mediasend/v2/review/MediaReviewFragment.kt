@@ -16,6 +16,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -24,7 +25,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.conversation.mutiselect.forward.MultiselectForwardFragment
 import org.thoughtcrime.securesms.conversation.mutiselect.forward.MultiselectForwardFragmentArgs
-import org.thoughtcrime.securesms.keyboard.findListener
 import org.thoughtcrime.securesms.mediasend.MediaSendActivityResult
 import org.thoughtcrime.securesms.mediasend.v2.HudCommand
 import org.thoughtcrime.securesms.mediasend.v2.MediaAnimations
@@ -36,8 +36,9 @@ import org.thoughtcrime.securesms.mediasend.v2.MediaValidator
 import org.thoughtcrime.securesms.mms.SentMediaQuality
 import org.thoughtcrime.securesms.permissions.Permissions
 import org.thoughtcrime.securesms.recipients.RecipientId
-import org.thoughtcrime.securesms.util.MappingAdapter
 import org.thoughtcrime.securesms.util.MediaUtil
+import org.thoughtcrime.securesms.util.adapter.mapping.MappingAdapter
+import org.thoughtcrime.securesms.util.fragments.requireListener
 import org.thoughtcrime.securesms.util.views.TouchInterceptingFrameLayout
 import org.thoughtcrime.securesms.util.visible
 
@@ -80,7 +81,7 @@ class MediaReviewFragment : Fragment(R.layout.v2_media_review_fragment) {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     postponeEnterTransition()
 
-    callback = requireNotNull(findListener())
+    callback = requireListener()
 
     drawToolButton = view.findViewById(R.id.draw_tool)
     cropAndRotateButton = view.findViewById(R.id.crop_and_rotate_tool)
@@ -199,7 +200,6 @@ class MediaReviewFragment : Fragment(R.layout.v2_media_review_fragment) {
       presentImageQualityToggle(state.quality)
 
       viewOnceButton.displayedChild = if (state.viewOnceToggleState == MediaSelectionState.ViewOnceToggleState.ONCE) 1 else 0
-      sendButton.isEnabled = !state.isSent && state.selectedMedia.isNotEmpty()
 
       computeViewStateAndAnimate(state)
     }
@@ -242,8 +242,9 @@ class MediaReviewFragment : Fragment(R.layout.v2_media_review_fragment) {
   }
 
   private fun launchGallery() {
+    val controller = findNavController()
     requestPermissionsForGallery {
-      navigator.goToGallery(requireView())
+      navigator.goToGallery(controller)
     }
   }
 
@@ -396,11 +397,11 @@ class MediaReviewFragment : Fragment(R.layout.v2_media_review_fragment) {
 
     return slideIn + if (state.isTouchEnabled) {
       listOf(
-        MediaReviewAnimatorController.getFadeInAnimator(sendButton),
+        MediaReviewAnimatorController.getFadeInAnimator(sendButton, state.canSend),
       )
     } else {
       listOf(
-        MediaReviewAnimatorController.getFadeOutAnimator(sendButton),
+        MediaReviewAnimatorController.getFadeOutAnimator(sendButton, state.canSend),
       )
     }
   }

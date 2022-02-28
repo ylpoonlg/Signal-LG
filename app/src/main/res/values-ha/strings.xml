@@ -470,7 +470,7 @@
   <string name="MediaOverviewActivity_sent_by_s_to_s"> %1$s ne ya tura zuwa %2$s</string>
   <string name="MediaOverviewActivity_sent_by_you_to_s">Sako daga kai/ke zuwa %1$s</string>
   <!--Megaphones-->
-  <string name="Megaphones_introducing_reactions">Gabatarwa da martani</string>
+  <!-- Removed by excludeNonTranslatables <string name="Megaphones_introducing_reactions">Gabatarwa da martani</string> -->
   <string name="Megaphones_remind_me_later">Tuna min anjima</string>
   <string name="Megaphones_verify_your_signal_pin">Tabbatar da lambobin sirri Signal dinka/ki</string>
   <string name="Megaphones_verify_pin">Tabbatar da lambobin sirri</string>
@@ -1369,14 +1369,14 @@
   <string name="conversation_callable_secure__menu_call">Kiran Signal</string>
   <string name="conversation_callable_secure__menu_video">Kiran bidiyon Signal</string>
   <!--conversation_context-->
-  <string name="conversation_context__menu_message_details">Karin bayanin sako</string>
-  <string name="conversation_context__menu_copy_text">Kwafa rubutu</string>
-  <string name="conversation_context__menu_delete_message">Goge sako</string>
-  <string name="conversation_context__menu_forward_message">Ingiza sako</string>
-  <string name="conversation_context__menu_resend_message">Sake tura sako</string>
-  <string name="conversation_context__menu_reply_to_message">Amsa sako</string>
+  <!-- Removed by excludeNonTranslatables <string name="conversation_context__menu_message_details">Karin bayanin sako</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="conversation_context__menu_copy_text">Kwafa rubutu</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="conversation_context__menu_delete_message">Goge sako</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="conversation_context__menu_forward_message">Ingiza sako</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="conversation_context__menu_resend_message">Sake tura sako</string> -->
+  <!-- Removed by excludeNonTranslatables <string name="conversation_context__menu_reply_to_message">Amsa sako</string> -->
   <!--conversation_context_reacction-->
-  <string name="conversation_context__reaction_multi_select">Zaba da yawa</string>
+  <!-- Removed by excludeNonTranslatables <string name="conversation_context__reaction_multi_select">Zaba da yawa</string> -->
   <!--conversation_context_image-->
   <string name="conversation_context_image__save_attachment">Ajiye kari</string>
   <!--conversation_expiring_off-->
@@ -1588,7 +1588,7 @@
   <!-- Removed by excludeNonTranslatables <string name="ChatsPreferenceFragment_signal_requires_external_storage_permission_in_order_to_create_backups">Signal na bukatar izinin ajiyar waje domin kirkirar tsimi, amma an hana wannan dama dindindin. Dan ci gaba da shigar mazabar saitin manhajar, zabi Izini sannan karfafa Ajiya.</string> -->
   <!-- Removed by excludeNonTranslatables <string name="ChatsPreferenceFragment_last_backup_s">Tsimin karshe: %s</string> -->
   <!-- Removed by excludeNonTranslatables <string name="ChatsPreferenceFragment_in_progress">Yana tafiya</string> -->
-  <string name="LocalBackupJob_creating_backup">Kirkirar tsimi</string>
+  <!-- Removed by excludeNonTranslatables <string name="LocalBackupJob_creating_backup">Kirkirar tsimi</string> -->
   <string name="ProgressPreference_d_messages_so_far">%d a yanzu</string>
   <!-- Removed by excludeNonTranslatables <string name="RegistrationActivity_please_enter_the_verification_code_sent_to_s">Shigar da lambar sirrin da aka aiko maka/ki%s.</string> -->
   <string name="RegistrationActivity_wrong_number">Lambar ba daidai bane</string>

@@ -5,7 +5,7 @@
   <string name="delete">Ta bort</string>
   <string name="please_wait">Vänligen vänta…</string>
   <string name="save">Spara</string>
-  <string name="note_to_self">Notering till mig själv</string>
+  <string name="note_to_self">Egen anteckning</string>
   <!--AbstractNotificationBuilder-->
   <string name="AbstractNotificationBuilder_new_message">Nytt meddelande</string>
   <!--AlbumThumbnailView-->
@@ -90,6 +90,10 @@
   <string name="BlockUnblockDialog_group_members_will_be_able_to_add_you">Gruppmedlemmar kommer att kunna lägga till dig i denna grupp igen.</string>
   <string name="BlockUnblockDialog_you_will_be_able_to_call_and_message_each_other">Ni kommer att kunna meddela och ringa varandra och ditt namn och foto delas.</string>
   <string name="BlockUnblockDialog_blocked_people_wont_be_able_to_call_you_or_send_you_messages">Blockerade personer kommer inte att kunna ringa eller skicka meddelanden till dig.</string>
+  <!--Message shown on block dialog when blocking the Signal release notes recipient-->
+  <string name="BlockUnblockDialog_block_getting_signal_updates_and_news">Blockera att ta emot Signal-uppdateringar och nyheter.</string>
+  <!--Message shown on unblock dialog when unblocking the Signal release notes recipient-->
+  <string name="BlockUnblockDialog_resume_getting_signal_updates_and_news">Återuppta att ta emot Signal-uppdateringar och nyheter.</string>
   <string name="BlockUnblockDialog_unblock_s">Avblockera %1$s?</string>
   <string name="BlockUnblockDialog_block">Blockera</string>
   <string name="BlockUnblockDialog_block_and_leave">Blockera och lämna</string>
@@ -327,8 +331,8 @@
     <item quantity="other">Olästa</item>
   </plurals>
   <plurals name="ConversationListFragment_pin_plural">
-    <item quantity="one">Fäst</item>
-    <item quantity="other">Fäst</item>
+    <item quantity="one">Nåla</item>
+    <item quantity="other">Nåla</item>
   </plurals>
   <plurals name="ConversationListFragment_unpin_plural">
     <item quantity="one">Lösgör</item>
@@ -411,6 +415,8 @@
   <string name="BackupsPreferenceFragment__learn_more">Läs mer</string>
   <string name="BackupsPreferenceFragment__in_progress">Pågående…</string>
   <string name="BackupsPreferenceFragment__d_so_far">%1$d hittills…</string>
+  <!--Show percentage of completion of backup-->
+  <string name="BackupsPreferenceFragment__s_so_far">%1$s%% hittills…</string>
   <string name="BackupsPreferenceFragment_signal_requires_external_storage_permission_in_order_to_create_backups">Signal behöver behörigheten Lagring för att skapa säkerhetskopior men den har avfärdats permanent. Vänligen fortsätt till inställningar för appar, välj \"Behörigheter\" och aktivera \"Lagring\".</string>
   <!--CustomDefaultPreference-->
   <string name="CustomDefaultPreference_using_custom">Använder anpassade: %s</string>
@@ -446,9 +452,6 @@
   <string name="DeviceListItem_today">Idag</string>
   <!--DocumentView-->
   <string name="DocumentView_unnamed_file">Namnlös fil</string>
-  <!--GroupCallingMegaphone-->
-  <string name="GroupCallingMegaphone__introducing_group_calls">Vi presenterar gruppsamtal</string>
-  <string name="GroupCallingMegaphone__open_a_new_group_to_start">Öppna en Ny grupp för att starta ett fritt krypterat gruppsamtal</string>
   <!--DozeReminder-->
   <string name="DozeReminder_optimize_for_missing_play_services">Optimera för avsaknad av Play-tjänster</string>
   <string name="DozeReminder_this_device_does_not_support_play_services_tap_to_disable_system_battery">Enheten stöder inte Play-tjänster. Tryck för att inaktivera systembatterioptimeringar som hindrar Signal från att hämta meddelanden vid inaktivitet.</string>
@@ -566,10 +569,6 @@
   <string name="LeaveGroupDialog_choose_new_admin">Välj ny administratör</string>
   <string name="LeaveGroupDialog_before_you_leave_you_must_choose_at_least_one_new_admin_for_this_group">Innan du lämnar måste du välja minst en ny administratör för denna grupp.</string>
   <string name="LeaveGroupDialog_choose_admin">Välj administratör</string>
-  <!--LinkPreviewsMegaphone-->
-  <string name="LinkPreviewsMegaphone_disable">Inaktivera</string>
-  <string name="LinkPreviewsMegaphone_preview_any_link">Förhandsgranska vilken länk som helst</string>
-  <string name="LinkPreviewsMegaphone_you_can_now_retrieve_link_previews_directly_from_any_website">Du kan nu hämta länkförhandsgranskningar direkt från valfri webbplats för meddelanden du skickar.</string>
   <!--LinkPreviewView-->
   <string name="LinkPreviewView_no_link_preview_available">Ingen länkförhandsvisning tillgänglig</string>
   <string name="LinkPreviewView_this_group_link_is_not_active">Denna grupplänk är inte aktiv</string>
@@ -866,8 +865,6 @@
   <string name="MediaOverviewActivity_sent_by_s_to_s">Skickad av %1$s till %2$s</string>
   <string name="MediaOverviewActivity_sent_by_you_to_s">Skickad av dig till %1$s</string>
   <!--Megaphones-->
-  <string name="Megaphones_introducing_reactions">Introducerar Reaktioner</string>
-  <string name="Megaphones_tap_and_hold_any_message_to_quicky_share_how_you_feel">Tryck och håll ett meddelande för att snabbt dela hur du känner.</string>
   <string name="Megaphones_remind_me_later">Påminn mig senare</string>
   <string name="Megaphones_verify_your_signal_pin">Verifiera din Signal PIN-kod</string>
   <string name="Megaphones_well_occasionally_ask_you_to_verify_your_pin">Vi ber dig ibland att verifiera din PIN-kod så att du kommer ihåg den.</string>
@@ -1091,7 +1088,11 @@
   <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified">Du markerade ditt säkerhetsnummer med %s som overifierat</string>
   <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified_from_another_device">Du markerade ditt säkerhetsnummer med %s som overifierat från en annan enhet</string>
   <string name="MessageRecord_a_message_from_s_couldnt_be_delivered">Ett meddelande från %s kunde inte levereras</string>
-  <string name="MessageRecord_s_changed_their_number_to_a_new_number">%1$s bytte nummer till ett nytt nummer.</string>
+  <string name="MessageRecord_s_changed_their_phone_number">%1$s ändrade sitt telefonnummer.</string>
+  <!--Update item message shown in the release channel when someone is already a sustainer so we ask them if they want to boost.-->
+  <string name="MessageRecord_like_this_new_feature_say_thanks_with_a_boost">Gillar du den här nya funktionen? Säg tack med en Boost.</string>
+  <!--Update item message shown in the release channel when someone is not a sustainer so we ask them to consider becoming one-->
+  <string name="MessageRecord_signal_is_powered_by_people_like_you_become_a_sustainer_today">Signal drivs av människor som du. Bli en upprätthållare idag.</string>
   <!--Group Calling update messages-->
   <string name="MessageRecord_s_started_a_group_call_s">%1$s startade ett gruppsamtal · %2$s</string>
   <string name="MessageRecord_s_is_in_the_group_call_s">%1$s är i gruppsamtalet · %2$s</string>
@@ -1120,6 +1121,7 @@
   <string name="MessageRequestBottomView_unblock">Avblockera</string>
   <string name="MessageRequestBottomView_do_you_want_to_let_s_message_you_they_wont_know_youve_seen_their_messages_until_you_accept">Tillåt att %1$s meddelar dig och dela ditt namn och foto? Personen vet inte att du har sett personens meddelande förrän du accepterar.</string>
   <string name="MessageRequestBottomView_do_you_want_to_let_s_message_you_wont_receive_any_messages_until_you_unblock_them">Tillåt att %1$s meddelar dig och dela ditt namn och foto? Du får inte några meddelanden förrän du har avblockerat personen.</string>
+  <string name="MessageRequestBottomView_get_updates_and_news_from_s_you_wont_receive_any_updates_until_you_unblock_them">Få uppdateringar och nyheter från %1$s? Du kommer inte att få några uppdateringar förrän du avblockerar dem.</string>
   <string name="MessageRequestBottomView_continue_your_conversation_with_this_group_and_share_your_name_and_photo">Fortsätta din konversation med denna grupp och dela ditt namn och foto med dess medlemmar?</string>
   <string name="MessageRequestBottomView_upgrade_this_group_to_activate_new_features">Uppgradera denna grupp för att aktivera nya funktioner som @omnämnanden och administratörer. Medlemmar som inte har delat sitt namn eller foto i denna grupp kommer att inbjudas att gå med.</string>
   <string name="MessageRequestBottomView_this_legacy_group_can_no_longer_be_used">Denna Äldre gruppen kan inte längre användas eftersom den är för stor. Den största gruppstorleken är %1$d.</string>
@@ -1244,6 +1246,11 @@
   <string name="RedPhone_number_not_registered">Numret är inte registrerat!</string>
   <string name="RedPhone_the_number_you_dialed_does_not_support_secure_voice">Numret du ringde har inte stöd för säkra röstsamtal!</string>
   <string name="RedPhone_got_it">Uppfattat</string>
+  <!--Valentine\'s Day Megaphone-->
+  <!--Title text for the Valentine\'s Day donation megaphone. The placeholder will always be a heart emoji. Needs to be a placeholder for Android reasons.-->
+  <string name="ValentinesDayMegaphone_happy_heart_day">Glad 💜-dag!</string>
+  <!--Body text for the Valentine\'s Day donation megaphone.-->
+  <string name="ValentinesDayMegaphone_show_your_affection">Visa din tillgivenhet genom att bli en Signal-upprätthållare.</string>
   <!--WebRtcCallActivity-->
   <string name="WebRtcCallActivity__tap_here_to_turn_on_your_video">Tryck här för att aktivera din video</string>
   <string name="WebRtcCallActivity__to_call_s_signal_needs_access_to_your_camera">För att ringa %1$s behöver Signal åtkomst till din kamera</string>
@@ -1299,7 +1306,9 @@
   <string name="WebRtcCallView__flip">Vänd</string>
   <string name="WebRtcCallView__speaker">Högtalare</string>
   <string name="WebRtcCallView__camera">Kamera</string>
+  <string name="WebRtcCallView__unmute">Av-tysta</string>
   <string name="WebRtcCallView__mute">Tysta</string>
+  <string name="WebRtcCallView__ring">Ring</string>
   <string name="WebRtcCallView__end_call">Avsluta samtal</string>
   <!--CallParticipantsListDialog-->
   <plurals name="CallParticipantsListDialog_in_this_call_d_people">
@@ -1595,6 +1604,10 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="NotificationChannel_voice_notes">Röstanteckningar</string>
   <string name="NotificationChannel_contact_joined_signal">Kontakt anslöt sig till Signal</string>
   <string name="NotificationChannels__no_activity_available_to_open_notification_channel_settings">Ingen aktivitet tillgänglig för att öppna inställningar för aviseringskanaler.</string>
+  <!--Notification channel name for showing persistent background connection on devices without push notifications-->
+  <string name="NotificationChannel_background_connection">Bakgrundsanslutning</string>
+  <!--Notification channel name for showing call status information (like connection, ongoing, etc.) Not ringing.-->
+  <string name="NotificationChannel_call_status">Samtalsstatus</string>
   <!--ProfileEditNameFragment-->
   <!--QuickResponseService-->
   <string name="QuickResponseService_quick_response_unavailable_when_Signal_is_locked">Snabbsvar är otillgängligt när Signal är låst!</string>
@@ -1624,6 +1637,7 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="UnauthorizedReminder_device_no_longer_registered">Enhet inte längre registreread</string>
   <string name="UnauthorizedReminder_this_is_likely_because_you_registered_your_phone_number_with_Signal_on_a_different_device">Detta är troligen på grund av att du registrerade ditt mobilnummer hos Signal på en annan enhet. Tryck för att återregistrera dig.</string>
   <!--WebRtcCallActivity-->
+  <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone">För att svara på samtalet, ge Signal åtkomst till din mikrofon.</string>
   <string name="WebRtcCallActivity_to_answer_the_call_from_s_give_signal_access_to_your_microphone">För att svara på samtalet från %s, ge Signal åtkomst till din mikrofon.</string>
   <string name="WebRtcCallActivity_signal_requires_microphone_and_camera_permissions_in_order_to_make_or_receive_calls">Signal behöver behörigheterna Mikrofon och Kamera för att ringa och ta emot samtal, men de har avfärdats permanent. Vänligen fortsätt till inställningar för appar, välj \"Behörigheter\" och aktivera \"Mikrofon\" och \"Kamera\".</string>
   <string name="WebRtcCallActivity__answered_on_a_linked_device">Besvarades på en länkad enhet.</string>
@@ -1723,6 +1737,10 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="ConversationUpdateItem_no_contacts_in_this_group_review_requests_carefully">Inga kontakter i denna grupp. Granska förfrågningar noggrant.</string>
   <string name="ConversationUpdateItem_view">Visa</string>
   <string name="ConversationUpdateItem_the_disappearing_message_time_will_be_set_to_s_when_you_message_them">Den försvinnande meddelandetiden ställs in till %1$s när du meddelar dem.</string>
+  <!--Update item button text to show to boost a feature-->
+  <string name="ConversationUpdateItem_signal_boost">Signal Boost</string>
+  <!--Update item button text to show to become a sustainer in the release notes channel-->
+  <string name="ConversationUpdateItem_become_a_sustainer">Bli en upprätthållare</string>
   <!--audio_view-->
   <string name="audio_view__play_pause_accessibility_description">Spela … Pausa</string>
   <string name="audio_view__download_accessibility_description">Hämta</string>
@@ -2055,7 +2073,7 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="preferences__help">Hjälp</string>
   <string name="preferences__advanced">Avancerat</string>
   <string name="preferences__donate_to_signal">Donera till Signal</string>
-  <string name="preferences__subscription">Prenumeration</string>
+  <string name="preferences__subscription">Abonnemang</string>
   <string name="preferences__become_a_signal_sustainer">Bli en Signal-upprätthållare</string>
   <string name="preferences__signal_boost">Signal Boost</string>
   <string name="preferences__privacy">Integritet</string>
@@ -2324,24 +2342,39 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="conversation_callable_secure__menu_call">Signal-samtal</string>
   <string name="conversation_callable_secure__menu_video">Signal-videosamtal</string>
   <!--conversation_context-->
-  <string name="conversation_context__menu_message_details">Meddelandedetaljer</string>
-  <string name="conversation_context__menu_copy_text">Kopiera text</string>
-  <string name="conversation_context__menu_delete_message">Ta bort meddelande</string>
-  <string name="conversation_context__menu_forward_message">Vidarebefordra meddelande</string>
-  <string name="conversation_context__menu_resend_message">Skicka meddelande igen</string>
-  <string name="conversation_context__menu_reply_to_message">Svara på meddelande</string>
-  <!--conversation_context_reacction-->
-  <string name="conversation_context__reaction_multi_select">Välj flera</string>
+  <!--Heading which shows how many messages are currently selected-->
+  <plurals name="conversation_context__s_selected">
+    <item quantity="one">%d vald</item>
+    <item quantity="other">%d valda</item>
+  </plurals>
   <!--conversation_context_image-->
-  <string name="conversation_context_image__save_attachment">Spara bilaga</string>
+  <!--Button to save a message attachment (image, file etc.)-->
+  <string name="conversation_context_image__save_attachment">Spara</string>
   <!--conversation_expiring_off-->
   <string name="conversation_expiring_off__disappearing_messages">Försvinnande meddelanden</string>
+  <!--conversation_selection-->
+  <!--Button to view detailed information for a message-->
+  <string name="conversation_selection__menu_message_details">Info</string>
+  <!--Button to copy a message\'s text to the clipboard-->
+  <string name="conversation_selection__menu_copy">Kopiera</string>
+  <!--Button to delete a message-->
+  <string name="conversation_selection__menu_delete">Ta bort</string>
+  <!--Button to forward a message to another person or group chat-->
+  <string name="conversation_selection__menu_forward">Vidarebefordra</string>
+  <!--Button to reply to a message-->
+  <string name="conversation_selection__menu_reply">Svara</string>
+  <!--Button to save a message attachment (image, file etc.)-->
+  <string name="conversation_selection__menu_save">Spara</string>
+  <!--Button to retry sending a message-->
+  <string name="conversation_selection__menu_resend_message">Skicka om</string>
+  <!--Button to select a message and enter selection mode-->
+  <string name="conversation_selection__menu_multi_select">Välj</string>
   <!--conversation_expiring_on-->
   <!--conversation_insecure-->
   <string name="conversation_insecure__invite">Bjud in</string>
   <!--conversation_list_batch-->
   <string name="conversation_list_batch__menu_delete_selected">Ta bort valda</string>
-  <string name="conversation_list_batch__menu_pin_selected">Fästade valda</string>
+  <string name="conversation_list_batch__menu_pin_selected">Nålad vald</string>
   <string name="conversation_list_batch__menu_unpin_selected">Lösgör valda</string>
   <string name="conversation_list_batch__menu_select_all">Markera alla</string>
   <string name="conversation_list_batch_archive__menu_archive_selected">Arkiv valt</string>
@@ -2351,9 +2384,9 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <!--conversation_list-->
   <string name="conversation_list_settings_shortcut">Genvägsinställningar</string>
   <string name="conversation_list_search_description">Sök</string>
-  <string name="conversation_list__pinned">Fastnålade</string>
+  <string name="conversation_list__pinned">Nålade</string>
   <string name="conversation_list__chats">Chattar</string>
-  <string name="conversation_list__you_can_only_pin_up_to_d_chats">Du kan bara fästa %1$d chattar</string>
+  <string name="conversation_list__you_can_only_pin_up_to_d_chats">Du kan bara nåla %1$d chattar</string>
   <!--conversation_list_item_view-->
   <string name="conversation_list_item_view__contact_photo_image">Kontaktfoto</string>
   <string name="conversation_list_item_view__archived">Arkiverad</string>
@@ -2519,16 +2552,6 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="KbsMegaphone__create_a_pin">Skapa en PIN-kod</string>
   <string name="KbsMegaphone__pins_keep_information_thats_stored_with_signal_encrytped">PIN-koder håller information som lagras hos Signal krypterad.</string>
   <string name="KbsMegaphone__create_pin">Skapa PIN-kod</string>
-  <!--Research Megaphone-->
-  <string name="ResearchMegaphone_tell_signal_what_you_think">Berätta för Signal vad du tycker</string>
-  <string name="ResearchMegaphone_to_make_signal_the_best_messaging_app_on_the_planet">För att göra Signal till den bästa meddelande-appen på planeten, skulle vi gärna höra din åsikt.</string>
-  <string name="ResearchMegaphone_learn_more">Läs mer</string>
-  <string name="ResearchMegaphone_dismiss">Avfärda</string>
-  <string name="ResearchMegaphoneDialog_signal_research">Signal-forskning</string>
-  <string name="ResearchMegaphoneDialog_we_believe_in_privacy"><![CDATA[<p><b>Vi tror på integritet.</b></p><p>Signal spårar inte dig och samlar inte in dina uppgifter. För att förbättra Signal för alla förlitar vi oss på användarrespons, <b>och vi skulle vilja få din.</b></p><p>Vi genomför en undersökning för att förstå hur du använder Signal. Vår undersökning samlar inte in några uppgifter som kommer att identifiera dig. Om du är intresserad av att dela ytterligare åsikter har du möjlighet att ge kontaktinformation.</p><p>Om du har några minuter och respons att erbjuda skulle vi gärna höra från dig.</p>]]></string>
-  <string name="ResearchMegaphoneDialog_take_the_survey">Ta undersökningen</string>
-  <string name="ResearchMegaphoneDialog_no_thanks">Nej tack</string>
-  <string name="ResearchMegaphoneDialog_the_survey_is_hosted_by_alchemer_at_the_secure_domain">Undersökningen anordnas av Alchemer på den säkra domänen surveys.signalusers.org</string>
   <!--transport_selection_list_item-->
   <string name="transport_selection_list_item__transport_icon">Transportikon</string>
   <string name="ConversationListFragment_loading">Hämtar in…</string>
@@ -2578,7 +2601,7 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="BackupDialog_verify">Verifiera</string>
   <string name="BackupDialog_you_successfully_entered_your_backup_passphrase">Du har angett ditt lösenord för säkerhetskopian</string>
   <string name="BackupDialog_passphrase_was_not_correct">Lösenordet var inte korrekt</string>
-  <string name="LocalBackupJob_creating_backup">Skapar säkerhetskopia…</string>
+  <string name="LocalBackupJob_creating_signal_backup">Skapar Signal-säkerhetskopia…</string>
   <string name="LocalBackupJobApi29_backup_failed">Säkerhetskopieringen misslyckades</string>
   <string name="LocalBackupJobApi29_your_backup_directory_has_been_deleted_or_moved">Din mapp för säkerhetskopior har tagits bort eller flyttats.</string>
   <string name="LocalBackupJobApi29_your_backup_file_is_too_large">Din säkerhetskopieringsfil är för stor för att lagras på denna volym.</string>
@@ -2700,6 +2723,8 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="DeviceTransfer__transferring_data">Överför data</string>
   <string name="DeviceTransfer__keep_both_devices_near_each_other">Håll båda enheterna nära varandra. Stäng inte av enheterna och håll Signal öppen. Överföringarna är ände-till-ände-krypterade.</string>
   <string name="DeviceTransfer__d_messages_so_far">%1$d meddelanden hittills…</string>
+  <!--Filled in with total percentage of messages transferred-->
+  <string name="DeviceTransfer__s_of_messages_so_far">%1$s%% av meddelanden hittills…</string>
   <string name="DeviceTransfer__cancel">Avbryt</string>
   <string name="DeviceTransfer__try_again">Försök igen</string>
   <string name="DeviceTransfer__stop_transfer_question">Stoppa överföringen?</string>
@@ -3022,7 +3047,10 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <!--ChangeNumberFragment-->
   <string name="ChangeNumberFragment__use_this_to_change_your_current_phone_number_to_a_new_phone_number">Använd detta för att ändra ditt nuvarande telefonnummer till ett nytt telefonnummer. Du kan inte ångra denna ändring.\n\nInnan du fortsätter, se till att ditt nya nummer kan ta emot SMS eller samtal.</string>
   <string name="ChangeNumberFragment__continue">Fortsätt</string>
-  <string name="ChangeNumber__your_phone_number_has_been_changed">Ditt telefonnummer har ändrats.</string>
+  <!--Message shown on dialog after your number has been changed successfully.-->
+  <string name="ChangeNumber__your_phone_number_has_changed_to_s">Ditt telefonnummer har ändrats till %1$s</string>
+  <!--Confirmation button to dismiss number changed dialog-->
+  <string name="ChangeNumber__okay">Okej</string>
   <!--ChangeNumberEnterPhoneNumberFragment-->
   <string name="ChangeNumberEnterPhoneNumberFragment__change_number">Ändra nummer</string>
   <string name="ChangeNumberEnterPhoneNumberFragment__your_old_number">Ditt gamla nummer</string>
@@ -3051,12 +3079,19 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="ChangeNumberPinDiffersFragment__update_pin">Uppdatera PIN-kod</string>
   <string name="ChangeNumberPinDiffersFragment__keep_old_pin_question">Behåll gammal PIN-kod?</string>
   <!--ChangeNumberLockActivity-->
+  <!--Info message shown to user if something crashed the app during the change number attempt and we were unable to confirm the change so we force them into this screen to check before letting them use the app-->
   <string name="ChangeNumberLockActivity__it_looks_like_you_tried_to_change_your_number_but_we_were_unable_to_determine_if_it_was_successful_rechecking_now">Det verkar som om du försökte ändra ditt nummer men vi kunde inte avgöra om det lyckades.\n\nKontrollerar igen nu…</string>
+  <!--Dialog title shown if we were able to confirm your change number status (meaning we now know what the server thinks our number is) after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__change_status_confirmed">Ändra status bekräftad</string>
+  <!--Dialog message shown if we were able to confirm your change number status (meaning we now know what the server thinks our number is) after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__your_number_has_been_confirmed_as_s">Ditt nummer har bekräftats som %1$s. Om detta inte är ditt nya nummer, vänligen starta om processen för att ändra numret.</string>
+  <!--Dialog title shown if we were not able to confirm your phone number with the server and thus cannot let leave the change flow yet after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__change_status_unconfirmed">Ändra status obekräftad</string>
+  <!--Dialog message shown when we can\'t verify the phone number on the server, only shown if there was a network error communicating with the server after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__we_could_not_determine_the_status_of_your_change_number_request">Vi kunde inte fastställa statusen för din begäran om att ändra nummer.\n\n(Fel: %1$s)</string>
+  <!--Dialog button to retry confirming the number on the server-->
   <string name="ChangeNumberLockActivity__retry">Försök igen</string>
+  <!--Dialog button shown to leave the app when in the unconfirmed change status after a crash in the regular flow-->
   <string name="ChangeNumberLockActivity__leave">Lämna</string>
   <string name="ChangeNumberLockActivity__submit_debug_log">Skicka felsökningslogg</string>
   <!--ChatsSettingsFragment-->
@@ -3350,17 +3385,17 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="SubscribeFragment__support_technology_that_is_built_for_you_not">Stöd teknik som är byggd för dig, inte för din data, genom att gå med i gemenskapen som upprätthåller Signal.</string>
   <string name="SubscribeFragment__currency">Valuta</string>
   <string name="SubscribeFragment__more_payment_options">Fler betalningsalternativ</string>
-  <string name="SubscribeFragment__cancel_subscription">Avbryt prenumeration</string>
+  <string name="SubscribeFragment__cancel_subscription">Avbryt abonnemang</string>
   <string name="SubscribeFragment__confirm_cancellation">Bekräfta annullering?</string>
   <string name="SubscribeFragment__you_wont_be_charged_again">Du kommer inte att debiteras igen. Ditt märke tas bort från din profil i slutet av din faktureringsperiod.</string>
   <string name="SubscribeFragment__not_now">Inte nu</string>
   <string name="SubscribeFragment__confirm">Bekräfta</string>
-  <string name="SubscribeFragment__update_subscription">Uppdatera prenumeration</string>
-  <string name="SubscribeFragment__your_subscription_has_been_cancelled">Din prenumeration har avslutats.</string>
-  <string name="SubscribeFragment__update_subscription_question">Uppdatera prenumeration?</string>
+  <string name="SubscribeFragment__update_subscription">Uppdatera abonnemang</string>
+  <string name="SubscribeFragment__your_subscription_has_been_cancelled">Ditt abonnemang har avslutats.</string>
+  <string name="SubscribeFragment__update_subscription_question">Uppdatera abonnemang?</string>
   <string name="SubscribeFragment__update">Uppdatera</string>
-  <string name="SubscribeFragment__you_will_be_charged_the_full_amount">Du kommer att debiteras hela beloppet för det nya prenumerationspriset idag. Din prenumeration förnyas %1$s.</string>
-  <string name="SubscribeFragment__you_will_be_charged_the_full_amount_s_of">Du kommer att debiteras hela beloppet (%1$s) för det nya prenumerationspriset idag. Din prenumeration förnyas varje månad.</string>
+  <string name="SubscribeFragment__you_will_be_charged_the_full_amount">Du kommer att debiteras hela beloppet för det nya abonnemangspriset idag. Ditt abonnemang förnyas %1$s.</string>
+  <string name="SubscribeFragment__you_will_be_charged_the_full_amount_s_of">Du kommer att debiteras hela beloppet (%1$s) för det nya abonnemangspriset idag. Ditt abonnemang förnyas varje månad.</string>
   <string name="Subscription__s_per_month">%s/månad</string>
   <string name="Subscription__s_per_month_dot_renews_s">%1$s/månad · Förnyar %2$s</string>
   <string name="Subscription__s_per_month_dot_expires_s">%1$s/månad · Upphör %2$s</string>
@@ -3381,11 +3416,11 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="BecomeASustainerFragment__get_badges">Få märken för din profil genom att stöda Signal.</string>
   <string name="BecomeASustainerFragment__signal_is_a_non_profit">Signal är en ideell organisation utan annonsörer eller investerare, som endast stöds av personer som du.</string>
   <string name="ManageDonationsFragment__my_support">Mitt stöd</string>
-  <string name="ManageDonationsFragment__manage_subscription">Hantera prenumeration</string>
+  <string name="ManageDonationsFragment__manage_subscription">Hantera abonnemang</string>
   <string name="ManageDonationsFragment__badges">Märken</string>
-  <string name="ManageDonationsFragment__subscription_faq">Vanliga frågor om prenumeration</string>
-  <string name="ManageDonationsFragment__error_getting_subscription">Det gick inte att få prenumeration.</string>
-  <string name="BoostFragment__give_signal_a_boost">Ge Signal ett lyft</string>
+  <string name="ManageDonationsFragment__subscription_faq">Vanliga frågor om abonnemang</string>
+  <string name="ManageDonationsFragment__error_getting_subscription">Det gick inte att få abonnemang.</string>
+  <string name="BoostFragment__give_signal_a_boost">Ge Signal en Boost</string>
   <string name="BoostFragment__say_thanks_and_earn">Säg \"Tack!\" och förtjäna Boost-märket i %1$d dagar.</string>
   <string name="Boost__enter_custom_amount">Ange anpassat belopp</string>
   <string name="Boost__one_time_contribution">Engångsbidrag</string>
@@ -3398,16 +3433,21 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="MySupportPreference__please_contact_support">Vänligen kontakta supporten.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__your_badge_has_expired">Ditt märke har upphört att gälla</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__badge_expired">Märket har upphört att gälla</string>
-  <string name="ExpiredBadgeBottomSheetDialogFragment__subscription_cancelled">Prenumerationen uppsagd</string>
+  <string name="ExpiredBadgeBottomSheetDialogFragment__subscription_cancelled">Abonnemang uppsagt</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__your_boost_badge_has_expired">Ditt Boost-märke har upphört att gälla och är inte längre synligt för andra på din profil.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__you_can_reactivate">Du kan återaktivera ditt Boost-märke för ytterligare 30 dagar med ett engångsbidrag.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__to_continue_supporting_technology">För att fortsätta stöda teknik som är byggd för dig, överväg att bli en månatlig upprätthållare.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__become_a_sustainer">Bli en upprätthållare</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__add_a_boost">Lägg till en Boost</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__not_now">Inte nu</string>
-  <string name="ExpiredBadgeBottomSheetDialogFragment__your_sustainer">Din upprätthållarprenumeration avslutades automatiskt eftersom du var inaktiv för länge. Ditt %1$s-märke är inte längre synligt på din profil.</string>
+  <!--Copy displayed when badge expires after user inactivity-->
+  <string name="ExpiredBadgeBottomSheetDialogFragment__your_sustainer_subscription_was_automatically">Ditt upprätthållarabonnemang avbröts automatiskt eftersom du var inaktiv för länge. Ditt %1$s-märke är inte längre synligt på din profil.</string>
+  <!--Copy displayed when badge expires after payment failure-->
+  <string name="ExpiredBadgeBottomSheetDialogFragment__your_sustainer_subscription_was_canceled">Ditt upprätthållarabonnemang avbröts eftersom vi inte kunde behandla din betalning. Ditt märke är inte längre synligt på din profil.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__you_can">Du kan fortsätta använda Signal men för att stöda appen och återaktivera ditt märke, förnya nu.</string>
-  <string name="ExpiredBadgeBottomSheetDialogFragment__renew_subscription">Förnya prenumeration</string>
+  <string name="ExpiredBadgeBottomSheetDialogFragment__renew_subscription">Förnya abonnemang</string>
+  <string name="CantProcessSubscriptionPaymentBottomSheetDialogFragment__cant_process_subscription_payment">Det går inte att behandla abonnemangsbetalningen</string>
+  <string name="CantProcessSubscriptionPaymentBottomSheetDialogFragment__dont_show_this_again">Visa inte detta igen</string>
   <string name="Subscription__please_contact_support_for_more_information">Vänligen kontakta supporten för mer information.</string>
   <string name="Subscription__contact_support">Kontakta support</string>
   <string name="Subscription__earn_a_s_badge">Tjäna ett %1$s-märke</string>
@@ -3424,19 +3464,48 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="DonationsErrors__your_payment_is_still">Din betalning behandlas fortfarande. Detta kan ta några minuter beroende på din anslutning.</string>
   <string name="DonationsErrors__google_pay_unavailable">Google Pay är inte tillgängligt</string>
   <string name="DonationsErrors__you_have_to_set_up_google_pay_to_donate_in_app">Du måste konfigurera Google Pay för att donera i appen.</string>
-  <string name="DonationsErrors__failed_to_cancel_subscription">Det gick inte att säga upp prenumerationen</string>
-  <string name="DonationsErrors__subscription_cancellation_requires_an_internet_connection">Avbokning av prenumeration kräver en internetanslutning.</string>
+  <string name="DonationsErrors__failed_to_cancel_subscription">Det gick inte att säga upp abonnemang</string>
+  <string name="DonationsErrors__subscription_cancellation_requires_an_internet_connection">Uppsägning av abonnemang kräver en internetanslutning.</string>
   <string name="ViewBadgeBottomSheetDialogFragment__your_device_doesn_t_support_google_pay_so_you_can_t_subscribe_to_earn_a_badge_you_can_still_support_signal_by_making_a_donation_on_our_website">Din enhet stöder inte Google Pay, så du kan inte prenumerera för att få ett märke. Du kan fortfarande stöda Signal genom att göra en donation på vår webbplats.</string>
   <string name="NetworkFailure__network_error_check_your_connection_and_try_again">Nätverksfel. Kontrollera din anslutning och försök igen.</string>
   <string name="NetworkFailure__retry">Försök igen</string>
+  <!--Stripe decline code generic_failure-->
+  <string name="DeclineCode__try_another_payment_method_or_contact_your_bank">Försök med en annan betalningsmetod eller kontakta din bank för mer information.</string>
+  <!--Stripe decline code verify on Google Pay and try again-->
+  <string name="DeclineCode__verify_your_payment_method_is_up_to_date_in_google_pay_and_try_again">Kontrollera att din betalningsmetod är aktuell i Google Pay och försök igen.</string>
+  <!--Stripe decline code learn more action label-->
+  <string name="DeclineCode__learn_more">Läs mer</string>
+  <!--Stripe decline code contact issuer-->
+  <string name="DeclineCode__verify_your_payment_method_is_up_to_date_in_google_pay_and_try_again_if_the_problem">Kontrollera att din betalningsmetod är uppdaterad i Google Pay och försök igen. Kontakta din bank om problemet kvarstår.</string>
+  <!--Stripe decline code purchase not supported-->
+  <string name="DeclineCode__your_card_does_not_support_this_type_of_purchase">Ditt kort stöder inte denna typ av köp. Pröva en annan betalningsmetod.</string>
+  <!--Stripe decline code your card has expired-->
+  <!--Stripe decline code go to google pay action label-->
+  <string name="DeclineCode__go_to_google_pay">Gå till Google Pay</string>
+  <!--Stripe decline code incorrect card number-->
+  <string name="DeclineCode__your_card_number_is_incorrect">Ditt kortnummer är felaktigt. Uppdatera det i Google Pay och försök igen.</string>
+  <!--Stripe decline code incorrect cvc-->
+  <string name="DeclineCode__your_cards_cvc_number_is_incorrect">Ditt korts CVC-nummer är felaktigt. Uppdatera det i Google Pay och försök igen.</string>
+  <!--Stripe decline code insufficient funds-->
+  <string name="DeclineCode__your_card_does_not_have_sufficient_funds">Ditt kort har inte tillräckligt med pengar för att slutföra detta köp. Prova en annan betalningsmetod.</string>
+  <!--Stripe decline code incorrect expiration month-->
+  <string name="DeclineCode__the_expiration_month">Förfallomånaden på din betalningsmetod är felaktig. Uppdatera den i Google Pay och försök igen.</string>
+  <!--Stripe decline code incorrect expiration year-->
+  <string name="DeclineCode__the_expiration_year">Förfalloåret på din betalningsmetod är felaktigt. Uppdatera den i Google Pay och försök igen.</string>
+  <!--Stripe decline code issuer not available-->
+  <string name="DeclineCode__try_completing_the_payment_again">Försök att slutföra betalningen igen eller kontakta din bank för mer information.</string>
+  <!--Stripe decline code processing error-->
+  <string name="DeclineCode__try_again">Försök igen eller kontakta din bank för mer information.</string>
   <!--Title of create notification profile screen-->
   <string name="EditNotificationProfileFragment__name_your_profile">Namnge din profil</string>
   <!--Hint text for create/edit notification profile name-->
   <string name="EditNotificationProfileFragment__profile_name">Profilnamn</string>
   <!--Name has a max length, this shows how many characters are used out of the max-->
   <string name="EditNotificationProfileFragment__count">%1$d/%2$d</string>
-  <!--Call to action button once the profile is named to continue to the next create step-->
+  <!--Call to action button to continue to the next step-->
   <string name="EditNotificationProfileFragment__next">Nästa</string>
+  <!--Call to action button once the profile is named to create the profile and continue to the customization steps-->
+  <string name="EditNotificationProfileFragment__create">Skapa</string>
   <!--Call to action button once the profile name is edited-->
   <string name="EditNotificationProfileFragment__save">Spara</string>
   <!--Title of edit notification profile screen-->
@@ -3512,13 +3581,21 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <!--Label for showing the end time for the schedule-->
   <string name="EditNotificationProfileSchedule__end">Slutet</string>
   <!--First letter of Sunday-->
+  <string name="EditNotificationProfileSchedule__sunday_first_letter">S</string>
   <!--First letter of Monday-->
+  <string name="EditNotificationProfileSchedule__monday_first_letter">M</string>
   <!--First letter of Tuesday-->
+  <string name="EditNotificationProfileSchedule__tuesday_first_letter">T</string>
   <!--First letter of Wednesday-->
+  <string name="EditNotificationProfileSchedule__wednesday_first_letter">O</string>
   <!--First letter of Thursday-->
+  <string name="EditNotificationProfileSchedule__thursday_first_letter">T</string>
   <!--First letter of Friday-->
+  <string name="EditNotificationProfileSchedule__friday_first_letter">F</string>
   <!--First letter of Saturday-->
+  <string name="EditNotificationProfileSchedule__saturday_first_letter">L</string>
   <!--Title of select time dialog shown when setting start time for schedule-->
+  <string name="EditNotificationProfileSchedule__set_start_time">Ställ in starttid</string>
   <!--Title of select time dialog shown when setting end time for schedule-->
   <string name="EditNotificationProfileSchedule__set_end_time">Ställ in sluttid</string>
   <!--If in edit mode, call to action button text show to save schedule to profile-->
@@ -3559,5 +3636,7 @@ Tog emot meddelande för nyckelutbyte för ogiltig protokollversion.</string>
   <string name="NotificationProfilesMegaphone__not_now">Inte nu</string>
   <!--Displayed in a toast when we fail to open the ringtone picker-->
   <string name="NotificationSettingsFragment__failed_to_open_picker">Det gick inte att öppna väljaren.</string>
+  <!--Description shown for the Signal Release Notes channel-->
+  <string name="ReleaseNotes__signal_release_notes_and_news">Signal-versionsinformation &amp; nyheter</string>
   <!--EOF-->
 </resources>

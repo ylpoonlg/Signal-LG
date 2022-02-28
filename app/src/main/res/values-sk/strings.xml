@@ -92,6 +92,10 @@
   <string name="BlockUnblockDialog_group_members_will_be_able_to_add_you">Členovia skupiny vás budú môcť do tejto skupiny znovu pridať.</string>
   <string name="BlockUnblockDialog_you_will_be_able_to_call_and_message_each_other">Budete si môcť navzájom písať a volať a budú vidieť vaše meno a fotku.</string>
   <string name="BlockUnblockDialog_blocked_people_wont_be_able_to_call_you_or_send_you_messages">Zablokované osoby vám nebudú môcť volať ani posielať správy.</string>
+  <!--Message shown on block dialog when blocking the Signal release notes recipient-->
+  <string name="BlockUnblockDialog_block_getting_signal_updates_and_news">Blokovať prijímanie aktualizácií a noviniek Signal.</string>
+  <!--Message shown on unblock dialog when unblocking the Signal release notes recipient-->
+  <string name="BlockUnblockDialog_resume_getting_signal_updates_and_news">Pokračovať v získavaní aktualizácií a noviniek Signal.</string>
   <string name="BlockUnblockDialog_unblock_s">Odblokovať %1$s?</string>
   <string name="BlockUnblockDialog_block">Blokovať</string>
   <string name="BlockUnblockDialog_block_and_leave">Zablokovať a odísť</string>
@@ -312,6 +316,7 @@
   <string name="ConversationFragment_your_safety_number_with_s_changed">Vaše bezpečnostné číslo s %s sa zmenilo.</string>
   <string name="ConversationFragment_your_safety_number_with_s_changed_likey_because_they_reinstalled_signal">Vaše bezpečnostné číslo s %s sa zmenilo, zrejme preto, že si preinštalovali Signal alebo vymenili zariadenie. Ťuknite Overiť pre potvrdenie nového bezpečnostného čísla. Táto akcia je nepovinná.</string>
   <!--Message shown to indicate which notification profile is on/active-->
+  <string name="ConversationFragment__s_on">%1$s na</string>
   <plurals name="ConversationListFragment_delete_selected_conversations">
     <item quantity="one">Zmazať označenú konverzáciu?</item>
     <item quantity="few">Zmazať označené konverzácie?</item>
@@ -406,6 +411,7 @@
   <!--Tooltip shown after you have created your first notification profile-->
   <string name="ConversationListFragment__turn_your_notification_profile_on_or_off_here">Tu môžete zapnúť alebo vypnúť svoj profil upozornení.</string>
   <!--Message shown in top toast to indicate the named profile is on-->
+  <string name="ConversationListFragment__s_on">%1$s na</string>
   <!--ConversationListItem-->
   <string name="ConversationListItem_key_exchange_message">Správa výmeny kľúčov</string>
   <!--ConversationListItemAction-->
@@ -451,6 +457,8 @@
   <string name="BackupsPreferenceFragment__learn_more">Dozvedieť sa viac</string>
   <string name="BackupsPreferenceFragment__in_progress">Prebieha…</string>
   <string name="BackupsPreferenceFragment__d_so_far">Zatiaľ %1$d…</string>
+  <!--Show percentage of completion of backup-->
+  <string name="BackupsPreferenceFragment__s_so_far">Zatiaľ %1$s%% …</string>
   <string name="BackupsPreferenceFragment_signal_requires_external_storage_permission_in_order_to_create_backups">Signal potrebuje prístup k úložisku aby mohol vytvárať zálohy, ale prístup bol natrvalo zakázaný. Prosím, v nastaveniach aplikácií zvoľte \"Oprávnenia\" a povoľte \"Úložisko\".</string>
   <!--CustomDefaultPreference-->
   <string name="CustomDefaultPreference_using_custom">Používa sa vlastné: %s</string>
@@ -486,9 +494,6 @@
   <string name="DeviceListItem_today">Dnes</string>
   <!--DocumentView-->
   <string name="DocumentView_unnamed_file">Nepomenovaný súbor</string>
-  <!--GroupCallingMegaphone-->
-  <string name="GroupCallingMegaphone__introducing_group_calls">Predstavujeme skupinové hovory</string>
-  <string name="GroupCallingMegaphone__open_a_new_group_to_start">Založte Novú skupinu pre zahájenie bezplatného šifrovaného skupinového hovoru</string>
   <!--DozeReminder-->
   <string name="DozeReminder_optimize_for_missing_play_services">Optimalizovať pre chýbajúce služby Google Play</string>
   <string name="DozeReminder_this_device_does_not_support_play_services_tap_to_disable_system_battery">Toto zariadenie nepodporuje služby Google Play. Ťuknite pre vypnutie systémovej optimalizácie batérie, ktorá zabraňuje Signalu prijímať správy v neaktívnom stave.</string>
@@ -632,10 +637,6 @@
   <string name="LeaveGroupDialog_choose_new_admin">Vybrať nového admina</string>
   <string name="LeaveGroupDialog_before_you_leave_you_must_choose_at_least_one_new_admin_for_this_group">Pred tým, než opustíte túto skupinu, musíte pre ňu vybrať aspoň jedného nového administrátora.</string>
   <string name="LeaveGroupDialog_choose_admin">Vybrať admina</string>
-  <!--LinkPreviewsMegaphone-->
-  <string name="LinkPreviewsMegaphone_disable">Zrušiť</string>
-  <string name="LinkPreviewsMegaphone_preview_any_link">Pozrite si predbežne akýkoľvek odkaz</string>
-  <string name="LinkPreviewsMegaphone_you_can_now_retrieve_link_previews_directly_from_any_website">Teraz môžete získavať ukážky stránok priamo z webových prepojení pre správy, ktoré odošlete.</string>
   <!--LinkPreviewView-->
   <string name="LinkPreviewView_no_link_preview_available">Náhľad odkazu nedostupný</string>
   <string name="LinkPreviewView_this_group_link_is_not_active">Tento odkaz do skupiny nie je aktívny</string>
@@ -970,8 +971,6 @@
   <string name="MediaOverviewActivity_sent_by_s_to_s">Odoslal/a %1$s adresátovi %2$s</string>
   <string name="MediaOverviewActivity_sent_by_you_to_s">Vami odoslané adresátovi %1$s</string>
   <!--Megaphones-->
-  <string name="Megaphones_introducing_reactions">Predstavujeme reakcie</string>
-  <string name="Megaphones_tap_and_hold_any_message_to_quicky_share_how_you_feel">Ťuknutím a podržaním akejkoľvek správy rýchlo zdieľajte, ako sa cítite.</string>
   <string name="Megaphones_remind_me_later">Pripomenúť neskôr</string>
   <string name="Megaphones_verify_your_signal_pin">Overte svoj PIN pre Signal</string>
   <string name="Megaphones_well_occasionally_ask_you_to_verify_your_pin">Občas vás požiadame o overenie PINu, aby ste ho nezabudli.</string>
@@ -1211,7 +1210,11 @@
   <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified">Bezpečnostné číslo s %s ste označili ako neoverené</string>
   <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified_from_another_device">Bezpečnostné číslo s %s ste označili ako neoverené z iného zariadenia</string>
   <string name="MessageRecord_a_message_from_s_couldnt_be_delivered">Správu od %s sa nepodarilo doručiť</string>
-  <string name="MessageRecord_s_changed_their_number_to_a_new_number">%1$s zmenil ich počet na nové číslo.</string>
+  <string name="MessageRecord_s_changed_their_phone_number">%1$s si zmenili svoje telefónne číslo.</string>
+  <!--Update item message shown in the release channel when someone is already a sustainer so we ask them if they want to boost.-->
+  <string name="MessageRecord_like_this_new_feature_say_thanks_with_a_boost">Páči sa vám táto nová funkcia? Poďakujte pomocou funkcie Podporiť.</string>
+  <!--Update item message shown in the release channel when someone is not a sustainer so we ask them to consider becoming one-->
+  <string name="MessageRecord_signal_is_powered_by_people_like_you_become_a_sustainer_today">Signal poháňajú ľudia ako vy. Staňte sa podporovateľom ešte dnes.</string>
   <!--Group Calling update messages-->
   <string name="MessageRecord_s_started_a_group_call_s">%1$s zahájil(a) skupinový hovor · %2$s</string>
   <string name="MessageRecord_s_is_in_the_group_call_s">%1$s je v skupinovom hovore · %2$s</string>
@@ -1244,6 +1247,7 @@
   <string name="MessageRequestBottomView_unblock">Odblokovať</string>
   <string name="MessageRequestBottomView_do_you_want_to_let_s_message_you_they_wont_know_youve_seen_their_messages_until_you_accept">Povoliť používateľovi %1$s, aby vám posielal správy a zdieľať s ním vaše meno a fotku? Kým s tým nebudete súhlasiť, nebude vedieť, že ste jeho správu videli.</string>
   <string name="MessageRequestBottomView_do_you_want_to_let_s_message_you_wont_receive_any_messages_until_you_unblock_them">Povoliť používateľovi %1$s, aby vám posielal správy a zdieľať s ním vaše meno a fotku? Kým ho neodblokujete, nepríjmete od neho žiadne správy.</string>
+  <string name="MessageRequestBottomView_get_updates_and_news_from_s_you_wont_receive_any_updates_until_you_unblock_them">Chcete dostávať aktualizácie a novinky od %1$s? Nebudete dostávať žiadne aktualizácie, kým ich neodblokujete.</string>
   <string name="MessageRequestBottomView_continue_your_conversation_with_this_group_and_share_your_name_and_photo">Pokračovať v chate v tejto skupine a zdieľať vaše meno a fotku s jej členmi?</string>
   <string name="MessageRequestBottomView_upgrade_this_group_to_activate_new_features">Modernizovaním tejto skupiny aktivujete nové funkcie ako @spomenutia a administrátori. Členovia, ktorí nezdieľali svoje meno alebo fotku, budú do tejto skupiny pozvaní.</string>
   <string name="MessageRequestBottomView_this_legacy_group_can_no_longer_be_used">Táto Zastaraná skupina sa nemôže ďalej používať, pretože je príliš veľká. Maximálna veľkosť skupiny je %1$d.</string>
@@ -1378,6 +1382,11 @@
   <string name="RedPhone_number_not_registered">Neregistrované číslo!</string>
   <string name="RedPhone_the_number_you_dialed_does_not_support_secure_voice">Číslo ktoré ste vytočili nepodporuje zabezpečené hovory!</string>
   <string name="RedPhone_got_it">Chápem</string>
+  <!--Valentine\'s Day Megaphone-->
+  <!--Title text for the Valentine\'s Day donation megaphone. The placeholder will always be a heart emoji. Needs to be a placeholder for Android reasons.-->
+  <string name="ValentinesDayMegaphone_happy_heart_day">Šťastný 💜 Deň!</string>
+  <!--Body text for the Valentine\'s Day donation megaphone.-->
+  <string name="ValentinesDayMegaphone_show_your_affection">Ukážte svoju náklonnosť tým, že sa stanete podporovateľom Signal.</string>
   <!--WebRtcCallActivity-->
   <string name="WebRtcCallActivity__tap_here_to_turn_on_your_video">Ťuknite sem pre spustenie videa</string>
   <string name="WebRtcCallActivity__to_call_s_signal_needs_access_to_your_camera">Pre volanie %1$s potrebuje Signal prístup k vašej kamere</string>
@@ -1443,6 +1452,7 @@
   <string name="WebRtcCallView__flip">Preklopiť</string>
   <string name="WebRtcCallView__speaker">Reproduktor</string>
   <string name="WebRtcCallView__camera">Fotoaparát</string>
+  <string name="WebRtcCallView__unmute">Zapnúť zvuky</string>
   <string name="WebRtcCallView__mute">Stlmiť</string>
   <string name="WebRtcCallView__ring">Zvoniť</string>
   <string name="WebRtcCallView__end_call">Ukončiť hovor</string>
@@ -1751,6 +1761,10 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="NotificationChannel_voice_notes">Hlasové poznámky</string>
   <string name="NotificationChannel_contact_joined_signal">Váš kontakt začal používať Signal</string>
   <string name="NotificationChannels__no_activity_available_to_open_notification_channel_settings">Na otvorenie nastavení kanála upozornení nie je k dispozícii žiadna aktivita.</string>
+  <!--Notification channel name for showing persistent background connection on devices without push notifications-->
+  <string name="NotificationChannel_background_connection">Pripojenie na pozadí</string>
+  <!--Notification channel name for showing call status information (like connection, ongoing, etc.) Not ringing.-->
+  <string name="NotificationChannel_call_status">Stav hovoru</string>
   <!--ProfileEditNameFragment-->
   <!--QuickResponseService-->
   <string name="QuickResponseService_quick_response_unavailable_when_Signal_is_locked">Rýchla odpoveď nie je dostupná, keď je Signal zamknutý!</string>
@@ -1782,6 +1796,7 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="UnauthorizedReminder_device_no_longer_registered">Zariadenie už nie je registrované</string>
   <string name="UnauthorizedReminder_this_is_likely_because_you_registered_your_phone_number_with_Signal_on_a_different_device">Dôvodom je pravdepodobne to, že ste Vaše telefónne číslo zaregistrovali v Signalu na inom zariadení.</string>
   <!--WebRtcCallActivity-->
+  <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone">Ak chcete prijať hovor, poskytnite Signal prístup k mikrofónu.</string>
   <string name="WebRtcCallActivity_to_answer_the_call_from_s_give_signal_access_to_your_microphone">Pre prijatie hovoru od %s musíte povoliť Signalu prístup k mikrofónu.</string>
   <string name="WebRtcCallActivity_signal_requires_microphone_and_camera_permissions_in_order_to_make_or_receive_calls">Signal potrebuje prístup k mikrofónu a fotoaparátu aby mohol volať alebo prijímať hovory, ale prístup bol natrvalo zakázaný. Prosím v nastaveniach aplikácií zvoľte \"Oprávnenia\", a povoľte \"Mikrofón\" a \"Fotoaparát\".</string>
   <string name="WebRtcCallActivity__answered_on_a_linked_device">Prijaté na pripojenom zariadení.</string>
@@ -1885,6 +1900,10 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="ConversationUpdateItem_no_contacts_in_this_group_review_requests_carefully">V tejto skupine nie sú žiadne kontakty. Žiadosti starostlivo skontrolujte.</string>
   <string name="ConversationUpdateItem_view">Zobraziť</string>
   <string name="ConversationUpdateItem_the_disappearing_message_time_will_be_set_to_s_when_you_message_them">Keď odošlete správu, čas zmiznutia správy bude nastavený na %1$s.</string>
+  <!--Update item button text to show to boost a feature-->
+  <string name="ConversationUpdateItem_signal_boost">Podporiť Signal</string>
+  <!--Update item button text to show to become a sustainer in the release notes channel-->
+  <string name="ConversationUpdateItem_become_a_sustainer">Staňte sa Sustainerom</string>
   <!--audio_view-->
   <string name="audio_view__play_pause_accessibility_description">Prehrať … Pozastaviť</string>
   <string name="audio_view__download_accessibility_description">Stiahnuť</string>
@@ -2233,7 +2252,7 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="preferences__help">Pomocník</string>
   <string name="preferences__advanced">Rozšírené</string>
   <string name="preferences__donate_to_signal">Prispieť na Signal</string>
-  <string name="preferences__subscription">Predplatné</string>
+  <string name="preferences__subscription">Prispievanie</string>
   <string name="preferences__become_a_signal_sustainer">Staňte sa podporovateľom Signal</string>
   <string name="preferences__signal_boost">Podporiť Signal</string>
   <string name="preferences__privacy">Súkromie</string>
@@ -2502,18 +2521,35 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="conversation_callable_secure__menu_call">Signal hovor</string>
   <string name="conversation_callable_secure__menu_video">Videohovor Signal</string>
   <!--conversation_context-->
-  <string name="conversation_context__menu_message_details">Podrobnosti správy</string>
-  <string name="conversation_context__menu_copy_text">Kopírovať text</string>
-  <string name="conversation_context__menu_delete_message">Zmazať správu</string>
-  <string name="conversation_context__menu_forward_message">Preposlať správu</string>
-  <string name="conversation_context__menu_resend_message">Odoslať správu znovu</string>
-  <string name="conversation_context__menu_reply_to_message">Odpovedať na správu</string>
-  <!--conversation_context_reacction-->
-  <string name="conversation_context__reaction_multi_select">Vyberte viaceré</string>
+  <!--Heading which shows how many messages are currently selected-->
+  <plurals name="conversation_context__s_selected">
+    <item quantity="one">%d vybraný</item>
+    <item quantity="few">%d vybraný</item>
+    <item quantity="many">%d vybraný</item>
+    <item quantity="other">%d vybraný</item>
+  </plurals>
   <!--conversation_context_image-->
-  <string name="conversation_context_image__save_attachment">Uložiť prílohu </string>
+  <!--Button to save a message attachment (image, file etc.)-->
+  <string name="conversation_context_image__save_attachment">Uložiť</string>
   <!--conversation_expiring_off-->
   <string name="conversation_expiring_off__disappearing_messages">Miznúce správy</string>
+  <!--conversation_selection-->
+  <!--Button to view detailed information for a message-->
+  <string name="conversation_selection__menu_message_details">Info</string>
+  <!--Button to copy a message\'s text to the clipboard-->
+  <string name="conversation_selection__menu_copy">Kopírovať</string>
+  <!--Button to delete a message-->
+  <string name="conversation_selection__menu_delete">Odstrániť</string>
+  <!--Button to forward a message to another person or group chat-->
+  <string name="conversation_selection__menu_forward">Preposlať</string>
+  <!--Button to reply to a message-->
+  <string name="conversation_selection__menu_reply">Odpovedať</string>
+  <!--Button to save a message attachment (image, file etc.)-->
+  <string name="conversation_selection__menu_save">Uložiť</string>
+  <!--Button to retry sending a message-->
+  <string name="conversation_selection__menu_resend_message">Poslať znovu</string>
+  <!--Button to select a message and enter selection mode-->
+  <string name="conversation_selection__menu_multi_select">Vybrať</string>
   <!--conversation_expiring_on-->
   <!--conversation_insecure-->
   <string name="conversation_insecure__invite">Pozvať</string>
@@ -2711,16 +2747,6 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="KbsMegaphone__create_a_pin">Vytvoriť PIN</string>
   <string name="KbsMegaphone__pins_keep_information_thats_stored_with_signal_encrytped">PIN kódy udržiavajú informácie uložené v Signale zašifrované.</string>
   <string name="KbsMegaphone__create_pin">Vytvoriť PIN</string>
-  <!--Research Megaphone-->
-  <string name="ResearchMegaphone_tell_signal_what_you_think">Povedzte Signalu, čo si myslíte</string>
-  <string name="ResearchMegaphone_to_make_signal_the_best_messaging_app_on_the_planet">Aby sme zo Signalu mohli spraviť najlepšiu aplikáciu na posielanie správ na planéte, radi by sme počuli vašu spätnú väzbu.</string>
-  <string name="ResearchMegaphone_learn_more">Dozvedieť sa viac</string>
-  <string name="ResearchMegaphone_dismiss">Zrušiť</string>
-  <string name="ResearchMegaphoneDialog_signal_research">Prieskum Signal</string>
-  <string name="ResearchMegaphoneDialog_we_believe_in_privacy"><![CDATA[<p><b>Veríme v súkromie.</b></p><p>Signal vás nesleduje a nezhromažďuje vaše údaje. Aby sme Signal vylepšili pre každého, spoliehame sa na spätnú väzbu našich používateľov <b> a tešíme sa aj na vašu.</b></p><p>Spustili sme anketu, aby sme zistili, ako Signal používate. Naša anketa nezhromažďuje žiadne údaje, na základe ktorých by vás bolo možné identifikovať. Ak nám budete chcieť poslať dodatočnú odozvu, budete mať možnosť poskytnúť kontaktné údaje.</p><p>Ak máte pár minút a vedeli by ste nám ponúknuť spätnú väzbu, boli by sme radi, keby ste sa nám ozvali.</p>]]></string>
-  <string name="ResearchMegaphoneDialog_take_the_survey">Zapojiť sa do ankety</string>
-  <string name="ResearchMegaphoneDialog_no_thanks">Nie, ďakujem</string>
-  <string name="ResearchMegaphoneDialog_the_survey_is_hosted_by_alchemer_at_the_secure_domain">Anketu sprostredkúva Alchemer na zabezpečenej doméne surveys.signalusers.org</string>
   <!--transport_selection_list_item-->
   <string name="transport_selection_list_item__transport_icon">Ikona prenosu</string>
   <string name="ConversationListFragment_loading">Načítava sa…</string>
@@ -2770,7 +2796,7 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="BackupDialog_verify">Overiť</string>
   <string name="BackupDialog_you_successfully_entered_your_backup_passphrase">Úspešne ste zadali svoje heslo pre zálohy</string>
   <string name="BackupDialog_passphrase_was_not_correct">Heslo nebolo správne</string>
-  <string name="LocalBackupJob_creating_backup">Vytváranie zálohy…</string>
+  <string name="LocalBackupJob_creating_signal_backup">Vytvára sa záloha Signal…</string>
   <string name="LocalBackupJobApi29_backup_failed">Zálohovanie zlyhalo</string>
   <string name="LocalBackupJobApi29_your_backup_directory_has_been_deleted_or_moved">Váš priečinok na zálohy bol vymazaný alebo premiestnený.</string>
   <string name="LocalBackupJobApi29_your_backup_file_is_too_large">Súbor s vašou zálohou je príliš veľký na uloženie v tejto jednotke.</string>
@@ -2892,6 +2918,8 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="DeviceTransfer__transferring_data">Prenášajú sa dáta</string>
   <string name="DeviceTransfer__keep_both_devices_near_each_other">Ponechajte obe zariadenia blízko seba. Nevypínajte zariadenia a nechajte Signal otvorený. Prenosy sú zabezpečené prostredníctvom koncového šifrovania.</string>
   <string name="DeviceTransfer__d_messages_so_far">Zatiaľ %1$d správ…</string>
+  <!--Filled in with total percentage of messages transferred-->
+  <string name="DeviceTransfer__s_of_messages_so_far">Zatiaľ %1$s%% správ…</string>
   <string name="DeviceTransfer__cancel">Zrušiť</string>
   <string name="DeviceTransfer__try_again">Skúsiť znova</string>
   <string name="DeviceTransfer__stop_transfer_question">Zastaviť prenos?</string>
@@ -3056,6 +3084,7 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <!--Title of error dialog shown when a network error occurs during account deletion-->
   <string name="DeleteAccountFragment__account_not_deleted">Účet nebol odstránený</string>
   <!--Message of error dialog shown when a network error occurs during account deletion-->
+  <string name="DeleteAccountFragment__there_was_a_problem">Pri dokončovaní procesu odstránenia sa vyskytol problém. Skontrolujte pripojenie k sieti a skúste to znova.</string>
   <!--DeleteAccountCountryPickerFragment-->
   <string name="DeleteAccountCountryPickerFragment__search_countries">Vyhľadať krajinu</string>
   <!--CreateGroupActivity-->
@@ -3219,7 +3248,10 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <!--ChangeNumberFragment-->
   <string name="ChangeNumberFragment__use_this_to_change_your_current_phone_number_to_a_new_phone_number">Toto použite na zmenu aktuálneho telefónneho čísla na nové telefónne číslo. Túto zmenu nemôžete vrátiť späť. \n\nPred pokračovaním sa uistite, že vaše nové číslo môže prijímať SMS alebo hovory.</string>
   <string name="ChangeNumberFragment__continue">Pokračovať</string>
-  <string name="ChangeNumber__your_phone_number_has_been_changed">Vaše telefónne číslo bolo zmenené.</string>
+  <!--Message shown on dialog after your number has been changed successfully.-->
+  <string name="ChangeNumber__your_phone_number_has_changed_to_s">Vaše telefónne číslo bolo zmenené na %1$s</string>
+  <!--Confirmation button to dismiss number changed dialog-->
+  <string name="ChangeNumber__okay">OK</string>
   <!--ChangeNumberEnterPhoneNumberFragment-->
   <string name="ChangeNumberEnterPhoneNumberFragment__change_number">Zmeniť číslo</string>
   <string name="ChangeNumberEnterPhoneNumberFragment__your_old_number">Vaše staré číslo</string>
@@ -3248,12 +3280,19 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="ChangeNumberPinDiffersFragment__update_pin">Aktualizovať PIN kód</string>
   <string name="ChangeNumberPinDiffersFragment__keep_old_pin_question">Ponechať si starý PIN?</string>
   <!--ChangeNumberLockActivity-->
+  <!--Info message shown to user if something crashed the app during the change number attempt and we were unable to confirm the change so we force them into this screen to check before letting them use the app-->
   <string name="ChangeNumberLockActivity__it_looks_like_you_tried_to_change_your_number_but_we_were_unable_to_determine_if_it_was_successful_rechecking_now">Zdá sa, že ste sa pokúsili zmeniť svoje číslo, ale nepodarilo sa nám určiť, či bolo úspešné.\n\nPrebieha opätovná kontrola…</string>
+  <!--Dialog title shown if we were able to confirm your change number status (meaning we now know what the server thinks our number is) after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__change_status_confirmed">Stav zmeny potvrdený</string>
+  <!--Dialog message shown if we were able to confirm your change number status (meaning we now know what the server thinks our number is) after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__your_number_has_been_confirmed_as_s">Vaše číslo bolo potvrdené ako %1$s. Ak to nie je vaše nové číslo, reštartujte proces zmeny čísla.</string>
+  <!--Dialog title shown if we were not able to confirm your phone number with the server and thus cannot let leave the change flow yet after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__change_status_unconfirmed">Zmeniť stav nepotvrdený</string>
+  <!--Dialog message shown when we can\'t verify the phone number on the server, only shown if there was a network error communicating with the server after a crash during the regular flow-->
   <string name="ChangeNumberLockActivity__we_could_not_determine_the_status_of_your_change_number_request">Nepodarilo sa nám určiť stav vašej žiadosti o zmenu čísla. \n\n (Chyba:%1$s)</string>
+  <!--Dialog button to retry confirming the number on the server-->
   <string name="ChangeNumberLockActivity__retry">Skúsiť znovu</string>
+  <!--Dialog button shown to leave the app when in the unconfirmed change status after a crash in the regular flow-->
   <string name="ChangeNumberLockActivity__leave">Opustiť</string>
   <string name="ChangeNumberLockActivity__submit_debug_log">Odoslať ladiaci záznam</string>
   <!--ChatsSettingsFragment-->
@@ -3267,11 +3306,16 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="NotificationsSettingsFragment__notify_when">Upozorniť, keď…</string>
   <string name="NotificationsSettingsFragment__contact_joins_signal">Kontakt sa pripojí k Signal</string>
   <!--Notification preference header-->
+  <string name="NotificationsSettingsFragment__notification_profiles">Profily pre upozornenia</string>
   <!--Notification preference option header-->
+  <string name="NotificationsSettingsFragment__profiles">Profily</string>
   <!--Notification preference summary text-->
+  <string name="NotificationsSettingsFragment__create_a_profile_to_receive_notifications_only_from_people_and_groups_you_choose">Vytvorte si profil, aby ste dostávali upozornenia iba od ľudí a skupín, ktoré si vyberiete.</string>
   <!--NotificationProfilesFragment-->
   <!--Title for notification profiles screen that shows all existing profiles-->
+  <string name="NotificationProfilesFragment__notification_profiles">Profily pre upozornenia</string>
   <!--Button text to create a notification profile-->
+  <string name="NotificationProfilesFragment__create_profile">Vytvoriť profil</string>
   <!--PrivacySettingsFragment-->
   <string name="PrivacySettingsFragment__blocked">Blokovaní</string>
   <string name="PrivacySettingsFragment__d_contacts">%1$d kontaktov</string>
@@ -3554,17 +3598,17 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="SubscribeFragment__support_technology_that_is_built_for_you_not">Podporte technológiu, ktorá je vytvorená pre vás, nie pre vaše dáta, tým, že sa pripojíte ku komunite, ktorá podporuje Signal.</string>
   <string name="SubscribeFragment__currency">Mena</string>
   <string name="SubscribeFragment__more_payment_options">Viac platobných možností</string>
-  <string name="SubscribeFragment__cancel_subscription">Zrušiť predplatné</string>
+  <string name="SubscribeFragment__cancel_subscription">Zrušiť prispievanie</string>
   <string name="SubscribeFragment__confirm_cancellation">Potvrdiť zrušenie?</string>
   <string name="SubscribeFragment__you_wont_be_charged_again">Už vám nebudeme účtovať žiadne poplatky. Na konci fakturačného obdobia bude váš odznak odstránený z vášho profilu.</string>
   <string name="SubscribeFragment__not_now">Teraz nie</string>
   <string name="SubscribeFragment__confirm">Potvrdiť</string>
-  <string name="SubscribeFragment__update_subscription">Aktualizovať predplatné</string>
-  <string name="SubscribeFragment__your_subscription_has_been_cancelled">Vaše predplatné bolo zrušené.</string>
-  <string name="SubscribeFragment__update_subscription_question">Aktualizovať odber?</string>
+  <string name="SubscribeFragment__update_subscription">Aktualizovať prispievanie</string>
+  <string name="SubscribeFragment__your_subscription_has_been_cancelled">Vaše prispievanie bolo zrušené.</string>
+  <string name="SubscribeFragment__update_subscription_question">Aktualizovať prispievanie?</string>
   <string name="SubscribeFragment__update">Aktualizovať</string>
-  <string name="SubscribeFragment__you_will_be_charged_the_full_amount">Dnes vám bude účtovaná plná suma novej ceny predplatného. Vaše predplatné sa obnoví %1$s.</string>
-  <string name="SubscribeFragment__you_will_be_charged_the_full_amount_s_of">Dnes vám bude účtovaná celá suma (%1$s) novej ceny predplatného. Vaše predplatné sa bude obnovovať mesačne.</string>
+  <string name="SubscribeFragment__you_will_be_charged_the_full_amount">Dnes vám bude účtovaná plná suma novej ceny príspevkov. Vaše prispievanie sa obnoví %1$s.</string>
+  <string name="SubscribeFragment__you_will_be_charged_the_full_amount_s_of">Dnes vám bude účtovaná celá suma (%1$s) novej ceny príspevkov. Vaše prispievanie sa bude obnovovať mesačne.</string>
   <string name="Subscription__s_per_month">%s/mesiac</string>
   <string name="Subscription__s_per_month_dot_renews_s">%1$s/mesiac · Obnovenie %2$s</string>
   <string name="Subscription__s_per_month_dot_expires_s">%1$s/mesiac · Vyprší %2$s</string>
@@ -3585,10 +3629,10 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="BecomeASustainerFragment__get_badges">Podporou Signal získate odznaky pre svoj profil.</string>
   <string name="BecomeASustainerFragment__signal_is_a_non_profit">Signal je nezisková organizácia bez inzerentov a investorov, ktorú podporujú iba ľudia ako vy.</string>
   <string name="ManageDonationsFragment__my_support">Moja podpora</string>
-  <string name="ManageDonationsFragment__manage_subscription">Spravovať predplatné</string>
+  <string name="ManageDonationsFragment__manage_subscription">Spravovať prispievanie</string>
   <string name="ManageDonationsFragment__badges">Odznaky</string>
-  <string name="ManageDonationsFragment__subscription_faq">Časté otázky o predplatnom</string>
-  <string name="ManageDonationsFragment__error_getting_subscription">Chyba pri získavaní predplatného.</string>
+  <string name="ManageDonationsFragment__subscription_faq">Časté otázky o prispievaním</string>
+  <string name="ManageDonationsFragment__error_getting_subscription">Chyba pri získavaní prispievania.</string>
   <string name="BoostFragment__give_signal_a_boost">Začať podporovať Signal</string>
   <string name="BoostFragment__say_thanks_and_earn">Povedz \"ďakujem!\" a získajte odznak Podpora %1$d dní.</string>
   <string name="Boost__enter_custom_amount">Zadajte vlastnú čiastku</string>
@@ -3602,16 +3646,22 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="MySupportPreference__please_contact_support">Prosím, kontaktujte podporu.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__your_badge_has_expired">Platnosť odznaku vypršala</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__badge_expired">Platnosť odznaku vypršala</string>
-  <string name="ExpiredBadgeBottomSheetDialogFragment__subscription_cancelled">Predplatné bolo zrušené</string>
+  <string name="ExpiredBadgeBottomSheetDialogFragment__subscription_cancelled">Prispievanie bolo zrušené</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__your_boost_badge_has_expired">Platnosť vášho odznaku podporovateľa vypršala a ostatní ho už vo vašom profile nevidia.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__you_can_reactivate">Svoj odznak podporovateľa môžete znova aktivovať na ďalších 30 dní jednorazovým príspevkom.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__to_continue_supporting_technology">Ak chcete pokračovať v podpore technológie, ktorá je vytvorená pre vás, zvážte, či sa nestanete mesačným podporovateľom.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__become_a_sustainer">Staňte sa Sustainerom</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__add_a_boost">Pridajte podporu</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__not_now">Teraz nie</string>
-  <string name="ExpiredBadgeBottomSheetDialogFragment__your_sustainer">Vaše predplatné podporovateľa bolo automaticky zrušené, pretože ste boli príliš dlho neaktívni. Váš odznak %1$s sa už vo vašom profile nezobrazuje.</string>
+  <!--Copy displayed when badge expires after user inactivity-->
+  <string name="ExpiredBadgeBottomSheetDialogFragment__your_sustainer_subscription_was_automatically">Vaše prispievanie podporovateľa bolo automaticky zrušené, pretože ste boli príliš dlho neaktívni. Váš odznak %1$s sa už vo vašom profile nezobrazuje.</string>
+  <!--Copy displayed when badge expires after payment failure-->
+  <string name="ExpiredBadgeBottomSheetDialogFragment__your_sustainer_subscription_was_canceled">Vaše predplatné Podporovateľa bolo zrušené, pretože sa nám nepodarilo spracovať vašu platbu. Váš odznak sa už vo vašom profile nezobrazuje.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__you_can">Signal môžete naďalej používať, ale ak chcete podporiť aplikáciu a znova aktivovať svoj odznak, obnovte ho teraz.</string>
-  <string name="ExpiredBadgeBottomSheetDialogFragment__renew_subscription">Obnoviť predplatné</string>
+  <string name="ExpiredBadgeBottomSheetDialogFragment__renew_subscription">Obnoviť prispievanie</string>
+  <string name="CantProcessSubscriptionPaymentBottomSheetDialogFragment__cant_process_subscription_payment">Nedá sa spracovať platba za podporu</string>
+  <string name="CantProcessSubscriptionPaymentBottomSheetDialogFragment__were_having_trouble">Máme problém s evidovaním vašej platby za Signal Podporovateľ. Uistite sa, že je váš spôsob platby aktuálny. Ak nie, aktualizujte ho v službe Google Pay. Signal sa pokúsi spracovať platbu znova o niekoľko dní.</string>
+  <string name="CantProcessSubscriptionPaymentBottomSheetDialogFragment__dont_show_this_again">Toto už nezobrazovať</string>
   <string name="Subscription__please_contact_support_for_more_information">Pre viac informácií kontaktujte podporu.</string>
   <string name="Subscription__contact_support">Kontaktovať zákaznícku podporu</string>
   <string name="Subscription__earn_a_s_badge">Získajte odznak %1$s</string>
@@ -3628,48 +3678,97 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <string name="DonationsErrors__your_payment_is_still">Vaša platba sa stále spracováva. V závislosti od vášho pripojenia to môže trvať niekoľko minút.</string>
   <string name="DonationsErrors__google_pay_unavailable">Google Pay je nedostupný</string>
   <string name="DonationsErrors__you_have_to_set_up_google_pay_to_donate_in_app">Ak chcete prispieť v aplikácii, musíte si nastaviť službu Google Pay.</string>
-  <string name="DonationsErrors__failed_to_cancel_subscription">Predplatné sa nepodarilo zrušiť</string>
-  <string name="DonationsErrors__subscription_cancellation_requires_an_internet_connection">Zrušenie predplatného vyžaduje internetové pripojenie.</string>
+  <string name="DonationsErrors__failed_to_cancel_subscription">Prispievanie sa nepodarilo zrušiť</string>
+  <string name="DonationsErrors__subscription_cancellation_requires_an_internet_connection">Zrušenie prispievania vyžaduje internetové pripojenie.</string>
   <string name="ViewBadgeBottomSheetDialogFragment__your_device_doesn_t_support_google_pay_so_you_can_t_subscribe_to_earn_a_badge_you_can_still_support_signal_by_making_a_donation_on_our_website">Vaše zariadenie nepodporuje Google Pay, takže sa nemôžete prihlásiť na odber a získať odznak. Signal môžete stále podporiť príspevkom na našej webovej stránke.</string>
   <string name="NetworkFailure__network_error_check_your_connection_and_try_again">Chyba siete. Skontrolujte pripojenie a skúste to znova.</string>
   <string name="NetworkFailure__retry">Skúsiť znovu</string>
+  <!--Stripe decline code generic_failure-->
+  <string name="DeclineCode__try_another_payment_method_or_contact_your_bank">Skúste iný spôsob platby, alebo kontaktujte svoju banku a požiadajte o viac informácií.</string>
+  <!--Stripe decline code verify on Google Pay and try again-->
+  <string name="DeclineCode__verify_your_payment_method_is_up_to_date_in_google_pay_and_try_again">Overte, či je váš spôsob platby aktuálny v službe Google Pay, a skúste to znova.</string>
+  <!--Stripe decline code learn more action label-->
+  <string name="DeclineCode__learn_more">Dozvedieť sa viac</string>
+  <!--Stripe decline code contact issuer-->
+  <string name="DeclineCode__verify_your_payment_method_is_up_to_date_in_google_pay_and_try_again_if_the_problem">Overte, či je váš spôsob platby aktuálny v službe Google Pay, a skúste to znova. Ak problém pretrváva, kontaktujte svoju banku.</string>
+  <!--Stripe decline code purchase not supported-->
+  <string name="DeclineCode__your_card_does_not_support_this_type_of_purchase">Vaša karta nepodporuje tento typ nákupu. Skúste iný spôsob platby.</string>
+  <!--Stripe decline code your card has expired-->
+  <string name="DeclineCode__your_card_has_expired">Platnosť vašej karty vypršala. Aktualizujte svoj spôsob platby v službe Google Pay a skúste to znova.</string>
+  <!--Stripe decline code go to google pay action label-->
+  <string name="DeclineCode__go_to_google_pay">Prejdite do služby Google Pay</string>
+  <!--Stripe decline code incorrect card number-->
+  <string name="DeclineCode__your_card_number_is_incorrect">Číslo vašej karty je nesprávne. Aktualizujte ho v službe Google Pay a skúste to znova.</string>
+  <!--Stripe decline code incorrect cvc-->
+  <string name="DeclineCode__your_cards_cvc_number_is_incorrect">Číslo CVC vašej karty je nesprávne. Aktualizujte ho v službe Google Pay a skúste to znova.</string>
+  <!--Stripe decline code insufficient funds-->
+  <string name="DeclineCode__your_card_does_not_have_sufficient_funds">Na vašej karte nie sú dostatočné prostriedky na dokončenie tohto nákupu. Skúste iný spôsob platby.</string>
+  <!--Stripe decline code incorrect expiration month-->
+  <string name="DeclineCode__the_expiration_month">Mesiac vypršania platnosti vášho spôsobu platby je nesprávny. Aktualizujte ho v službe Google Pay a skúste to znova.</string>
+  <!--Stripe decline code incorrect expiration year-->
+  <string name="DeclineCode__the_expiration_year">Rok vypršania platnosti vášho spôsobu platby je nesprávny. Aktualizujte ho v službe Google Pay a skúste to znova.</string>
+  <!--Stripe decline code issuer not available-->
+  <string name="DeclineCode__try_completing_the_payment_again">Skúste znova dokončiť platbu, alebo kontaktujte svoju banku a požiadajte o ďalšie informácie.</string>
+  <!--Stripe decline code processing error-->
+  <string name="DeclineCode__try_again">Skúste to znova, alebo kontaktujte svoju banku a požiadajte o ďalšie informácie.</string>
   <!--Title of create notification profile screen-->
+  <string name="EditNotificationProfileFragment__name_your_profile">Pomenujte svoj profil</string>
   <!--Hint text for create/edit notification profile name-->
   <string name="EditNotificationProfileFragment__profile_name">Názov profilu</string>
   <!--Name has a max length, this shows how many characters are used out of the max-->
   <string name="EditNotificationProfileFragment__count">%1$d/%2$d</string>
-  <!--Call to action button once the profile is named to continue to the next create step-->
+  <!--Call to action button to continue to the next step-->
   <string name="EditNotificationProfileFragment__next">Ďalší</string>
+  <!--Call to action button once the profile is named to create the profile and continue to the customization steps-->
+  <string name="EditNotificationProfileFragment__create">Vytvoriť</string>
   <!--Call to action button once the profile name is edited-->
   <string name="EditNotificationProfileFragment__save">Uložiť</string>
   <!--Title of edit notification profile screen-->
+  <string name="EditNotificationProfileFragment__edit_this_profile">Upraviť tento profil</string>
   <!--Error message shown when attempting to create or edit a profile name to an existing profile name-->
+  <string name="EditNotificationProfileFragment__a_profile_with_this_name_already_exists">Profil s týmto názvom už existuje</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
   <string name="EditNotificationProfileFragment__work">Práca</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
+  <string name="EditNotificationProfileFragment__sleep">Spánok</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
+  <string name="EditNotificationProfileFragment__driving">Šoférovanie</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
+  <string name="EditNotificationProfileFragment__downtime">Odpočinok</string>
   <!--Preset selectable name for a profile name, shown as list in edit/create screen-->
+  <string name="EditNotificationProfileFragment__focus">Sústrediť sa</string>
   <!--Error message shown when attempting to next/save without a profile name-->
+  <string name="EditNotificationProfileFragment__profile_must_have_a_name">Musí mať meno</string>
   <!--Title for add recipients to notification profile screen in create flow-->
+  <string name="AddAllowedMembers__allowed_notifications">Povolené upozornenia</string>
   <!--Description of what the user should be doing with this screen-->
+  <string name="AddAllowedMembers__add_people_and_groups_you_want_notifications_and_calls_from_when_this_profile_is_on">Pridajte ľudí a skupiny, od ktorých chcete dostávať upozornenia a hovory, keď je tento profil zapnutý</string>
   <!--Button text that launches the contact picker to select from-->
+  <string name="AddAllowedMembers__add_people_or_groups">Pridajte ľudí alebo skupiny</string>
   <!--Call to action button on contact picker for adding to profile-->
   <string name="SelectRecipientsFragment__add">Pridať</string>
   <!--Notification profiles home fragment, shown when no profiles have been created yet-->
+  <string name="NotificationProfilesFragment__create_a_profile_to_receive_notifications_and_calls_only_from_the_people_and_groups_you_want_to_hear_from">Vytvorte si profil, aby ste dostávali upozornenia a hovory iba od ľudí a skupín, od ktorých chcete počuť.</string>
   <!--Header shown above list of all notification profiles-->
+  <string name="NotificationProfilesFragment__profiles">Profily</string>
   <!--Button that starts the create new notification profile flow-->
+  <string name="NotificationProfilesFragment__new_profile">Nový profil</string>
   <!--Profile active status, indicating the current profile is on for an unknown amount of time-->
   <string name="NotificationProfilesFragment__on">Zapnuté</string>
   <!--Button use to permanently delete a notification profile-->
+  <string name="NotificationProfileDetails__delete_profile">Odstrániť profil</string>
   <!--Snakbar message shown when removing a recipient from a profile-->
+  <string name="NotificationProfileDetails__s_removed">\"%1$s\" odstránený.</string>
   <!--Snackbar button text that will undo the recipient remove-->
   <string name="NotificationProfileDetails__undo">Späť</string>
   <!--Dialog message shown to confirm deleting a profile-->
+  <string name="NotificationProfileDetails__permanently_delete_profile">Chcete natrvalo odstrániť profil?</string>
   <!--Dialog button to delete profile-->
   <string name="NotificationProfileDetails__delete">Odstrániť</string>
   <!--Title/accessibility text for edit icon to edit profile emoji/name-->
+  <string name="NotificationProfileDetails__edit_notification_profile">Upraviť profil upozornení</string>
   <!--Schedule description if all days are selected-->
+  <string name="NotificationProfileDetails__everyday">Každý deň</string>
   <!--Profile status on if it is the active profile-->
   <string name="NotificationProfileDetails__on">Zapnuté</string>
   <!--Profile status on if it is not the active profile-->
@@ -3677,27 +3776,43 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <!--Description of hours for schedule (start to end) times-->
   <string name="NotificationProfileDetails__s_to_s">od %1$s do %2$s</string>
   <!--Section header for exceptions to the notification profile-->
+  <string name="NotificationProfileDetails__exceptions">Výnimky</string>
   <!--Profile exception to allow all calls through the profile restrictions-->
+  <string name="NotificationProfileDetails__allow_all_calls">Povoliť všetky hovory</string>
   <!--Profile exception to allow all @mentions through the profile restrictions-->
+  <string name="NotificationProfileDetails__notify_for_all_mentions">Upozorniť na všetky zmienky</string>
   <!--Section header for showing schedule information-->
+  <string name="NotificationProfileDetails__schedule">Rozvrh</string>
   <!--If member list is long, will truncate the list and show an option to then see all when tapped-->
   <string name="NotificationProfileDetails__see_all">Pozrieť všetky</string>
   <!--Title for add schedule to profile in create flow-->
+  <string name="EditNotificationProfileSchedule__add_a_schedule">Pridajte rozvrh</string>
   <!--Descriptor text indicating what the user can do with this screen-->
+  <string name="EditNotificationProfileSchedule__set_up_a_schedule_to_enable_this_notification_profile_automatically">Nastavte plán na automatické povolenie tohto profilu upozornení.</string>
   <!--Text shown next to toggle switch to enable/disable schedule-->
+  <string name="EditNotificationProfileSchedule__schedule">Rozvrh</string>
   <!--Label for showing the start time for the schedule-->
   <string name="EditNotificationProfileSchedule__start">Štart</string>
   <!--Label for showing the end time for the schedule-->
   <string name="EditNotificationProfileSchedule__end">Ukončiť</string>
   <!--First letter of Sunday-->
+  <string name="EditNotificationProfileSchedule__sunday_first_letter">Ne</string>
   <!--First letter of Monday-->
+  <string name="EditNotificationProfileSchedule__monday_first_letter">Po</string>
   <!--First letter of Tuesday-->
+  <string name="EditNotificationProfileSchedule__tuesday_first_letter">Ut</string>
   <!--First letter of Wednesday-->
+  <string name="EditNotificationProfileSchedule__wednesday_first_letter">St</string>
   <!--First letter of Thursday-->
+  <string name="EditNotificationProfileSchedule__thursday_first_letter">Št</string>
   <!--First letter of Friday-->
+  <string name="EditNotificationProfileSchedule__friday_first_letter">Pi</string>
   <!--First letter of Saturday-->
+  <string name="EditNotificationProfileSchedule__saturday_first_letter">So</string>
   <!--Title of select time dialog shown when setting start time for schedule-->
+  <string name="EditNotificationProfileSchedule__set_start_time">Nastavte čas začiatku</string>
   <!--Title of select time dialog shown when setting end time for schedule-->
+  <string name="EditNotificationProfileSchedule__set_end_time">Nastavte čas ukončenia</string>
   <!--If in edit mode, call to action button text show to save schedule to profile-->
   <string name="EditNotificationProfileSchedule__save">Uložiť</string>
   <!--If in create mode, call to action button text to show to skip enabling a schedule-->
@@ -3705,24 +3820,38 @@ Bola prijatá správa výmeny kľúčov s neplatnou verziou protokolu.
   <!--If in create mode, call to action button text to show to use the enabled schedule and move to the next screen-->
   <string name="EditNotificationProfileSchedule__next">Ďalší</string>
   <!--Error message shown if trying to save/use a schedule with no days selected-->
+  <string name="EditNotificationProfileSchedule__schedule_must_have_at_least_one_day">Rozvrh musí mať aspoň jeden deň</string>
   <!--Title for final screen shown after completing a profile creation-->
+  <string name="NotificationProfileCreated__profile_created">Profil bol vytvorený</string>
   <!--Call to action button to press to close the created screen and move to the profile details screen-->
   <string name="NotificationProfileCreated__done">Hotovo</string>
   <!--Descriptor text shown to indicate how to manually turn a profile on/off-->
+  <string name="NotificationProfileCreated__you_can_turn_your_profile_on_or_off_manually_via_the_menu_on_the_chat_list">Svoj profil môžete zapnúť, alebo vypnúť manuálne cez ponuku v zozname rozhovorov.</string>
   <!--Descriptor text shown to indicate you can add a schedule later since you did not add one during create flow-->
+  <string name="NotificationProfileCreated__add_a_schedule_in_settings_to_automate_your_profile">Pridajte plán v nastaveniach na automatizáciu svojho profilu.</string>
   <!--Descriptor text shown to indicate your profile will follow the schedule set during create flow-->
+  <string name="NotificationProfileCreated__your_profile_will_turn_on_and_off_automatically_according_to_your_schedule">Váš profil sa automaticky zapne a vypne podľa vášho plánu.</string>
   <!--Button text shown in profile selection bottom sheet to create a new profile-->
+  <string name="NotificationProfileSelection__new_profile">Nový profil</string>
   <!--Manual enable option to manually enable a profile for 1 hour-->
+  <string name="NotificationProfileSelection__for_1_hour">Na 1 hodinu</string>
   <!--Manual enable option to manually enable a profile until a set time (currently 6pm or 8am depending on what is next)-->
   <string name="NotificationProfileSelection__until_s">Do %1$s</string>
   <!--Option to view profile details-->
+  <string name="NotificationProfileSelection__view_settings">Zobraziť nastavenia</string>
   <!--Descriptor text indicating how long a profile will be on when there is a time component associated with it-->
+  <string name="NotificationProfileSelection__on_until_s">Až do %1$s</string>
   <!--Title for notification profile megaphone-->
+  <string name="NotificationProfilesMegaphone__notification_profiles">Profily pre upozornenia</string>
   <!--Description for notification profile megaphone-->
+  <string name="NotificationProfilesMegaphone__only_get_notifications_from_the_people_and_groups_you_choose">Dostávajte upozornenia iba od ľudí a skupín, ktoré si vyberiete.</string>
   <!--Call to action button to create a profile from megaphone-->
+  <string name="NotificationProfilesMegaphone__create_a_profile">Vytvorte si profil</string>
   <!--Button to dismiss notification profile megaphone-->
   <string name="NotificationProfilesMegaphone__not_now">Teraz nie</string>
   <!--Displayed in a toast when we fail to open the ringtone picker-->
   <string name="NotificationSettingsFragment__failed_to_open_picker">Výber sa nepodarilo otvoriť.</string>
+  <!--Description shown for the Signal Release Notes channel-->
+  <string name="ReleaseNotes__signal_release_notes_and_news">Poznámky k vydaniu Signal  &amp; Novinky</string>
   <!--EOF-->
 </resources>
