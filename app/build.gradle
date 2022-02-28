@@ -91,7 +91,6 @@ def selectableVariants = [
 ]
 
 android {
-    buildToolsVersion BUILD_TOOL_VERSION
     compileSdkVersion COMPILE_SDK
 
     flavorDimensions 'distribution', 'environment'
@@ -125,12 +124,6 @@ android {
         }
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError true
-        baseline file("lint-baseline.xml")
-        disable "LintError"
-    }
 
     sourceSets {
         test {
@@ -147,15 +140,10 @@ android {
         sourceCompatibility JAVA_VERSION
         targetCompatibility JAVA_VERSION
     }
-
     packagingOptions {
-        exclude 'LICENSE.txt'
-        exclude 'LICENSE'
-        exclude 'NOTICE'
-        exclude 'asm-license.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/proguard/androidx-annotations.pro'
+        resources {
+            excludes += ['LICENSE.txt', 'LICENSE', 'NOTICE', 'asm-license.txt', 'META-INF/LICENSE', 'META-INF/NOTICE', 'META-INF/proguard/androidx-annotations.pro']
+        }
     }
 
 
@@ -216,8 +204,8 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
+        //resConfigs
 
-        resConfigs autoResConfig()
 
         splits {
             abi {
@@ -348,6 +336,12 @@ android {
             buildConfigField "String", "BUILD_ENVIRONMENT_TYPE", "\"Staging\""
             buildConfigField "String", "STRIPE_PUBLISHABLE_KEY", "\"pk_test_sngOd8FnXNkpce9nPXawKrJD00kIDngZkD\""
         }
+    }
+    lint {
+        abortOnError true
+        baseline file('lint-baseline.xml')
+        checkReleaseBuilds false
+        disable 'LintError'
     }
 
     android.applicationVariants.all { variant ->
