@@ -63,8 +63,8 @@ ktlint {
     version = "0.43.2"
 }
 
-def canonicalVersionCode = 1057
-def canonicalVersionName = "5.39.1"
+def canonicalVersionCode = 1058
+def canonicalVersionName = "5.39.2"
 
 def postFixSize = 100
 def abiPostFix = ['universal'   : 0,
@@ -92,6 +92,7 @@ def selectableVariants = [
 ]
 
 android {
+    buildToolsVersion BUILD_TOOL_VERSION
     compileSdkVersion COMPILE_SDK
 
     flavorDimensions 'distribution', 'environment'
@@ -125,6 +126,12 @@ android {
         }
     }
 
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError true
+        baseline file("lint-baseline.xml")
+        disable "LintError"
+    }
 
     sourceSets {
         test {
@@ -141,10 +148,15 @@ android {
         sourceCompatibility JAVA_VERSION
         targetCompatibility JAVA_VERSION
     }
+
     packagingOptions {
-        resources {
-            excludes += ['LICENSE.txt', 'LICENSE', 'NOTICE', 'asm-license.txt', 'META-INF/LICENSE', 'META-INF/NOTICE', 'META-INF/proguard/androidx-annotations.pro']
-        }
+        exclude 'LICENSE.txt'
+        exclude 'LICENSE'
+        exclude 'NOTICE'
+        exclude 'asm-license.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/proguard/androidx-annotations.pro'
     }
 
 
@@ -187,13 +199,13 @@ android {
         buildConfigField "String", "CDS_MRENCLAVE", "\"c98e00a4e3ff977a56afefe7362a27e4961e4f19e211febfbb19b897e6b80b15\""
         buildConfigField "String", "CDSI_MRENCLAVE", "\"42e36b74794abe612d698308b148ff8a7dc5fdc6ad28d99bc5024ed6ece18dfe\""
         buildConfigField "org.thoughtcrime.securesms.KbsEnclave", "KBS_ENCLAVE", "new org.thoughtcrime.securesms.KbsEnclave(\"0cedba03535b41b67729ce9924185f831d7767928a1d1689acb689bc079c375f\", " +
-                                                                                                                           "\"187d2739d22be65e74b65f0055e74d31310e4267e5fac2b1246cc8beba81af39\", " +
-                                                                                                                           "\"ee19f1965b1eefa3dc4204eb70c04f397755f771b8c1909d080c04dad2a6a9ba\")"
+                "\"187d2739d22be65e74b65f0055e74d31310e4267e5fac2b1246cc8beba81af39\", " +
+                "\"ee19f1965b1eefa3dc4204eb70c04f397755f771b8c1909d080c04dad2a6a9ba\")"
         buildConfigField "org.thoughtcrime.securesms.KbsEnclave[]", "KBS_FALLBACKS", "new org.thoughtcrime.securesms.KbsEnclave[] {" +
                 "new org.thoughtcrime.securesms.KbsEnclave(\"fe7c1bfae98f9b073d220366ea31163ee82f6d04bead774f71ca8e5c40847bfe\", " +
-                                                          "\"fe7c1bfae98f9b073d220366ea31163ee82f6d04bead774f71ca8e5c40847bfe\", " +
-                                                          "\"a3baab19ef6ce6f34ab9ebb25ba722725ae44a8872dc0ff08ad6d83a9489de87\")" +
-            "}"
+                "\"fe7c1bfae98f9b073d220366ea31163ee82f6d04bead774f71ca8e5c40847bfe\", " +
+                "\"a3baab19ef6ce6f34ab9ebb25ba722725ae44a8872dc0ff08ad6d83a9489de87\")" +
+                "}"
         buildConfigField "String", "UNIDENTIFIED_SENDER_TRUST_ROOT", "\"BXu6QIKVz5MA8gstzfOgRQGqyLqOwNKHL6INkv3IHWMF\""
         buildConfigField "String", "ZKGROUP_SERVER_PUBLIC_PARAMS", "\"AMhf5ywVwITZMsff/eCyudZx9JDmkkkbV6PInzG4p8x3VqVJSFiMvnvlEKWuRob/1eaIetR31IYeAbm0NdOuHH8Qi+Rexi1wLlpzIo1gstHWBfZzy1+qHRV5A4TqPp15YzBPm0WSggW6PbSn+F4lf57VCnHF7p8SvzAA2ZZJPYJURt8X7bbg+H3i+PEjH9DXItNEqs2sNcug37xZQDLm7X36nOoGPs54XsEGzPdEV+itQNGUFEjY6X9Uv+Acuks7NpyGvCoKxGwgKgE5XyJ+nNKlyHHOLb6N1NuHyBrZrgtY/JYJHRooo5CEqYKBqdFnmbTVGEkCvJKxLnjwKWf+fEPoWeQFj5ObDjcKMZf2Jm2Ae69x+ikU5gBXsRmoF94GXQ==\""
         buildConfigField "String[]", "LANGUAGES", "new String[]{\"" + autoResConfig().collect { s -> s.replace('-r', '_') }.join('", "') + '"}'
@@ -212,8 +224,8 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
-        //resConfigs
 
+        resConfigs autoResConfig()
 
         splits {
             abi {
@@ -329,13 +341,13 @@ android {
             buildConfigField "String", "SIGNAL_KEY_BACKUP_URL", "\"https://api-staging.backup.signal.org\""
             buildConfigField "String", "CDS_MRENCLAVE", "\"c98e00a4e3ff977a56afefe7362a27e4961e4f19e211febfbb19b897e6b80b15\""
             buildConfigField "org.thoughtcrime.securesms.KbsEnclave", "KBS_ENCLAVE", "new org.thoughtcrime.securesms.KbsEnclave(\"dd6f66d397d9e8cf6ec6db238e59a7be078dd50e9715427b9c89b409ffe53f99\", " +
-                                                                                                                               "\"4200003414528c151e2dccafbc87aa6d3d66a5eb8f8c05979a6e97cb33cd493a\", " +
-                                                                                                                               "\"ee19f1965b1eefa3dc4204eb70c04f397755f771b8c1909d080c04dad2a6a9ba\")"
+                    "\"4200003414528c151e2dccafbc87aa6d3d66a5eb8f8c05979a6e97cb33cd493a\", " +
+                    "\"ee19f1965b1eefa3dc4204eb70c04f397755f771b8c1909d080c04dad2a6a9ba\")"
             buildConfigField "org.thoughtcrime.securesms.KbsEnclave[]", "KBS_FALLBACKS", "new org.thoughtcrime.securesms.KbsEnclave[] {" +
                     "new org.thoughtcrime.securesms.KbsEnclave(\"823a3b2c037ff0cbe305cc48928cfcc97c9ed4a8ca6d49af6f7d6981fb60a4e9\", " +
-                                                              "\"16b94ac6d2b7f7b9d72928f36d798dbb35ed32e7bb14c42b4301ad0344b46f29\", " +
-                                                              "\"a3baab19ef6ce6f34ab9ebb25ba722725ae44a8872dc0ff08ad6d83a9489de87\")" +
-                "}"
+                    "\"16b94ac6d2b7f7b9d72928f36d798dbb35ed32e7bb14c42b4301ad0344b46f29\", " +
+                    "\"a3baab19ef6ce6f34ab9ebb25ba722725ae44a8872dc0ff08ad6d83a9489de87\")" +
+                    "}"
             buildConfigField "String", "UNIDENTIFIED_SENDER_TRUST_ROOT", "\"BbqY1DzohE4NUZoVF+L18oUPrK3kILllLEJh2UnPSsEx\""
             buildConfigField "String", "ZKGROUP_SERVER_PUBLIC_PARAMS", "\"ABSY21VckQcbSXVNCGRYJcfWHiAMZmpTtTELcDmxgdFbtp/bWsSxZdMKzfCp8rvIs8ocCU3B37fT3r4Mi5qAemeGeR2X+/YmOGR5ofui7tD5mDQfstAI9i+4WpMtIe8KC3wU5w3Inq3uNWVmoGtpKndsNfwJrCg0Hd9zmObhypUnSkfYn2ooMOOnBpfdanRtrvetZUayDMSC5iSRcXKpdlukrpzzsCIvEwjwQlJYVPOQPj4V0F4UXXBdHSLK05uoPBCQG8G9rYIGedYsClJXnbrgGYG3eMTG5hnx4X4ntARBgELuMWWUEEfSK0mjXg+/2lPmWcTZWR9nkqgQQP0tbzuiPm74H2wMO4u1Wafe+UwyIlIT9L7KLS19Aw8r4sPrXQ==\""
             buildConfigField "String", "MOBILE_COIN_ENVIRONMENT", "\"testnet\""
@@ -345,12 +357,6 @@ android {
             buildConfigField "String", "BUILD_ENVIRONMENT_TYPE", "\"Staging\""
             buildConfigField "String", "STRIPE_PUBLISHABLE_KEY", "\"pk_test_sngOd8FnXNkpce9nPXawKrJD00kIDngZkD\""
         }
-    }
-    lint {
-        abortOnError true
-        baseline file('lint-baseline.xml')
-        checkReleaseBuilds false
-        disable 'LintError'
     }
 
     android.applicationVariants.all { variant ->

@@ -272,7 +272,8 @@ public class ConversationListFragment extends MainFragment implements ActionMode
     ftdayButton.setOnClickListener(new View.OnClickListener() {
       @SuppressLint("LogTagInlined") @Override public void onClick(View view) {
         Log.d("ftday", "Open Image Screen...");
-
+        Intent intent = new Intent(getActivity(), FTDayActivity.class);
+        startActivity(intent);
       }
     });
 
