@@ -571,12 +571,18 @@
         <item name="chipBackgroundColor">@color/core_grey_05</item>
         <item name="closeIconTint">@color/core_grey_60</item>
     </style>
-    
+
     <style name="ThemeOverlay.Signal.EditProfileInput" parent="ThemeOverlay.MaterialComponents">
         <item name="colorAccent">@color/signal_accent_primary</item>
         <item name="colorControlNormal">@color/signal_accent_primary</item>
         <item name="colorControlHighlight">@color/signal_accent_primary</item>
         <item name="colorControlActivated">@color/signal_accent_primary</item>
     </style>
+    <style name="TextSecure.LightTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="TextSecure.LightTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="TextSecure.LightTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

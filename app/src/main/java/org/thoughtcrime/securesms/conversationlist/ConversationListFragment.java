@@ -39,6 +39,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -220,6 +221,8 @@ public class ConversationListFragment extends MainFragment implements ActionMode
   private SignalContextMenu              activeContextMenu;
   private LifecycleDisposable            lifecycleDisposable;
 
+  private Button                         ftdayButton;
+
   protected ConversationListArchiveItemDecoration archiveDecoration;
   protected ConversationListItemAnimator          itemAnimator;
   private   Stopwatch                             startupStopwatch;
@@ -264,6 +267,15 @@ public class ConversationListFragment extends MainFragment implements ActionMode
     megaphoneContainer        = new Stub<>(view.findViewById(R.id.megaphone_container));
     paymentNotificationView   = new Stub<>(view.findViewById(R.id.payments_notification));
     voiceNotePlayerViewStub   = new Stub<>(view.findViewById(R.id.voice_note_player));
+
+    ftdayButton               = view.findViewById(R.id.ftday_btn);   // ftday
+    ftdayButton.setOnClickListener(new View.OnClickListener() {
+      @SuppressLint("LogTagInlined") @Override public void onClick(View view) {
+        Log.d("ftday", "Open Image Screen...");
+
+      }
+    });
+
 
     if (FeatureFlags.internalUser()) {
       fab       = view.findViewById(R.id.fab_new);
