@@ -29,7 +29,6 @@ import org.thoughtcrime.securesms.conversation.ConversationFragment;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.notifications.NotificationChannels;
 import org.thoughtcrime.securesms.util.DeviceProperties;
-import org.thoughtcrime.securesms.util.TextSecurePreferences;
 
 /**
  * Provide basic steps to fix potential call notification issues based on what we can detect on the system
@@ -185,7 +184,7 @@ public final class EnableCallNotificationSettingsDialog extends DialogFragment {
   }
 
   private void showNotificationChannelSettings() {
-    NotificationChannels.openChannelSettings(requireContext(), NotificationChannels.CALLS);
+    NotificationChannels.openChannelSettings(requireContext(), NotificationChannels.CALLS, null);
   }
 
   private void showAppSettings() {

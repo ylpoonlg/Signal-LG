@@ -16,7 +16,7 @@ import org.thoughtcrime.securesms.database.SignalDatabase;
 import org.thoughtcrime.securesms.database.ThreadDatabase;
 import org.thoughtcrime.securesms.database.model.ThreadRecord;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
-import org.thoughtcrime.securesms.util.CursorUtil;
+import org.signal.core.util.CursorUtil;
 import org.thoughtcrime.securesms.util.LRUCache;
 import org.thoughtcrime.securesms.util.Stopwatch;
 import org.thoughtcrime.securesms.util.concurrent.FilteredExecutor;
@@ -55,7 +55,7 @@ public final class LiveRecipientCache {
     this.warmedUp          = new AtomicBoolean(false);
     this.localRecipientId  = new AtomicReference<>(null);
     this.unknown           = new LiveRecipient(context, Recipient.UNKNOWN);
-    this.resolveExecutor   = ThreadUtil.trace(new FilteredExecutor(SignalExecutors.BOUNDED, () -> !SignalDatabase.inTransaction()));
+    this.resolveExecutor   = ThreadUtil.trace(new FilteredExecutor(SignalExecutors.newCachedBoundedExecutor("signal-recipients", 1, 4, 15), () -> !SignalDatabase.inTransaction()));
   }
 
   @AnyThread
@@ -155,11 +155,11 @@ public final class LiveRecipientCache {
       }
 
       if (localAci != null) {
-        selfId = recipientDatabase.getByServiceId(localAci).orNull();
+        selfId = recipientDatabase.getByServiceId(localAci).orElse(null);
       }
 
       if (selfId == null && localE164 != null) {
-        selfId = recipientDatabase.getByE164(localE164).orNull();
+        selfId = recipientDatabase.getByE164(localE164).orElse(null);
       }
 
       if (selfId == null) {

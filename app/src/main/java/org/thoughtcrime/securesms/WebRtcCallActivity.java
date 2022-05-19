@@ -39,16 +39,19 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Consumer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.window.DisplayFeature;
 import androidx.window.FoldingFeature;
 import androidx.window.WindowLayoutInfo;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.signal.core.util.concurrent.SignalExecutors;
 import org.signal.core.util.logging.Log;
+import org.signal.libsignal.protocol.IdentityKey;
 import org.thoughtcrime.securesms.components.TooltipPopup;
 import org.thoughtcrime.securesms.components.sensors.DeviceOrientationMonitor;
 import org.thoughtcrime.securesms.components.webrtc.CallParticipantsListUpdatePopupWindow;
@@ -75,15 +78,18 @@ import org.thoughtcrime.securesms.util.FullscreenHelper;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
 import org.thoughtcrime.securesms.util.ThrottledDebouncer;
 import org.thoughtcrime.securesms.util.Util;
+import org.thoughtcrime.securesms.util.VibrateUtil;
 import org.thoughtcrime.securesms.util.livedata.LiveDataUtil;
 import org.thoughtcrime.securesms.webrtc.CallParticipantsViewState;
 import org.thoughtcrime.securesms.webrtc.audio.SignalAudioManager;
-import org.whispersystems.libsignal.IdentityKey;
 import org.whispersystems.signalservice.api.messages.calls.HangupMessage;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 import static org.thoughtcrime.securesms.components.sensors.Orientation.PORTRAIT_BOTTOM_EDGE;
 
@@ -92,6 +98,7 @@ public class WebRtcCallActivity extends BaseActivity implements SafetyNumberChan
   private static final String TAG = Log.tag(WebRtcCallActivity.class);
 
   private static final int STANDARD_DELAY_FINISH = 1000;
+  private static final int VIBRATE_DURATION      = 50;
 
   public static final String ANSWER_ACTION   = WebRtcCallActivity.class.getCanonicalName() + ".ANSWER_ACTION";
   public static final String DENY_ACTION     = WebRtcCallActivity.class.getCanonicalName() + ".DENY_ACTION";
@@ -107,9 +114,12 @@ public class WebRtcCallActivity extends BaseActivity implements SafetyNumberChan
   private TooltipPopup                  videoTooltip;
   private WebRtcCallViewModel           viewModel;
   private boolean                       enableVideoIfAvailable;
+  private boolean                       hasWarnedAboutBluetooth;
   private androidx.window.WindowManager windowManager;
   private WindowLayoutInfoConsumer      windowLayoutInfoConsumer;
   private ThrottledDebouncer            requestNewSizesThrottle;
+
+  private Disposable ephemeralStateDisposable = Disposable.empty();
 
   @Override
   protected void attachBaseContext(@NonNull Context newBase) {
@@ -154,6 +164,16 @@ public class WebRtcCallActivity extends BaseActivity implements SafetyNumberChan
   }
 
   @Override
+  protected void onStart() {
+    super.onStart();
+
+    ephemeralStateDisposable = ApplicationDependencies.getSignalCallManager()
+                                                      .ephemeralStates()
+                                                      .observeOn(AndroidSchedulers.mainThread())
+                                                      .subscribe(viewModel::updateFromEphemeralState);
+  }
+
+  @Override
   public void onResume() {
     Log.i(TAG, "onResume()");
     super.onResume();
@@ -192,6 +212,8 @@ public class WebRtcCallActivity extends BaseActivity implements SafetyNumberChan
   protected void onStop() {
     Log.i(TAG, "onStop");
     super.onStop();
+
+    ephemeralStateDisposable.dispose();
 
     if (!isInPipMode() || isFinishing()) {
       EventBus.getDefault().unregister(this);
@@ -285,7 +307,7 @@ public class WebRtcCallActivity extends BaseActivity implements SafetyNumberChan
 
     WebRtcCallViewModel.Factory factory = new WebRtcCallViewModel.Factory(deviceOrientationMonitor);
 
-    viewModel = ViewModelProviders.of(this, factory).get(WebRtcCallViewModel.class);
+    viewModel = new ViewModelProvider(this, factory).get(WebRtcCallViewModel.class);
     viewModel.setIsLandscapeEnabled(isLandscapeEnabled);
     viewModel.setIsInPipMode(isInPipMode());
     viewModel.getMicrophoneEnabled().observe(this, callScreen::setMicEnabled);
@@ -295,7 +317,8 @@ public class WebRtcCallActivity extends BaseActivity implements SafetyNumberChan
 
     LiveDataUtil.combineLatest(viewModel.getCallParticipantsState(),
                                viewModel.getOrientationAndLandscapeEnabled(),
-                               (s, o) -> new CallParticipantsViewState(s, o.first == PORTRAIT_BOTTOM_EDGE, o.second))
+                               viewModel.getEphemeralState(),
+                               (s, o, e) -> new CallParticipantsViewState(s, e, o.first == PORTRAIT_BOTTOM_EDGE, o.second))
                 .observe(this, p -> callScreen.updateCallParticipants(p));
     viewModel.getCallParticipantListUpdate().observe(this, participantUpdateWindow::addCallParticipantListUpdate);
     viewModel.getSafetyNumberChangeEvent().observe(this, this::handleSafetyNumberChangeEvent);
@@ -501,6 +524,11 @@ public class WebRtcCallActivity extends BaseActivity implements SafetyNumberChan
     }
   }
 
+  private void handleCallReconnecting() {
+    callScreen.setStatus(getString(R.string.WebRtcCallActivity__reconnecting));
+    VibrateUtil.vibrate(this, VIBRATE_DURATION);
+  }
+
   private void handleRecipientUnavailable() {
     EventBus.getDefault().removeStickyEvent(WebRtcViewModel.class);
     callScreen.setStatus(getString(R.string.RedPhone_recipient_unavailable));
@@ -623,6 +651,8 @@ public class WebRtcCallActivity extends BaseActivity implements SafetyNumberChan
         handleCallPreJoin(event); break;
       case CALL_CONNECTED:
         handleCallConnected(event); break;
+      case CALL_RECONNECTING:
+        handleCallReconnecting(); break;
       case NETWORK_FAILURE:
         handleServerFailure(); break;
       case CALL_RINGING:
@@ -658,6 +688,17 @@ public class WebRtcCallActivity extends BaseActivity implements SafetyNumberChan
     if (enableVideo) {
       enableVideoIfAvailable = false;
       handleSetMuteVideo(false);
+    }
+
+    if (event.getBluetoothPermissionDenied() && !hasWarnedAboutBluetooth && !isFinishing()) {
+      new MaterialAlertDialogBuilder(this)
+          .setTitle(R.string.WebRtcCallActivity__bluetooth_permission_denied)
+          .setMessage(R.string.WebRtcCallActivity__please_enable_the_nearby_devices_permission_to_use_bluetooth_during_a_call)
+          .setPositiveButton(R.string.WebRtcCallActivity__open_settings, (d, w) -> startActivity(Permissions.getApplicationSettingsIntent(this)))
+          .setNegativeButton(R.string.WebRtcCallActivity__not_now, null)
+          .show();
+
+      hasWarnedAboutBluetooth = true;
     }
   }
 
@@ -807,7 +848,7 @@ public class WebRtcCallActivity extends BaseActivity implements SafetyNumberChan
       if (feature.isPresent()) {
         FoldingFeature foldingFeature = (FoldingFeature) feature.get();
         Rect           bounds         = foldingFeature.getBounds();
-        if (foldingFeature.getState() == FoldingFeature.State.HALF_OPENED && bounds.top == bounds.bottom) {
+        if (foldingFeature.isSeparating()) {
           Log.d(TAG, "OnWindowLayoutInfo accepted: ensure call view is in table-top display mode");
           viewModel.setFoldableState(WebRtcControls.FoldableState.folded(bounds.top));
         } else {

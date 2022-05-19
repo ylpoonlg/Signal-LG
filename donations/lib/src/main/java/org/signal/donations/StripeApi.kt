@@ -55,17 +55,17 @@ class StripeApi(
     setupIntentHelper.setDefaultPaymentMethod(it)
   }
 
-  fun createPaymentIntent(price: FiatMoney, description: String? = null): Single<CreatePaymentIntentResult> {
+  fun createPaymentIntent(price: FiatMoney, level: Long): Single<CreatePaymentIntentResult> {
     @Suppress("CascadeIf")
     return if (Validation.isAmountTooSmall(price)) {
       Single.just(CreatePaymentIntentResult.AmountIsTooSmall(price))
     } else if (Validation.isAmountTooLarge(price)) {
       Single.just(CreatePaymentIntentResult.AmountIsTooLarge(price))
-    } else if (!Validation.supportedCurrencyCodes.contains(price.currency.currencyCode.toUpperCase(Locale.ROOT))) {
+    } else if (!Validation.supportedCurrencyCodes.contains(price.currency.currencyCode.uppercase(Locale.ROOT))) {
       Single.just<CreatePaymentIntentResult>(CreatePaymentIntentResult.CurrencyIsNotSupported(price.currency.currencyCode))
     } else {
       paymentIntentFetcher
-        .fetchPaymentIntent(price, description)
+        .fetchPaymentIntent(price, level)
         .map<CreatePaymentIntentResult> { CreatePaymentIntentResult.Success(it) }
     }.subscribeOn(Schedulers.io())
   }
@@ -120,7 +120,7 @@ class StripeApi(
     if (response.isSuccessful) {
       return response
     } else {
-      val body = response.body()?.toString()
+      val body = response.body()?.string()
       throw StripeError.PostError(
         response.code(),
         parseErrorCode(body),
@@ -150,12 +150,7 @@ class StripeApi(
     }
 
     return try {
-      val jsonBody = JSONObject(body)
-      Log.d(TAG, "parseDeclineCode: Parsed body with keys: ${jsonBody.keys().asSequence().joinToString(", ")}")
-      val jsonError = jsonBody.getJSONObject("error")
-      Log.d(TAG, "parseDeclineCode: Parsed error with keys: ${jsonError.keys().asSequence().joinToString(", ")}")
-
-      StripeDeclineCode.getFromCode(jsonError.getString("decline_code"))
+      StripeDeclineCode.getFromCode(JSONObject(body).getJSONObject("error").getString("decline_code"))
     } catch (e: Exception) {
       Log.d(TAG, "parseDeclineCode: Failed to parse decline code.", e, true)
       null
@@ -365,7 +360,7 @@ class StripeApi(
   interface PaymentIntentFetcher {
     fun fetchPaymentIntent(
       price: FiatMoney,
-      description: String? = null
+      level: Long
     ): Single<PaymentIntent>
   }
 

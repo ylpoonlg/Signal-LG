@@ -22,6 +22,8 @@ import org.signal.libsignal.metadata.ProtocolLegacyMessageException;
 import org.signal.libsignal.metadata.ProtocolNoSessionException;
 import org.signal.libsignal.metadata.ProtocolUntrustedIdentityException;
 import org.signal.libsignal.metadata.SelfSendException;
+import org.signal.libsignal.protocol.message.CiphertextMessage;
+import org.signal.libsignal.protocol.message.DecryptionErrorMessage;
 import org.thoughtcrime.securesms.R;
 import org.thoughtcrime.securesms.crypto.ReentrantSessionLock;
 import org.thoughtcrime.securesms.crypto.UnidentifiedAccessUtil;
@@ -42,21 +44,20 @@ import org.thoughtcrime.securesms.notifications.NotificationIds;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.util.FeatureFlags;
 import org.thoughtcrime.securesms.util.GroupUtil;
-import org.whispersystems.libsignal.protocol.CiphertextMessage;
-import org.whispersystems.libsignal.protocol.DecryptionErrorMessage;
-import org.whispersystems.libsignal.util.guava.Optional;
 import org.whispersystems.signalservice.api.InvalidMessageStructureException;
 import org.whispersystems.signalservice.api.SignalServiceAccountDataStore;
 import org.whispersystems.signalservice.api.crypto.ContentHint;
 import org.whispersystems.signalservice.api.crypto.SignalServiceCipher;
 import org.whispersystems.signalservice.api.messages.SignalServiceContent;
 import org.whispersystems.signalservice.api.messages.SignalServiceEnvelope;
+import org.whispersystems.signalservice.api.push.ServiceId;
 import org.whispersystems.signalservice.api.push.SignalServiceAddress;
 import org.whispersystems.signalservice.internal.push.SignalServiceProtos;
 import org.whispersystems.signalservice.internal.push.UnsupportedDataMessageException;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Handles taking an encrypted {@link SignalServiceEnvelope} and turning it into a plaintext model.
@@ -76,8 +77,26 @@ public final class MessageDecryptionUtil {
    * caller.
    */
   public static @NonNull DecryptionResult decrypt(@NonNull Context context, @NonNull SignalServiceEnvelope envelope) {
-    SignalServiceAccountDataStore protocolStore = ApplicationDependencies.getProtocolStore().aci();
-    SignalServiceAddress          localAddress  = new SignalServiceAddress(Recipient.self().requireServiceId(), Recipient.self().requireE164());
+    ServiceId aci = SignalStore.account().requireAci();
+    ServiceId pni = SignalStore.account().requirePni();
+
+    ServiceId destination;
+    if (!FeatureFlags.phoneNumberPrivacy()) {
+      destination = aci;
+    } else if (envelope.hasDestinationUuid()) {
+      destination = ServiceId.parseOrThrow(envelope.getDestinationUuid());
+    } else {
+      Log.w(TAG, "No destinationUuid set! Defaulting to ACI.");
+      destination = aci;
+    }
+
+    if (!destination.equals(aci) && !destination.equals(pni)) {
+      Log.w(TAG, "Destination of " + destination + " does not match our ACI (" + aci + ") or PNI (" + pni + ")! Defaulting to ACI.");
+      destination = aci;
+    }
+
+    SignalServiceAccountDataStore protocolStore = ApplicationDependencies.getProtocolStore().get(destination);
+    SignalServiceAddress          localAddress  = new SignalServiceAddress(SignalStore.account().requireAci(), SignalStore.account().getE164());
     SignalServiceCipher           cipher        = new SignalServiceCipher(localAddress, SignalStore.account().getDeviceId(), protocolStore, ReentrantSessionLock.INSTANCE, UnidentifiedAccessUtil.getCertificateValidator());
     List<Job>                     jobs          = new LinkedList<>();
 
@@ -130,7 +149,7 @@ public final class MessageDecryptionUtil {
     ContentHint       contentHint       = ContentHint.fromType(protocolException.getContentHint());
     int               senderDevice      = protocolException.getSenderDevice();
     long              receivedTimestamp = System.currentTimeMillis();
-    Optional<GroupId> groupId           = Optional.absent();
+    Optional<GroupId> groupId           = Optional.empty();
 
     if (protocolException.getGroupId().isPresent()) {
       try {

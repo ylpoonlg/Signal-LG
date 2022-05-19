@@ -6,19 +6,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.signal.core.util.logging.Log;
-import org.signal.zkgroup.groups.GroupMasterKey;
+import org.signal.libsignal.zkgroup.groups.GroupMasterKey;
 import org.thoughtcrime.securesms.database.GroupDatabase;
 import org.thoughtcrime.securesms.database.RecipientDatabase;
 import org.thoughtcrime.securesms.database.SignalDatabase;
 import org.thoughtcrime.securesms.groups.GroupId;
 import org.thoughtcrime.securesms.groups.GroupsV1MigrationUtil;
 import org.thoughtcrime.securesms.recipients.RecipientId;
-import org.whispersystems.libsignal.util.guava.Optional;
 import org.whispersystems.signalservice.api.storage.SignalGroupV2Record;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Optional;
 
 public final class GroupV2RecordProcessor extends DefaultStorageRecordProcessor<SignalGroupV2Record> {
 
@@ -51,17 +51,17 @@ public final class GroupV2RecordProcessor extends DefaultStorageRecordProcessor<
 
     Optional<RecipientId> recipientId = recipientDatabase.getByGroupId(groupId);
 
-    return recipientId.transform(recipientDatabase::getRecordForSync)
-                      .transform(settings -> {
+    return recipientId.map(recipientDatabase::getRecordForSync)
+                      .map(settings -> {
                         if (settings.getSyncExtras().getGroupMasterKey() != null) {
                           return StorageSyncModels.localToRemoteRecord(settings);
                         } else {
                           Log.w(TAG, "No local master key. Assuming it matches remote since the groupIds match. Enqueuing a fetch to fix the bad state.");
-                          groupDatabase.fixMissingMasterKey(record.getMasterKeyOrThrow());
+                          groupDatabase.fixMissingMasterKey(null, record.getMasterKeyOrThrow());
                           return StorageSyncModels.localToRemoteRecord(settings, record.getMasterKeyOrThrow());
                         }
                       })
-                      .transform(r -> r.getGroupV2().get());
+                      .map(r -> r.getGroupV2().get());
   }
 
   @Override
@@ -73,9 +73,10 @@ public final class GroupV2RecordProcessor extends DefaultStorageRecordProcessor<
     boolean forcedUnread               = remote.isForcedUnread();
     long    muteUntil                  = remote.getMuteUntil();
     boolean notifyForMentionsWhenMuted = remote.notifyForMentionsWhenMuted();
+    boolean hideStory      = remote.shouldHideStory();
 
-    boolean matchesRemote = doParamsMatch(remote, unknownFields, blocked, profileSharing, archived, forcedUnread, muteUntil, notifyForMentionsWhenMuted);
-    boolean matchesLocal  = doParamsMatch(local, unknownFields, blocked, profileSharing, archived, forcedUnread, muteUntil, notifyForMentionsWhenMuted);
+    boolean matchesRemote = doParamsMatch(remote, unknownFields, blocked, profileSharing, archived, forcedUnread, muteUntil, notifyForMentionsWhenMuted, hideStory);
+    boolean matchesLocal  = doParamsMatch(local, unknownFields, blocked, profileSharing, archived, forcedUnread, muteUntil, notifyForMentionsWhenMuted, hideStory);
 
     if (matchesRemote) {
       return remote;
@@ -89,6 +90,7 @@ public final class GroupV2RecordProcessor extends DefaultStorageRecordProcessor<
                                     .setForcedUnread(forcedUnread)
                                     .setMuteUntil(muteUntil)
                                     .setNotifyForMentionsWhenMuted(notifyForMentionsWhenMuted)
+                                    .setHideStory(hideStory)
                                     .build();
     }
   }
@@ -136,14 +138,16 @@ public final class GroupV2RecordProcessor extends DefaultStorageRecordProcessor<
                                 boolean archived,
                                 boolean forcedUnread,
                                 long muteUntil,
-                                boolean notifyForMentionsWhenMuted)
+                                boolean notifyForMentionsWhenMuted,
+                                boolean hideStory)
   {
-    return Arrays.equals(unknownFields, group.serializeUnknownFields()) &&
-           blocked == group.isBlocked()                                 &&
-           profileSharing == group.isProfileSharingEnabled()            &&
-           archived == group.isArchived()                               &&
-           forcedUnread == group.isForcedUnread()                       &&
-           muteUntil == group.getMuteUntil()                            &&
-           notifyForMentionsWhenMuted == group.notifyForMentionsWhenMuted();
+    return Arrays.equals(unknownFields, group.serializeUnknownFields())     &&
+           blocked == group.isBlocked()                                     &&
+           profileSharing == group.isProfileSharingEnabled()                &&
+           archived == group.isArchived()                                   &&
+           forcedUnread == group.isForcedUnread()                           &&
+           muteUntil == group.getMuteUntil()                                &&
+           notifyForMentionsWhenMuted == group.notifyForMentionsWhenMuted() &&
+           hideStory == group.shouldHideStory();
   }
 }

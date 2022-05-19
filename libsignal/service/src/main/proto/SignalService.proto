@@ -45,6 +45,7 @@ message Content {
   optional TypingMessage  typingMessage                = 6;
   optional bytes          senderKeyDistributionMessage = 7;
   optional bytes          decryptionErrorMessage       = 8;
+  optional StoryMessage   storyMessage                 = 9;
 }
 
 message CallMessage {
@@ -137,6 +138,11 @@ message DataMessage {
   }
 
   message Quote {
+    enum Type {
+      NORMAL     = 0;
+      GIFT_BADGE = 1;
+    }
+
     message QuotedAttachment {
       optional string            contentType = 1;
       optional string            fileName    = 2;
@@ -144,11 +150,12 @@ message DataMessage {
     }
 
     optional uint64           id          = 1;
-    optional string           authorE164  = 2;
+    reserved                /*authorE164*/  2;
     optional string           authorUuid  = 5;
     optional string           text        = 3;
     repeated QuotedAttachment attachments = 4;
     repeated BodyRange        bodyRanges  = 6;
+    optional Type             type        = 7;
   }
 
   message Contact {
@@ -218,14 +225,6 @@ message DataMessage {
     optional string            organization    = 7;
   }
 
-  message Preview {
-    optional string            url         = 1;
-    optional string            title       = 2;
-    optional AttachmentPointer image       = 3;
-    optional string            description = 4;
-    optional uint64            date        = 5;
-  }
-
   message Sticker {
     optional bytes             packId    = 1;
     optional bytes             packKey   = 2;
@@ -237,7 +236,7 @@ message DataMessage {
   message Reaction {
     optional string emoji               = 1;
     optional bool   remove              = 2;
-    reserved     /* targetAuthorE164 */   3; // removed
+    reserved      /*targetAuthorE164*/    3;
     optional string targetAuthorUuid    = 4;
     optional uint64 targetSentTimestamp = 5;
   }
@@ -294,6 +293,10 @@ message DataMessage {
     }
   }
 
+  message GiftBadge {
+    optional bytes receiptCredentialPresentation = 1;
+  }
+
   enum ProtocolVersion {
     option allow_alias = true;
 
@@ -328,6 +331,7 @@ message DataMessage {
   optional GroupCallUpdate    groupCallUpdate         = 19;
   optional Payment            payment                 = 20;
   optional StoryContext       storyContext            = 21;
+  optional GiftBadge          giftBadge               = 22;
 }
 
 message NullMessage {
@@ -356,6 +360,51 @@ message TypingMessage {
     optional bytes  groupId   = 3;
 }
 
+message StoryMessage {
+  optional bytes             profileKey    = 1;
+  optional GroupContextV2    group         = 2;
+  oneof attachment {
+    AttachmentPointer fileAttachment = 3;
+    TextAttachment    textAttachment = 4;
+  }
+  optional bool              allowsReplies = 5;
+}
+
+message Preview {
+  optional string            url         = 1;
+  optional string            title       = 2;
+  optional AttachmentPointer image       = 3;
+  optional string            description = 4;
+  optional uint64            date        = 5;
+}
+
+message TextAttachment {
+  enum Style {
+    DEFAULT   = 0;
+    REGULAR   = 1;
+    BOLD      = 2;
+    SERIF     = 3;
+    SCRIPT    = 4;
+    CONDENSED = 5;
+  }
+
+  message Gradient {
+    optional uint32 startColor = 1;
+    optional uint32 endColor   = 2;
+    optional uint32 angle      = 3; // degrees
+  }
+
+  optional string  text                = 1;
+  optional Style   textStyle           = 2;
+  optional uint32  textForegroundColor = 3; // integer representation of hex color
+  optional uint32  textBackgroundColor = 4;
+  optional Preview preview             = 5;
+  oneof background {
+    Gradient gradient = 6;
+    uint32   color    = 7;
+  }
+}
+
 message Verified {
   enum State {
     DEFAULT    = 0;
@@ -363,7 +412,7 @@ message Verified {
     UNVERIFIED = 2;
   }
 
-  optional string destinationE164 = 1;
+  reserved      /*destinationE164*/ 1;
   optional string destinationUuid = 5;
   optional bytes  identityKey     = 2;
   optional State  state           = 3;
@@ -373,18 +422,26 @@ message Verified {
 message SyncMessage {
   message Sent {
     message UnidentifiedDeliveryStatus {
-      optional string destinationE164 = 1;
+      reserved      /*destinationE164*/ 1;
       optional string destinationUuid = 3;
       optional bool   unidentified    = 2;
     }
 
-    optional string                     destinationE164          = 1;
+    message StoryMessageRecipient {
+      optional string destinationUuid     = 1;
+      repeated string distributionListIds = 2;
+      optional bool   isAllowedToReply    = 3;
+    }
+
+    reserved                          /*destinationE164*/          1;
     optional string                     destinationUuid          = 7;
     optional uint64                     timestamp                = 2;
     optional DataMessage                message                  = 3;
     optional uint64                     expirationStartTimestamp = 4;
     repeated UnidentifiedDeliveryStatus unidentifiedStatus       = 5;
     optional bool                       isRecipientUpdate        = 6 [default = false];
+    optional StoryMessage               storyMessage             = 8;
+    repeated StoryMessageRecipient      storyMessageRecipients   = 9;
   }
 
   message Contacts {
@@ -417,22 +474,22 @@ message SyncMessage {
   }
 
   message Read {
-    optional string senderE164 = 1;
+    reserved      /*senderE164*/ 1;
     optional string senderUuid = 3;
     optional uint64 timestamp  = 2;
   }
 
   message Viewed {
-    optional string senderE164 = 1;
+    reserved      /*senderE164*/ 1;
     optional string senderUuid = 3;
-    optional uint64 timestamp = 2;
+    optional uint64 timestamp  = 2;
   }
 
   message Configuration {
     optional bool   readReceipts                   = 1;
     optional bool   unidentifiedDeliveryIndicators = 2;
     optional bool   typingIndicators               = 3;
-    reserved     /* linkPreviews */                  4; // removed
+    reserved     /* linkPreviews */                  4;
     optional uint32 provisioningVersion            = 5;
     optional bool   linkPreviews                   = 6;
   }
@@ -449,7 +506,7 @@ message SyncMessage {
   }
 
   message ViewOnceOpen {
-    optional string senderE164 = 1;
+    reserved      /*senderE164*/ 1;
     optional string senderUuid = 3;
     optional uint64 timestamp  = 2;
   }
@@ -483,7 +540,7 @@ message SyncMessage {
       BLOCK_AND_DELETE = 4;
     }
 
-    optional string threadE164 = 1;
+    reserved      /*threadE164*/ 1;
     optional string threadUuid = 2;
     optional bytes  groupId    = 3;
     optional Type   type       = 4;
@@ -527,6 +584,7 @@ message SyncMessage {
   optional MessageRequestResponse messageRequestResponse = 14;
   optional OutgoingPayment        outgoingPayment        = 15;
   repeated Viewed                 viewed                 = 16;
+  optional PniIdentity            pniIdentity            = 17;
 }
 
 message AttachmentPointer {

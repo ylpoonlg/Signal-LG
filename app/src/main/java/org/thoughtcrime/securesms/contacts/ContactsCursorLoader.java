@@ -60,8 +60,8 @@ public class ContactsCursorLoader extends AbstractContactsCursorLoader {
 
   private static final int RECENT_CONVERSATION_MAX = 25;
 
-  private final int     mode;
-  private final boolean recents;
+  private final int              mode;
+  private final boolean          recents;
 
   private final ContactRepository contactRepository;
 
@@ -188,7 +188,7 @@ public class ContactsCursorLoader extends AbstractContactsCursorLoader {
     ThreadDatabase threadDatabase = SignalDatabase.threads();
 
     MatrixCursor recentConversations = ContactsCursorRows.createMatrixCursor(RECENT_CONVERSATION_MAX);
-    try (Cursor rawConversations = threadDatabase.getRecentConversationList(RECENT_CONVERSATION_MAX, flagSet(mode, DisplayMode.FLAG_INACTIVE_GROUPS), groupsOnly, hideGroupsV1(mode), !smsEnabled(mode))) {
+    try (Cursor rawConversations = threadDatabase.getRecentConversationList(RECENT_CONVERSATION_MAX, flagSet(mode, DisplayMode.FLAG_INACTIVE_GROUPS), false, groupsOnly, hideGroupsV1(mode), !smsEnabled(mode), false)) {
       ThreadDatabase.Reader reader = threadDatabase.readerFor(rawConversations);
       ThreadRecord          threadRecord;
       while ((threadRecord = reader.getNext()) != null) {
@@ -214,7 +214,7 @@ public class ContactsCursorLoader extends AbstractContactsCursorLoader {
 
   private Cursor getGroupsCursor() {
     MatrixCursor groupContacts = ContactsCursorRows.createMatrixCursor();
-    try (GroupDatabase.Reader reader = SignalDatabase.groups().getGroupsFilteredByTitle(getFilter(), flagSet(mode, DisplayMode.FLAG_INACTIVE_GROUPS), hideGroupsV1(mode), !smsEnabled(mode))) {
+    try (GroupDatabase.Reader reader = SignalDatabase.groups().queryGroupsByTitle(getFilter(), flagSet(mode, DisplayMode.FLAG_INACTIVE_GROUPS), hideGroupsV1(mode), !smsEnabled(mode))) {
       GroupDatabase.GroupRecord groupRecord;
       while ((groupRecord = reader.getNext()) != null) {
         groupContacts.addRow(ContactsCursorRows.forGroup(groupRecord));
@@ -299,10 +299,10 @@ public class ContactsCursorLoader extends AbstractContactsCursorLoader {
 
   public static class Factory implements AbstractContactsCursorLoader.Factory {
 
-    private final Context context;
-    private final int     displayMode;
-    private final String  cursorFilter;
-    private final boolean displayRecents;
+    private final Context          context;
+    private final int              displayMode;
+    private final String           cursorFilter;
+    private final boolean          displayRecents;
 
     public Factory(Context context, int displayMode, String cursorFilter, boolean displayRecents) {
       this.context        = context;

@@ -17,6 +17,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.signal.core.util.Conversions;
 import org.signal.core.util.StreamUtil;
 import org.signal.core.util.logging.Log;
+import org.signal.libsignal.protocol.kdf.HKDFv3;
+import org.signal.libsignal.protocol.util.ByteUtil;
 import org.thoughtcrime.securesms.backup.BackupProtos.Attachment;
 import org.thoughtcrime.securesms.backup.BackupProtos.BackupFrame;
 import org.thoughtcrime.securesms.backup.BackupProtos.DatabaseVersion;
@@ -36,9 +38,7 @@ import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.profiles.AvatarHelper;
 import org.thoughtcrime.securesms.recipients.RecipientId;
 import org.thoughtcrime.securesms.util.BackupUtil;
-import org.thoughtcrime.securesms.util.SqlUtil;
-import org.whispersystems.libsignal.kdf.HKDFv3;
-import org.whispersystems.libsignal.util.ByteUtil;
+import org.signal.core.util.SqlUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -69,6 +69,18 @@ public class FullBackupImporter extends FullBackupBase {
   @SuppressWarnings("unused")
   private static final String TAG = Log.tag(FullBackupImporter.class);
 
+  private static final String[] TABLES_TO_DROP_FIRST = {
+      "distribution_list_member",
+      "distribution_list",
+      "message_send_log_recipients",
+      "msl_recipient",
+      "msl_message",
+      "reaction",
+      "notification_profile_schedule",
+      "notification_profile_allowed_members",
+      "story_sends"
+  };
+
   public static void importFile(@NonNull Context context, @NonNull AttachmentSecret attachmentSecret,
                                 @NonNull SQLiteDatabase db, @NonNull Uri uri, @NonNull String passphrase)
       throws IOException
@@ -85,11 +97,11 @@ public class FullBackupImporter extends FullBackupBase {
     int count = 0;
 
     SQLiteDatabase keyValueDatabase = KeyValueDatabase.getInstance(ApplicationDependencies.getApplication()).getSqlCipherDatabase();
+
+    db.beginTransaction();
+    keyValueDatabase.beginTransaction();
     try {
       BackupRecordInputStream inputStream = new BackupRecordInputStream(is, passphrase);
-
-      db.beginTransaction();
-      keyValueDatabase.beginTransaction();
 
       dropAllTables(db);
 
@@ -272,12 +284,17 @@ public class FullBackupImporter extends FullBackupBase {
   }
 
   private static void dropAllTables(@NonNull SQLiteDatabase db) {
+    for (String name : TABLES_TO_DROP_FIRST) {
+      db.execSQL("DROP TABLE IF EXISTS " + name);
+    }
+
     try (Cursor cursor = db.rawQuery("SELECT name, type FROM sqlite_master", null)) {
       while (cursor != null && cursor.moveToNext()) {
         String name = cursor.getString(0);
         String type = cursor.getString(1);
 
         if ("table".equals(type) && !name.startsWith("sqlite_")) {
+          Log.i(TAG, "Dropping table: " + name);
           db.execSQL("DROP TABLE IF EXISTS " + name);
         }
       }

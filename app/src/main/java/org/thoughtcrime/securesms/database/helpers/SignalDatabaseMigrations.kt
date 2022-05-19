@@ -10,10 +10,15 @@ import android.os.Build
 import android.os.SystemClock
 import android.preference.PreferenceManager
 import android.text.TextUtils
+import androidx.core.content.contentValuesOf
 import com.annimon.stream.Stream
 import com.google.protobuf.InvalidProtocolBufferException
 import net.zetetic.database.sqlcipher.SQLiteDatabase
+import org.signal.core.util.CursorUtil
+import org.signal.core.util.Hex
+import org.signal.core.util.SqlUtil
 import org.signal.core.util.logging.Log
+import org.signal.core.util.requireString
 import org.thoughtcrime.securesms.color.MaterialColor
 import org.thoughtcrime.securesms.contacts.avatars.ContactColorsLegacy
 import org.thoughtcrime.securesms.conversation.colors.AvatarColor
@@ -22,37 +27,26 @@ import org.thoughtcrime.securesms.conversation.colors.ChatColorsMapper.entrySet
 import org.thoughtcrime.securesms.database.KeyValueDatabase
 import org.thoughtcrime.securesms.database.RecipientDatabase
 import org.thoughtcrime.securesms.database.model.databaseprotos.ReactionList
-import org.thoughtcrime.securesms.database.requireString
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies
 import org.thoughtcrime.securesms.groups.GroupId
 import org.thoughtcrime.securesms.jobs.RefreshPreKeysJob
 import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.notifications.NotificationChannels
 import org.thoughtcrime.securesms.phonenumbers.PhoneNumberFormatter
-import org.thoughtcrime.securesms.profiles.AvatarHelper
 import org.thoughtcrime.securesms.profiles.ProfileName
-import org.thoughtcrime.securesms.recipients.RecipientId
 import org.thoughtcrime.securesms.storage.StorageSyncHelper
 import org.thoughtcrime.securesms.util.Base64
-import org.thoughtcrime.securesms.util.CursorUtil
 import org.thoughtcrime.securesms.util.FileUtils
-import org.thoughtcrime.securesms.util.Hex
 import org.thoughtcrime.securesms.util.ServiceUtil
-import org.thoughtcrime.securesms.util.SqlUtil
 import org.thoughtcrime.securesms.util.Stopwatch
 import org.thoughtcrime.securesms.util.Triple
 import org.thoughtcrime.securesms.util.Util
 import org.whispersystems.signalservice.api.push.ACI
 import org.whispersystems.signalservice.api.push.DistributionId
-import java.io.ByteArrayInputStream
 import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
-import java.lang.AssertionError
-import java.util.ArrayList
-import java.util.HashSet
 import java.util.LinkedList
 import java.util.Locale
+import java.util.UUID
 
 /**
  * Contains all of the database migrations for [SignalDatabase]. Broken into a separate file for cleanliness.
@@ -190,8 +184,24 @@ object SignalDatabaseMigrations {
   private const val MESSAGE_RANGES = 128
   private const val REACTION_TRIGGER_FIX = 129
   private const val PNI_STORES = 130
+  private const val DONATION_RECEIPTS = 131
+  private const val STORIES = 132
+  private const val ALLOW_STORY_REPLIES = 133
+  private const val GROUP_STORIES = 134
+  private const val MMS_COUNT_INDEX = 135
+  private const val STORY_SENDS = 136
+  private const val STORY_TYPE_AND_DISTRIBUTION = 137
+  private const val CLEAN_DELETED_DISTRIBUTION_LISTS = 138
+  private const val REMOVE_KNOWN_UNKNOWNS = 139
+  private const val CDS_V2 = 140
+  private const val GROUP_SERVICE_ID = 141
+  private const val QUOTE_TYPE = 142
+  private const val STORY_SYNCS = 143
+  private const val GROUP_STORY_NOTIFICATIONS = 144
+  private const val GROUP_STORY_REPLY_CLEANUP = 145
+  private const val REMOTE_MEGAPHONE = 146
 
-  const val DATABASE_VERSION = 130
+  const val DATABASE_VERSION = 146
 
   @JvmStatic
   fun migrate(context: Application, db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -872,38 +882,11 @@ object SignalDatabaseMigrations {
     }
 
     if (oldVersion < AVATAR_LOCATION_MIGRATION) {
-      val oldAvatarDirectory: File = File(context.getFilesDir(), "avatars")
-      val results = oldAvatarDirectory.listFiles()
-      if (results != null) {
-        Log.i(TAG, "Preparing to migrate " + results.size + " avatars.")
-        for (file: File in results) {
-          if (Util.isLong(file.name)) {
-            try {
-              AvatarHelper.setAvatar(context, RecipientId.from(file.name), FileInputStream(file))
-            } catch (e: IOException) {
-              Log.w(TAG, "Failed to copy file " + file.name + "! Skipping.")
-            }
-          } else {
-            Log.w(TAG, "Invalid avatar name '" + file.name + "'! Skipping.")
-          }
-        }
-      } else {
-        Log.w(TAG, "No avatar directory files found.")
-      }
+      val oldAvatarDirectory = File(context.getFilesDir(), "avatars")
       if (!FileUtils.deleteDirectory(oldAvatarDirectory)) {
         Log.w(TAG, "Failed to delete avatar directory.")
       }
-      db.rawQuery("SELECT recipient_id, avatar FROM groups", null).use { cursor ->
-        while (cursor != null && cursor.moveToNext()) {
-          val recipientId: RecipientId = RecipientId.from(cursor.getLong(cursor.getColumnIndexOrThrow("recipient_id")))
-          val avatar: ByteArray? = cursor.getBlob(cursor.getColumnIndexOrThrow("avatar"))
-          try {
-            AvatarHelper.setAvatar(context, recipientId, if (avatar != null) ByteArrayInputStream(avatar) else null)
-          } catch (e: IOException) {
-            Log.w(TAG, "Failed to copy avatar for " + recipientId + "! Skipping.", e)
-          }
-        }
-      }
+      db.execSQL("UPDATE recipient SET signal_profile_avatar = NULL")
       db.execSQL("UPDATE groups SET avatar_id = 0 WHERE avatar IS NULL")
       db.execSQL("UPDATE groups SET avatar = NULL")
     }
@@ -2396,6 +2379,239 @@ object SignalDatabaseMigrations {
 
       db.execSQL("DROP TABLE sessions")
       db.execSQL("ALTER TABLE sessions_tmp RENAME TO sessions")
+    }
+
+    if (oldVersion < DONATION_RECEIPTS) {
+      db.execSQL(
+        // language=sql
+        """
+          CREATE TABLE donation_receipt (
+            _id INTEGER PRIMARY KEY AUTOINCREMENT,
+            receipt_type TEXT NOT NULL,
+            receipt_date INTEGER NOT NULL,
+            amount TEXT NOT NULL,
+            currency TEXT NOT NULL,
+            subscription_level INTEGER NOT NULL
+          )
+        """.trimIndent()
+      )
+
+      db.execSQL("CREATE INDEX IF NOT EXISTS donation_receipt_type_index ON donation_receipt (receipt_type);")
+      db.execSQL("CREATE INDEX IF NOT EXISTS donation_receipt_date_index ON donation_receipt (receipt_date);")
+    }
+
+    if (oldVersion < STORIES) {
+      db.execSQL("ALTER TABLE mms ADD COLUMN is_story INTEGER DEFAULT 0")
+      db.execSQL("ALTER TABLE mms ADD COLUMN parent_story_id INTEGER DEFAULT 0")
+      db.execSQL("CREATE INDEX IF NOT EXISTS mms_is_story_index ON mms (is_story)")
+      db.execSQL("CREATE INDEX IF NOT EXISTS mms_parent_story_id_index ON mms (parent_story_id)")
+
+      db.execSQL("ALTER TABLE recipient ADD COLUMN distribution_list_id INTEGER DEFAULT NULL")
+
+      db.execSQL(
+        // language=sql
+        """
+            CREATE TABLE distribution_list (
+              _id INTEGER PRIMARY KEY AUTOINCREMENT,
+              name TEXT UNIQUE NOT NULL,
+              distribution_id TEXT UNIQUE NOT NULL,
+              recipient_id INTEGER UNIQUE REFERENCES recipient (_id) ON DELETE CASCADE
+            )
+        """.trimIndent()
+      )
+
+      db.execSQL(
+        // language=sql
+        """
+            CREATE TABLE distribution_list_member (
+              _id INTEGER PRIMARY KEY AUTOINCREMENT,
+              list_id INTEGER NOT NULL REFERENCES distribution_list (_id) ON DELETE CASCADE,
+              recipient_id INTEGER NOT NULL,
+              UNIQUE(list_id, recipient_id) ON CONFLICT IGNORE
+            )
+        """.trimIndent()
+      )
+
+      val recipientId = db.insert(
+        "recipient", null,
+        contentValuesOf(
+          "distribution_list_id" to 1L,
+          "storage_service_key" to Base64.encodeBytes(StorageSyncHelper.generateKey()),
+          "profile_sharing" to 1
+        )
+      )
+
+      val listUUID = UUID.randomUUID().toString()
+      db.insert(
+        "distribution_list", null,
+        contentValuesOf(
+          "_id" to 1L,
+          "name" to listUUID,
+          "distribution_id" to listUUID,
+          "recipient_id" to recipientId
+        )
+      )
+    }
+
+    if (oldVersion < ALLOW_STORY_REPLIES) {
+      db.execSQL("ALTER TABLE distribution_list ADD COLUMN allows_replies INTEGER DEFAULT 1")
+    }
+
+    if (oldVersion < GROUP_STORIES) {
+      db.execSQL("ALTER TABLE groups ADD COLUMN display_as_story INTEGER DEFAULT 0")
+    }
+
+    if (oldVersion < MMS_COUNT_INDEX) {
+      db.execSQL("CREATE INDEX IF NOT EXISTS mms_thread_story_parent_story_index ON mms (thread_id, date_received, is_story, parent_story_id)")
+    }
+
+    if (oldVersion < STORY_SENDS) {
+      db.execSQL(
+        """
+          CREATE TABLE story_sends (
+            _id INTEGER PRIMARY KEY,
+            message_id INTEGER NOT NULL REFERENCES mms (_id) ON DELETE CASCADE,
+            recipient_id INTEGER NOT NULL REFERENCES recipient (_id) ON DELETE CASCADE,
+            sent_timestamp INTEGER NOT NULL,
+            allows_replies INTEGER NOT NULL
+          )
+        """.trimIndent()
+      )
+
+      db.execSQL("CREATE INDEX story_sends_recipient_id_sent_timestamp_allows_replies_index ON story_sends (recipient_id, sent_timestamp, allows_replies)")
+    }
+
+    if (oldVersion < STORY_TYPE_AND_DISTRIBUTION) {
+      db.execSQL("ALTER TABLE distribution_list ADD COLUMN deletion_timestamp INTEGER DEFAULT 0")
+
+      db.execSQL(
+        """
+        UPDATE recipient
+        SET group_type = 4
+        WHERE distribution_list_id IS NOT NULL
+        """.trimIndent()
+      )
+
+      db.execSQL(
+        """
+        UPDATE distribution_list
+        SET name = '00000000-0000-0000-0000-000000000000',
+            distribution_id = '00000000-0000-0000-0000-000000000000'
+        WHERE _id = 1
+        """.trimIndent()
+      )
+    }
+
+    if (oldVersion < CLEAN_DELETED_DISTRIBUTION_LISTS) {
+      db.execSQL(
+        """
+          UPDATE recipient
+          SET storage_service_key = NULL
+          WHERE distribution_list_id IS NOT NULL AND NOT EXISTS(SELECT _id from distribution_list WHERE _id = distribution_list_id)
+        """.trimIndent()
+      )
+    }
+
+    if (oldVersion < REMOVE_KNOWN_UNKNOWNS) {
+      val count: Int = db.delete("storage_key", "type <= ?", SqlUtil.buildArgs(4))
+      Log.i(TAG, "Cleaned up $count invalid unknown records.")
+    }
+
+    if (oldVersion < CDS_V2) {
+      db.execSQL("CREATE INDEX IF NOT EXISTS recipient_service_id_profile_key ON recipient (uuid, profile_key) WHERE uuid NOT NULL AND profile_key NOT NULL")
+      db.execSQL(
+        """
+        CREATE TABLE cds (
+          _id INTEGER PRIMARY KEY,
+          e164 TEXT NOT NULL UNIQUE ON CONFLICT IGNORE,
+          last_seen_at INTEGER DEFAULT 0
+        )
+      """
+      )
+    }
+
+    if (oldVersion < GROUP_SERVICE_ID) {
+      db.execSQL("ALTER TABLE groups ADD COLUMN auth_service_id TEXT DEFAULT NULL")
+    }
+
+    if (oldVersion < QUOTE_TYPE) {
+      db.execSQL("ALTER TABLE mms ADD COLUMN quote_type INTEGER DEFAULT 0")
+    }
+
+    if (oldVersion < STORY_SYNCS) {
+      db.execSQL("ALTER TABLE distribution_list ADD COLUMN is_unknown INTEGER DEFAULT 0")
+
+      db.execSQL(
+        """
+          CREATE TABLE story_sends_tmp (
+            _id INTEGER PRIMARY KEY,
+            message_id INTEGER NOT NULL REFERENCES mms (_id) ON DELETE CASCADE,
+            recipient_id INTEGER NOT NULL REFERENCES recipient (_id) ON DELETE CASCADE,
+            sent_timestamp INTEGER NOT NULL,
+            allows_replies INTEGER NOT NULL,
+            distribution_id TEXT NOT NULL REFERENCES distribution_list (distribution_id) ON DELETE CASCADE
+          )
+        """.trimIndent()
+      )
+
+      db.execSQL(
+        """
+          INSERT INTO story_sends_tmp (_id, message_id, recipient_id, sent_timestamp, allows_replies, distribution_id)
+              SELECT story_sends._id, story_sends.message_id, story_sends.recipient_id, story_sends.sent_timestamp, story_sends.allows_replies, distribution_list.distribution_id
+              FROM story_sends
+              INNER JOIN mms ON story_sends.message_id = mms._id
+              INNER JOIN distribution_list ON distribution_list.recipient_id = mms.address
+        """.trimIndent()
+      )
+
+      db.execSQL("DROP TABLE story_sends")
+      db.execSQL("DROP INDEX IF EXISTS story_sends_recipient_id_sent_timestamp_allows_replies_index")
+
+      db.execSQL("ALTER TABLE story_sends_tmp RENAME TO story_sends")
+      db.execSQL("CREATE INDEX story_sends_recipient_id_sent_timestamp_allows_replies_index ON story_sends (recipient_id, sent_timestamp, allows_replies)")
+    }
+
+    if (oldVersion < GROUP_STORY_NOTIFICATIONS) {
+      db.execSQL("UPDATE mms SET read = 1 WHERE parent_story_id > 0")
+    }
+
+    if (oldVersion < GROUP_STORY_REPLY_CLEANUP) {
+      db.execSQL(
+        """
+        DELETE FROM mms
+        WHERE 
+          parent_story_id > 0 AND
+          parent_story_id NOT IN (SELECT _id FROM mms WHERE remote_deleted = 0) 
+        """.trimIndent()
+      )
+    }
+
+    if (oldVersion < REMOTE_MEGAPHONE) {
+      db.execSQL(
+        """
+          CREATE TABLE remote_megaphone (
+            _id INTEGER PRIMARY KEY,
+            uuid TEXT UNIQUE NOT NULL,
+            priority INTEGER NOT NULL,
+            countries TEXT,
+            minimum_version INTEGER NOT NULL,
+            dont_show_before INTEGER NOT NULL,
+            dont_show_after INTEGER NOT NULL,
+            show_for_days INTEGER NOT NULL,
+            conditional_id TEXT,
+            primary_action_id TEXT,
+            secondary_action_id TEXT,
+            image_url TEXT,
+            image_uri TEXT DEFAULT NULL,
+            title TEXT NOT NULL,
+            body TEXT NOT NULL,
+            primary_action_text TEXT,
+            secondary_action_text TEXT,
+            shown_at INTEGER DEFAULT 0,
+            finished_at INTEGER DEFAULT 0
+          )
+        """
+      )
     }
   }
 

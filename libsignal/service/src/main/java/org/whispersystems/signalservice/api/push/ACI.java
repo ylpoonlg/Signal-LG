@@ -12,8 +12,6 @@ import java.util.UUID;
  */
 public final class ACI extends ServiceId {
 
-  public static final ACI UNKNOWN = ACI.from(UuidUtil.UNKNOWN_UUID);
-
   public static ACI from(UUID uuid) {
     return new ACI(uuid);
   }
@@ -37,24 +35,5 @@ public final class ACI extends ServiceId {
 
   public byte[] toByteArray() {
     return UuidUtil.toByteArray(uuid);
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    if (other instanceof ServiceId) {
-      return uuid.equals(((ServiceId) other).uuid);
-    } else {
-      return false;
-    }
-  }
-
-  @Override
-  public int hashCode() {
-    return uuid.hashCode();
-  }
-
-  @Override
-  public String toString() {
-    return uuid.toString();
   }
 }

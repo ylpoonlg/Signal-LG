@@ -53,11 +53,11 @@ import org.thoughtcrime.securesms.util.ViewUtil;
 import org.thoughtcrime.securesms.util.concurrent.AssertedSuccessListener;
 import org.thoughtcrime.securesms.util.concurrent.ListenableFuture;
 import org.thoughtcrime.securesms.util.concurrent.SettableFuture;
-import org.whispersystems.libsignal.util.guava.Optional;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class InputPanel extends LinearLayout
@@ -79,7 +79,8 @@ public class InputPanel extends LinearLayout
   private ComposeText     composeText;
   private View            quickCameraToggle;
   private View            quickAudioToggle;
-  private View            buttonToggle;
+  private AnimatingToggle buttonToggle;
+  private SendButton      sendButton;
   private View            recordingContainer;
   private View            recordLockCancel;
   private ViewGroup       composeContainer;
@@ -127,6 +128,7 @@ public class InputPanel extends LinearLayout
     this.quickCameraToggle      = findViewById(R.id.quick_camera_toggle);
     this.quickAudioToggle       = findViewById(R.id.quick_audio_toggle);
     this.buttonToggle           = findViewById(R.id.button_toggle);
+    this.sendButton             = findViewById(R.id.send_button);
     this.recordingContainer     = findViewById(R.id.recording_container);
     this.recordLockCancel       = findViewById(R.id.record_cancel);
     this.voiceNoteDraftView     = findViewById(R.id.voice_note_draft_view);
@@ -177,15 +179,22 @@ public class InputPanel extends LinearLayout
                        long id,
                        @NonNull Recipient author,
                        @NonNull CharSequence body,
-                       @NonNull SlideDeck attachments)
+                       @NonNull SlideDeck attachments,
+                       @NonNull QuoteModel.Type quoteType)
   {
-    this.quoteView.setQuote(glideRequests, id, author, body, false, attachments, null);
+    this.quoteView.setQuote(glideRequests, id, author, body, false, attachments, null, null, quoteType);
 
     int originalHeight = this.quoteView.getVisibility() == VISIBLE ? this.quoteView.getMeasuredHeight()
                                                                    : 0;
 
     this.quoteView.setVisibility(VISIBLE);
-    this.quoteView.measure(0, 0);
+
+    int maxWidth = composeContainer.getWidth();
+    if (quoteView.getLayoutParams() instanceof MarginLayoutParams) {
+      MarginLayoutParams layoutParams = (MarginLayoutParams) quoteView.getLayoutParams();
+      maxWidth -= layoutParams.leftMargin + layoutParams.rightMargin;
+    }
+    this.quoteView.measure(MeasureSpec.makeMeasureSpec(maxWidth, MeasureSpec.AT_MOST), 0);
 
     if (quoteAnimator != null) {
       quoteAnimator.cancel();
@@ -248,9 +257,9 @@ public class InputPanel extends LinearLayout
 
   public Optional<QuoteModel> getQuote() {
     if (quoteView.getQuoteId() > 0 && quoteView.getVisibility() == View.VISIBLE) {
-      return Optional.of(new QuoteModel(quoteView.getQuoteId(), quoteView.getAuthor().getId(), quoteView.getBody().toString(), false, quoteView.getAttachments(), quoteView.getMentions()));
+      return Optional.of(new QuoteModel(quoteView.getQuoteId(), quoteView.getAuthor().getId(), quoteView.getBody().toString(), false, quoteView.getAttachments(), quoteView.getMentions(), quoteView.getQuoteType()));
     } else {
-      return Optional.absent();
+      return Optional.empty();
     }
   }
 
@@ -475,6 +484,7 @@ public class InputPanel extends LinearLayout
       voiceNoteDraftView.setDraft(voiceNoteDraft);
       voiceNoteDraftView.setVisibility(VISIBLE);
       hideNormalComposeViews();
+      buttonToggle.displayQuick(sendButton);
     } else {
       voiceNoteDraftView.clearDraft();
       ViewUtil.fadeOut(voiceNoteDraftView, FADE_TIME);
@@ -492,7 +502,7 @@ public class InputPanel extends LinearLayout
       mediaKeyboard.setAlpha(0f);
     }
 
-    for (View view : Arrays.asList(composeText, quickCameraToggle, quickAudioToggle, buttonToggle)) {
+    for (View view : Arrays.asList(composeText, quickCameraToggle, quickAudioToggle)) {
       view.animate().cancel();
       view.setAlpha(0f);
     }

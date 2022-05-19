@@ -1,7 +1,9 @@
 package org.thoughtcrime.securesms.database
 
 import com.google.protobuf.ByteString
+import org.signal.libsignal.zkgroup.groups.GroupMasterKey
 import org.signal.storageservice.protos.groups.AccessControl
+import org.signal.storageservice.protos.groups.GroupChange
 import org.signal.storageservice.protos.groups.Member
 import org.signal.storageservice.protos.groups.local.DecryptedGroup
 import org.signal.storageservice.protos.groups.local.DecryptedGroupChange
@@ -11,14 +13,14 @@ import org.signal.storageservice.protos.groups.local.DecryptedRequestingMember
 import org.signal.storageservice.protos.groups.local.DecryptedString
 import org.signal.storageservice.protos.groups.local.DecryptedTimer
 import org.signal.storageservice.protos.groups.local.EnabledState
-import org.signal.zkgroup.groups.GroupMasterKey
 import org.thoughtcrime.securesms.groups.GroupId
 import org.thoughtcrime.securesms.recipients.RecipientId
-import org.whispersystems.libsignal.util.guava.Optional
 import org.whispersystems.signalservice.api.groupsv2.DecryptedGroupHistoryEntry
 import org.whispersystems.signalservice.api.groupsv2.GroupHistoryPage
-import org.whispersystems.signalservice.api.push.ACI
+import org.whispersystems.signalservice.api.groupsv2.GroupsV2Operations
 import org.whispersystems.signalservice.api.push.DistributionId
+import org.whispersystems.signalservice.api.push.ServiceId
+import java.util.Optional
 import java.util.UUID
 
 fun DecryptedGroupChange.Builder.setNewDescription(description: String) {
@@ -65,20 +67,48 @@ class ChangeSet {
   }
 
   fun toApiResponse(): GroupHistoryPage {
-    return GroupHistoryPage(changeSet.map { DecryptedGroupHistoryEntry(Optional.fromNullable(it.groupSnapshot), Optional.fromNullable(it.groupChange)) }, GroupHistoryPage.PagingData.NONE)
+    return GroupHistoryPage(changeSet.map { DecryptedGroupHistoryEntry(Optional.ofNullable(it.groupSnapshot), Optional.ofNullable(it.groupChange)) }, GroupHistoryPage.PagingData.NONE)
   }
 }
 
-class GroupStateTestData(private val masterKey: GroupMasterKey) {
+class GroupChangeData(private val revision: Int, private val groupOperations: GroupsV2Operations.GroupOperations) {
+  private val groupChangeBuilder: GroupChange.Builder = GroupChange.newBuilder()
+  private val actionsBuilder: GroupChange.Actions.Builder = GroupChange.Actions.newBuilder()
+  var changeEpoch: Int = GroupsV2Operations.HIGHEST_KNOWN_EPOCH
+
+  val groupChange: GroupChange
+    get() {
+      return groupChangeBuilder
+        .setChangeEpoch(changeEpoch)
+        .setActions(actionsBuilder.setRevision(revision).build().toByteString())
+        .build()
+    }
+
+  fun source(serviceId: ServiceId) {
+    actionsBuilder.sourceUuid = groupOperations.encryptUuid(serviceId.uuid())
+  }
+
+  fun deleteMember(serviceId: ServiceId) {
+    actionsBuilder.addDeleteMembers(GroupChange.Actions.DeleteMemberAction.newBuilder().setDeletedUserId(groupOperations.encryptUuid(serviceId.uuid())))
+  }
+
+  fun modifyRole(serviceId: ServiceId, role: Member.Role) {
+    actionsBuilder.addModifyMemberRoles(GroupChange.Actions.ModifyMemberRoleAction.newBuilder().setUserId(groupOperations.encryptUuid(serviceId.uuid())).setRole(role))
+  }
+}
+
+class GroupStateTestData(private val masterKey: GroupMasterKey, private val groupOperations: GroupsV2Operations.GroupOperations? = null) {
 
   var localState: DecryptedGroup? = null
-  var groupRecord: Optional<GroupDatabase.GroupRecord> = Optional.absent()
+  var groupRecord: Optional<GroupDatabase.GroupRecord> = Optional.empty()
   var serverState: DecryptedGroup? = null
   var changeSet: ChangeSet? = null
+  var groupChange: GroupChange? = null
   var includeFirst: Boolean = false
   var requestedRevision: Int = 0
 
   fun localState(
+    active: Boolean = true,
     revision: Int = 0,
     title: String = "",
     avatar: String = "",
@@ -88,10 +118,11 @@ class GroupStateTestData(private val masterKey: GroupMasterKey) {
     pendingMembers: List<DecryptedPendingMember> = emptyList(),
     requestingMembers: List<DecryptedRequestingMember> = emptyList(),
     inviteLinkPassword: ByteArray = ByteArray(0),
-    disappearingMessageTimer: DecryptedTimer = DecryptedTimer.getDefaultInstance()
+    disappearingMessageTimer: DecryptedTimer = DecryptedTimer.getDefaultInstance(),
+    serviceId: String = ServiceId.from(UUID.randomUUID()).toString()
   ) {
     localState = decryptedGroup(revision, title, avatar, description, accessControl, members, pendingMembers, requestingMembers, inviteLinkPassword, disappearingMessageTimer)
-    groupRecord = groupRecord(masterKey, localState!!)
+    groupRecord = groupRecord(masterKey, localState!!, active = active, serviceId = serviceId)
   }
 
   fun serverState(
@@ -120,6 +151,12 @@ class GroupStateTestData(private val masterKey: GroupMasterKey) {
     this.requestedRevision = requestedRevision
     this.includeFirst = includeFirst
   }
+
+  fun groupChange(revision: Int, init: GroupChangeData.() -> Unit) {
+    val groupChangeData = GroupChangeData(revision, groupOperations!!)
+    groupChangeData.init()
+    this.groupChange = groupChangeData.groupChange
+  }
 }
 
 fun groupRecord(
@@ -136,7 +173,8 @@ fun groupRecord(
   active: Boolean = true,
   avatarDigest: ByteArray = ByteArray(0),
   mms: Boolean = false,
-  distributionId: DistributionId? = null
+  distributionId: DistributionId? = null,
+  serviceId: String = ServiceId.from(UUID.randomUUID()).toString()
 ): Optional<GroupDatabase.GroupRecord> {
   return Optional.of(
     GroupDatabase.GroupRecord(
@@ -155,7 +193,8 @@ fun groupRecord(
       masterKey.serialize(),
       decryptedGroup.revision,
       decryptedGroup.toByteArray(),
-      distributionId
+      distributionId,
+      serviceId
     )
   )
 }
@@ -188,22 +227,4 @@ fun decryptedGroup(
     .addAllRequestingMembers(requestingMembers)
 
   return builder.build()
-}
-
-fun member(aci: UUID, role: Member.Role = Member.Role.DEFAULT, joinedAt: Int = 0): DecryptedMember {
-  return member(ACI.from(aci), role, joinedAt)
-}
-
-fun member(aci: ACI, role: Member.Role = Member.Role.DEFAULT, joinedAt: Int = 0): DecryptedMember {
-  return DecryptedMember.newBuilder()
-    .setRole(role)
-    .setUuid(aci.toByteString())
-    .setJoinedAtRevision(joinedAt)
-    .build()
-}
-
-fun requestingMember(aci: ACI): DecryptedRequestingMember {
-  return DecryptedRequestingMember.newBuilder()
-    .setUuid(aci.toByteString())
-    .build()
 }

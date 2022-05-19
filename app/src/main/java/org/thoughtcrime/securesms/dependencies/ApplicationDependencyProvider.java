@@ -8,16 +8,17 @@ import androidx.annotation.NonNull;
 
 import org.signal.core.util.concurrent.DeadlockDetector;
 import org.signal.core.util.concurrent.SignalExecutors;
-import org.signal.zkgroup.receipts.ClientZkReceiptOperations;
+import org.signal.libsignal.zkgroup.profiles.ClientZkProfileOperations;
+import org.signal.libsignal.zkgroup.receipts.ClientZkReceiptOperations;
 import org.thoughtcrime.securesms.BuildConfig;
 import org.thoughtcrime.securesms.components.TypingStatusRepository;
 import org.thoughtcrime.securesms.components.TypingStatusSender;
 import org.thoughtcrime.securesms.crypto.ReentrantSessionLock;
 import org.thoughtcrime.securesms.crypto.storage.SignalBaseIdentityKeyStore;
-import org.thoughtcrime.securesms.crypto.storage.SignalServiceDataStoreImpl;
-import org.thoughtcrime.securesms.crypto.storage.SignalServiceAccountDataStoreImpl;
-import org.thoughtcrime.securesms.crypto.storage.SignalSenderKeyStore;
 import org.thoughtcrime.securesms.crypto.storage.SignalIdentityKeyStore;
+import org.thoughtcrime.securesms.crypto.storage.SignalSenderKeyStore;
+import org.thoughtcrime.securesms.crypto.storage.SignalServiceAccountDataStoreImpl;
+import org.thoughtcrime.securesms.crypto.storage.SignalServiceDataStoreImpl;
 import org.thoughtcrime.securesms.crypto.storage.TextSecurePreKeyStore;
 import org.thoughtcrime.securesms.crypto.storage.TextSecureSessionStore;
 import org.thoughtcrime.securesms.database.DatabaseObserver;
@@ -54,6 +55,7 @@ import org.thoughtcrime.securesms.push.SignalServiceNetworkAccess;
 import org.thoughtcrime.securesms.recipients.LiveRecipientCache;
 import org.thoughtcrime.securesms.revealable.ViewOnceMessageManager;
 import org.thoughtcrime.securesms.service.ExpiringMessageManager;
+import org.thoughtcrime.securesms.service.ExpiringStoriesManager;
 import org.thoughtcrime.securesms.service.PendingRetryReceiptManager;
 import org.thoughtcrime.securesms.service.TrimThreadsByDateManager;
 import org.thoughtcrime.securesms.service.webrtc.SignalCallManager;
@@ -65,10 +67,9 @@ import org.thoughtcrime.securesms.util.EarlyMessageCache;
 import org.thoughtcrime.securesms.util.FeatureFlags;
 import org.thoughtcrime.securesms.util.FrameRateTracker;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
-import org.thoughtcrime.securesms.video.exo.SimpleExoPlayerPool;
 import org.thoughtcrime.securesms.video.exo.GiphyMp4Cache;
+import org.thoughtcrime.securesms.video.exo.SimpleExoPlayerPool;
 import org.thoughtcrime.securesms.webrtc.audio.AudioManagerCompat;
-import org.whispersystems.libsignal.util.guava.Optional;
 import org.whispersystems.signalservice.api.SignalServiceAccountManager;
 import org.whispersystems.signalservice.api.SignalServiceDataStore;
 import org.whispersystems.signalservice.api.SignalServiceMessageReceiver;
@@ -79,12 +80,14 @@ import org.whispersystems.signalservice.api.groupsv2.GroupsV2Operations;
 import org.whispersystems.signalservice.api.push.ACI;
 import org.whispersystems.signalservice.api.push.PNI;
 import org.whispersystems.signalservice.api.services.DonationsService;
+import org.whispersystems.signalservice.api.services.ProfileService;
 import org.whispersystems.signalservice.api.util.CredentialsProvider;
 import org.whispersystems.signalservice.api.util.SleepTimer;
 import org.whispersystems.signalservice.api.util.UptimeSleepTimer;
 import org.whispersystems.signalservice.api.websocket.WebSocketFactory;
 import org.whispersystems.signalservice.internal.websocket.WebSocketConnection;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -104,7 +107,7 @@ public class ApplicationDependencyProvider implements ApplicationDependencies.Pr
 
   @Override
   public @NonNull GroupsV2Operations provideGroupsV2Operations() {
-    return new GroupsV2Operations(provideClientZkOperations());
+    return new GroupsV2Operations(provideClientZkOperations(), FeatureFlags.groupLimits().getHardLimit());
   }
 
   @Override
@@ -210,6 +213,11 @@ public class ApplicationDependencyProvider implements ApplicationDependencies.Pr
   }
 
   @Override
+  public @NonNull ExpiringStoriesManager provideExpiringStoriesManager() {
+    return new ExpiringStoriesManager(context);
+  }
+
+  @Override
   public @NonNull ExpiringMessageManager provideExpiringMessageManager() {
     return new ExpiringMessageManager(context);
   }
@@ -263,7 +271,7 @@ public class ApplicationDependencyProvider implements ApplicationDependencies.Pr
 
   @Override
   public @NonNull PendingRetryReceiptCache providePendingRetryReceiptCache() {
-    return new PendingRetryReceiptCache(context);
+    return new PendingRetryReceiptCache();
   }
 
   @Override
@@ -290,8 +298,19 @@ public class ApplicationDependencyProvider implements ApplicationDependencies.Pr
       throw new IllegalStateException("No PNI set!");
     }
 
+    boolean needsPreKeyJob = false;
+
+    if (!SignalStore.account().hasAciIdentityKey()) {
+      SignalStore.account().generateAciIdentityKeyIfNecessary();
+      needsPreKeyJob = true;
+    }
+
     if (!SignalStore.account().hasPniIdentityKey()) {
       SignalStore.account().generatePniIdentityKeyIfNecessary();
+      needsPreKeyJob = true;
+    }
+
+    if (needsPreKeyJob) {
       CreateSignedPreKeyJob.enqueueIfNeeded();
     }
 
@@ -336,6 +355,14 @@ public class ApplicationDependencyProvider implements ApplicationDependencies.Pr
   }
 
   @Override
+  public @NonNull ProfileService provideProfileService(@NonNull ClientZkProfileOperations clientZkProfileOperations,
+                                                       @NonNull SignalServiceMessageReceiver receiver,
+                                                       @NonNull SignalWebSocket signalWebSocket)
+  {
+    return new ProfileService(clientZkProfileOperations, receiver, signalWebSocket);
+  }
+
+  @Override
   public @NonNull DeadlockDetector provideDeadlockDetector() {
     HandlerThread handlerThread = new HandlerThread("signal-DeadlockDetector");
     handlerThread.start();
@@ -362,7 +389,7 @@ public class ApplicationDependencyProvider implements ApplicationDependencies.Pr
       public WebSocketConnection createUnidentifiedWebSocket() {
         return new WebSocketConnection("unidentified",
                                        provideSignalServiceNetworkAccess().getConfiguration(),
-                                       Optional.absent(),
+                                       Optional.empty(),
                                        BuildConfig.SIGNAL_AGENT,
                                        healthMonitor);
       }

@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import org.signal.core.util.logging.Log;
+import org.signal.libsignal.protocol.InvalidKeyException;
 import org.thoughtcrime.securesms.KbsEnclave;
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
 import org.thoughtcrime.securesms.jobmanager.JobTracker;
@@ -20,8 +21,6 @@ import org.thoughtcrime.securesms.lock.RegistrationLockReminders;
 import org.thoughtcrime.securesms.lock.v2.PinKeyboardType;
 import org.thoughtcrime.securesms.megaphone.Megaphones;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
-import org.whispersystems.libsignal.InvalidKeyException;
-import org.whispersystems.libsignal.util.guava.Optional;
 import org.whispersystems.signalservice.api.KbsPinData;
 import org.whispersystems.signalservice.api.KeyBackupService;
 import org.whispersystems.signalservice.api.kbs.HashedPin;
@@ -31,6 +30,7 @@ import org.whispersystems.signalservice.internal.contacts.crypto.Unauthenticated
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public final class PinState {
@@ -86,6 +86,7 @@ public final class PinState {
     SignalStore.kbsValues().setKbsMasterKey(kbsData, pin);
     SignalStore.kbsValues().setV2RegistrationLockEnabled(false);
     SignalStore.pinValues().resetPinReminders();
+    SignalStore.kbsValues().setPinForgottenOrSkipped(false);
     SignalStore.storageService().setNeedsAccountRestore(false);
     resetPinRetryCount(context, pin);
     ClearFallbackKbsEnclaveJob.clearAll();
@@ -99,6 +100,7 @@ public final class PinState {
   public static synchronized void onPinRestoreForgottenOrSkipped() {
     SignalStore.kbsValues().clearRegistrationLockAndPin();
     SignalStore.storageService().setNeedsAccountRestore(false);
+    SignalStore.kbsValues().setPinForgottenOrSkipped(true);
 
     updateState(buildInferredStateFromOtherFields());
   }
@@ -122,6 +124,7 @@ public final class PinState {
     KbsPinData                        kbsData          = pinChangeSession.setPin(hashedPin, masterKey);
 
     kbsValues.setKbsMasterKey(kbsData, pin);
+    kbsValues.setPinForgottenOrSkipped(false);
     TextSecurePreferences.clearRegistrationLockV1(context);
     SignalStore.pinValues().setKeyboardType(keyboard);
     SignalStore.pinValues().resetPinReminders();

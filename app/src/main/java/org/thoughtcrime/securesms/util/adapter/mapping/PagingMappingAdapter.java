@@ -33,7 +33,7 @@ public class PagingMappingAdapter<Key> extends MappingAdapter {
   }
 
   @Override
-  protected @Nullable MappingModel<?> getItem(int position) {
+  public @Nullable MappingModel<?> getItem(int position) {
     if (pagingController != null) {
       pagingController.onDataNeededAroundIndex(position);
     }
@@ -53,6 +53,10 @@ public class PagingMappingAdapter<Key> extends MappingAdapter {
       return type;
     }
     throw new AssertionError("No view holder factory for type: " + item.getClass());
+  }
+
+  public boolean hasItem(int position) {
+    return getItem(position) != null;
   }
 
   private static class Placeholder implements MappingModel<Placeholder> {

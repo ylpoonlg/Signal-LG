@@ -31,7 +31,7 @@ import org.thoughtcrime.securesms.util.AvatarUtil
 import org.thoughtcrime.securesms.util.BubbleUtil
 import org.thoughtcrime.securesms.util.ConversationUtil
 import org.thoughtcrime.securesms.util.TextSecurePreferences
-import org.whispersystems.libsignal.util.guava.Optional
+import java.util.Optional
 import androidx.core.app.Person as PersonCompat
 
 private const val BIG_PICTURE_DIMEN = 500
@@ -334,7 +334,7 @@ sealed class NotificationBuilder(protected val context: Context) {
       val intent = PendingIntent.getActivity(
         context,
         0,
-        ConversationIntents.createBubbleIntent(context, conversation.recipient.id, conversation.threadId),
+        ConversationIntents.createBubbleIntent(context, conversation.recipient.id, conversation.thread.threadId),
         0
       )
 

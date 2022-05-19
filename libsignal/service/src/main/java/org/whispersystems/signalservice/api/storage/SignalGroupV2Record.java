@@ -3,9 +3,9 @@ package org.whispersystems.signalservice.api.storage;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import org.signal.zkgroup.InvalidInputException;
-import org.signal.zkgroup.groups.GroupMasterKey;
-import org.whispersystems.libsignal.logging.Log;
+import org.signal.libsignal.protocol.logging.Log;
+import org.signal.libsignal.zkgroup.InvalidInputException;
+import org.signal.libsignal.zkgroup.groups.GroupMasterKey;
 import org.whispersystems.signalservice.api.util.ProtoUtil;
 import org.whispersystems.signalservice.internal.storage.protos.GroupV2Record;
 
@@ -78,6 +78,10 @@ public final class SignalGroupV2Record implements SignalRecord {
         diff.add("NotifyForMentionsWhenMuted");
       }
 
+      if (shouldHideStory() != that.shouldHideStory()) {
+        diff.add("HideStory");
+      }
+
       if (!Objects.equals(this.hasUnknownFields(), that.hasUnknownFields())) {
         diff.add("UnknownFields");
       }
@@ -132,6 +136,9 @@ public final class SignalGroupV2Record implements SignalRecord {
     return !proto.getDontNotifyForMentionsIfMuted();
   }
 
+  public boolean shouldHideStory() {
+    return proto.getHideStory();
+  }
 
   GroupV2Record toProto() {
     return proto;
@@ -198,6 +205,11 @@ public final class SignalGroupV2Record implements SignalRecord {
 
     public Builder setNotifyForMentionsWhenMuted(boolean value) {
       builder.setDontNotifyForMentionsIfMuted(!value);
+      return this;
+    }
+
+    public Builder setHideStory(boolean hideStory) {
+      builder.setHideStory(hideStory);
       return this;
     }
 

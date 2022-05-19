@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +20,6 @@ import org.signal.core.util.ThreadUtil;
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.components.emoji.parsing.EmojiDrawInfo;
 import org.thoughtcrime.securesms.components.emoji.parsing.EmojiParser;
-import org.thoughtcrime.securesms.emoji.EmojiFiles;
 import org.thoughtcrime.securesms.emoji.EmojiPageCache;
 import org.thoughtcrime.securesms.emoji.EmojiSource;
 import org.thoughtcrime.securesms.emoji.JumboEmoji;
@@ -101,6 +101,10 @@ public class EmojiProvider {
   }
 
   static @Nullable Drawable getEmojiDrawable(@NonNull Context context, @Nullable CharSequence emoji, boolean jumboEmoji) {
+    if (TextUtils.isEmpty(emoji)) {
+      return null;
+    }
+
     EmojiDrawInfo drawInfo = EmojiSource.getLatest().getEmojiTree().getEmoji(emoji, 0, emoji.length());
     return getEmojiDrawable(context, drawInfo, null, jumboEmoji);
   }

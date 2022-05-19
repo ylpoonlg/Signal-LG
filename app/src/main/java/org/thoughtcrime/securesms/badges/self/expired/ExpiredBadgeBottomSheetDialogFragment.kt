@@ -14,6 +14,7 @@ import org.thoughtcrime.securesms.components.settings.app.subscription.errors.Un
 import org.thoughtcrime.securesms.components.settings.configure
 import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.util.BottomSheetUtil
+import org.whispersystems.signalservice.api.subscriptions.ActiveSubscription
 
 /**
  * Bottom sheet displaying a fading badge with a notice and action for becoming a subscriber again.
@@ -30,7 +31,8 @@ class ExpiredBadgeBottomSheetDialogFragment : DSLSettingsBottomSheetFragment(
   private fun getConfiguration(): DSLConfiguration {
     val args = ExpiredBadgeBottomSheetDialogFragmentArgs.fromBundle(requireArguments())
     val badge: Badge = args.badge
-    val cancellationReason: UnexpectedSubscriptionCancellation? = UnexpectedSubscriptionCancellation.fromStatus(args.cancelationReason)
+    val cancellationReason = UnexpectedSubscriptionCancellation.fromStatus(args.cancelationReason)
+    val chargeFailure: ActiveSubscription.ChargeFailure? = SignalStore.donationsValues().getUnexpectedSubscriptionCancelationChargeFailure()
     val isLikelyASustainer = SignalStore.donationsValues().isLikelyASustainer()
 
     val inactive = cancellationReason == UnexpectedSubscriptionCancellation.INACTIVE
@@ -41,9 +43,9 @@ class ExpiredBadgeBottomSheetDialogFragment : DSLSettingsBottomSheetFragment(
       sectionHeaderPref(
         DSLSettingsText.from(
           if (badge.isBoost()) {
-            R.string.ExpiredBadgeBottomSheetDialogFragment__your_badge_has_expired
+            R.string.ExpiredBadgeBottomSheetDialogFragment__boost_badge_expired
           } else {
-            R.string.ExpiredBadgeBottomSheetDialogFragment__subscription_cancelled
+            R.string.ExpiredBadgeBottomSheetDialogFragment__monthly_donation_cancelled
           },
           DSLSettingsText.CenterModifier
         )
@@ -54,11 +56,11 @@ class ExpiredBadgeBottomSheetDialogFragment : DSLSettingsBottomSheetFragment(
       noPadTextPref(
         DSLSettingsText.from(
           if (badge.isBoost()) {
-            getString(R.string.ExpiredBadgeBottomSheetDialogFragment__your_boost_badge_has_expired)
+            getString(R.string.ExpiredBadgeBottomSheetDialogFragment__your_boost_badge_has_expired_and)
           } else if (inactive) {
-            getString(R.string.ExpiredBadgeBottomSheetDialogFragment__your_sustainer_subscription_was_automatically, badge.name)
+            getString(R.string.ExpiredBadgeBottomSheetDialogFragment__your_recurring_monthly_donation_was_automatically, badge.name)
           } else {
-            getString(R.string.ExpiredBadgeBottomSheetDialogFragment__your_sustainer_subscription_was_canceled)
+            getString(R.string.ExpiredBadgeBottomSheetDialogFragment__your_recurring_monthly_donation_was_canceled)
           },
           DSLSettingsText.CenterModifier
         )
@@ -72,7 +74,7 @@ class ExpiredBadgeBottomSheetDialogFragment : DSLSettingsBottomSheetFragment(
             if (isLikelyASustainer) {
               R.string.ExpiredBadgeBottomSheetDialogFragment__you_can_reactivate
             } else {
-              R.string.ExpiredBadgeBottomSheetDialogFragment__to_continue_supporting_technology
+              R.string.ExpiredBadgeBottomSheetDialogFragment__you_can_keep
             }
           } else {
             R.string.ExpiredBadgeBottomSheetDialogFragment__you_can

@@ -43,12 +43,17 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.signal.core.util.ThreadUtil;
 import org.signal.core.util.concurrent.SignalExecutors;
 import org.signal.core.util.logging.Log;
+import org.signal.libsignal.protocol.IdentityKey;
+import org.signal.libsignal.protocol.fingerprint.Fingerprint;
+import org.signal.libsignal.protocol.fingerprint.FingerprintVersionMismatchException;
+import org.signal.libsignal.protocol.fingerprint.NumericFingerprintGenerator;
 import org.thoughtcrime.securesms.R;
 import org.thoughtcrime.securesms.crypto.IdentityKeyParcelable;
 import org.thoughtcrime.securesms.crypto.ReentrantSessionLock;
 import org.thoughtcrime.securesms.database.IdentityDatabase;
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
 import org.thoughtcrime.securesms.jobs.MultiDeviceVerifiedUpdateJob;
+import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.qr.QrCode;
 import org.thoughtcrime.securesms.recipients.LiveRecipient;
 import org.thoughtcrime.securesms.recipients.Recipient;
@@ -58,11 +63,7 @@ import org.thoughtcrime.securesms.util.FeatureFlags;
 import org.thoughtcrime.securesms.util.IdentityUtil;
 import org.thoughtcrime.securesms.util.Util;
 import org.thoughtcrime.securesms.util.ViewUtil;
-import org.thoughtcrime.securesms.util.concurrent.SimpleTask;
-import org.whispersystems.libsignal.IdentityKey;
-import org.whispersystems.libsignal.fingerprint.Fingerprint;
-import org.whispersystems.libsignal.fingerprint.FingerprintVersionMismatchException;
-import org.whispersystems.libsignal.fingerprint.NumericFingerprintGenerator;
+import org.signal.core.util.concurrent.SimpleTask;
 import org.whispersystems.signalservice.api.SignalSessionLock;
 
 import java.nio.charset.Charset;
@@ -213,7 +214,7 @@ public class VerifyDisplayFragment extends Fragment implements ViewTreeObserver.
     if (FeatureFlags.verifyV2() && resolved.getServiceId().isPresent()) {
       Log.i(TAG, "Using UUID (version 2).");
       version  = 2;
-      localId  = Recipient.self().requireServiceId().toByteArray();
+      localId  = SignalStore.account().requireAci().toByteArray();
       remoteId = resolved.requireServiceId().toByteArray();
     } else if (!FeatureFlags.verifyV2() && resolved.getE164().isPresent()) {
       Log.i(TAG, "Using E164 (version 1).");

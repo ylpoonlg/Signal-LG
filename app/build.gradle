@@ -7,6 +7,7 @@ apply from: 'translations.gradle'
 apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'app.cash.exhaustive'
 apply plugin: 'kotlin-parcelize'
+apply from: 'static-ips.gradle'
 
 repositories {
     maven {
@@ -62,8 +63,8 @@ ktlint {
     version = "0.43.2"
 }
 
-def canonicalVersionCode = 1017
-def canonicalVersionName = "5.32.14"
+def canonicalVersionCode = 1057
+def canonicalVersionName = "5.39.1"
 
 def postFixSize = 100
 def abiPostFix = ['universal'   : 0,
@@ -166,7 +167,7 @@ android {
         buildConfigField "String", "SIGNAL_CDN_URL", "\"https://cdn.signal.org\""
         buildConfigField "String", "SIGNAL_CDN2_URL", "\"https://cdn2.signal.org\""
         buildConfigField "String", "SIGNAL_CONTACT_DISCOVERY_URL", "\"https://api.directory.signal.org\""
-        buildConfigField "String", "SIGNAL_CDSH_URL", "\"https://cdsh.staging.signal.org\""
+        buildConfigField "String", "SIGNAL_CDSI_URL", "\"https://cdsi.staging.signal.org\""
         buildConfigField "String", "SIGNAL_SERVICE_STATUS_URL", "\"uptime.signal.org\""
         buildConfigField "String", "SIGNAL_KEY_BACKUP_URL", "\"https://api.backup.signal.org\""
         buildConfigField "String", "SIGNAL_SFU_URL", "\"https://sfu.voip.signal.org\""
@@ -174,10 +175,17 @@ android {
         buildConfigField "String[]", "SIGNAL_SFU_INTERNAL_URLS", "new String[]{\"https://sfu.test.voip.signal.org\", \"https://sfu.staging.voip.signal.org\"}"
         buildConfigField "String", "CONTENT_PROXY_HOST", "\"contentproxy.signal.org\""
         buildConfigField "int", "CONTENT_PROXY_PORT", "443"
+        buildConfigField "String[]", "SIGNAL_SERVICE_IPS", service_ips
+        buildConfigField "String[]", "SIGNAL_STORAGE_IPS", storage_ips
+        buildConfigField "String[]", "SIGNAL_CDN_IPS", cdn_ips
+        buildConfigField "String[]", "SIGNAL_CDN2_IPS", cdn2_ips
+        buildConfigField "String[]", "SIGNAL_CDS_IPS", cds_ips
+        buildConfigField "String[]", "SIGNAL_KBS_IPS", kbs_ips
+        buildConfigField "String[]", "SIGNAL_SFU_IPS", sfu_ips
+        buildConfigField "String[]", "SIGNAL_CONTENT_PROXY_IPS", content_proxy_ips
         buildConfigField "String", "SIGNAL_AGENT", "\"OWA\""
-        buildConfigField "String", "CDSH_PUBLIC_KEY", "\"2fe57da347cd62431528daac5fbb290730fff684afc4cfc2ed90995f58cb3b74\""
-        buildConfigField "String", "CDSH_CODE_HASH", "\"ec58c0d7561de8d5657f3a4b22a635eaa305204e9359dcc80a99dfd0c5f1cbf2\""
         buildConfigField "String", "CDS_MRENCLAVE", "\"c98e00a4e3ff977a56afefe7362a27e4961e4f19e211febfbb19b897e6b80b15\""
+        buildConfigField "String", "CDSI_MRENCLAVE", "\"42e36b74794abe612d698308b148ff8a7dc5fdc6ad28d99bc5024ed6ece18dfe\""
         buildConfigField "org.thoughtcrime.securesms.KbsEnclave", "KBS_ENCLAVE", "new org.thoughtcrime.securesms.KbsEnclave(\"0cedba03535b41b67729ce9924185f831d7767928a1d1689acb689bc079c375f\", " +
                                                                                                                            "\"187d2739d22be65e74b65f0055e74d31310e4267e5fac2b1246cc8beba81af39\", " +
                                                                                                                            "\"ee19f1965b1eefa3dc4204eb70c04f397755f771b8c1909d080c04dad2a6a9ba\")"
@@ -191,8 +199,8 @@ android {
         buildConfigField "String[]", "LANGUAGES", "new String[]{\"" + autoResConfig().collect { s -> s.replace('-r', '_') }.join('", "') + '"}'
         buildConfigField "int", "CANONICAL_VERSION_CODE", "$canonicalVersionCode"
         buildConfigField "String", "DEFAULT_CURRENCIES", "\"EUR,AUD,GBP,CAD,CNY\""
-        buildConfigField "int[]", "MOBILE_COIN_BLACKLIST", "new int[]{98,963,53,850,7}"
         buildConfigField "String", "GIPHY_API_KEY", "\"3o6ZsYH6U6Eri53TXy\""
+        buildConfigField "String", "SIGNAL_CAPTCHA_URL", "\"https://signalcaptchas.org/registration/generate.html\""
         buildConfigField "String", "RECAPTCHA_PROOF_URL", "\"https://signalcaptchas.org/challenge/generate.html\""
 
         buildConfigField "String", "BUILD_DISTRIBUTION_TYPE", "\"unset\""
@@ -331,6 +339,7 @@ android {
             buildConfigField "String", "UNIDENTIFIED_SENDER_TRUST_ROOT", "\"BbqY1DzohE4NUZoVF+L18oUPrK3kILllLEJh2UnPSsEx\""
             buildConfigField "String", "ZKGROUP_SERVER_PUBLIC_PARAMS", "\"ABSY21VckQcbSXVNCGRYJcfWHiAMZmpTtTELcDmxgdFbtp/bWsSxZdMKzfCp8rvIs8ocCU3B37fT3r4Mi5qAemeGeR2X+/YmOGR5ofui7tD5mDQfstAI9i+4WpMtIe8KC3wU5w3Inq3uNWVmoGtpKndsNfwJrCg0Hd9zmObhypUnSkfYn2ooMOOnBpfdanRtrvetZUayDMSC5iSRcXKpdlukrpzzsCIvEwjwQlJYVPOQPj4V0F4UXXBdHSLK05uoPBCQG8G9rYIGedYsClJXnbrgGYG3eMTG5hnx4X4ntARBgELuMWWUEEfSK0mjXg+/2lPmWcTZWR9nkqgQQP0tbzuiPm74H2wMO4u1Wafe+UwyIlIT9L7KLS19Aw8r4sPrXQ==\""
             buildConfigField "String", "MOBILE_COIN_ENVIRONMENT", "\"testnet\""
+            buildConfigField "String", "SIGNAL_CAPTCHA_URL", "\"https://signalcaptchas.org/staging/registration/generate.html\""
             buildConfigField "String", "RECAPTCHA_PROOF_URL", "\"https://signalcaptchas.org/staging/challenge/generate.html\""
 
             buildConfigField "String", "BUILD_ENVIRONMENT_TYPE", "\"Staging\""
@@ -439,8 +448,9 @@ dependencies {
     implementation project(':device-transfer')
     implementation project(':image-editor')
     implementation project(':donations')
+    implementation project(':contacts')
 
-    implementation libs.signal.client.android
+    implementation libs.libsignal.android
     implementation libs.google.protobuf.javalite
 
     implementation(libs.mobilecoin) {
@@ -508,10 +518,7 @@ dependencies {
     testImplementation testLibs.junit.junit
     testImplementation testLibs.assertj.core
     testImplementation testLibs.mockito.core
-    testImplementation testLibs.powermock.api.mockito
-    testImplementation testLibs.powermock.module.junit4.core
-    testImplementation testLibs.powermock.module.junit4.rule
-    testImplementation testLibs.powermock.classloading.xstream
+    testImplementation testLibs.mockito.kotlin
 
     testImplementation testLibs.androidx.test.core
     testImplementation (testLibs.robolectric.robolectric) {
@@ -527,6 +534,9 @@ dependencies {
 
     androidTestImplementation testLibs.androidx.test.ext.junit
     androidTestImplementation testLibs.espresso.core
+    androidTestImplementation testLibs.androidx.test.core
+    androidTestImplementation testLibs.androidx.test.core.ktx
+    androidTestImplementation testLibs.androidx.test.ext.junit.ktx
 
     testImplementation testLibs.espresso.core
 
@@ -538,7 +548,7 @@ dependencies {
     implementation libs.rxjava3.rxkotlin
     implementation libs.rxdogtag
 
-    androidTestUtil 'androidx.test:orchestrator:1.4.0'
+    androidTestUtil 'androidx.test:orchestrator:1.4.1'
 }
 
 def getLastCommitTimestamp() {

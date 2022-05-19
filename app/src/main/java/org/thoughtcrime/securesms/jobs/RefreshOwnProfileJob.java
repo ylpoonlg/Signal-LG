@@ -6,12 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.signal.core.util.logging.Log;
-import org.signal.zkgroup.profiles.ProfileKey;
-import org.signal.zkgroup.profiles.ProfileKeyCredential;
+import org.signal.libsignal.zkgroup.profiles.PniCredential;
+import org.signal.libsignal.zkgroup.profiles.ProfileKey;
+import org.signal.libsignal.zkgroup.profiles.ProfileKeyCredential;
 import org.thoughtcrime.securesms.badges.BadgeRepository;
 import org.thoughtcrime.securesms.badges.Badges;
 import org.thoughtcrime.securesms.badges.models.Badge;
-import org.thoughtcrime.securesms.components.settings.app.subscription.errors.UnexpectedSubscriptionCancellation;
 import org.thoughtcrime.securesms.crypto.ProfileKeyUtil;
 import org.thoughtcrime.securesms.database.RecipientDatabase;
 import org.thoughtcrime.securesms.database.SignalDatabase;
@@ -23,20 +23,24 @@ import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.profiles.ProfileName;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.subscription.Subscriber;
+import org.thoughtcrime.securesms.util.Base64;
 import org.thoughtcrime.securesms.util.ProfileUtil;
+import org.thoughtcrime.securesms.util.TextSecurePreferences;
 import org.thoughtcrime.securesms.util.Util;
-import org.whispersystems.libsignal.util.guava.Optional;
 import org.whispersystems.signalservice.api.crypto.InvalidCiphertextException;
+import org.whispersystems.signalservice.api.crypto.ProfileCipher;
 import org.whispersystems.signalservice.api.profiles.ProfileAndCredential;
 import org.whispersystems.signalservice.api.profiles.SignalServiceProfile;
 import org.whispersystems.signalservice.api.push.exceptions.PushNetworkException;
 import org.whispersystems.signalservice.api.subscriptions.ActiveSubscription;
 import org.whispersystems.signalservice.internal.ServiceResponse;
+import org.whispersystems.signalservice.internal.ServiceResponseProcessor;
 
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -112,14 +116,36 @@ public class RefreshOwnProfileJob extends BaseJob {
     ProfileAndCredential profileAndCredential = ProfileUtil.retrieveProfileSync(context, self, getRequestType(self), false);
     SignalServiceProfile profile              = profileAndCredential.getProfile();
 
+    if (Util.isEmpty(profile.getName()) &&
+        Util.isEmpty(profile.getAvatar()) &&
+        Util.isEmpty(profile.getAbout()) &&
+        Util.isEmpty(profile.getAboutEmoji()))
+    {
+      Log.w(TAG, "The profile we retrieved was empty! Ignoring it.");
+      return;
+    }
+
     setProfileName(profile.getName());
     setProfileAbout(profile.getAbout(), profile.getAboutEmoji());
     setProfileAvatar(profile.getAvatar());
     setProfileCapabilities(profile.getCapabilities());
     setProfileBadges(profile.getBadges());
+    ensureUnidentifiedAccessCorrect(profile.getUnidentifiedAccess(), profile.isUnrestrictedUnidentifiedAccess());
+
     Optional<ProfileKeyCredential> profileKeyCredential = profileAndCredential.getProfileKeyCredential();
     if (profileKeyCredential.isPresent()) {
       setProfileKeyCredential(self, ProfileKeyUtil.getSelfProfileKey(), profileKeyCredential.get());
+    }
+
+    if (SignalStore.account().getAci() != null) {
+      PniCredential pniCredential = ApplicationDependencies.getProfileService()
+                                                           .getPniProfileCredential(SignalStore.account().requireAci(),
+                                                                                    SignalStore.account().requirePni(),
+                                                                                    ProfileKeyUtil.getSelfProfileKey())
+                                                           .map(ServiceResponseProcessor.DefaultProcessor::new)
+                                                           .blockingGet()
+                                                           .getResultOrThrow();
+      SignalStore.account().setPniCredential(pniCredential);
     }
   }
 
@@ -151,8 +177,13 @@ public class RefreshOwnProfileJob extends BaseJob {
       String      plaintextName = ProfileUtil.decryptString(profileKey, encryptedName);
       ProfileName profileName   = ProfileName.fromSerialized(plaintextName);
 
-      Log.d(TAG, "Saving " + (!Util.isEmpty(plaintextName) ? "non-" : "") + "empty name.");
-      SignalDatabase.recipients().setProfileName(Recipient.self().getId(), profileName);
+      if (!profileName.isEmpty()) {
+        Log.d(TAG, "Saving non-empty name.");
+        SignalDatabase.recipients().setProfileName(Recipient.self().getId(), profileName);
+      } else {
+        Log.w(TAG, "Ignoring empty name.");
+      }
+
     } catch (InvalidCiphertextException | IOException e) {
       Log.w(TAG, e);
     }
@@ -186,7 +217,37 @@ public class RefreshOwnProfileJob extends BaseJob {
     SignalDatabase.recipients().setCapabilities(Recipient.self().getId(), capabilities);
   }
 
-  private void setProfileBadges(@Nullable List<SignalServiceProfile.Badge> badges) {
+  private void ensureUnidentifiedAccessCorrect(@Nullable String unidentifiedAccessVerifier, boolean universalUnidentifiedAccess) {
+    if (unidentifiedAccessVerifier == null) {
+      Log.w(TAG, "No unidentified access is set remotely! Refreshing attributes.");
+      ApplicationDependencies.getJobManager().add(new RefreshAttributesJob());
+      return;
+    }
+
+    if (TextSecurePreferences.isUniversalUnidentifiedAccess(context) != universalUnidentifiedAccess) {
+      Log.w(TAG, "The universal access flag doesn't match our local value (local: " + TextSecurePreferences.isUniversalUnidentifiedAccess(context) + ", remote: " + universalUnidentifiedAccess + ")! Refreshing attributes.");
+      ApplicationDependencies.getJobManager().add(new RefreshAttributesJob());
+      return;
+    }
+
+    ProfileKey    profileKey = ProfileKeyUtil.getSelfProfileKey();
+    ProfileCipher cipher     = new ProfileCipher(profileKey);
+
+    boolean verified;
+    try {
+      verified = cipher.verifyUnidentifiedAccess(Base64.decode(unidentifiedAccessVerifier));
+    } catch (IOException e) {
+      Log.w(TAG, "Failed to decode unidentified access!", e);
+      verified = false;
+    }
+
+    if (!verified) {
+      Log.w(TAG, "Unidentified access failed to verify! Refreshing attributes.");
+      ApplicationDependencies.getJobManager().add(new RefreshAttributesJob());
+    }
+  }
+
+  private void setProfileBadges(@Nullable List<SignalServiceProfile.Badge> badges) throws IOException {
     if (badges == null) {
       return;
     }
@@ -207,6 +268,8 @@ public class RefreshOwnProfileJob extends BaseJob {
     boolean localHasSubscriptionBadges  = localDonorBadgeIds.stream().anyMatch(RefreshOwnProfileJob::isSubscription);
     boolean remoteHasBoostBadges        = remoteDonorBadgeIds.stream().anyMatch(RefreshOwnProfileJob::isBoost);
     boolean localHasBoostBadges         = localDonorBadgeIds.stream().anyMatch(RefreshOwnProfileJob::isBoost);
+    boolean remoteHasGiftBadges         = remoteDonorBadgeIds.stream().anyMatch(RefreshOwnProfileJob::isGift);
+    boolean localHasGiftBadges          = localDonorBadgeIds.stream().anyMatch(RefreshOwnProfileJob::isGift);
 
     if (!remoteHasSubscriptionBadges && localHasSubscriptionBadges) {
       Badge mostRecentExpiration = Recipient.self()
@@ -234,15 +297,17 @@ public class RefreshOwnProfileJob extends BaseJob {
             ActiveSubscription activeSubscription = response.getResult().get();
             if (activeSubscription.isFailedPayment()) {
               Log.d(TAG, "Unexpected expiry due to payment failure.", true);
-              SignalStore.donationsValues().setUnexpectedSubscriptionCancelationReason(activeSubscription.getActiveSubscription().getStatus());
               isDueToPaymentFailure = true;
+            }
+
+            if (activeSubscription.getChargeFailure() != null) {
+              Log.d(TAG, "Active payment contains a charge failure: " + activeSubscription.getChargeFailure().getCode(), true);
             }
           }
         }
 
         if (!isDueToPaymentFailure) {
           Log.d(TAG, "Unexpected expiry due to inactivity.", true);
-          SignalStore.donationsValues().setUnexpectedSubscriptionCancelationReason(UnexpectedSubscriptionCancellation.INACTIVE.getStatus());
         }
 
         MultiDeviceSubscriptionSyncRequestJob.enqueue();
@@ -259,6 +324,32 @@ public class RefreshOwnProfileJob extends BaseJob {
 
       Log.d(TAG, "Marking boost badge as expired, should notify next time the conversation list is open.", true);
       SignalStore.donationsValues().setExpiredBadge(mostRecentExpiration);
+    } else {
+      Badge badge = SignalStore.donationsValues().getExpiredBadge();
+
+      if (badge != null && badge.isSubscription() && remoteHasSubscriptionBadges) {
+        Log.d(TAG, "Remote has subscription badges. Clearing local expired subscription badge.", true);
+        SignalStore.donationsValues().setExpiredBadge(null);
+      } else if (badge != null && badge.isBoost() && remoteHasBoostBadges) {
+        Log.d(TAG, "Remote has boost badges. Clearing local expired boost badge.", true);
+        SignalStore.donationsValues().setExpiredBadge(null);
+      }
+    }
+
+    if (!remoteHasGiftBadges && localHasGiftBadges) {
+      Badge mostRecentExpiration = Recipient.self()
+                                            .getBadges()
+                                            .stream()
+                                            .filter(badge -> badge.getCategory() == Badge.Category.Donor)
+                                            .filter(badge -> isGift(badge.getId()))
+                                            .max(Comparator.comparingLong(Badge::getExpirationTimestamp))
+                                            .get();
+
+      Log.d(TAG, "Marking gift badge as expired, should notify next time the manage donations screen is open.", true);
+      SignalStore.donationsValues().setExpiredGiftBadge(mostRecentExpiration);
+    } else if (remoteHasGiftBadges) {
+      Log.d(TAG, "We have remote gift badges. Clearing local expired gift badge.", true);
+      SignalStore.donationsValues().setExpiredGiftBadge(null);
     }
 
     boolean userHasVisibleBadges   = badges.stream().anyMatch(SignalServiceProfile.Badge::isVisible);
@@ -273,18 +364,23 @@ public class RefreshOwnProfileJob extends BaseJob {
                  " visible.", true);
 
       BadgeRepository badgeRepository = new BadgeRepository(context);
-      badgeRepository.setVisibilityForAllBadges(displayBadgesOnProfile, appBadges).blockingSubscribe();
+      List<Badge> updatedBadges = badgeRepository.setVisibilityForAllBadgesSync(displayBadgesOnProfile, appBadges);
+      SignalDatabase.recipients().setBadges(Recipient.self().getId(), updatedBadges);
     } else {
       SignalDatabase.recipients().setBadges(Recipient.self().getId(), appBadges);
     }
   }
 
   private static boolean isSubscription(String badgeId) {
-    return !Objects.equals(badgeId, Badge.BOOST_BADGE_ID);
+    return !isBoost(badgeId) && !isGift(badgeId);
   }
 
   private static boolean isBoost(String badgeId) {
     return Objects.equals(badgeId, Badge.BOOST_BADGE_ID);
+  }
+
+  private static boolean isGift(String badgeId) {
+    return Objects.equals(badgeId, Badge.GIFT_BADGE_ID);
   }
 
   public static final class Factory implements Job.Factory<RefreshOwnProfileJob> {

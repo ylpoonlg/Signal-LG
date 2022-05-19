@@ -39,7 +39,6 @@ import org.thoughtcrime.securesms.util.LifecycleDisposable
 import org.thoughtcrime.securesms.util.SpanUtil
 import org.thoughtcrime.securesms.util.fragments.requireListener
 import org.thoughtcrime.securesms.util.navigation.safeNavigate
-import java.util.Calendar
 import java.util.Currency
 import java.util.concurrent.TimeUnit
 
@@ -53,7 +52,7 @@ class SubscribeFragment : DSLSettingsFragment(
   private val lifecycleDisposable = LifecycleDisposable()
 
   private val supportTechSummary: CharSequence by lazy {
-    SpannableStringBuilder(requireContext().getString(R.string.SubscribeFragment__support_technology_that_is_built_for_you_not))
+    SpannableStringBuilder(requireContext().getString(R.string.SubscribeFragment__make_a_recurring_monthly_donation))
       .append(" ")
       .append(
         SpanUtil.readMore(requireContext(), ContextCompat.getColor(requireContext(), R.color.signal_button_secondary_text)) {
@@ -121,7 +120,7 @@ class SubscribeFragment : DSLSettingsFragment(
 
   override fun onDestroyView() {
     super.onDestroyView()
-    processingDonationPaymentDialog.hide()
+    processingDonationPaymentDialog.dismiss()
   }
 
   private fun getConfiguration(state: SubscribeState): DSLConfiguration {
@@ -134,7 +133,7 @@ class SubscribeFragment : DSLSettingsFragment(
     val areFieldsEnabled = state.stage == SubscribeState.Stage.READY && !state.hasInProgressSubscriptionTransaction
 
     return configure {
-      customPref(BadgePreview.SubscriptionModel(state.selectedSubscription?.badge))
+      customPref(BadgePreview.BadgeModel.SubscriptionModel(state.selectedSubscription?.badge))
 
       sectionHeaderPref(
         title = DSLSettingsText.from(
@@ -216,9 +215,7 @@ class SubscribeFragment : DSLSettingsFragment(
           isEnabled = areFieldsEnabled && (!activeAndSameLevel || state.isSubscriptionExpiring()),
           onClick = {
             val price = viewModel.getPriceOfSelectedSubscription() ?: return@primaryButton
-            val calendar = Calendar.getInstance()
 
-            calendar.add(Calendar.MONTH, 1)
             MaterialAlertDialogBuilder(requireContext())
               .setTitle(R.string.SubscribeFragment__update_subscription_question)
               .setMessage(

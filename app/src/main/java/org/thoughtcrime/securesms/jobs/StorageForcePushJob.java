@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.annimon.stream.Stream;
 
 import org.signal.core.util.logging.Log;
+import org.signal.libsignal.protocol.InvalidKeyException;
 import org.thoughtcrime.securesms.database.RecipientDatabase;
 import org.thoughtcrime.securesms.database.SignalDatabase;
 import org.thoughtcrime.securesms.database.UnknownStorageIdDatabase;
@@ -19,7 +20,6 @@ import org.thoughtcrime.securesms.storage.StorageSyncHelper;
 import org.thoughtcrime.securesms.storage.StorageSyncModels;
 import org.thoughtcrime.securesms.storage.StorageSyncValidations;
 import org.thoughtcrime.securesms.transport.RetryLaterException;
-import org.whispersystems.libsignal.InvalidKeyException;
 import org.whispersystems.signalservice.api.SignalServiceAccountManager;
 import org.whispersystems.signalservice.api.push.exceptions.PushNetworkException;
 import org.whispersystems.signalservice.api.storage.SignalStorageManifest;
@@ -73,6 +73,11 @@ public class StorageForcePushJob extends BaseJob {
   protected void onRun() throws IOException, RetryLaterException {
     if (SignalStore.account().isLinkedDevice()) {
       Log.i(TAG, "Only the primary device can force push");
+      return;
+    }
+
+    if (!SignalStore.account().isRegistered() || SignalStore.account().getE164() == null || Recipient.self().getStorageServiceId() == null) {
+      Log.w(TAG, "User not registered. Skipping.");
       return;
     }
 

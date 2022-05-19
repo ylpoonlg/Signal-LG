@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="10dp">
 
-        <org.thoughtcrime.securesms.components.AvatarImageView
+        <org.thoughtcrime.securesms.avatar.view.AvatarView
             android:id="@+id/contact_photo_image"
             android:layout_width="36dp"
             android:layout_height="36dp"

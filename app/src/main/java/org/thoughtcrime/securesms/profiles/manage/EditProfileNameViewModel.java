@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms.profiles.manage;
 
 import android.content.Context;
-import android.text.Editable;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -11,7 +10,7 @@ import androidx.lifecycle.ViewModel;
 
 import org.thoughtcrime.securesms.profiles.ProfileName;
 import org.thoughtcrime.securesms.util.SingleLiveEvent;
-import org.thoughtcrime.securesms.util.StringUtil;
+import org.signal.core.util.StringUtil;
 
 public final class EditProfileNameViewModel extends ViewModel {
 

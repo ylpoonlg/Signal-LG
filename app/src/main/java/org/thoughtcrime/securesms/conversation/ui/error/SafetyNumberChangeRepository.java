@@ -12,27 +12,29 @@ import com.annimon.stream.Stream;
 
 import org.signal.core.util.concurrent.SignalExecutors;
 import org.signal.core.util.logging.Log;
+import org.signal.libsignal.protocol.IdentityKey;
+import org.signal.libsignal.protocol.SignalProtocolAddress;
 import org.thoughtcrime.securesms.crypto.ReentrantSessionLock;
 import org.thoughtcrime.securesms.crypto.storage.SignalIdentityKeyStore;
 import org.thoughtcrime.securesms.database.IdentityDatabase;
-import org.thoughtcrime.securesms.database.SignalDatabase;
-import org.thoughtcrime.securesms.database.model.IdentityRecord;
 import org.thoughtcrime.securesms.database.MessageDatabase;
 import org.thoughtcrime.securesms.database.MmsSmsDatabase;
 import org.thoughtcrime.securesms.database.NoSuchMessageException;
+import org.thoughtcrime.securesms.database.SignalDatabase;
+import org.thoughtcrime.securesms.database.model.IdentityRecord;
 import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
 import org.thoughtcrime.securesms.sms.MessageSender;
 import org.thoughtcrime.securesms.util.Util;
-import org.whispersystems.libsignal.IdentityKey;
-import org.whispersystems.libsignal.SignalProtocolAddress;
 import org.whispersystems.signalservice.api.SignalSessionLock;
 import org.whispersystems.signalservice.api.push.SignalServiceAddress;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 final class SafetyNumberChangeRepository {
 
@@ -151,8 +153,9 @@ final class SafetyNumberChangeRepository {
   @WorkerThread
   private void processOutgoingMessageRecord(@NonNull List<ChangedRecipient> changedRecipients, @NonNull MessageRecord messageRecord) {
     Log.d(TAG, "processOutgoingMessageRecord");
-    MessageDatabase smsDatabase = SignalDatabase.sms();
-    MessageDatabase mmsDatabase = SignalDatabase.mms();
+    MessageDatabase  smsDatabase = SignalDatabase.sms();
+    MessageDatabase  mmsDatabase = SignalDatabase.mms();
+    Set<RecipientId> resendIds   = new HashSet<>();
 
     for (ChangedRecipient changedRecipient : changedRecipients) {
       RecipientId id          = changedRecipient.getRecipient().getId();
@@ -161,8 +164,8 @@ final class SafetyNumberChangeRepository {
       if (messageRecord.isMms()) {
         mmsDatabase.removeMismatchedIdentity(messageRecord.getId(), id, identityKey);
 
-        if (messageRecord.getRecipient().isPushGroup()) {
-          MessageSender.resendGroupMessage(context, messageRecord, id);
+        if (messageRecord.getRecipient().isDistributionList() || messageRecord.getRecipient().isPushGroup()) {
+          resendIds.add(id);
         } else {
           MessageSender.resend(context, messageRecord);
         }
@@ -170,6 +173,14 @@ final class SafetyNumberChangeRepository {
         smsDatabase.removeMismatchedIdentity(messageRecord.getId(), id, identityKey);
 
         MessageSender.resend(context, messageRecord);
+      }
+    }
+
+    if (Util.hasItems(resendIds)) {
+      if (messageRecord.getRecipient().isPushGroup()) {
+        MessageSender.resendGroupMessage(context, messageRecord, resendIds);
+      } else {
+        MessageSender.resendDistributionList(context, messageRecord, resendIds);
       }
     }
   }

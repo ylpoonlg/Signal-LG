@@ -13,34 +13,34 @@ import androidx.annotation.WorkerThread;
 import com.annimon.stream.Stream;
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import org.signal.core.util.CursorUtil;
+import org.signal.core.util.SetUtil;
+import org.signal.core.util.SqlUtil;
 import org.signal.core.util.logging.Log;
+import org.signal.libsignal.zkgroup.InvalidInputException;
+import org.signal.libsignal.zkgroup.groups.GroupMasterKey;
 import org.signal.storageservice.protos.groups.AccessControl;
 import org.signal.storageservice.protos.groups.Member;
 import org.signal.storageservice.protos.groups.local.DecryptedGroup;
 import org.signal.storageservice.protos.groups.local.DecryptedGroupChange;
 import org.signal.storageservice.protos.groups.local.EnabledState;
-import org.signal.zkgroup.InvalidInputException;
-import org.signal.zkgroup.groups.GroupMasterKey;
 import org.thoughtcrime.securesms.crypto.SenderKeyUtil;
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
-import org.thoughtcrime.securesms.groups.v2.processing.GroupsV2StateProcessor;
-import org.thoughtcrime.securesms.jobs.RequestGroupV2InfoJob;
-import org.thoughtcrime.securesms.keyvalue.SignalStore;
-import org.whispersystems.signalservice.api.push.ACI;
-import org.whispersystems.signalservice.api.push.DistributionId;
+import org.thoughtcrime.securesms.groups.BadGroupIdException;
 import org.thoughtcrime.securesms.groups.GroupAccessControl;
 import org.thoughtcrime.securesms.groups.GroupId;
 import org.thoughtcrime.securesms.groups.GroupMigrationMembershipChange;
+import org.thoughtcrime.securesms.groups.v2.processing.GroupsV2StateProcessor;
+import org.thoughtcrime.securesms.jobs.RequestGroupV2InfoJob;
+import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
-import org.thoughtcrime.securesms.util.CursorUtil;
-import org.thoughtcrime.securesms.util.SetUtil;
-import org.thoughtcrime.securesms.util.SqlUtil;
 import org.thoughtcrime.securesms.util.Util;
-import org.whispersystems.libsignal.util.guava.Optional;
 import org.whispersystems.signalservice.api.groupsv2.DecryptedGroupUtil;
 import org.whispersystems.signalservice.api.groupsv2.GroupChangeReconstruct;
 import org.whispersystems.signalservice.api.messages.SignalServiceAttachmentPointer;
+import org.whispersystems.signalservice.api.push.ACI;
+import org.whispersystems.signalservice.api.push.DistributionId;
 import org.whispersystems.signalservice.api.push.ServiceId;
 import org.whispersystems.signalservice.api.util.UuidUtil;
 
@@ -56,6 +56,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -67,7 +68,7 @@ public class GroupDatabase extends Database {
           static final String TABLE_NAME            = "groups";
   private static final String ID                    = "_id";
           static final String GROUP_ID              = "group_id";
-          static final String RECIPIENT_ID          = "recipient_id";
+  public  static final String RECIPIENT_ID          = "recipient_id";
   private static final String TITLE                 = "title";
           static final String MEMBERS               = "members";
   private static final String AVATAR_ID             = "avatar_id";
@@ -81,6 +82,8 @@ public class GroupDatabase extends Database {
   private static final String EXPECTED_V2_ID        = "expected_v2_id";
   private static final String UNMIGRATED_V1_MEMBERS = "former_v1_members";
   private static final String DISTRIBUTION_ID       = "distribution_id";
+  private static final String DISPLAY_AS_STORY      = "display_as_story";
+  private static final String AUTH_SERVICE_ID       = "auth_service_id";
 
 
   /* V2 Group columns */
@@ -89,7 +92,7 @@ public class GroupDatabase extends Database {
   /** Increments with every change to the group */
   private static final String V2_REVISION         = "revision";
   /** Serialized {@link DecryptedGroup} protobuf */
-  private static final String V2_DECRYPTED_GROUP  = "decrypted_group";
+  public  static final String V2_DECRYPTED_GROUP  = "decrypted_group";
 
   public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " (" + ID                    + " INTEGER PRIMARY KEY, " +
                                                                                   GROUP_ID              + " TEXT, " +
@@ -109,18 +112,20 @@ public class GroupDatabase extends Database {
                                                                                   V2_DECRYPTED_GROUP    + " BLOB, " +
                                                                                   EXPECTED_V2_ID        + " TEXT DEFAULT NULL, " +
                                                                                   UNMIGRATED_V1_MEMBERS + " TEXT DEFAULT NULL, " +
-                                                                                  DISTRIBUTION_ID       + " TEXT DEFAULT NULL);";
+                                                                                  DISTRIBUTION_ID       + " TEXT DEFAULT NULL, " +
+                                                                                  DISPLAY_AS_STORY      + " INTEGER DEFAULT 0, " +
+                                                                                  AUTH_SERVICE_ID       + " TEXT DEFAULT NULL);";
 
   public static final String[] CREATE_INDEXS = {
       "CREATE UNIQUE INDEX IF NOT EXISTS group_id_index ON " + TABLE_NAME + " (" + GROUP_ID + ");",
       "CREATE UNIQUE INDEX IF NOT EXISTS group_recipient_id_index ON " + TABLE_NAME + " (" + RECIPIENT_ID + ");",
       "CREATE UNIQUE INDEX IF NOT EXISTS expected_v2_id_index ON " + TABLE_NAME + " (" + EXPECTED_V2_ID + ");",
-      "CREATE UNIQUE INDEX IF NOT EXISTS group_distribution_id_index ON " + TABLE_NAME + "(" + DISTRIBUTION_ID + ")"
-};
+      "CREATE UNIQUE INDEX IF NOT EXISTS group_distribution_id_index ON " + TABLE_NAME + "(" + DISTRIBUTION_ID + ");"
+  };
 
-private static final String[] GROUP_PROJECTION = {
+  private static final String[] GROUP_PROJECTION = {
       GROUP_ID, RECIPIENT_ID, TITLE, MEMBERS, UNMIGRATED_V1_MEMBERS, AVATAR_ID, AVATAR_KEY, AVATAR_CONTENT_TYPE, AVATAR_RELAY, AVATAR_DIGEST,
-      TIMESTAMP, ACTIVE, MMS, V2_MASTER_KEY, V2_REVISION, V2_DECRYPTED_GROUP
+      TIMESTAMP, ACTIVE, MMS, V2_MASTER_KEY, V2_REVISION, V2_DECRYPTED_GROUP, AUTH_SERVICE_ID
   };
 
   static final List<String> TYPED_GROUP_PROJECTION = Stream.of(GROUP_PROJECTION).map(columnName -> TABLE_NAME + "." + columnName).toList();
@@ -135,7 +140,7 @@ private static final String[] GROUP_PROJECTION = {
         return getGroup(cursor);
       }
 
-      return Optional.absent();
+      return Optional.empty();
     }
   }
 
@@ -165,7 +170,7 @@ private static final String[] GROUP_PROJECTION = {
         return getGroup(cursor);
       }
 
-      return Optional.absent();
+      return Optional.empty();
     }
   }
 
@@ -187,7 +192,7 @@ private static final String[] GROUP_PROJECTION = {
       if (cursor.moveToFirst()) {
         return getGroup(cursor);
       } else {
-        return Optional.absent();
+        return Optional.empty();
       }
     }
   }
@@ -201,7 +206,7 @@ private static final String[] GROUP_PROJECTION = {
       if (cursor.moveToFirst()) {
         return getGroup(cursor);
       } else {
-        return Optional.absent();
+        return Optional.empty();
       }
     }
   }
@@ -231,7 +236,7 @@ private static final String[] GROUP_PROJECTION = {
 
   Optional<GroupRecord> getGroup(Cursor cursor) {
     Reader reader = new Reader(cursor);
-    return Optional.fromNullable(reader.getCurrent());
+    return Optional.ofNullable(reader.getCurrent());
   }
 
   /**
@@ -278,16 +283,18 @@ private static final String[] GROUP_PROJECTION = {
     return noMetadata && noMembers;
   }
 
-  public Reader getGroupsFilteredByTitle(String constraint, boolean includeInactive, boolean excludeV1, boolean excludeMms) {
+  public Reader queryGroupsByTitle(String inputQuery, boolean includeInactive, boolean excludeV1, boolean excludeMms) {
     String   query;
     String[] queryArgs;
 
+    String caseInsensitiveQuery = SqlUtil.buildCaseInsensitiveGlobPattern(inputQuery);
+
     if (includeInactive) {
-      query     = TITLE + " LIKE ? AND (" + ACTIVE + " = ? OR " + RECIPIENT_ID + " IN (SELECT " + ThreadDatabase.RECIPIENT_ID + " FROM " + ThreadDatabase.TABLE_NAME + "))";
-      queryArgs = new String[]{"%" + constraint + "%", "1"};
+      query     = TITLE + " GLOB ? AND (" + ACTIVE + " = ? OR " + RECIPIENT_ID + " IN (SELECT " + ThreadDatabase.RECIPIENT_ID + " FROM " + ThreadDatabase.TABLE_NAME + "))";
+      queryArgs = SqlUtil.buildArgs(caseInsensitiveQuery, 1);
     } else {
-      query     = TITLE + " LIKE ? AND " + ACTIVE + " = ?";
-      queryArgs = new String[]{"%" + constraint + "%", "1"};
+      query     = TITLE + " GLOB ? AND " + ACTIVE + " = ?";
+      queryArgs = SqlUtil.buildArgs(caseInsensitiveQuery, 1);
     }
 
     if (excludeV1) {
@@ -426,10 +433,26 @@ private static final String[] GROUP_PROJECTION = {
   }
 
   @WorkerThread
+  public @NonNull List<RecipientId> getGroupMemberIds(@NonNull GroupId groupId, @NonNull MemberSet memberSet) {
+    if (groupId.isV2()) {
+      return getGroup(groupId).map(g -> g.requireV2GroupProperties().getMemberRecipientIds(memberSet))
+                              .orElse(Collections.emptyList());
+    } else {
+      List<RecipientId> currentMembers = getCurrentMembers(groupId);
+
+      if (!memberSet.includeSelf) {
+        currentMembers.remove(Recipient.self().getId());
+      }
+
+      return currentMembers;
+    }
+  }
+
+  @WorkerThread
   public @NonNull List<Recipient> getGroupMembers(@NonNull GroupId groupId, @NonNull MemberSet memberSet) {
     if (groupId.isV2()) {
-      return getGroup(groupId).transform(g -> g.requireV2GroupProperties().getMemberRecipients(memberSet))
-                              .or(Collections.emptyList());
+      return getGroup(groupId).map(g -> g.requireV2GroupProperties().getMemberRecipients(memberSet))
+                              .orElse(Collections.emptyList());
     } else {
       List<RecipientId> currentMembers = getCurrentMembers(groupId);
       List<Recipient>   recipients     = new ArrayList<>(currentMembers.size());
@@ -454,23 +477,25 @@ private static final String[] GROUP_PROJECTION = {
     if (groupExists(groupId.deriveV2MigrationGroupId())) {
       throw new LegacyGroupInsertException(groupId);
     }
-    create(groupId, title, members, avatar, relay, null, null);
+    create(null, groupId, title, members, avatar, relay, null, null);
   }
 
   public void create(@NonNull GroupId.Mms groupId,
                      @Nullable String title,
                      @NonNull Collection<RecipientId> members)
   {
-    create(groupId, Util.isEmpty(title) ? null : title, members, null, null, null, null);
+    create(null, groupId, Util.isEmpty(title) ? null : title, members, null, null, null, null);
   }
 
-  public GroupId.V2 create(@NonNull GroupMasterKey groupMasterKey,
+  public GroupId.V2 create(@Nullable ServiceId authServiceId,
+                           @NonNull GroupMasterKey groupMasterKey,
                            @NonNull DecryptedGroup groupState)
   {
-    return create(groupMasterKey, groupState, false);
+    return create(authServiceId, groupMasterKey, groupState, false);
   }
 
-  public GroupId.V2 create(@NonNull GroupMasterKey groupMasterKey,
+  public GroupId.V2 create(@Nullable ServiceId authServiceId,
+                           @NonNull GroupMasterKey groupMasterKey,
                            @NonNull DecryptedGroup groupState,
                            boolean force)
   {
@@ -482,7 +507,7 @@ private static final String[] GROUP_PROJECTION = {
       Log.w(TAG, "Forcing the creation of a group even though we already have a V1 ID!");
     }
 
-    create(groupId, groupState.getTitle(), Collections.emptyList(), null, null, groupMasterKey, groupState);
+    create(authServiceId, groupId, groupState.getTitle(), Collections.emptyList(), null, null, groupMasterKey, groupState);
 
     return groupId;
   }
@@ -491,7 +516,7 @@ private static final String[] GROUP_PROJECTION = {
    * There was a point in time where we weren't properly responding to group creates on linked devices. This would result in us having a Recipient entry for the
    * group, but we'd either be missing the group entry, or that entry would be missing a master key. This method fixes this scenario.
    */
-  public void fixMissingMasterKey(@NonNull GroupMasterKey groupMasterKey) {
+  public void fixMissingMasterKey(@Nullable ServiceId authServiceId, @NonNull GroupMasterKey groupMasterKey) {
     GroupId.V2 groupId = GroupId.v2(groupMasterKey);
 
     if (getGroupV1ByExpectedV2(groupId).isPresent()) {
@@ -512,7 +537,8 @@ private static final String[] GROUP_PROJECTION = {
 
       if (updated < 1) {
         Log.w(TAG, "No group entry. Creating restore placeholder for " + groupId);
-        create(groupMasterKey,
+        create(authServiceId,
+               groupMasterKey,
                DecryptedGroup.newBuilder()
                              .setRevision(GroupsV2StateProcessor.RESTORE_PLACEHOLDER_REVISION)
                              .build(),
@@ -533,7 +559,8 @@ private static final String[] GROUP_PROJECTION = {
   /**
    * @param groupMasterKey null for V1, must be non-null for V2 (presence dictates group version).
    */
-  private void create(@NonNull GroupId groupId,
+  private void create(@Nullable ServiceId authServiceId,
+                      @NonNull GroupId groupId,
                       @Nullable String title,
                       @NonNull Collection<RecipientId> memberCollection,
                       @Nullable SignalServiceAttachmentPointer avatar,
@@ -548,6 +575,7 @@ private static final String[] GROUP_PROJECTION = {
     Collections.sort(members);
 
     ContentValues contentValues = new ContentValues();
+    contentValues.put(AUTH_SERVICE_ID, authServiceId != null ? authServiceId.toString() : null);
     contentValues.put(RECIPIENT_ID, groupRecipientId.serialize());
     contentValues.put(GROUP_ID, groupId.toString());
     contentValues.put(TITLE, title);
@@ -557,7 +585,7 @@ private static final String[] GROUP_PROJECTION = {
       contentValues.put(AVATAR_ID, avatar.getRemoteId().getV2().get());
       contentValues.put(AVATAR_KEY, avatar.getKey());
       contentValues.put(AVATAR_CONTENT_TYPE, avatar.getContentType());
-      contentValues.put(AVATAR_DIGEST, avatar.getDigest().orNull());
+      contentValues.put(AVATAR_DIGEST, avatar.getDigest().orElse(null));
     } else {
       contentValues.put(AVATAR_ID, 0);
     }
@@ -620,7 +648,7 @@ private static final String[] GROUP_PROJECTION = {
       contentValues.put(AVATAR_ID, avatar.getRemoteId().getV2().get());
       contentValues.put(AVATAR_CONTENT_TYPE, avatar.getContentType());
       contentValues.put(AVATAR_KEY, avatar.getKey());
-      contentValues.put(AVATAR_DIGEST, avatar.getDigest().orNull());
+      contentValues.put(AVATAR_DIGEST, avatar.getDigest().orElse(null));
     } else {
       contentValues.put(AVATAR_ID, 0);
     }
@@ -737,7 +765,7 @@ private static final String[] GROUP_PROJECTION = {
 
       if (removed.size() > 0) {
         Log.i(TAG, removed.size() + " members were removed from group " + groupId + ". Rotating the DistributionId " + distributionId);
-        SenderKeyUtil.rotateOurKey(context, distributionId);
+        SenderKeyUtil.rotateOurKey(distributionId);
       }
     }
 
@@ -887,7 +915,7 @@ private static final String[] GROUP_PROJECTION = {
       if (UuidUtil.UNKNOWN_UUID.equals(uuid)) {
         Log.w(TAG, "Seen unknown UUID in members list");
       } else {
-        RecipientId           id       = RecipientId.from(ACI.from(uuid), null);
+        RecipientId           id       = RecipientId.from(ServiceId.from(uuid), null);
         Optional<RecipientId> remapped = RemappedRecords.getInstance().getRecipient(id);
 
         if (remapped.isPresent()) {
@@ -959,9 +987,16 @@ private static final String[] GROUP_PROJECTION = {
     return result;
   }
 
+  public void setAuthServiceId(@Nullable ServiceId authServiceId, @NonNull GroupId groupId) {
+    ContentValues values = new ContentValues(1);
+    values.put(AUTH_SERVICE_ID, authServiceId == null ? null : authServiceId.toString());
+
+    getWritableDatabase().update(TABLE_NAME, values, GROUP_ID + " = ?", SqlUtil.buildArgs(groupId));
+  }
+
   public static class Reader implements Closeable {
 
-    private final Cursor cursor;
+    public final Cursor cursor;
 
     public Reader(Cursor cursor) {
       this.cursor = cursor;
@@ -1003,7 +1038,8 @@ private static final String[] GROUP_PROJECTION = {
                              CursorUtil.requireBlob(cursor, V2_MASTER_KEY),
                              CursorUtil.requireInt(cursor, V2_REVISION),
                              CursorUtil.requireBlob(cursor, V2_DECRYPTED_GROUP),
-                             CursorUtil.getString(cursor, DISTRIBUTION_ID).transform(DistributionId::from).orNull());
+                             CursorUtil.getString(cursor, DISTRIBUTION_ID).map(DistributionId::from).orElse(null),
+                             CursorUtil.requireString(cursor, AUTH_SERVICE_ID));
     }
 
     @Override
@@ -1029,6 +1065,7 @@ private static final String[] GROUP_PROJECTION = {
               private final boolean           mms;
     @Nullable private final V2GroupProperties v2GroupProperties;
               private final DistributionId    distributionId;
+    @Nullable private final String            authServiceId;
 
     public GroupRecord(@NonNull GroupId id,
                        @NonNull RecipientId recipientId,
@@ -1045,7 +1082,8 @@ private static final String[] GROUP_PROJECTION = {
                        @Nullable byte[] groupMasterKeyBytes,
                        int groupRevision,
                        @Nullable byte[] decryptedGroupBytes,
-                       @Nullable DistributionId distributionId)
+                       @Nullable DistributionId distributionId,
+                       @Nullable String authServiceId)
     {
       this.id                = id;
       this.recipientId       = recipientId;
@@ -1058,6 +1096,7 @@ private static final String[] GROUP_PROJECTION = {
       this.active            = active;
       this.mms               = mms;
       this.distributionId    = distributionId;
+      this.authServiceId     = authServiceId;
 
       V2GroupProperties v2GroupProperties = null;
       if (groupMasterKeyBytes != null && decryptedGroupBytes != null) {
@@ -1188,7 +1227,11 @@ private static final String[] GROUP_PROJECTION = {
 
     public MemberLevel memberLevel(@NonNull Recipient recipient) {
       if (isV2Group()) {
-        return requireV2GroupProperties().memberLevel(recipient);
+        MemberLevel memberLevel = requireV2GroupProperties().memberLevel(recipient.getServiceId());
+        if (recipient.isSelf() && memberLevel == MemberLevel.NOT_A_MEMBER) {
+          memberLevel = requireV2GroupProperties().memberLevel(Optional.ofNullable(SignalStore.account().getPni()));
+        }
+        return memberLevel;
       } else if (isMms() && recipient.isSelf()) {
         return MemberLevel.FULL_MEMBER;
       } else {
@@ -1242,6 +1285,10 @@ private static final String[] GROUP_PROJECTION = {
       }
       return false;
     }
+
+    public @Nullable ServiceId getAuthServiceId() {
+      return ServiceId.parseOrNull(authServiceId);
+    }
   }
 
   public static class V2GroupProperties {
@@ -1284,17 +1331,15 @@ private static final String[] GROUP_PROJECTION = {
       }
 
       return DecryptedGroupUtil.findMemberByUuid(getDecryptedGroup().getMembersList(), serviceId.get().uuid())
-                               .transform(t -> t.getRole() == Member.Role.ADMINISTRATOR)
-                               .or(false);
+                               .map(t -> t.getRole() == Member.Role.ADMINISTRATOR)
+                               .orElse(false);
     }
 
     public @NonNull List<Recipient> getAdmins(@NonNull List<Recipient> members) {
       return members.stream().filter(this::isAdmin).collect(Collectors.toList());
     }
 
-    public MemberLevel memberLevel(@NonNull Recipient recipient) {
-      Optional<ServiceId> serviceId = recipient.getServiceId();
-
+    public MemberLevel memberLevel(@NonNull Optional<ServiceId> serviceId) {
       if (!serviceId.isPresent()) {
         return MemberLevel.NOT_A_MEMBER;
       }
@@ -1302,14 +1347,14 @@ private static final String[] GROUP_PROJECTION = {
       DecryptedGroup decryptedGroup = getDecryptedGroup();
 
       return DecryptedGroupUtil.findMemberByUuid(decryptedGroup.getMembersList(), serviceId.get().uuid())
-                               .transform(member -> member.getRole() == Member.Role.ADMINISTRATOR
+                               .map(member -> member.getRole() == Member.Role.ADMINISTRATOR
                                                     ? MemberLevel.ADMINISTRATOR
                                                     : MemberLevel.FULL_MEMBER)
-                               .or(() -> DecryptedGroupUtil.findPendingByUuid(decryptedGroup.getPendingMembersList(), serviceId.get().uuid())
-                                                           .transform(m -> MemberLevel.PENDING_MEMBER)
-                                                           .or(() -> DecryptedGroupUtil.findRequestingByUuid(decryptedGroup.getRequestingMembersList(), serviceId.get().uuid())
-                                                                                       .transform(m -> MemberLevel.REQUESTING_MEMBER)
-                                                                                       .or(MemberLevel.NOT_A_MEMBER)));
+                               .orElse(DecryptedGroupUtil.findPendingByUuid(decryptedGroup.getPendingMembersList(), serviceId.get().uuid())
+                                                         .map(m -> MemberLevel.PENDING_MEMBER)
+                                                         .orElse(DecryptedGroupUtil.findRequestingByUuid(decryptedGroup.getRequestingMembersList(), serviceId.get().uuid())
+                                                                                   .map(m -> MemberLevel.REQUESTING_MEMBER)
+                                                                                   .orElse(MemberLevel.NOT_A_MEMBER)));
     }
 
     public List<Recipient> getMemberRecipients(@NonNull MemberSet memberSet) {
@@ -1319,7 +1364,7 @@ private static final String[] GROUP_PROJECTION = {
     public List<RecipientId> getMemberRecipientIds(@NonNull MemberSet memberSet) {
       boolean           includeSelf    = memberSet.includeSelf;
       DecryptedGroup    groupV2        = getDecryptedGroup();
-      UUID              selfUuid       = Recipient.self().requireServiceId().uuid();
+      UUID              selfUuid       = SignalStore.account().requireAci().uuid();
       List<RecipientId> recipients     = new ArrayList<>(groupV2.getMembersCount() + groupV2.getPendingMembersCount());
       int               unknownMembers = 0;
       int               unknownPending = 0;
@@ -1328,7 +1373,7 @@ private static final String[] GROUP_PROJECTION = {
         if (UuidUtil.UNKNOWN_UUID.equals(uuid)) {
           unknownMembers++;
         } else if (includeSelf || !selfUuid.equals(uuid)) {
-          recipients.add(RecipientId.from(ACI.from(uuid), null));
+          recipients.add(RecipientId.from(ServiceId.from(uuid), null));
         }
       }
       if (memberSet.includePending) {
@@ -1336,7 +1381,7 @@ private static final String[] GROUP_PROJECTION = {
           if (UuidUtil.UNKNOWN_UUID.equals(uuid)) {
             unknownPending++;
           } else if (includeSelf || !selfUuid.equals(uuid)) {
-            recipients.add(RecipientId.from(ACI.from(uuid), null));
+            recipients.add(RecipientId.from(ServiceId.from(uuid), null));
           }
         }
       }
@@ -1347,6 +1392,36 @@ private static final String[] GROUP_PROJECTION = {
 
       return recipients;
     }
+
+    public @NonNull Set<UUID> getBannedMembers() {
+      return DecryptedGroupUtil.bannedMembersToUuidSet(getDecryptedGroup().getBannedMembersList());
+    }
+  }
+
+  public @NonNull List<GroupId> getGroupsToDisplayAsStories() throws BadGroupIdException {
+    String[] selection = SqlUtil.buildArgs(GROUP_ID);
+    String   where     = DISPLAY_AS_STORY + " = ? AND " + ACTIVE + " = ?";
+    String[] whereArgs = SqlUtil.buildArgs(1, 1);
+
+    try (Cursor cursor = getReadableDatabase().query(TABLE_NAME, selection, where, whereArgs, null, null, null, null)) {
+      if (cursor == null || cursor.getCount() == 0) {
+        return Collections.emptyList();
+      }
+
+      List<GroupId> results = new ArrayList<>(cursor.getCount());
+      while (cursor.moveToNext()) {
+        results.add(GroupId.parse(CursorUtil.requireString(cursor, GROUP_ID)));
+      }
+
+      return results;
+    }
+  }
+
+  public void markDisplayAsStory(@NonNull GroupId groupId) {
+    ContentValues contentValues = new ContentValues(1);
+    contentValues.put(DISPLAY_AS_STORY, true);
+
+    getWritableDatabase().update(TABLE_NAME, contentValues, GROUP_ID + " = ?", SqlUtil.buildArgs(groupId.toString()));
   }
 
   public enum MemberSet {

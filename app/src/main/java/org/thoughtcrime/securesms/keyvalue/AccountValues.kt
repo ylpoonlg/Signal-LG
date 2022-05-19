@@ -5,6 +5,11 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import androidx.annotation.VisibleForTesting
 import org.signal.core.util.logging.Log
+import org.signal.libsignal.protocol.IdentityKey
+import org.signal.libsignal.protocol.IdentityKeyPair
+import org.signal.libsignal.protocol.ecc.Curve
+import org.signal.libsignal.protocol.util.Medium
+import org.signal.libsignal.zkgroup.profiles.PniCredential
 import org.thoughtcrime.securesms.crypto.IdentityKeyUtil
 import org.thoughtcrime.securesms.crypto.MasterCipher
 import org.thoughtcrime.securesms.crypto.ProfileKeyUtil
@@ -16,10 +21,6 @@ import org.thoughtcrime.securesms.service.KeyCachingService
 import org.thoughtcrime.securesms.util.Base64
 import org.thoughtcrime.securesms.util.TextSecurePreferences
 import org.thoughtcrime.securesms.util.Util
-import org.whispersystems.libsignal.IdentityKey
-import org.whispersystems.libsignal.IdentityKeyPair
-import org.whispersystems.libsignal.ecc.Curve
-import org.whispersystems.libsignal.util.Medium
 import org.whispersystems.signalservice.api.push.ACI
 import org.whispersystems.signalservice.api.push.PNI
 import org.whispersystems.signalservice.api.push.SignalServiceAddress
@@ -30,7 +31,6 @@ internal class AccountValues internal constructor(store: KeyValueStore) : Signal
   companion object {
     private val TAG = Log.tag(AccountValues::class.java)
     private const val KEY_SERVICE_PASSWORD = "account.service_password"
-    private const val KEY_IS_REGISTERED = "account.is_registered"
     private const val KEY_REGISTRATION_ID = "account.registration_id"
     private const val KEY_FCM_ENABLED = "account.fcm_enabled"
     private const val KEY_FCM_TOKEN = "account.fcm_token"
@@ -54,6 +54,7 @@ internal class AccountValues internal constructor(store: KeyValueStore) : Signal
     private const val KEY_PNI_ACTIVE_SIGNED_PREKEY_ID = "account.pni_active_signed_prekey_id"
     private const val KEY_PNI_SIGNED_PREKEY_FAILURE_COUNT = "account.pni_signed_prekey_failure_count"
     private const val KEY_PNI_NEXT_ONE_TIME_PREKEY_ID = "account.pni_next_one_time_prekey_id"
+    private const val KEY_PNI_CREDENTIAL = "account.pni_credential"
 
     @VisibleForTesting
     const val KEY_E164 = "account.e164"
@@ -61,6 +62,8 @@ internal class AccountValues internal constructor(store: KeyValueStore) : Signal
     const val KEY_ACI = "account.aci"
     @VisibleForTesting
     const val KEY_PNI = "account.pni"
+    @VisibleForTesting
+    const val KEY_IS_REGISTERED = "account.is_registered"
   }
 
   init {
@@ -110,6 +113,10 @@ internal class AccountValues internal constructor(store: KeyValueStore) : Signal
     putString(KEY_PNI, pni.toString())
   }
 
+  fun getServiceIds(): ServiceIds {
+    return ServiceIds(requireAci(), pni)
+  }
+
   /** The local user's E164. */
   val e164: String?
     get() = getString(KEY_E164, null)
@@ -149,11 +156,19 @@ internal class AccountValues internal constructor(store: KeyValueStore) : Signal
       )
     }
 
+  fun hasAciIdentityKey(): Boolean {
+    return store.containsKey(KEY_ACI_IDENTITY_PUBLIC_KEY)
+  }
+
   /** Generates and saves an identity key pair for the ACI identity. Should only be done once. */
-  fun generateAciIdentityKey() {
+  fun generateAciIdentityKeyIfNecessary() {
     synchronized(this) {
+      if (store.containsKey(KEY_ACI_IDENTITY_PUBLIC_KEY)) {
+        Log.w(TAG, "Tried to generate an ANI identity, but one was already set!", Throwable())
+        return
+      }
+
       Log.i(TAG, "Generating a new ACI identity key pair.")
-      require(!store.containsKey(KEY_ACI_IDENTITY_PUBLIC_KEY)) { "Already generated!" }
 
       val key: IdentityKeyPair = IdentityKeyUtil.generateIdentityKeyPair()
       store
@@ -291,6 +306,10 @@ internal class AccountValues internal constructor(store: KeyValueStore) : Signal
 
   val isLinkedDevice: Boolean
     get() = !isPrimaryDevice
+
+  var pniCredential: PniCredential?
+    set(value) = putBlob(KEY_PNI_CREDENTIAL, value?.serialize())
+    get() = getBlob(KEY_PNI_CREDENTIAL, null)?.let { PniCredential(it) }
 
   private fun clearLocalCredentials(context: Context) {
     putString(KEY_SERVICE_PASSWORD, Util.getSecret(18))

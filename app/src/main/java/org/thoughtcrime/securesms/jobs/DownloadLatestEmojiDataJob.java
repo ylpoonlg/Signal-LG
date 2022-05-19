@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 
 import com.annimon.stream.IntPair;
 import com.annimon.stream.Stream;
-import com.mobilecoin.lib.util.Hex;
 
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.components.emoji.EmojiPageModel;
@@ -32,19 +31,10 @@ import org.thoughtcrime.securesms.util.ScreenDensity;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import okio.Okio;
-import okio.Sink;
-import okio.Source;
 
 /**
  * Downloads Emoji JSON and Images to local persistent storage.
@@ -85,10 +75,10 @@ public class DownloadLatestEmojiDataJob extends BaseJob {
     }
   }
 
-  public DownloadLatestEmojiDataJob(boolean force) {
+  public DownloadLatestEmojiDataJob(boolean ignoreAutoDownloadConstraints) {
     this(new Job.Parameters.Builder()
              .setQueue(QUEUE_KEY)
-             .addConstraint(force ? NetworkConstraint.KEY : AutoDownloadEmojiConstraint.KEY)
+             .addConstraint(ignoreAutoDownloadConstraints ? NetworkConstraint.KEY : AutoDownloadEmojiConstraint.KEY)
              .setMaxInstancesForQueue(1)
              .setMaxAttempts(5)
              .setLifespan(TimeUnit.DAYS.toMillis(1))
@@ -136,10 +126,10 @@ public class DownloadLatestEmojiDataJob extends BaseJob {
       EmojiData    emojiData          = downloadJson(context, targetVersion);
       List<String> supportedDensities = emojiData.getDensities();
       String       format             = emojiData.getFormat();
-      List<String> imagePaths = Stream.of(emojiData.getDataPages())
-                                      .map(EmojiPageModel::getSpriteUri)
-                                      .map(Uri::getLastPathSegment)
-                                      .toList();
+      List<String> imagePaths         = Stream.of(emojiData.getDataPages())
+                                              .map(EmojiPageModel::getSpriteUri)
+                                              .map(Uri::getLastPathSegment)
+                                              .toList();
 
       String density = resolveDensity(supportedDensities, targetVersion.getDensity());
       targetVersion = new EmojiFiles.Version(targetVersion.getVersion(), targetVersion.getUuid(), density);

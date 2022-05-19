@@ -32,13 +32,13 @@ import org.thoughtcrime.securesms.mms.IncomingMediaMessage;
 import org.thoughtcrime.securesms.mms.MmsException;
 import org.thoughtcrime.securesms.mms.MmsRadioException;
 import org.thoughtcrime.securesms.mms.PartParser;
+import org.thoughtcrime.securesms.notifications.v2.ConversationId;
 import org.thoughtcrime.securesms.providers.BlobProvider;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
 import org.thoughtcrime.securesms.service.KeyCachingService;
 import org.thoughtcrime.securesms.util.MediaUtil;
 import org.thoughtcrime.securesms.util.Util;
-import org.whispersystems.libsignal.util.guava.Optional;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -174,7 +175,7 @@ public class MmsDownloadJob extends BaseJob {
 
     if (automatic) {
       database.markIncomingNotificationReceived(threadId);
-      ApplicationDependencies.getMessageNotifier().updateNotification(context, threadId);
+      ApplicationDependencies.getMessageNotifier().updateNotification(context, ConversationId.forConversation(threadId));
     }
   }
 
@@ -189,7 +190,7 @@ public class MmsDownloadJob extends BaseJob {
       throws MmsException
   {
     MessageDatabase   database    = SignalDatabase.mms();
-    Optional<GroupId> group       = Optional.absent();
+    Optional<GroupId> group       = Optional.empty();
     Set<RecipientId>  members     = new HashSet<>();
     String            body        = null;
     List<Attachment>  attachments = new LinkedList<>();
@@ -254,7 +255,7 @@ public class MmsDownloadJob extends BaseJob {
 
     if (insertResult.isPresent()) {
       database.deleteMessage(messageId);
-      ApplicationDependencies.getMessageNotifier().updateNotification(context, insertResult.get().getThreadId());
+      ApplicationDependencies.getMessageNotifier().updateNotification(context, ConversationId.forConversation(insertResult.get().getThreadId()));
     }
   }
 
@@ -266,7 +267,7 @@ public class MmsDownloadJob extends BaseJob {
 
     if (automatic) {
       db.markIncomingNotificationReceived(threadId);
-      ApplicationDependencies.getMessageNotifier().updateNotification(context, threadId);
+      ApplicationDependencies.getMessageNotifier().updateNotification(context, ConversationId.forConversation(threadId));
     }
   }
 

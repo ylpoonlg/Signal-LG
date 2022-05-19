@@ -11,17 +11,18 @@ import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
 import org.thoughtcrime.securesms.jobmanager.Data;
 import org.thoughtcrime.securesms.jobmanager.Job;
 import org.thoughtcrime.securesms.jobmanager.impl.DecryptionsDrainedConstraint;
+import org.thoughtcrime.securesms.notifications.v2.ConversationId;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
 import org.thoughtcrime.securesms.recipients.RecipientUtil;
 import org.thoughtcrime.securesms.util.FeatureFlags;
-import org.whispersystems.libsignal.util.guava.Optional;
 import org.whispersystems.signalservice.api.SignalServiceMessageSender;
 import org.whispersystems.signalservice.api.crypto.UnidentifiedAccessPair;
 import org.whispersystems.signalservice.api.crypto.UntrustedIdentityException;
 import org.whispersystems.signalservice.api.push.SignalServiceAddress;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -121,7 +122,7 @@ public class AutomaticSessionResetJob extends BaseJob {
 
   private void insertLocalMessage() {
     MessageDatabase.InsertResult result = SignalDatabase.sms().insertChatSessionRefreshedMessage(recipientId, deviceId, sentTimestamp);
-    ApplicationDependencies.getMessageNotifier().updateNotification(context, result.getThreadId());
+    ApplicationDependencies.getMessageNotifier().updateNotification(context, ConversationId.forConversation(result.getThreadId()));
   }
 
   private void sendNullMessage() throws IOException {

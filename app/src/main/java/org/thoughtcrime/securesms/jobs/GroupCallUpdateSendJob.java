@@ -21,6 +21,7 @@ import org.whispersystems.signalservice.api.crypto.ContentHint;
 import org.whispersystems.signalservice.api.crypto.UntrustedIdentityException;
 import org.whispersystems.signalservice.api.messages.SendMessageResult;
 import org.whispersystems.signalservice.api.messages.SignalServiceDataMessage;
+import org.whispersystems.signalservice.api.push.exceptions.ProofRequiredException;
 import org.whispersystems.signalservice.api.push.exceptions.ServerRejectedException;
 
 import java.io.IOException;
@@ -58,7 +59,6 @@ public class GroupCallUpdateSendJob extends BaseJob {
 
     List<RecipientId> recipients = Stream.of(RecipientUtil.getEligibleForSending(conversationRecipient.getParticipants()))
                                          .filterNot(Recipient::isSelf)
-                                         .filterNot(Recipient::isBlocked)
                                          .map(Recipient::getId)
                                          .toList();
 
@@ -168,7 +168,7 @@ public class GroupCallUpdateSendJob extends BaseJob {
       results.add(ApplicationDependencies.getSignalServiceMessageSender().sendSyncMessage(dataMessage));
     }
 
-    return GroupSendJobHelper.getCompletedSends(destinations, results);
+    return GroupSendJobHelper.getCompletedSends(destinations, results).completed;
   }
 
   public static class Factory implements Job.Factory<GroupCallUpdateSendJob> {

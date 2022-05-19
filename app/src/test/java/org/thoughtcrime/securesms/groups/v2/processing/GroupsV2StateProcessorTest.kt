@@ -18,18 +18,20 @@ import org.mockito.Mockito.reset
 import org.mockito.Mockito.verify
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.signal.core.util.Hex.fromStringCondensed
 import org.signal.core.util.logging.Log
+import org.signal.libsignal.protocol.logging.SignalProtocolLoggerProvider
+import org.signal.libsignal.zkgroup.groups.GroupMasterKey
 import org.signal.storageservice.protos.groups.local.DecryptedGroup
 import org.signal.storageservice.protos.groups.local.DecryptedGroupChange
 import org.signal.storageservice.protos.groups.local.DecryptedMember
 import org.signal.storageservice.protos.groups.local.DecryptedTimer
-import org.signal.zkgroup.groups.GroupMasterKey
 import org.thoughtcrime.securesms.SignalStoreRule
 import org.thoughtcrime.securesms.database.GroupDatabase
 import org.thoughtcrime.securesms.database.GroupStateTestData
 import org.thoughtcrime.securesms.database.RecipientDatabase
-import org.thoughtcrime.securesms.database.member
-import org.thoughtcrime.securesms.database.requestingMember
+import org.thoughtcrime.securesms.database.model.databaseprotos.member
+import org.thoughtcrime.securesms.database.model.databaseprotos.requestingMember
 import org.thoughtcrime.securesms.database.setNewDescription
 import org.thoughtcrime.securesms.database.setNewTitle
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies
@@ -38,11 +40,10 @@ import org.thoughtcrime.securesms.groups.GroupsV2Authorization
 import org.thoughtcrime.securesms.jobs.RequestGroupV2InfoJob
 import org.thoughtcrime.securesms.logging.CustomSignalProtocolLogger
 import org.thoughtcrime.securesms.testutil.SystemOutLogger
-import org.thoughtcrime.securesms.util.Hex.fromStringCondensed
-import org.whispersystems.libsignal.logging.SignalProtocolLoggerProvider
 import org.whispersystems.signalservice.api.groupsv2.GroupsV2Api
 import org.whispersystems.signalservice.api.groupsv2.PartialDecryptedGroup
 import org.whispersystems.signalservice.api.push.ACI
+import org.whispersystems.signalservice.api.push.ServiceId
 import java.util.UUID
 
 @RunWith(RobolectricTestRunner::class)
@@ -50,11 +51,11 @@ import java.util.UUID
 class GroupsV2StateProcessorTest {
 
   companion object {
-    val masterKey = GroupMasterKey(fromStringCondensed("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"))
-    val selfAci: ACI = ACI.from(UUID.randomUUID())
-    val otherAci: ACI = ACI.from(UUID.randomUUID())
-    val selfAndOthers: List<DecryptedMember> = listOf(member(selfAci), member(otherAci))
-    val others: List<DecryptedMember> = listOf(member(otherAci))
+    private val masterKey = GroupMasterKey(fromStringCondensed("0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"))
+    private val selfAci: ACI = ACI.from(UUID.randomUUID())
+    private val otherSid: ServiceId = ServiceId.from(UUID.randomUUID())
+    private val selfAndOthers: List<DecryptedMember> = listOf(member(selfAci), member(otherSid))
+    private val others: List<DecryptedMember> = listOf(member(otherSid))
   }
 
   private lateinit var groupDatabase: GroupDatabase
@@ -88,8 +89,7 @@ class GroupsV2StateProcessorTest {
   }
 
   private fun given(init: GroupStateTestData.() -> Unit) {
-    val data = GroupStateTestData(masterKey)
-    data.init()
+    val data = givenData(init)
 
     doReturn(data.groupRecord).`when`(groupDatabase).getGroup(any(GroupId.V2::class.java))
     doReturn(!data.groupRecord.isPresent).`when`(groupDatabase).isUnknownGroup(any())
@@ -106,6 +106,12 @@ class GroupsV2StateProcessorTest {
     data.changeSet?.let { changeSet ->
       doReturn(changeSet.toApiResponse()).`when`(groupsV2API).getGroupHistoryPage(any(), eq(data.requestedRevision), any(), eq(data.includeFirst))
     }
+  }
+
+  private fun givenData(init: GroupStateTestData.() -> Unit): GroupStateTestData {
+    val data = GroupStateTestData(masterKey)
+    data.init()
+    return data
   }
 
   @Test
@@ -248,7 +254,7 @@ class GroupsV2StateProcessorTest {
         revision = 2,
         title = "Breaking Signal for Science",
         description = "We break stuff, because we must.",
-        members = listOf(member(otherAci), member(selfAci, joinedAt = 2))
+        members = listOf(member(otherSid), member(selfAci, joinedAt = 2))
       )
       changeSet {
         changeLog(2) {
@@ -270,7 +276,7 @@ class GroupsV2StateProcessorTest {
         revision = 3,
         title = "Breaking Signal for Science",
         description = "We break stuff, because we must.",
-        members = listOf(member(otherAci), member(selfAci, joinedAt = 2))
+        members = listOf(member(otherSid), member(selfAci, joinedAt = 2))
       )
       changeSet {
         changeLog(2) {
@@ -327,7 +333,7 @@ class GroupsV2StateProcessorTest {
       serverState(
         revision = 3,
         title = "Beam me up",
-        members = listOf(member(otherAci), member(selfAci, joinedAt = 3))
+        members = listOf(member(otherSid), member(selfAci, joinedAt = 3))
       )
       changeSet {
         changeLog(3) {
@@ -357,7 +363,7 @@ class GroupsV2StateProcessorTest {
       serverState(
         revision = 5,
         title = "Beam me up!",
-        members = listOf(member(otherAci), member(selfAci, joinedAt = 3))
+        members = listOf(member(otherSid), member(selfAci, joinedAt = 3))
       )
       changeSet {
         changeLog(3) {

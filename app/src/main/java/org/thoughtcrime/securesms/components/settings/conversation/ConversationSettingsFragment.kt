@@ -75,6 +75,10 @@ import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientExporter
 import org.thoughtcrime.securesms.recipients.RecipientId
 import org.thoughtcrime.securesms.recipients.ui.bottomsheet.RecipientBottomSheetDialogFragment
+import org.thoughtcrime.securesms.stories.Stories
+import org.thoughtcrime.securesms.stories.StoryViewerArgs
+import org.thoughtcrime.securesms.stories.dialogs.StoryDialogs
+import org.thoughtcrime.securesms.stories.viewer.StoryViewerActivity
 import org.thoughtcrime.securesms.util.CommunicationActions
 import org.thoughtcrime.securesms.util.ContextUtil
 import org.thoughtcrime.securesms.util.ExpirationUtil
@@ -266,14 +270,26 @@ class ConversationSettingsFragment : DSLSettingsFragment(
       customPref(
         AvatarPreference.Model(
           recipient = state.recipient,
+          storyViewState = state.storyViewState,
           onAvatarClick = { avatar ->
-            if (!state.recipient.isSelf) {
-              requireActivity().apply {
-                startActivity(
-                  AvatarPreviewActivity.intentFromRecipientId(this, state.recipient.id),
-                  AvatarPreviewActivity.createTransitionBundle(this, avatar)
+            val viewAvatarIntent = AvatarPreviewActivity.intentFromRecipientId(requireContext(), state.recipient.id)
+            val viewAvatarTransitionBundle = AvatarPreviewActivity.createTransitionBundle(requireActivity(), avatar)
+
+            if (Stories.isFeatureEnabled() && avatar.hasStory()) {
+              val viewStoryIntent = StoryViewerActivity.createIntent(
+                requireContext(),
+                StoryViewerArgs(
+                  recipientId = state.recipient.id,
+                  isInHiddenStoryMode = state.recipient.shouldHideStory()
                 )
-              }
+              )
+              StoryDialogs.displayStoryOrProfileImage(
+                context = requireContext(),
+                onViewStory = { startActivity(viewStoryIntent) },
+                onViewAvatar = { startActivity(viewAvatarIntent, viewAvatarTransitionBundle) }
+              )
+            } else if (!state.recipient.isSelf) {
+              startActivity(viewAvatarIntent, viewAvatarTransitionBundle)
             }
           },
           onBadgeClick = { badge ->
@@ -387,15 +403,15 @@ class ConversationSettingsFragment : DSLSettingsFragment(
       dividerPref()
 
       val summary = DSLSettingsText.from(formatDisappearingMessagesLifespan(state.disappearingMessagesLifespan))
-      val icon = if (state.disappearingMessagesLifespan <= 0) {
+      val icon = if (state.disappearingMessagesLifespan <= 0 || state.recipient.isBlocked) {
         R.drawable.ic_update_timer_disabled_16
       } else {
         R.drawable.ic_update_timer_16
       }
 
-      var enabled = true
+      var enabled = !state.recipient.isBlocked
       state.withGroupSettingsState {
-        enabled = it.canEditGroupAttributes
+        enabled = it.canEditGroupAttributes && !state.recipient.isBlocked
       }
 
       if (!state.recipient.isReleaseNotes) {
