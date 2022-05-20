@@ -11,22 +11,9 @@
       "type": "UNIVERSAL",
       "filters": [],
       "attributes": [],
-      "versionCode": 101700,
-      "versionName": "5.32.14",
-      "outputFile": "Signal-Android-play-prod-universal-release-5.32.14.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
-          "value": "x86_64"
-        }
-      ],
-      "attributes": [],
-      "versionCode": 101704,
-      "versionName": "5.32.14",
-      "outputFile": "Signal-Android-play-prod-x86_64-release-5.32.14.apk"
+      "versionCode": 105800,
+      "versionName": "5.39.2",
+      "outputFile": "Signal-Android-play-prod-universal-release-5.39.2.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -37,22 +24,9 @@
         }
       ],
       "attributes": [],
-      "versionCode": 101703,
-      "versionName": "5.32.14",
-      "outputFile": "Signal-Android-play-prod-x86-release-5.32.14.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [
-        {
-          "filterType": "ABI",
-          "value": "arm64-v8a"
-        }
-      ],
-      "attributes": [],
-      "versionCode": 101702,
-      "versionName": "5.32.14",
-      "outputFile": "Signal-Android-play-prod-arm64-v8a-release-5.32.14.apk"
+      "versionCode": 105803,
+      "versionName": "5.39.2",
+      "outputFile": "Signal-Android-play-prod-x86-release-5.39.2.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -63,9 +37,35 @@
         }
       ],
       "attributes": [],
-      "versionCode": 101701,
-      "versionName": "5.32.14",
-      "outputFile": "Signal-Android-play-prod-armeabi-v7a-release-5.32.14.apk"
+      "versionCode": 105801,
+      "versionName": "5.39.2",
+      "outputFile": "Signal-Android-play-prod-armeabi-v7a-release-5.39.2.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "x86_64"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 105804,
+      "versionName": "5.39.2",
+      "outputFile": "Signal-Android-play-prod-x86_64-release-5.39.2.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
+      "filters": [
+        {
+          "filterType": "ABI",
+          "value": "arm64-v8a"
+        }
+      ],
+      "attributes": [],
+      "versionCode": 105802,
+      "versionName": "5.39.2",
+      "outputFile": "Signal-Android-play-prod-arm64-v8a-release-5.39.2.apk"
     }
   ],
   "elementType": "File"

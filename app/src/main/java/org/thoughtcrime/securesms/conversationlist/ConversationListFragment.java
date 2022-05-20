@@ -19,6 +19,7 @@ package org.thoughtcrime.securesms.conversationlist;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Notification;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -78,6 +79,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.signal.core.util.DimensionUnit;
 import org.signal.core.util.concurrent.SignalExecutors;
 import org.signal.core.util.logging.Log;
+import org.thoughtcrime.securesms.FTDayActivity;
 import org.thoughtcrime.securesms.MainFragment;
 import org.thoughtcrime.securesms.MainNavigator;
 import org.thoughtcrime.securesms.MuteDialog;
@@ -165,9 +167,11 @@ import org.thoughtcrime.securesms.wallpaper.ChatWallpaper;
 import org.whispersystems.signalservice.api.websocket.WebSocketConnectionState;
 
 import java.lang.ref.WeakReference;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -268,6 +272,7 @@ public class ConversationListFragment extends MainFragment implements ActionMode
     paymentNotificationView   = new Stub<>(view.findViewById(R.id.payments_notification));
     voiceNotePlayerViewStub   = new Stub<>(view.findViewById(R.id.voice_note_player));
 
+    // Father's Day Special ---------
     ftdayButton               = view.findViewById(R.id.ftday_btn);   // ftday
     ftdayButton.setOnClickListener(new View.OnClickListener() {
       @SuppressLint("LogTagInlined") @Override public void onClick(View view) {
@@ -276,6 +281,9 @@ public class ConversationListFragment extends MainFragment implements ActionMode
         startActivity(intent);
       }
     });
+
+
+    // -----------------------------
 
 
     if (FeatureFlags.internalUser()) {
@@ -357,6 +365,9 @@ public class ConversationListFragment extends MainFragment implements ActionMode
   @Override
   public void onResume() {
     super.onResume();
+
+    // FTDay
+    checkDateToShowFTDayButton();
 
     updateReminders();
     EventBus.getDefault().register(this);
@@ -576,6 +587,19 @@ public class ConversationListFragment extends MainFragment implements ActionMode
   @Override
   public void onMegaphoneDialogFragmentRequested(@NonNull DialogFragment dialogFragment) {
     dialogFragment.show(getChildFragmentManager(), "megaphone_dialog");
+  }
+
+  // FTDay
+  private void checkDateToShowFTDayButton() {
+    LocalDateTime startShow = LocalDateTime.of(2022, 6, 19, 6, 0);
+    LocalDateTime stopShow = LocalDateTime.of(2022, 6, 21, 15, 0);
+
+    LocalDateTime now = LocalDateTime.now();
+    if (now.isAfter(startShow) && now.isBefore(stopShow)) {
+      ftdayButton.setVisibility(View.VISIBLE);
+    } else {
+      ftdayButton.setVisibility(View.GONE);
+    }
   }
 
   private void initializeReminderView() {
