@@ -148,6 +148,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -174,6 +176,8 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
   private static final int   SHRINK_BUBBLE_DELAY_MILLIS = 100;
   private static final long  MAX_CLUSTERING_TIME_DIFF   = TimeUnit.MINUTES.toMillis(3);
 
+  private static final Pattern NOT_URL_PATTERN = Pattern.compile("[^a-zA-Z0-9-._~:/?#\\[\\]@!$&'()\\*+,;=]");
+
   private ConversationMessage     conversationMessage;
   private MessageRecord           messageRecord;
   private Optional<MessageRecord> nextMessageRecord;
@@ -183,22 +187,22 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
   private GlideRequests           glideRequests;
   private ValueAnimator           pulseOutlinerAlphaAnimator;
 
-            protected ConversationItemBodyBubble bodyBubble;
-            protected View                       reply;
-            protected View                       replyIcon;
+  protected ConversationItemBodyBubble bodyBubble;
+  protected View                       reply;
+  protected View                       replyIcon;
   @Nullable protected ViewGroup                  contactPhotoHolder;
   @Nullable private   QuoteView                  quoteView;
-            private   EmojiTextView              bodyText;
-            private   ConversationItemFooter     footer;
+  private   EmojiTextView              bodyText;
+  private   ConversationItemFooter     footer;
   @Nullable private   ConversationItemFooter     stickerFooter;
   @Nullable private   TextView                   groupSender;
   @Nullable private   View                       groupSenderHolder;
-            private   AvatarImageView            contactPhoto;
-            private   AlertView                  alertView;
-            protected ReactionsConversationView  reactionsView;
-            protected BadgeImageView             badgeImageView;
-            private   View                       storyReactionLabelWrapper;
-            private   TextView                   storyReactionLabel;
+  private   AvatarImageView            contactPhoto;
+  private   AlertView                  alertView;
+  protected ReactionsConversationView  reactionsView;
+  protected BadgeImageView             badgeImageView;
+  private   View                       storyReactionLabelWrapper;
+  private   TextView                   storyReactionLabel;
 
   private @NonNull  Set<MultiselectPart>                    batchSelected = new HashSet<>();
   private @NonNull  Outliner                                outliner      = new Outliner();
@@ -946,9 +950,9 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
       SpannableString italics = new SpannableString(deletedMessage);
       italics.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, deletedMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
       italics.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.signal_text_primary)),
-                                              0,
-                                              deletedMessage.length(),
-                                              Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                      0,
+                      deletedMessage.length(),
+                      Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
       bodyText.setText(italics);
       bodyText.setVisibility(View.VISIBLE);
@@ -995,10 +999,10 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
   private void setMediaAttributes(@NonNull  MessageRecord                messageRecord,
                                   @NonNull  Optional<MessageRecord>      previousRecord,
                                   @NonNull  Optional<MessageRecord>      nextRecord,
-                                            boolean                      isGroupThread,
-                                            boolean                      hasWallpaper,
-                                            boolean                      messageRequestAccepted,
-                                            boolean                      allowedToPlayInline)
+                                  boolean                      isGroupThread,
+                                  boolean                      hasWallpaper,
+                                  boolean                      messageRequestAccepted,
+                                  boolean                      allowedToPlayInline)
   {
     boolean showControls = !messageRecord.isFailed();
 
@@ -1188,7 +1192,7 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
 
       List<Slide> thumbnailSlides = ((MmsMessageRecord) messageRecord).getSlideDeck().getThumbnailSlides();
       mediaThumbnailStub.require().setMinimumThumbnailWidth(readDimen(isCaptionlessMms(messageRecord) ? R.dimen.media_bubble_min_width_solo
-                                                                                                  : R.dimen.media_bubble_min_width_with_content));
+                                                                                                      : R.dimen.media_bubble_min_width_with_content));
       mediaThumbnailStub.require().setImageResource(glideRequests,
                                                     thumbnailSlides,
                                                     showControls,
@@ -1286,7 +1290,7 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
   private void setThumbnailCorners(@NonNull MessageRecord           current,
                                    @NonNull Optional<MessageRecord> previous,
                                    @NonNull Optional<MessageRecord> next,
-                                            boolean                 isGroupThread)
+                                   boolean                 isGroupThread)
   {
     int defaultRadius  = readDimen(R.dimen.message_corner_radius);
     int collapseRadius = readDimen(R.dimen.message_corner_collapse_radius);
@@ -1353,11 +1357,11 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
   private void setSharedContactCorners(@NonNull MessageRecord current, @NonNull Optional<MessageRecord> previous, @NonNull Optional<MessageRecord> next, boolean isGroupThread) {
     if (messageRecord.isDisplayBodyEmpty(getContext())){
       if (isSingularMessage(current, previous, next, isGroupThread) || isEndOfMessageCluster(current, next, isGroupThread)) {
-          sharedContactStub.get().setSingularStyle();
+        sharedContactStub.get().setSingularStyle();
       } else if (current.isOutgoing()) {
-          sharedContactStub.get().setClusteredOutgoingStyle();
+        sharedContactStub.get().setClusteredOutgoingStyle();
       } else {
-          sharedContactStub.get().setClusteredIncomingStyle();
+        sharedContactStub.get().setClusteredIncomingStyle();
       }
     }
   }
@@ -1402,12 +1406,26 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
     boolean hasLinks    = LinkifyCompat.addLinks(messageBody, shouldLinkifyAllLinks ? linkPattern : 0);
 
     if (hasLinks) {
-      Stream.of(messageBody.getSpans(0, messageBody.length(), URLSpan.class))
+      URLSpan[] urlSpans = messageBody.getSpans(0, messageBody.length(), URLSpan.class);
+
+      for (URLSpan urlSpan : urlSpans) {
+        int     start = messageBody.getSpanStart(urlSpan);
+        int     end   = messageBody.getSpanEnd(urlSpan);
+
+        Matcher matcher = NOT_URL_PATTERN.matcher(messageBody.toString().substring(end));
+        if (matcher.find()) {
+          int newEnd = end + matcher.start();
+          URLSpan newSpan = new URLSpan(messageBody.toString().substring(start, newEnd));
+          messageBody.removeSpan(urlSpan);
+          messageBody.setSpan(newSpan, start, newEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+      }
+
+      Stream.of(urlSpans)
             .filterNot(url -> LinkUtil.isLegalUrl(url.getURL()))
             .forEach(messageBody::removeSpan);
 
-      URLSpan[] urlSpans = messageBody.getSpans(0, messageBody.length(), URLSpan.class);
-
+      urlSpans = messageBody.getSpans(0, messageBody.length(), URLSpan.class);
       for (URLSpan urlSpan : urlSpans) {
         int     start = messageBody.getSpanStart(urlSpan);
         int     end   = messageBody.getSpanEnd(urlSpan);
@@ -1649,9 +1667,9 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
   private boolean shouldInterceptClicks(MessageRecord messageRecord) {
     return batchSelected.isEmpty()                                                     &&
            ((messageRecord.isFailed() && !messageRecord.isMmsNotification())           ||
-           (messageRecord.isRateLimited() && SignalStore.rateLimit().needsRecaptcha()) ||
-           messageRecord.isPendingInsecureSmsFallback()                                ||
-           messageRecord.isBundleKeyExchange());
+            (messageRecord.isRateLimited() && SignalStore.rateLimit().needsRecaptcha()) ||
+            messageRecord.isPendingInsecureSmsFallback()                                ||
+            messageRecord.isBundleKeyExchange());
   }
 
   @SuppressLint("SetTextI18n")
@@ -1663,7 +1681,7 @@ public final class ConversationItem extends RelativeLayout implements BindableCo
 
   private void setGroupAuthorColor(@NonNull MessageRecord messageRecord, boolean hasWallpaper, @NonNull Colorizer colorizer) {
     if (groupSender != null) {
-        groupSender.setTextColor(colorizer.getIncomingGroupSenderColor(getContext(), messageRecord.getIndividualRecipient()));
+      groupSender.setTextColor(colorizer.getIncomingGroupSenderColor(getContext(), messageRecord.getIndividualRecipient()));
     }
   }
 
