@@ -325,6 +325,8 @@
     </plurals>
 
     <!-- ConversationFragment -->
+    <!-- Toast text when contacts activity is not found -->
+    <string name="ConversationFragment__contacts_app_not_found">Contacts app not found.</string>
     <plurals name="ConversationFragment_delete_selected_messages">
         <item quantity="one">Delete selected message?</item>
         <item quantity="other">Delete selected messages?</item>
@@ -1041,6 +1043,9 @@
     <string name="Megaphones_appearance">Appearance</string>
     <string name="Megaphones_add_photo">Add photo</string>
 
+    <!-- Title of a bottom sheet to render messages that all quote a specific message -->
+    <string name="MessageQuotesBottomSheet_replies">Replies</string>
+
     <!-- NotificationBarManager -->
     <string name="NotificationBarManager_signal_call_in_progress">Signal call in progress</string>
     <string name="NotificationBarManager__establishing_signal_call">Establishing Signal call</string>
@@ -1293,9 +1298,7 @@
     <string name="MessageRecord_a_message_from_s_couldnt_be_delivered">A message from %s couldn\'t be delivered</string>
     <string name="MessageRecord_s_changed_their_phone_number">%1$s changed their phone number.</string>
     <!-- Update item message shown in the release channel when someone is already a sustainer so we ask them if they want to boost. -->
-    <string name="MessageRecord_like_this_new_feature_say_thanks_with_a_boost">Like this new feature? Say thanks with a Boost.</string>
-    <!-- Update item message shown in the release channel when someone is not a sustainer so we ask them to consider becoming one -->
-    <string name="MessageRecord_signal_is_powered_by_people_like_you_become_a_sustainer_today">Signal is powered by people like you. Become a sustainer today.</string>
+    <string name="MessageRecord_like_this_new_feature_help_support_signal_with_a_one_time_donation">Like this new feature? Help support Signal with a one-time donation.</string>
 
     <!-- Group Calling update messages -->
     <string name="MessageRecord_s_started_a_group_call_s">%1$s started a group call · %2$s</string>
@@ -2108,9 +2111,7 @@
     <string name="ConversationUpdateItem_view">View</string>
     <string name="ConversationUpdateItem_the_disappearing_message_time_will_be_set_to_s_when_you_message_them">The disappearing message time will be set to %1$s when you message them.</string>
     <!-- Update item button text to show to boost a feature -->
-    <string name="ConversationUpdateItem_signal_boost">Signal Boost</string>
-    <!-- Update item button text to show to become a sustainer in the release notes channel -->
-    <string name="ConversationUpdateItem_become_a_sustainer">Become a Sustainer</string>
+    <string name="ConversationUpdateItem_donate">Donate</string>
 
     <!-- audio_view -->
     <string name="audio_view__play_pause_accessibility_description">Play … Pause</string>
@@ -2411,7 +2412,7 @@
     <string name="HelpFragment__debug_log">Debug Log:</string>
     <string name="HelpFragment__could_not_upload_logs">Could not upload logs</string>
     <string name="HelpFragment__please_be_as_descriptive_as_possible">Please be as descriptive as possible to help us understand the issue.</string>
-    <string-array name="HelpFragment__categories_3">
+    <string-array name="HelpFragment__categories_4">
         <item>\-\- Please select an option \-\-</item>
         <item>Something\'s Not Working</item>
         <item>Feature Request</item>
@@ -2419,7 +2420,7 @@
         <item>Feedback</item>
         <item>Other</item>
         <item>Payments (MobileCoin)</item>
-        <item>Sustainers &amp; Signal Boost</item>
+        <item>Donations &amp; Badges</item>
     </string-array>
 
     <!-- ReactWithAnyEmojiBottomSheetDialogFragment -->
@@ -4083,6 +4084,10 @@
     <string name="MultiselectForwardFragment__share_with">Share with</string>
     <string name="MultiselectForwardFragment__add_a_message">Add a message</string>
     <string name="MultiselectForwardFragment__faster_forwards">Faster forwards</string>
+    <!-- Displayed when user selects a video that will be clipped before sharing to a story -->
+    <string name="MultiselectForwardFragment__videos_will_be_trimmed">Videos will be trimmed to 30s clips and sent as multiple Stories.</string>
+    <!-- Displayed when user selects a video that cannot be sent as a story -->
+    <string name="MultiselectForwardFragment__videos_sent_to_stories_cant">Videos sent to Stories can\'t be longer than 30s.</string>
     <string name="MultiselectForwardFragment__forwarded_messages_are_now">Forwarded messages are now sent immediately.</string>
     <plurals name="MultiselectForwardFragment_send_d_messages">
         <item quantity="one">Send %1$d message</item>
@@ -4629,11 +4634,30 @@
     <string name="MyStorySettingsFragment__who_can_see_this_story">Who can see this story</string>
     <!-- Clickable option for selecting people to hide your story from -->
     <string name="MyStorySettingsFragment__hide_story_from">Hide story from</string>
-    <!-- Summary of clickable option displaying how many people you have hidden your story from -->
+    <!-- Privacy setting title for sending stories to all your signal connections -->
+    <string name="MyStorySettingsFragment__all_signal_connections">All Signal connections</string>
+    <!-- Privacy setting description for sending stories to all your signal connections -->
+    <string name="MyStorySettingsFragment__share_with_all_connections">Share with all connections</string>
+    <!-- Privacy setting title for sending stories to all except the specified connections -->
+    <string name="MyStorySettingsFragment__all_signal_connections_except">All Signal connections except…</string>
+    <!-- Privacy setting description for sending stories to all except the specified connections -->
+    <string name="MyStorySettingsFragment__hide_your_story_from_specific_people">Hide your story from specific people</string>
+    <!-- Summary of clickable option displaying how many people you have excluded from your story -->
+    <plurals name="MyStorySettingsFragment__d_people_excluded">
+        <item quantity="one">%1$d person excluded</item>
+        <item quantity="other">%1$d people excluded</item>
+    </plurals>
+    <!-- Privacy setting title for only sharing your story with specified connections -->
+    <string name="MyStorySettingsFragment__only_share_with">Only share with…</string>
+    <!-- Privacy setting description for only sharing your story with specified connections -->
+    <string name="MyStorySettingsFragment__only_share_with_selected_people">Only share with selected people</string>
+    <!-- Summary of clickable option displaying how many people you have included to send to in your story -->
     <plurals name="MyStorySettingsFragment__d_people">
         <item quantity="one">%1$d person</item>
         <item quantity="other">%1$d people</item>
     </plurals>
+    <!-- My story privacy fine print about what the privacy settings are for -->
+    <string name="MyStorySettingsFragment__choose_who_can_view_your_story">Choose who can view your story. Changes won\'t affect stories you\'ve already sent.</string>
     <!-- Section header for options related to replies and reactions -->
     <string name="MyStorySettingsFragment__replies_amp_reactions">Replies &amp; reactions</string>
     <!-- Switchable option for allowing replies and reactions on your stories -->
@@ -4642,10 +4666,10 @@
     <string name="MyStorySettingsFragment__let_people_who_can_view_your_story_react_and_reply">Let people who can view your story react and reply</string>
     <!-- Note about default sharing -->
     <string name="MyStorySettingsFragment__hide_your_story_from">Hide your story from specific people. By default, your story is shared with your %1$s</string>
-    <!-- Signal connections linked text that opens the Signal Connections sheet -->
-    <string name="MyStorySettingsFragment__signal_connections">Signal connections.</string>
+    <!-- Signal connections bolded text in the Signal Connections sheet -->
+    <string name="SignalConnectionsBottomSheet___signal_connections">Signal Connections</string>
     <!-- Displayed at the top of the signal connections sheet. Please remember to insert strong tag as required. -->
-    <string name="SignalConnectionsBottomSheet__signal_connections_are_people"><strong>Signal Connections</strong> are people you\'ve chosen to trust, either by:</string>
+    <string name="SignalConnectionsBottomSheet__signal_connections_are_people">Signal Connections are people you\'ve chosen to trust, either by:</string>
     <!-- Signal connections sheet bullet point 1 -->
     <string name="SignalConnectionsBottomSheet__starting_a_conversation">Starting a conversation</string>
     <!-- Signal connections sheet bullet point 2 -->
@@ -4694,8 +4718,10 @@
     <string name="TextStoryPostSendFragment__search">Search</string>
     <!-- Toast shown when an unexpected error occurs while sending a text story -->
     <string name="TextStoryPostSendFragment__an_unexpected_error_occurred_try_again">An unexpected error occurred</string>
-    <!-- Title for screen allowing user to hide "My Story" entries from specific people -->
-    <string name="HideStoryFromFragment__hide_story_from">Hide story from…</string>
+    <!-- Title for screen allowing user to exclude "My Story" entries from specific people -->
+    <string name="ChangeMyStoryMembershipFragment__all_except">All except…</string>
+    <!-- Title for screen allowing user to only share "My Story" entries with specific people -->
+    <string name="ChangeMyStoryMembershipFragment__only_share_with">Only share with…</string>
     <!-- Done button label for hide story from screen -->
     <string name="HideStoryFromFragment__done">Done</string>
     <!-- Dialog title for first time adding something to a story -->
@@ -4793,6 +4819,7 @@
 
     <!-- Duration and price information -->
     <plurals name="GiftRowItem_s_dot_d_day_duration">
+        <item quantity="one">%1$s · %2$d day duration</item>
         <item quantity="other">%1$s · %2$d day duration</item>
     </plurals>
     <!-- Tagline for gift row items -->
@@ -4855,6 +4882,24 @@
         <item quantity="one">Group Story · %1$d viewer</item>
         <item quantity="other">Group Story · %1$d viewers</item>
     </plurals>
+    <!-- Label for context menu item to open story settings -->
+    <string name="ContactSearchItems__story_settings">Story settings</string>
+    <!-- Label for context menu item to remove a group story from contact results -->
+    <string name="ContactSearchItems__remove_story">Remove story</string>
+    <!-- Label for context menu item to delete a private story -->
+    <string name="ContactSearchItems__delete_story">Delete story</string>
+    <!-- Dialog title for removing a group story -->
+    <string name="ContactSearchMediator__remove_group_story">Remove group story?</string>
+    <!-- Dialog message for removing a group story -->
+    <string name="ContactSearchMediator__this_will_remove">This will remove the story from this list. You will still be able to view stories from this group.</string>
+    <!-- Dialog action item for removing a group story -->
+    <string name="ContactSearchMediator__remove">Remove</string>
+    <!-- Dialog title for deleting a private story -->
+    <string name="ContactSearchMediator__delete_story">Delete story?</string>
+    <!-- Dialog message for deleting a private story -->
+    <string name="ContactSearchMediator__delete_the_private">Delete the private story \"%1$s\"?</string>
+    <!-- Dialog action item for deleting a private story -->
+    <string name="ContactSearchMediator__delete">Delete</string>
     <!-- Gift expiry days remaining -->
     <plurals name="Gifts__d_days_remaining">
         <item quantity="one">%1$d days remaining</item>
@@ -4872,6 +4917,15 @@
     </plurals>
     <!-- Gift expiry expired -->
     <string name="Gifts__expired">Expired</string>
+
+    <!-- Label indicating that a user can tap to advance to the next post in a story -->
+    <string name="StoryFirstTimeNavigationView__tap_to_advance">Tap to advance</string>
+    <!-- Label indicating swipe direction to skip current story -->
+    <string name="StoryFirstTimeNavigationView__swipe_up_to_skip">Swipe up to skip</string>
+    <!-- Label indicating swipe direction to exit story viewer -->
+    <string name="StoryFirstTimeNavigationView__swipe_right_to_exit">Swipe right to exit</string>
+    <!-- Button label to confirm understanding of story navigation -->
+    <string name="StoryFirstTimeNagivationView__got_it">Got it</string>
 
     <!-- EOF -->
 

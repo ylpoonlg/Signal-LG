@@ -1009,7 +1009,7 @@ public class ConversationParentFragment extends Fragment
     if (recipient != null && recipient.get().isMuted()) inflater.inflate(R.menu.conversation_muted, menu);
     else                                                inflater.inflate(R.menu.conversation_unmuted, menu);
 
-    if (isSingleConversation() && getRecipient().getContactUri() == null && !recipient.get().isReleaseNotes()) {
+    if (isSingleConversation() && getRecipient().getContactUri() == null && !recipient.get().isReleaseNotes() && !recipient.get().isSelf()) {
       inflater.inflate(R.menu.conversation_add_to_contacts, menu);
     }
 
@@ -1249,7 +1249,7 @@ public class ConversationParentFragment extends Fragment
         AttachmentManager.selectContactInfo(this, PICK_CONTACT);
         break;
       case LOCATION:
-        AttachmentManager.selectLocation(this, PICK_LOCATION);
+        AttachmentManager.selectLocation(this, PICK_LOCATION, getSendButtonColor(sendButton.getSelectedSendType()));
         break;
       case PAYMENT:
         if (recipient.get().hasProfileKeyCredential()) {
@@ -2100,7 +2100,7 @@ public class ConversationParentFragment extends Fragment
           unverifiedBannerView.get().hide();
         }
 
-        titleView.setVerified(isSecureText && identityRecords.isVerified());
+        titleView.setVerified(isSecureText && identityRecords.isVerified() && !recipient.get().isSelf());
 
         future.set(true);
       }
@@ -2279,7 +2279,7 @@ public class ConversationParentFragment extends Fragment
       int toolbarTextAndIconColor = getResources().getColor(R.color.signal_colorNeutralInverse);
       toolbar.setTitleTextColor(toolbarTextAndIconColor);
       setToolbarActionItemTint(toolbar, toolbarTextAndIconColor);
-      WindowUtil.setNavigationBarColor(requireActivity().getWindow(), getResources().getColor(R.color.conversation_navigation_wallpaper));
+      WindowUtil.setNavigationBarColor(requireActivity(), getResources().getColor(R.color.conversation_navigation_wallpaper));
     } else {
       wallpaper.setImageDrawable(null);
       wallpaperDim.setVisibility(View.GONE);
@@ -2292,7 +2292,7 @@ public class ConversationParentFragment extends Fragment
       int toolbarTextAndIconColor = getResources().getColor(R.color.signal_colorOnSurface);
       toolbar.setTitleTextColor(toolbarTextAndIconColor);
       setToolbarActionItemTint(toolbar, toolbarTextAndIconColor);
-      WindowUtil.setNavigationBarColor(requireActivity().getWindow(), getResources().getColor(R.color.signal_colorBackground));
+      WindowUtil.setNavigationBarColor(requireActivity(), getResources().getColor(R.color.signal_colorBackground));
     }
     fragment.onWallpaperChanged(chatWallpaper);
     messageRequestBottomView.setWallpaperEnabled(chatWallpaper != null);
@@ -2634,7 +2634,7 @@ public class ConversationParentFragment extends Fragment
 
     Log.i(TAG, "onModified(" + recipient.getId() + ") " + recipient.getRegistered());
     titleView.setTitle(glideRequests, recipient);
-    titleView.setVerified(identityRecords.isVerified());
+    titleView.setVerified(identityRecords.isVerified() && !recipient.isSelf());
     setBlockedUserState(recipient, isSecureText, isDefaultSms);
     updateReminders();
     updateDefaultSubscriptionId(recipient.getDefaultSubscriptionId());
@@ -2743,7 +2743,7 @@ public class ConversationParentFragment extends Fragment
   }
 
   private void openContactShareEditor(Uri contactUri) {
-    Intent intent = ContactShareEditActivity.getIntent(requireContext(), Collections.singletonList(contactUri));
+    Intent intent = ContactShareEditActivity.getIntent(requireContext(), Collections.singletonList(contactUri), getSendButtonColor(sendButton.getSelectedSendType()));
     startActivityForResult(intent, GET_CONTACT_DETAILS);
   }
 
@@ -2771,7 +2771,7 @@ public class ConversationParentFragment extends Fragment
       numberItems[i] = contactData.numbers.get(i).type + ": " + contactData.numbers.get(i).number;
     }
 
-    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+    AlertDialog.Builder builder = new MaterialAlertDialogBuilder(requireContext());
     builder.setIcon(R.drawable.ic_account_box);
     builder.setTitle(R.string.ConversationActivity_select_contact_info);
 
@@ -3249,7 +3249,7 @@ public class ConversationParentFragment extends Fragment
   }
 
   private void showDefaultSmsPrompt() {
-    new AlertDialog.Builder(requireContext())
+    new MaterialAlertDialogBuilder(requireContext())
                    .setMessage(R.string.ConversationActivity_signal_cannot_sent_sms_mms_messages_because_it_is_not_your_default_sms_app)
                    .setNegativeButton(R.string.ConversationActivity_no, (dialog, which) -> dialog.dismiss())
                    .setPositiveButton(R.string.ConversationActivity_yes, (dialog, which) -> handleMakeDefaultSms())
@@ -3954,6 +3954,11 @@ public class ConversationParentFragment extends Fragment
   }
 
   @Override
+  public int getSendButtonTint() {
+    return getSendButtonColor(sendButton.getSelectedSendType());
+  }
+
+  @Override
   public boolean isKeyboardOpen() {
     return container.isKeyboardOpen();
   }
@@ -4075,7 +4080,7 @@ public class ConversationParentFragment extends Fragment
       return;
     }
 
-    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext())
+    AlertDialog.Builder builder = new MaterialAlertDialogBuilder(requireContext())
                                                  .setNeutralButton(R.string.ConversationActivity_cancel, (d, w) -> d.dismiss());
 
     if (recipient.isGroup() && recipient.isBlocked()) {
@@ -4199,7 +4204,7 @@ public class ConversationParentFragment extends Fragment
           unverifiedNames[i] = Recipient.resolved(unverifiedIdentities.get(i).getRecipientId()).getDisplayName(requireContext());
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(requireContext());
         builder.setIcon(R.drawable.ic_warning);
         builder.setTitle("No longer verified");
         builder.setItems(unverifiedNames, (dialog, which) -> {
