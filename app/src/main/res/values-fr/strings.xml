@@ -41,6 +41,9 @@
   <string name="ApplicationPreferencesActivity_record_payments_recovery_phrase">Enregistrer une phrase de récupération des paiements</string>
   <string name="ApplicationPreferencesActivity_record_phrase">Enregistrez la phrase</string>
   <string name="ApplicationPreferencesActivity_before_you_can_disable_your_pin">Avant de pouvoir désactiver votre NIP, vous devez enregistrer votre phrase de récupération des paiements pour vous permettre de récupérer votre compte de paiements.</string>
+  <!--NumericKeyboardView-->
+  <!--Back button on numeric keyboard-->
+  <string name="NumericKeyboardView__backspace">Retour en arrière</string>
   <!--AppProtectionPreferenceFragment-->
   <plurals name="AppProtectionPreferenceFragment_minutes">
     <item quantity="one">%d minute</item>
@@ -169,22 +172,30 @@
   <!--Label for my stories when selecting who to send media to-->
   <string name="ContactsCursorLoader_my_stories">Mes histoires</string>
   <!--Action for creating a new story-->
-  <string name="ContactsCursorLoader_new_story">Nouvelle histoire</string>
+  <string name="ContactsCursorLoader_new_story">Nouvelle story</string>
   <!--ContactsDatabase-->
   <string name="ContactsDatabase_message_s">Message %s</string>
   <string name="ContactsDatabase_signal_call_s">Appel Signal %s</string>
   <!--ContactNameEditActivity-->
+  <!--Toolbar title for contact name edit activity-->
+  <string name="ContactNameEditActivity__edit_name">Modifier le nom</string>
   <string name="ContactNameEditActivity_given_name">Prénom</string>
   <string name="ContactNameEditActivity_family_name">Nom de famille</string>
   <string name="ContactNameEditActivity_prefix">Titre</string>
   <string name="ContactNameEditActivity_suffix">Suffixe</string>
   <string name="ContactNameEditActivity_middle_name">Deuxième prénom</string>
   <!--ContactShareEditActivity-->
+  <!--ContactShareEditActivity toolbar title-->
+  <string name="ContactShareEditActivity__send_contact">Envoyer le contact</string>
   <string name="ContactShareEditActivity_type_home">Domicile</string>
   <string name="ContactShareEditActivity_type_mobile">Mobile</string>
   <string name="ContactShareEditActivity_type_work">Travail</string>
   <string name="ContactShareEditActivity_type_missing">Autre</string>
   <string name="ContactShareEditActivity_invalid_contact">Le contact sélectionné était invalide</string>
+  <!--Content descrption for name edit button on contact share edit activity-->
+  <string name="ContactShareEditActivity__edit_name">Modifier le nom</string>
+  <!--Content description for user avatar in edit activity-->
+  <string name="ContactShareEditActivity__avatar">Avatar</string>
   <!--ConversationItem-->
   <string name="ConversationItem_error_not_sent_tap_for_details">N’a pas été envoyé, toucher pour obtenir des détails</string>
   <string name="ConversationItem_error_partially_not_delivered">Envoyé partiellement, toucher pour obtenir des détails</string>
@@ -220,8 +231,10 @@
   <string name="ConversationActivity_this_device_does_not_appear_to_support_dial_actions">Cet appareil ne semble pas prendre en charge les actions de numérotation.</string>
   <string name="ConversationActivity_transport_insecure_sms">Texto non sécurisé</string>
   <!--A title for the option to send an SMS with a placeholder to put the name of their SIM card-->
+  <string name="ConversationActivity_transport_insecure_sms_with_sim">Texto non sécurisé (%1$s)</string>
   <string name="ConversationActivity_transport_insecure_mms">Message multimédia non sécurisé</string>
   <!--A title for the option to send an SMS with a placeholder to put the name of their SIM card-->
+  <string name="ConversationActivity_transport_insecure_mms_with_sim">Message multimédia non sécurisé (%1$s)</string>
   <string name="ConversationActivity_transport_signal">Message Signal</string>
   <string name="ConversationActivity_lets_switch_to_signal">Passons à Signal %1$s</string>
   <string name="ConversationActivity_specify_recipient">Veuillez choisir un contact</string>
@@ -274,6 +287,8 @@
     <item quantity="other">%d messages non lus</item>
   </plurals>
   <!--ConversationFragment-->
+  <!--Toast text when contacts activity is not found-->
+  <string name="ConversationFragment__contacts_app_not_found">Impossible de retrouver l\'application Contacts.</string>
   <plurals name="ConversationFragment_delete_selected_messages">
     <item quantity="one">Supprimer le message sélectionné ?</item>
     <item quantity="many">Supprimer les messages sélectionnés ?</item>
@@ -436,8 +451,20 @@
   <string name="CreateProfileActivity_error_setting_profile_photo">Erreur de définition de la photo de profil</string>
   <string name="CreateProfileActivity_problem_setting_profile">Problème de définition du profil</string>
   <string name="CreateProfileActivity_set_up_your_profile">Configurez votre profil</string>
-  <string name="CreateProfileActivity_signal_profiles_are_end_to_end_encrypted">Votre profil est chiffré de bout en bout. Votre profil et les modifications qui y sont apportées seront visibles par vos contacts quand vous lancerez ou accepterez de nouvelles conversations et quand vous vous joindrez à de nouveaux groupes.</string>
+  <string name="CreateProfileActivity_signal_profiles_are_end_to_end_encrypted">Votre profil et les modifications qui y sont apportées seront visibles par vos interlocuteurs, vos contacts et vos groupes.</string>
   <string name="CreateProfileActivity_set_avatar_description">Définir un avatar</string>
+  <!--ProfileCreateFragment-->
+  <!--Displayed at the top of the screen and explains how profiles can be viewed.-->
+  <string name="ProfileCreateFragment__profiles_are_visible_to_contacts_and_people_you_message">Les profils sont visibles par vos interlocuteurs, vos contacts et vos groupes.</string>
+  <!--Title of clickable row to select phone number privacy settings-->
+  <string name="ProfileCreateFragment__who_can_find_me">Qui peut me retrouver par mon numéro ?</string>
+  <!--WhoCanSeeMyPhoneNumberFragment-->
+  <!--Toolbar title for this screen-->
+  <string name="WhoCanSeeMyPhoneNumberFragment__who_can_find_me_by_number">Qui peut me retrouver par mon numéro ?</string>
+  <!--Description for radio item stating anyone can see your phone number-->
+  <string name="WhoCanSeeMyPhoneNumberFragment__anyone_who_has">Toutes les personne ayant votre numéro de téléphone dans leurs contacts pourront vous retrouver sur Signal. Les autres pourront utiliser la recherche pour vous trouver.</string>
+  <!--Description for radio item stating no one will be able to see your phone number-->
+  <string name="WhoCanSeeMyPhoneNumberFragment__nobody_on_signal">Aucun utilisateur Signal ne pourra vous retrouver depuis votre numéro de téléphone.</string>
   <!--ChooseBackupFragment-->
   <string name="ChooseBackupFragment__restore_from_backup">Restaurer d’une sauvegarde ?</string>
   <string name="ChooseBackupFragment__restore_your_messages_and_media">Restaurez vos messages et médias d’une sauvegarde locale. Si vous ne les restaurez pas maintenant, vous ne pourrez pas le faire plus tard.</string>
@@ -469,6 +496,8 @@
   <string name="BackupsPreferenceFragment__to_restore_a_backup">Pour restaurer une sauvegarde, installez un nouvel exemplaire de Signal. Ouvrez l’appli, touchez « Restaurer la sauvegarde », puis trouvez un fichier de sauvegarde. %1$s</string>
   <string name="BackupsPreferenceFragment__learn_more">En apprendre davantage</string>
   <string name="BackupsPreferenceFragment__in_progress">En cours…</string>
+  <!--Status text shown in backup preferences when verifying a backup-->
+  <string name="BackupsPreferenceFragment__verifying_backup">Vérification de la sauvegarde…</string>
   <string name="BackupsPreferenceFragment__d_so_far">%1$d jusqu’à présent…</string>
   <!--Show percentage of completion of backup-->
   <string name="BackupsPreferenceFragment__s_so_far">%1$s%% jusqu’à présent…</string>
@@ -693,6 +722,7 @@
   <string name="AddGroupDetailsFragment__group_creation_failed">Échec de création du groupe.</string>
   <string name="AddGroupDetailsFragment__try_again_later">Réessayez plus tard.</string>
   <!--Displayed when adding group details to an MMS Group-->
+  <string name="AddGroupDetailsFragment__youve_selected_a_contact_that_doesnt_support">Vous avez sélectionné un contact qui ne prend pas en charge les groupes Signal. Les échanges de ce groupe se feront donc par MMS. Le nom personnalisé du groupe, ainsi que les photos, ne seront visibles que par vous.</string>
   <string name="AddGroupDetailsFragment__remove">Supprimer</string>
   <string name="AddGroupDetailsFragment__sms_contact">Contact texto</string>
   <string name="AddGroupDetailsFragment__remove_s_from_this_group">Supprimer %1$s de ce groupe ?</string>
@@ -756,6 +786,10 @@
   <string name="ManageProfileFragment_failed_to_set_avatar">Échec de définition de l’avatar</string>
   <string name="ManageProfileFragment_badges">Macarons</string>
   <string name="ManageProfileFragment__edit_photo">Modifier la photo</string>
+  <!--Snackbar message after creating username-->
+  <string name="ManageProfileFragment__username_created">Pseudo créé</string>
+  <!--Snackbar message after copying username-->
+  <string name="ManageProfileFragment__username_copied">Pseudo copié</string>
   <!--ManageRecipientActivity-->
   <string name="ManageRecipientActivity_no_groups_in_common">Aucun groupe en commun</string>
   <plurals name="ManageRecipientActivity_d_groups_in_common">
@@ -948,12 +982,15 @@
   <string name="Megaphones_use_sms">Utiliser les textos</string>
   <string name="Megaphones_appearance">Apparence</string>
   <string name="Megaphones_add_photo">Ajouter une photo</string>
+  <!--Title of a bottom sheet to render messages that all quote a specific message-->
+  <string name="MessageQuotesBottomSheet_replies">Réponses</string>
   <!--NotificationBarManager-->
   <string name="NotificationBarManager_signal_call_in_progress">Appel Signal en cours</string>
   <string name="NotificationBarManager__establishing_signal_call">Établissement de l’appel Signal</string>
   <string name="NotificationBarManager__incoming_signal_call">Appel Signal entrant</string>
   <string name="NotificationBarManager__incoming_signal_group_call">Appel de groupe entrant sur Signal</string>
   <!--Temporary notification shown when starting the calling service-->
+  <string name="NotificationBarManager__starting_signal_call_service">Démarrage du service d\'appel Signal</string>
   <string name="NotificationBarManager__stopping_signal_call_service">Arrêt du service d’appel de Signal</string>
   <string name="NotificationBarManager__decline_call">Rejeter l’appel</string>
   <string name="NotificationBarManager__answer_call">Répondre à l’appel</string>
@@ -1178,9 +1215,7 @@
   <string name="MessageRecord_a_message_from_s_couldnt_be_delivered">Un message de %s n’a pas pu être remis</string>
   <string name="MessageRecord_s_changed_their_phone_number">%1$s a changé de numéro de téléphone</string>
   <!--Update item message shown in the release channel when someone is already a sustainer so we ask them if they want to boost.-->
-  <!-- Removed by excludeNonTranslatables <string name="MessageRecord_like_this_new_feature_say_thanks_with_a_boost">Aimez-vous cette nouvelle fonction ? Dites merci avec un Coup de pouce.</string> -->
-  <!--Update item message shown in the release channel when someone is not a sustainer so we ask them to consider becoming one-->
-  <!-- Removed by excludeNonTranslatables <string name="MessageRecord_signal_is_powered_by_people_like_you_become_a_sustainer_today">Signal est alimenté par des personnes comme vous. Devenez un donateur mensuel dès aujourd’hui.</string> -->
+  <string name="MessageRecord_like_this_new_feature_help_support_signal_with_a_one_time_donation">Vous aimez cette nouvelle fonction ? Soutenez Signal avec un don ponctuel.</string>
   <!--Group Calling update messages-->
   <string name="MessageRecord_s_started_a_group_call_s">%1$s a lancé un appel de groupe · %2$s</string>
   <string name="MessageRecord_s_is_in_the_group_call_s">%1$s fait partie de l’appel de groupe · %2$s</string>
@@ -1569,6 +1604,12 @@
   <!--SubmitDebugLogActivity-->
   <string name="SubmitDebugLogActivity_edit">Modifier</string>
   <string name="SubmitDebugLogActivity_done">Terminé</string>
+  <!--Menu option to save a debug log file to disk.-->
+  <string name="SubmitDebugLogActivity_save">Enregistrer</string>
+  <!--Error that is show in a toast when we fail to save a debug log file to disk.-->
+  <string name="SubmitDebugLogActivity_failed_to_save">Échec de la sauvegarde</string>
+  <!--Toast that is show to notify that we have saved the debug log file to disk.-->
+  <string name="SubmitDebugLogActivity_save_complete">Sauvegarde terminée</string>
   <string name="SubmitDebugLogActivity_tap_a_line_to_delete_it">Toucher une ligne pour la supprimer</string>
   <string name="SubmitDebugLogActivity_submit">Envoyer</string>
   <string name="SubmitDebugLogActivity_failed_to_submit_logs">Échec d’envoi des journaux</string>
@@ -1622,6 +1663,10 @@
   <string name="ThreadRecord__you_sent_a_gift">Vous avez envoyé un cadeau</string>
   <!--Displayed in the notification when the user has opened a received gift-->
   <string name="ThreadRecord__you_redeemed_a_gift_badge">Vous avez utilisé un macaron cadeau</string>
+  <!--Displayed in the conversation list when someone reacted to your story-->
+  <string name="ThreadRecord__reacted_s_to_your_story">%1$sutilisateurs ont réagi à votre Story</string>
+  <!--Displayed in the conversation list when you reacted to someone\'s story-->
+  <string name="ThreadRecord__reacted_s_to_their_story">%1$sutilisateurs ont réagi à votre Story</string>
   <!--UpdateApkReadyListener-->
   <string name="UpdateApkReadyListener_Signal_update">Mise à jour de Signal</string>
   <string name="UpdateApkReadyListener_a_new_version_of_signal_is_available_tap_to_update">Une nouvelle version de Signal est proposée, touchez pour lancer la mise à jour</string>
@@ -1632,6 +1677,8 @@
   <string name="UnverifiedSendDialog_send_message">Envoyer le message ?</string>
   <string name="UnverifiedSendDialog_send">Envoyer</string>
   <!--UsernameEditFragment-->
+  <!--Instructional text at the top of the username edit screen-->
+  <string name="UsernameEditFragment__choose_your_username">Choisissez votre pseudo</string>
   <string name="UsernameEditFragment_username">Nom d’utilisateur</string>
   <string name="UsernameEditFragment_delete">Supprimer</string>
   <string name="UsernameEditFragment_successfully_set_username">Le nom d’utilisateur a été défini avec succès.</string>
@@ -1643,12 +1690,19 @@
   <string name="UsernameEditFragment_usernames_cannot_begin_with_a_number">Les noms d’utilisateur ne peuvent pas commencer par un numéro.</string>
   <string name="UsernameEditFragment_username_is_invalid">Le nom d’utilisateur est invalide.</string>
   <string name="UsernameEditFragment_usernames_must_be_between_a_and_b_characters">Les noms d’utilisateur doivent comporter entre %1$d et %2$d caractères.</string>
-  <string name="UsernameEditFragment_usernames_on_signal_are_optional">Sur Signal, les noms d’utilisateur sont facultatifs. Si vous choisissez de créer un nom d’utilisateur, les autres utilisateurs de Signal pourront vous trouver avec ce nom d’utilisateur et vous contacter sans connaître votre numéro de téléphone.</string>
+  <!--Explanation about what usernames provide-->
+  <string name="UsernameEditFragment__usernames_let_others_message">Votre pseudo vous permet de recevoir des messages sans que votre contact ait besoin de votre numéro de téléphone. Il est associé à une série de chiffres qui préserve la confidentialité de votre adresse.</string>
+  <!--Dialog title for explanation about numbers at the end of the username-->
+  <string name="UsernameEditFragment__what_is_this_number">Qu\'est-ce que ce numéro ?</string>
+  <string name="UsernameEditFragment__these_digits_help_keep">Ces chiffres servent à préserver la confidentialité de votre identité correspondant au pseudo choisi et ainsi d\'éviter les messages indésirables. Ne partagez votre pseudo qu\'avec les personnes et les groupes avec lesquels vous souhaitez échanger. Si vous changez votre pseudo, un nouvel ensemble de chiffres vous sera attribué.</string>
   <plurals name="UserNotificationMigrationJob_d_contacts_are_on_signal">
     <item quantity="one">%d contact est sur Signal</item>
     <item quantity="many">%d contacts sont sur Signal</item>
     <item quantity="other">%d contacts sont sur Signal</item>
   </plurals>
+  <!--UsernameShareBottomSheet-->
+  <!--Explanation of what the sheet enables the user to do-->
+  <string name="UsernameShareBottomSheet__copy_or_share_a_username_link">Copier ou partager un lien d\'utilisateur</string>
   <!--VerifyIdentityActivity-->
   <string name="VerifyIdentityActivity_your_contact_is_running_an_old_version_of_signal">Votre contact utilise une ancienne version de Signal. Veuillez lui demander de la mettre à jour avant de confirmer votre numéro de sécurité.</string>
   <string name="VerifyIdentityActivity_your_contact_is_running_a_newer_version_of_Signal">Votre contact utilise une version plus récente de Signal dont le format de code QR est incompatible. Veuillez mettre Signal à jour pour comparer.</string>
@@ -1887,9 +1941,7 @@
   <string name="ConversationUpdateItem_view">Afficher</string>
   <string name="ConversationUpdateItem_the_disappearing_message_time_will_be_set_to_s_when_you_message_them">La minuterie des messages éphémères sera définie sur %1$s quand vous échangez des messages avec cette personne.</string>
   <!--Update item button text to show to boost a feature-->
-  <!-- Removed by excludeNonTranslatables <string name="ConversationUpdateItem_signal_boost">Coup de pouce à Signal</string> -->
-  <!--Update item button text to show to become a sustainer in the release notes channel-->
-  <!-- Removed by excludeNonTranslatables <string name="ConversationUpdateItem_become_a_sustainer">Devenir donateur mensuel</string> -->
+  <string name="ConversationUpdateItem_donate">Faire un don</string>
   <!--audio_view-->
   <string name="audio_view__play_pause_accessibility_description">Lecture … Mettre en pause</string>
   <string name="audio_view__download_accessibility_description">Télécharger</string>
@@ -2057,7 +2109,7 @@
   <string name="EditAboutFragment_be_kind">Sois gentil</string>
   <string name="EditAboutFragment_coffee_lover">Amateur de café</string>
   <string name="EditAboutFragment_free_to_chat">Prêt à converser</string>
-  <string name="EditAboutFragment_taking_a_break">Je prend une pause</string>
+  <string name="EditAboutFragment_taking_a_break">Je prends une pause</string>
   <string name="EditAboutFragment_working_on_something_new">Je travaille sur quelque chose de nouveau </string>
   <!--EditProfileFragment-->
   <string name="EditProfileFragment__edit_group">Modifier le groupe</string>
@@ -2136,16 +2188,16 @@
   <string name="HelpFragment__debug_log">Journal de débogage :</string>
   <string name="HelpFragment__could_not_upload_logs">Impossible de téléverser les journaux</string>
   <string name="HelpFragment__please_be_as_descriptive_as_possible">Veuillez nous donner autant de détails que possible, afin de nous aider à comprendre la situation.</string>
-  <!-- Removed by excludeNonTranslatables <string-array name="HelpFragment__categories_3">
-    <item>\-\- Veuillez sélectionner une option \-\-\-</item>
+  <string-array name="HelpFragment__categories_4">
+    <item>\-\- Veuillez sélectionner une option  \-\-</item>
     <item>Quelque chose ne fonctionne pas</item>
     <item>Demande de fonction</item>
     <item>Question</item>
-    <item>Rétroaction</item>
+    <item>Commentaires</item>
     <item>Autre</item>
     <item>Paiements (MobileCoin)</item>
-    <item>Donateurs mensuels et Coups de pouce à Signal</item>
-  </string-array> -->
+    <item>Dons et macarons</item>
+  </string-array>
   <!--ReactWithAnyEmojiBottomSheetDialogFragment-->
   <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">Ce message</string>
   <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">Utilisés récemment</string>
@@ -2248,6 +2300,8 @@
   <!--Preference label for making one-time donations to Signal-->
   <string name="preferences__one_time_donation">Don ponctuel</string>
   <string name="preferences__privacy">Confidentialité</string>
+  <!--Preference label for stories-->
+  <string name="preferences__stories">Stories</string>
   <string name="preferences__mms_user_agent">Agent utilisateur MMS</string>
   <string name="preferences__advanced_mms_access_point_names">Paramètres manuels de messagerie multimédia</string>
   <string name="preferences__mmsc_url">URL MMSC</string>
@@ -2260,6 +2314,8 @@
   <string name="preferences__data_and_storage">Données et mémoire</string>
   <string name="preferences__storage">Mémoire</string>
   <string name="preferences__payments">Paiements</string>
+  <!--Privacy settings payments section description-->
+  <string name="preferences__payment_lock">Blocage des paiements</string>
   <string name="preferences__payments_beta">Paiements (bêta)</string>
   <string name="preferences__conversation_length_limit">Taille maximale des conversations</string>
   <string name="preferences__keep_messages">Conserver les messages</string>
@@ -2325,6 +2381,8 @@
   <string name="preferences_app_protection__who_can">Qui peut…</string>
   <string name="preferences_app_protection__app_access">Accès à l’appli</string>
   <string name="preferences_app_protection__communication">Communication</string>
+  <!--Privacy settings payments section title-->
+  <string name="preferences_app_protection__payments">Paiements</string>
   <string name="preferences_chats__chats">Conversations</string>
   <string name="preferences_data_and_storage__manage_storage">Gérer la mémoire</string>
   <string name="preferences_data_and_storage__calls">Appels</string>
@@ -2426,6 +2484,14 @@
   <string name="PaymentsHomeFragment__activate">Activer</string>
   <string name="PaymentsHomeFragment__view_mobile_coin_terms">Afficher les CGU de MobileCoin</string>
   <string name="PaymentsHomeFragment__payments_not_available">Les paiements ne sont plus proposés dans Signal. Vous pouvez encore transférer des fonds vers une plateforme de change, mais vous ne pouvez plus ni envoyer, ni recevoir de paiements, ni ajouter de fonds.</string>
+  <!--Alert dialog title which shows up after a payment to turn on payment lock-->
+  <string name="PaymentsHomeFragment__turn_on">Activer le blocage des paiements pour les prochains envois ?</string>
+  <!--Alert dialog description for why payment lock should be enabled before sending payments-->
+  <string name="PaymentsHomeFragment__add_an_additional_layer">Ajoutez une couche de sécurité et activez le verrouillage de l\'écran ou la demande de l\'empreinte digitale d\'Android pour effectuer un paiement.</string>
+  <!--Alert dialog button to enable payment lock-->
+  <string name="PaymentsHomeFragment__enable">Activer</string>
+  <!--Alert dialog button to not enable payment lock for now-->
+  <string name="PaymentsHomeFragment__not_now">Pas maintenant</string>
   <!--PaymentsAddMoneyFragment-->
   <string name="PaymentsAddMoneyFragment__add_funds">Ajouter des fonds</string>
   <string name="PaymentsAddMoneyFragment__your_wallet_address">L’adresse de votre portefeuille</string>
@@ -2506,6 +2572,14 @@
   <string name="ConfirmPayment__payment_failed">Échec de paiement</string>
   <string name="ConfirmPayment__payment_will_continue_processing">Le traitement du paiement va se poursuivre</string>
   <string name="ConfirmPaymentFragment__invalid_recipient">Le destinataire est invalide</string>
+  <!--Biometric/Device authentication prompt title which comes up before sending a payment-->
+  <string name="ConfirmPaymentFragment__unlock_to_send_payment">Déverrouiller pour envoyer le paiement</string>
+  <!--Title of a dialog show when we were unable to present the user\'s screenlock before sending a payment-->
+  <string name="ConfirmPaymentFragment__failed_to_show_payment_lock">Impossible d\'afficher le blocage du paiement</string>
+  <!--Body of a dialog show when we were unable to present the user\'s screenlock before sending a payment-->
+  <string name="ConfirmPaymentFragment__you_enabled_payment_lock_in_the_settings">Le blocage du paiement a été activé dans les paramètres, mais il ne peut pas être affiché.</string>
+  <!--Button in a dialog that will take the user to the privacy settings-->
+  <string name="ConfirmPaymentFragment__go_to_settings">Rendez-vous dans les Paramètres</string>
   <string name="ConfirmPaymentFragment__this_person_has_not_activated_payments">Cette personne n’a pas activé les paiements</string>
   <string name="ConfirmPaymentFragment__unable_to_request_a_network_fee">Impossible de demander des frais de réseau. Pour poursuivre ce paiement, touchez Valider pour réessayer.</string>
   <!--CurrencyAmountFormatter_s_at_s-->
@@ -2794,10 +2868,16 @@
   <string name="BackupDialog_you_successfully_entered_your_backup_passphrase">Vous avez saisi avec succès la phrase de passe de votre sauvegarde</string>
   <string name="BackupDialog_passphrase_was_not_correct">La phrase de passe était erronée</string>
   <string name="LocalBackupJob_creating_signal_backup">Création de la sauvegarde de Signal…</string>
+  <!--Title for progress notification shown in a system notification while verifying a recent backup.-->
+  <string name="LocalBackupJob_verifying_signal_backup">Vérification de la sauvegarde Signal…</string>
   <string name="LocalBackupJobApi29_backup_failed">La sauvegarde a échoué</string>
   <string name="LocalBackupJobApi29_your_backup_directory_has_been_deleted_or_moved">Votre répertoire de sauvegarde a été supprimé ou déplacé.</string>
   <string name="LocalBackupJobApi29_your_backup_file_is_too_large">Votre fichier de sauvegarde est trop gros pour être enregistré sur ce volume.</string>
   <string name="LocalBackupJobApi29_there_is_not_enough_space">Il manque d’espace pour enregistrer votre sauvegarde.</string>
+  <!--Error message shown if a newly created backup could not be verified as accurate-->
+  <string name="LocalBackupJobApi29_your_backup_could_not_be_verified">La création et la vérification de votre dernière sauvegarde ont échoué. Veuillez réessayer.</string>
+  <!--Error message shown if a very large attachment is encountered during the backup creation and causes the backup to fail-->
+  <string name="LocalBackupJobApi29_your_backup_contains_a_very_large_file">Votre sauvegarde contient un fichier trop volumineux. Veuillez le supprimer et créer une nouvelle sauvegarde.</string>
   <string name="LocalBackupJobApi29_tap_to_manage_backups">Toucher pour gérer les sauvegardes</string>
   <string name="ProgressPreference_d_messages_so_far">%d messages jusqu’à présent</string>
   <string name="RegistrationActivity_wrong_number">Mauvais numéro</string>
@@ -3055,6 +3135,9 @@
   <string name="CallParticipant__you">Vous</string>
   <string name="CallParticipant__you_on_another_device">Vous (sur un autre appareil)</string>
   <string name="CallParticipant__s_on_another_device">%1$s (sur un autre appareil)</string>
+  <!--WifiToCellularPopupWindow-->
+  <!--Message shown during a call when the WiFi network is unusable, and cellular data starts to be used for the call instead.-->
+  <string name="WifiToCellularPopupWindow__weak_wifi_switched_to_cellular">Connexion Wi-Fi faible. Choisir un réseau cellulaire.</string>
   <!--DeleteAccountFragment-->
   <string name="DeleteAccountFragment__deleting_your_account_will">Supprimer votre compte implique :</string>
   <string name="DeleteAccountFragment__enter_your_phone_number">Saisir votre numéro de téléphone</string>
@@ -3098,6 +3181,8 @@
   <string name="ShareActivity__send">Envoyer</string>
   <string name="ShareActivity__comma_s">, %1$s</string>
   <string name="ShareActivity__sharing_to_multiple_chats_is">Le partage vers plusieurs conversations n’est pris en charge que pour les messages Signal.</string>
+  <!--Toast when the incoming intent is invalid-->
+  <string name="ShareActivity__could_not_get_share_data_from_intent">Impossible d\'obtenir les données partagées.</string>
   <!--MultiShareDialogs-->
   <string name="MultiShareDialogs__failed_to_send_to_some_users">Échec d’envoi vers certains utilisateurs</string>
   <string name="MultiShareDialogs__you_can_only_share_with_up_to">Vous ne pouvez partager qu’avec %1$d conversations, au plus</string>
@@ -3301,6 +3386,12 @@ Nouvelle tentative…</string>
   <string name="ChatsSettingsFragment__enter_key_sends">La touche Entrée envoie</string>
   <!--SmsSettingsFragment-->
   <string name="SmsSettingsFragment__use_as_default_sms_app">Utiliser comme appli de textos par défaut</string>
+  <!--Preference title to export sms-->
+  <string name="SmsSettingsFragment__export_sms_messages">Exporter des SMS</string>
+  <!--Preference title to delete sms-->
+  <string name="SmsSettingsFragment__remove_sms_messages">Supprimer des SMS</string>
+  <!--Snackbar text to confirm deletion-->
+  <string name="SmsSettingsFragment__sms_messages_removed">SMS supprimés</string>
   <!--NotificationsSettingsFragment-->
   <string name="NotificationsSettingsFragment__messages">Messages</string>
   <string name="NotificationsSettingsFragment__calls">Appels</string>
@@ -3327,6 +3418,19 @@ Nouvelle tentative…</string>
   <string name="PrivacySettingsFragment__signal_message_and_calls">Messages et appels Signal, toujours relayer les appels et expéditeur scellé</string>
   <string name="PrivacySettingsFragment__default_timer_for_new_changes">Minuterie par défaut pour les nouvelles conversations</string>
   <string name="PrivacySettingsFragment__set_a_default_disappearing_message_timer_for_all_new_chats_started_by_you">Définissez une minuterie par défaut pour les messages éphémères pour toutes les nouvelles conversations que vous démarrez.</string>
+  <!--Summary for stories preference to launch into story privacy settings-->
+  <string name="PrivacySettingsFragment__manage_your_stories">Gérez vos stories et les personnes autorisées à les consulter</string>
+  <string name="PrivacySettingsFragment__payment_lock_require_lock">Exiger le verrouillage de l\'écran ou l\'empreinte digitale pour effectuer un paiement</string>
+  <!--Alert dialog title when payment lock cannot be enabled-->
+  <string name="PrivacySettingsFragment__cant_enable_title">Impossible d\'activer le blocage du paiement</string>
+  <!--Alert dialog description to setup screen lock or fingerprint in phone settings-->
+  <string name="PrivacySettingsFragment__cant_enable_description">Pour utiliser la fonction de blocage du paiement, vous devez d\'abord activer le verrouillage de l\'écran ou l\'identification digitale dans les paramètres de votre téléphone.</string>
+  <!--Shown in a toast when we can\'t navigate to the user\'s system fingerprint settings-->
+  <string name="PrivacySettingsFragment__failed_to_navigate_to_system_settings">Impossible de consulter les paramètres du système</string>
+  <!--Alert dialog button to go to phone settings-->
+  <string name="PrivacySettingsFragment__go_to_settings">Rendez-vous dans les Paramètres</string>
+  <!--Alert dialog button to cancel the dialog-->
+  <string name="PrivacySettingsFragment__cancel">Annuler</string>
   <!--AdvancedPrivacySettingsFragment-->
   <string name="AdvancedPrivacySettingsFragment__show_status_icon">Afficher l’icône d’état</string>
   <string name="AdvancedPrivacySettingsFragment__show_an_icon">Afficher une icône dans les détails des messages qui ont été remis avec l’option « expéditeur scellé ».</string>
@@ -3438,6 +3542,8 @@ Nouvelle tentative…</string>
   <string name="EmojiSearchFragment__no_results_found">Aucun résultat trouvé</string>
   <string name="NotificationsSettingsFragment__unknown_ringtone">Sonnerie inconnue</string>
   <!--ConversationSettingsFragment-->
+  <!--Error toasted when no activity can handle the add contact intent-->
+  <string name="ConversationSettingsFragment__contacts_app_not_found">Application Contacts non trouvée</string>
   <string name="ConversationSettingsFragment__send_message">Envoyer un message</string>
   <string name="ConversationSettingsFragment__start_video_call">Lancer un appel vidéo</string>
   <string name="ConversationSettingsFragment__start_audio_call">Lancer un appel audio</string>
@@ -3537,6 +3643,10 @@ Nouvelle tentative…</string>
   <string name="MultiselectForwardFragment__share_with">Partager avec</string>
   <string name="MultiselectForwardFragment__add_a_message">Ajouter un message</string>
   <string name="MultiselectForwardFragment__faster_forwards">Transferts plus rapides</string>
+  <!--Displayed when user selects a video that will be clipped before sharing to a story-->
+  <string name="MultiselectForwardFragment__videos_will_be_trimmed">Les vidéos seront formatées en clips de 30 sec. et envoyées en plusieurs histoires.</string>
+  <!--Displayed when user selects a video that cannot be sent as a story-->
+  <string name="MultiselectForwardFragment__videos_sent_to_stories_cant">Les vidéos intégrées dans les histoires ne peuvent pas dépasser 30 sec.</string>
   <string name="MultiselectForwardFragment__forwarded_messages_are_now">Les messages transférés sont désormais immédiatement envoyés.</string>
   <plurals name="MultiselectForwardFragment_send_d_messages">
     <item quantity="one">Envoyer %1$d message</item>
@@ -3558,6 +3668,8 @@ Nouvelle tentative…</string>
     <item quantity="many">Impossible de transférer les messages car ils ne sont plus disponibles.</item>
     <item quantity="other">Impossible de transférer les messages car ils ne sont plus disponibles.</item>
   </plurals>
+  <!--Error message shown when attempting to select a group to forward/share but it\'s announcement only and you are not an admin-->
+  <string name="MultiselectForwardFragment__only_admins_can_send_messages_to_this_group">Seuls les administrateurs peuvent envoyer des messages à ce groupe.</string>
   <string name="MultiselectForwardFragment__limit_reached">Limite atteinte</string>
   <!--Media V2-->
   <string name="MediaReviewFragment__add_a_message">Ajouter un message</string>
@@ -3679,6 +3791,7 @@ Nouvelle tentative…</string>
   <!--Copy displayed when badge expires after payment failure-->
   <string name="ExpiredBadgeBottomSheetDialogFragment__your_recurring_monthly_donation_was_canceled">Votre don mensuel a automatiquement été résilié car nous n’avons pas pu traiter votre paiement. Votre macaron n’est plus visible sur votre profil.</string>
   <!--Copy displayed when badge expires after a payment failure and we have a displayable charge failure reason-->
+  <string name="ExpiredBadgeBottomSheetDialogFragment__your_recurring_monthly_donation_was_canceled_s">Votre don mensuel récurrent a été automatiquement annulé. %1$s Votre macaron %2$s n\'est plus affiché sur votre profil.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__you_can">Vous pouvez continuer à utiliser Signal, mais pour soutenir l\'appli t réactiver votre macaron, renouvelez maintenant.</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__renew_subscription">Renouveler l’abonnement</string>
   <!--Button label to send user to Google Pay website-->
@@ -3716,13 +3829,13 @@ Nouvelle tentative…</string>
   <string name="NetworkFailure__network_error_check_your_connection_and_try_again">Erreur réseau. Vérifiez votre connexion et réessayez.</string>
   <string name="NetworkFailure__retry">Réessayer</string>
   <!--Displayed as a dialog title when the selected recipient for a gift doesn\'t support gifting-->
-  <string name="DonationsErrors__recipient_verification_failed">La vérification du destinataire a échoué.</string>
+  <string name="DonationsErrors__cant_send_gift">Impossible d\'envoyer un cadeau</string>
   <!--Displayed as a dialog message when the selected recipient for a gift doesn\'t support gifting-->
-  <string name="DonationsErrors__target_does_not_support_gifting">Le destinataire ne peut pas recevoir de cadeau.</string>
+  <string name="DonationsErrors__target_does_not_support_gifting">Ce destinataire utilise une version de Signal qui ne lui permet pas de recevoir de macaron en cadeau. Pour recevoir des cadeaux, il devra effectuer une mise à jour.</string>
   <!--Displayed as a dialog title when the user\'s profile could not be fetched, likely due to lack of internet-->
-  <string name="DonationsErrors__could_not_verify_recipient">Impossible de vérifier le destinataire.</string>
+  <string name="DonationsErrors__couldnt_send_gift">Impossible d\'envoyer un cadeau</string>
   <!--Displayed as a dialog message when the user\'s profile could not be fetched, likely due to lack of internet-->
-  <string name="DonationsErrors__please_check_your_network_connection">Vérifiez votre connexion réseau puis réessayez.</string>
+  <string name="DonationsErrors__please_check_your_network_connection">Suite à un problème de réseau, votre cadeau n\'a pas pu être envoyé. Vérifiez votre connexion puis réessayez.</string>
   <!--Gift message view title-->
   <string name="GiftMessageView__gift_badge">Macaron cadeau</string>
   <!--Gift message view expiry information-->
@@ -3940,10 +4053,12 @@ Nouvelle tentative…</string>
   <string name="ConversationListTabs__stories">Histoires</string>
   <!--String for counts above 99 in conversation list tabs-->
   <string name="ConversationListTabs__99p">+ de 99</string>
+  <!--Menu item on stories landing page-->
+  <string name="StoriesLandingFragment__story_privacy">Confidentialité de la story</string>
   <!--Title for "My Stories" row item in Stories landing page-->
   <string name="StoriesLandingFragment__my_stories">Mes histoires</string>
   <!--Subtitle for "My Stories" row item when user has not added stories-->
-  <string name="StoriesLandingFragment__add_a_story">Ajouter une histoire</string>
+  <string name="StoriesLandingFragment__tap_to_add_a_story">Appuyez pour ajouter une story</string>
   <!--Displayed when there are no stories to display-->
   <string name="StoriesLandingFragment__no_recent_updates_to_show_right_now_tap_plus_to_add_to_your_story">Aucune mise à jour récente à afficher actuellement. Toucher + plus pour ajouter à votre histoire.</string>
   <!--Context menu option to hide a story-->
@@ -3956,6 +4071,8 @@ Nouvelle tentative…</string>
   <string name="StoriesLandingItem__share">Partager…</string>
   <!--Context menu option to go to story chat-->
   <string name="StoriesLandingItem__go_to_chat">Accéder à la conversation</string>
+  <!--Context menu option to go to story info-->
+  <string name="StoriesLandingItem__info">Info</string>
   <!--Label when a story is pending sending-->
   <string name="StoriesLandingItem__sending">Envoi…</string>
   <!--Label when multiple stories are pending sending-->
@@ -3963,6 +4080,7 @@ Nouvelle tentative…</string>
   <!--Label when a story fails to send due to networking-->
   <string name="StoriesLandingItem__send_failed">Échec d’envoi</string>
   <!--Label when a story fails to send due to identity mismatch-->
+  <string name="StoriesLandingItem__partially_sent">Partiellement envoyé</string>
   <!--Status label when a story fails to send indicating user action to retry-->
   <string name="StoriesLandingItem__tap_to_retry">Appuyez pour réessayer</string>
   <!--Title of dialog confirming decision to hide a story-->
@@ -3990,6 +4108,7 @@ Nouvelle tentative…</string>
   <!--Message of dialog to confirm deletion of story-->
   <string name="MyStories__this_story_will_be_deleted">Cette histoire sera supprimée pour vous et quiconque l’a reçue.</string>
   <!--Toast shown when story media cannot be saved-->
+  <string name="MyStories__unable_to_save">Échec de la sauvegarde</string>
   <!--Displayed at bottom of story viewer when current item has views-->
   <plurals name="StoryViewerFragment__d_views">
     <item quantity="one">%1$d vue</item>
@@ -4002,6 +4121,8 @@ Nouvelle tentative…</string>
     <item quantity="many">%1$d réponses</item>
     <item quantity="other">%1$d réponses</item>
   </plurals>
+  <!--Used when view receipts are disabled-->
+  <string name="StoryViewerPageFragment__views_off">Affichage désactivé</string>
   <!--Used to join views and replies when both exist on a story item-->
   <string name="StoryViewerFragment__s_s">%1$s %2$s</string>
   <!--Displayed when viewing a post you sent-->
@@ -4014,6 +4135,18 @@ Nouvelle tentative…</string>
   <string name="StoryViewerPageFragment__reply_to_group">Répondre au groupe</string>
   <!--Displayed when a story has no views-->
   <string name="StoryViewsFragment__no_views_yet">Aucune vue pour le moment</string>
+  <!--Displayed when user has disabled receipts-->
+  <string name="StoryViewsFragment__enable_read_receipts_to_see_whos_viewed_your_story">Activer les accusés de lecture pour savoir qui a consulté vos Stories.</string>
+  <!--Button label displayed when user has disabled receipts-->
+  <string name="StoryViewsFragment__go_to_settings">Rendez-vous dans les Paramètres</string>
+  <!--Dialog action to remove viewer from a story-->
+  <string name="StoryViewsFragment__remove">Supprimer</string>
+  <!--Dialog title when removing a viewer from a story-->
+  <string name="StoryViewsFragment__remove_viewer">Retirer le spectateur ?</string>
+  <!--Dialog message when removing a viewer from a story-->
+  <string name="StoryViewsFragment__s_will_still_be_able">%1$s pourra voir ce post mais ne pourra pas voir vos prochains posts publiés sur %2$s</string>
+  <!--Story View context menu action to remove them from a story-->
+  <string name="StoryViewItem__remove_viewer">Retirer le spectateur </string>
   <!--Displayed when a story has no replies yet-->
   <string name="StoryGroupReplyFragment__no_replies_yet">Aucune réponse pour le moment</string>
   <!--Displayed for each user that reacted to a story when viewing replies-->
@@ -4032,26 +4165,38 @@ Nouvelle tentative…</string>
   <string name="StoryGroupReplyItem__copy">Copier</string>
   <!--Context menu item to delete a story response-->
   <string name="StoryGroupReplyItem__delete">Supprimer</string>
-  <!--Story settings page title-->
-  <string name="StorySettingsFragment__story_settings">Paramètres des histoires</string>
-  <!--Story settings private stories heading-->
-  <string name="StorySettingsFragment__private_stories">Histoires privées</string>
-  <!--Note at bottom of story settings regarding who can see private stories.-->
-  <string name="StorySettingsFragment__private_stories_can_only_be_viewed">Les histoires privées ne peuvent être vues que par les personnes que vous y avez ajoutées. Vous seul pouvez voir le nom de l’histoire.</string>
-  <!--Option label for creating a new private story-->
-  <string name="StorySettingsFragment__new_private_story">Nouvelle histoire privée</string>
   <!--Page title for My Story options-->
   <string name="MyStorySettingsFragment__my_story">Mon histoire</string>
   <!--Section heading for story visibility-->
-  <string name="MyStorySettingsFragment__who_can_see_this_story">Qui peut voir cette histoire</string>
+  <string name="MyStorySettingsFragment__who_can_view_this_story">Qui peut voir cette story ?</string>
   <!--Clickable option for selecting people to hide your story from-->
   <string name="MyStorySettingsFragment__hide_story_from">Cacher l’histoire pour</string>
-  <!--Summary of clickable option displaying how many people you have hidden your story from-->
+  <!--Privacy setting title for sending stories to all your signal connections-->
+  <string name="MyStorySettingsFragment__all_signal_connections">Toutes les connexions Signal</string>
+  <!--Privacy setting description for sending stories to all your signal connections-->
+  <string name="MyStorySettingsFragment__share_with_all_connections">Partager avec toutes les connexions</string>
+  <!--Privacy setting title for sending stories to all except the specified connections-->
+  <string name="MyStorySettingsFragment__all_except">Tout sauf…</string>
+  <!--Privacy setting description for sending stories to all except the specified connections-->
+  <string name="MyStorySettingsFragment__hide_your_story_from_specific_people">Cacher votre histoire de certains contacts</string>
+  <!--Summary of clickable option displaying how many people you have excluded from your story-->
+  <plurals name="MyStorySettingsFragment__d_people_excluded">
+    <item quantity="one">%1$d contact exclu</item>
+    <item quantity="many">%1$d contacts exclus</item>
+    <item quantity="other">%1$d contact(s) exclu(s)</item>
+  </plurals>
+  <!--Privacy setting title for only sharing your story with specified connections-->
+  <string name="MyStorySettingsFragment__only_share_with">Partager uniquement avec…</string>
+  <!--Privacy setting description for only sharing your story with specified connections-->
+  <string name="MyStorySettingsFragment__only_share_with_selected_people">Partager uniquement avec les contacts sélectionnés</string>
+  <!--Summary of clickable option displaying how many people you have included to send to in your story-->
   <plurals name="MyStorySettingsFragment__d_people">
     <item quantity="one">%1$d personne</item>
     <item quantity="many">%1$d personnes</item>
     <item quantity="other">%1$d personnes</item>
   </plurals>
+  <!--My story privacy fine print about what the privacy settings are for-->
+  <string name="MyStorySettingsFragment__choose_who_can_view_your_story">Choisissez qui peut voir votre histoire. Les modifications n\'affecteront pas les histoires déjà postées.</string>
   <!--Section header for options related to replies and reactions-->
   <string name="MyStorySettingsFragment__replies_amp_reactions">Réponses et réactions</string>
   <!--Switchable option for allowing replies and reactions on your stories-->
@@ -4060,10 +4205,10 @@ Nouvelle tentative…</string>
   <string name="MyStorySettingsFragment__let_people_who_can_view_your_story_react_and_reply">Laisser les personnes qui peuvent voir votre histoire réagir et y répondre</string>
   <!--Note about default sharing-->
   <string name="MyStorySettingsFragment__hide_your_story_from">Cacher votre histoire pour certaines personnes. Par défaut, votre histoire est partagée avec votre %1$s</string>
-  <!--Signal connections linked text that opens the Signal Connections sheet-->
-  <!-- Removed by excludeNonTranslatables <string name="MyStorySettingsFragment__signal_connections">Relations Signal.</string> -->
+  <!--Signal connections bolded text in the Signal Connections sheet-->
+  <string name="SignalConnectionsBottomSheet___signal_connections">Connexions Signal</string>
   <!--Displayed at the top of the signal connections sheet. Please remember to insert strong tag as required.-->
-  <string name="SignalConnectionsBottomSheet__signal_connections_are_people">Les <strong>relations Signal</strong> sont des personnes en qui vous avez choisi d’avoir confiance, que ce soit en :</string>
+  <string name="SignalConnectionsBottomSheet__signal_connections_are_people">Les connexions Signal correspondent aux contacts auxquels vous avez choisi de faire confiance, soit par :</string>
   <!--Signal connections sheet bullet point 1-->
   <string name="SignalConnectionsBottomSheet__starting_a_conversation">Engageant une conversation</string>
   <!--Signal connections sheet bullet point 2-->
@@ -4111,8 +4256,11 @@ Nouvelle tentative…</string>
   <!--Hint text for searching for a story text post recipient.-->
   <string name="TextStoryPostSendFragment__search">Chercher</string>
   <!--Toast shown when an unexpected error occurs while sending a text story-->
-  <!--Title for screen allowing user to hide "My Story" entries from specific people-->
-  <!-- Removed by excludeNonTranslatables <string name="HideStoryFromFragment__hide_story_from">Cacher l’histoire pour…</string> -->
+  <string name="TextStoryPostSendFragment__an_unexpected_error_occurred_try_again">Une erreur inattendue s\'est produite.</string>
+  <!--Title for screen allowing user to exclude "My Story" entries from specific people-->
+  <string name="ChangeMyStoryMembershipFragment__all_except">Tout sauf…</string>
+  <!--Title for screen allowing user to only share "My Story" entries with specific people-->
+  <string name="ChangeMyStoryMembershipFragment__only_share_with">Partager uniquement avec…</string>
   <!--Done button label for hide story from screen-->
   <string name="HideStoryFromFragment__done">Terminé</string>
   <!--Dialog title for first time adding something to a story-->
@@ -4205,7 +4353,12 @@ Nouvelle tentative…</string>
   <!--Content description for expand contacts chevron-->
   <string name="ExpandModel__view_more">En afficher plus</string>
   <string name="StoriesLinkPopup__visit_link">Visitez le lien</string>
-  <!--Duration and price information-->
+  <!--Gift price and duration, formatted as: {price} dot {n} day duration-->
+  <plurals name="GiftRowItem_s_dot_d_day_duration">
+    <item quantity="one">%1$s · %2$d jour</item>
+    <item quantity="many">%1$s · %2$d jours</item>
+    <item quantity="other">%1$s · %2$d jours</item>
+  </plurals>
   <!--Tagline for gift row items-->
   <string name="GiftRowItem__send_a_gift_badge">Envoyer un macaron cadeau</string>
   <!--Headline text on start fragment for gifting a badge-->
@@ -4256,18 +4409,46 @@ Nouvelle tentative…</string>
   <string name="ExpiredGiftSheetConfiguration__make_a_monthly_donation">Faire un don mensuel</string>
   <!--Expired gift sheet not now button-->
   <string name="ExpiredGiftSheetConfiguration__not_now">Pas maintenant</string>
+  <!--My Story label designating that we will only share with the selected viewers.-->
+  <string name="ContactSearchItems__only_share_with">Partager uniquement avec </string>
   <!--Label under name for private stories-->
   <plurals name="ContactSearchItems__private_story_d_viewers">
-    <item quantity="one">Histoire privée · %1$d spectateur</item>
-    <item quantity="many">Histoire privée · %1$d spectateurs</item>
-    <item quantity="other">Histoire privée · %1$d spectateurs</item>
+    <item quantity="one">Story privée · %1$d spectateur</item>
+    <item quantity="many">Story privée · %1$d spectateur</item>
+    <item quantity="other">Story privée · %1$d spectateurs</item>
   </plurals>
   <!--Label under name for group stories-->
   <plurals name="ContactSearchItems__group_story_d_viewers">
-    <item quantity="one">Histoire de groupe · %1$d spectateur</item>
-    <item quantity="many">Histoire de groupe · %1$d spectateurs</item>
-    <item quantity="other">Histoire de groupe · %1$d spectateurs</item>
+    <item quantity="one">Story de groupe · %1$d spectateur</item>
+    <item quantity="many">Story de groupe · %1$d spectateur</item>
+    <item quantity="other">Story de groupe · %1$d spectateurs</item>
   </plurals>
+  <!--Label under name for my story-->
+  <plurals name="ContactSearchItems__my_story_s_dot_d_viewers">
+    <item quantity="one">%1$s · %2$d spectateur</item>
+    <item quantity="many">%1$s · %2$d spectateur</item>
+    <item quantity="other">%1$s · %2$d spectateurs</item>
+  </plurals>
+  <!--Label under name for My Story when first sending to my story-->
+  <string name="ContactSearchItems__tap_to_choose_your_viewers">Appuyez pour choisir vos spectateurs</string>
+  <!--Label for context menu item to open story settings-->
+  <string name="ContactSearchItems__story_settings">Paramètres des histoires</string>
+  <!--Label for context menu item to remove a group story from contact results-->
+  <string name="ContactSearchItems__remove_story">Supprimer l\'histoire</string>
+  <!--Label for context menu item to delete a private story-->
+  <string name="ContactSearchItems__delete_story">Effacer l\'histoire</string>
+  <!--Dialog title for removing a group story-->
+  <string name="ContactSearchMediator__remove_group_story">Supprimer l\'histoire de groupe ?</string>
+  <!--Dialog message for removing a group story-->
+  <string name="ContactSearchMediator__this_will_remove">Cette action supprimera l\'histoire de cette liste. Vous pourrez toujours consulter les histoires de ce groupe. </string>
+  <!--Dialog action item for removing a group story-->
+  <string name="ContactSearchMediator__remove">Supprimer</string>
+  <!--Dialog title for deleting a private story-->
+  <string name="ContactSearchMediator__delete_story">Supprimer l’histoire ?</string>
+  <!--Dialog message for deleting a private story-->
+  <string name="ContactSearchMediator__delete_the_private">Supprimer l\'histoire privée « %1$s » ?</string>
+  <!--Dialog action item for deleting a private story-->
+  <string name="ContactSearchMediator__delete">Supprimer</string>
   <!--Gift expiry days remaining-->
   <plurals name="Gifts__d_days_remaining">
     <item quantity="one">%1$d jour restant</item>
@@ -4288,5 +4469,137 @@ Nouvelle tentative…</string>
   </plurals>
   <!--Gift expiry expired-->
   <string name="Gifts__expired">Expiré</string>
+  <!--Label indicating that a user can tap to advance to the next post in a story-->
+  <string name="StoryFirstTimeNavigationView__tap_to_advance">Appuyez pour avancer</string>
+  <!--Label indicating swipe direction to skip current story-->
+  <string name="StoryFirstTimeNavigationView__swipe_up_to_skip">Balayez vers le haut pour passer</string>
+  <!--Label indicating swipe direction to exit story viewer-->
+  <string name="StoryFirstTimeNavigationView__swipe_right_to_exit">Balayez vers la droite pour quitter</string>
+  <!--Button label to confirm understanding of story navigation-->
+  <string name="StoryFirstTimeNagivationView__got_it">Je l’ai</string>
+  <!--Content description for vertical context menu button in safety number sheet rows-->
+  <string name="SafetyNumberRecipientRowItem__open_context_menu">Ouvrir le menu contextuel</string>
+  <!--Sub-line when a user is verified.-->
+  <string name="SafetyNumberRecipientRowItem__s_dot_verified">%1$s · Vérifié</string>
+  <!--Sub-line when a user is verified.-->
+  <string name="SafetyNumberRecipientRowItem__verified">Confirmé</string>
+  <!--Title of safety number changes bottom sheet when showing individual records-->
+  <string name="SafetyNumberBottomSheetFragment__safety_number_changes">Modification du numéro de sécurité</string>
+  <!--Message of safety number changes bottom sheet when showing individual records-->
+  <string name="SafetyNumberBottomSheetFragment__the_following_people">Les contacts suivants ont peut-être réinstallé Signal ou changé d\'appareils. Appuyez sur le contact pour confirmer le nouveau numéro de sécurité. Cette étape est facultative.</string>
+  <!--Title of safety number changes bottom sheet when not showing individual records-->
+  <string name="SafetyNumberBottomSheetFragment__safety_number_checkup">Vérification du numéro de sécurité</string>
+  <!--Title of safety number changes bottom sheet when not showing individual records and user has seen review screen-->
+  <string name="SafetyNumberBottomSheetFragment__safety_number_checkup_complete">Vérification du numéro de sécurité terminée</string>
+  <!--Message of safety number changes bottom sheet when not showing individual records and user has seen review screen-->
+  <string name="SafetyNumberBottomSheetFragment__all_connections_have_been_reviewed">Toutes les connexions ont été revues, appuyez sur envoyer pour continuer.</string>
+  <!--Message of safety number changes bottom sheet when not showing individual records-->
+  <string name="SafetyNumberBottomSheetFragment__you_have_d_connections">%1$dde vos contacts ont sûrement réinstallé Signal ou changé d\'appareils. Avant de partager votre Story avec ces personnes, vérifiez leurs numéros de sécurité ou excluez-les de votre partage.</string>
+  <!--Menu action to launch safety number verification screen-->
+  <string name="SafetyNumberBottomSheetFragment__verify_safety_number">Confirmer le numéro de sécurité</string>
+  <!--Menu action to remove user from story-->
+  <string name="SafetyNumberBottomSheetFragment__remove_from_story">Supprimer de la Story</string>
+  <!--Action button at bottom of SafetyNumberBottomSheetFragment to send anyway-->
+  <string name="SafetyNumberBottomSheetFragment__send_anyway">Envoyer quand même</string>
+  <!--Action button at bottom of SafetyNumberBottomSheetFragment to review connections-->
+  <string name="SafetyNumberBottomSheetFragment__review_connections">Contrôler les relations</string>
+  <!--Empty state copy for SafetyNumberBottomSheetFragment-->
+  <string name="SafetyNumberBottomSheetFragment__no_more_recipients_to_show">Plus de destinataires à afficher</string>
+  <!--Done button on safety number review fragment-->
+  <string name="SafetyNumberReviewConnectionsFragment__done">Terminé</string>
+  <!--Title of safety number review fragment-->
+  <string name="SafetyNumberReviewConnectionsFragment__safety_number_changes">Modification du numéro de sécurité</string>
+  <!--Message of safety number review fragment-->
+  <plurals name="SafetyNumberReviewConnectionsFragment__d_recipients_may_have">
+    <item quantity="one">%1$d de vos contacts a sûrement réinstallé Signal ou changé d\'appareils. Appuyez sur le contact pour confirmer le nouveau numéro de sécurité. Cette étape est facultative.</item>
+    <item quantity="many">%1$d de vos contacts ont sûrement réinstallé Signal ou changé d\'appareils. Appuyez sur le contact pour confirmer le nouveau numéro de sécurité. Cette étape est facultative.</item>
+    <item quantity="other">%1$d de vos contacts ont sûrement réinstallé Signal ou changé d\'appareil. Appuyez sur le contact pour confirmer le nouveau numéro de sécurité. Cette étape est facultative.</item>
+  </plurals>
+  <!--Section header for 1:1 contacts in review fragment-->
+  <string name="SafetyNumberBucketRowItem__contacts">Contacts</string>
+  <!--Context menu label for distribution list headers in review fragment-->
+  <string name="SafetyNumberReviewConnectionsFragment__remove_all">Tout supprimer</string>
+  <!--Context menu label for 1:1 contacts to remove from send-->
+  <string name="SafetyNumberReviewConnectionsFragment__remove">Supprimer</string>
+  <!--Title of initial My Story settings configuration shown when sending to My Story for the first time-->
+  <string name="ChooseInitialMyStoryMembershipFragment__my_story_privacy">Confidentialité de ma Story</string>
+  <!--Subtitle of initial My Story settings configuration shown when sending to My Story for the first time-->
+  <string name="ChooseInitialMyStoryMembershipFragment__choose_who_can_see_posts_to_my_story_you_can_always_make_changes_in_settings">Choisissez les contacts autorisés à voir votre Story. Vous pouvez modifier ces préférences à tout moment dans les Paramètres.</string>
+  <!--All connections option for initial My Story settings configuration shown when sending to My Story for the first time-->
+  <string name="ChooseInitialMyStoryMembershipFragment__all_signal_connections">Toutes les relations Signal</string>
+  <!--All connections except option for initial My Story settings configuration shown when sending to My Story for the first time-->
+  <string name="ChooseInitialMyStoryMembershipFragment__all_except">Tout sauf…</string>
+  <!--Only with selected connections option for initial My Story settings configuration shown when sending to My Story for the first time-->
+  <string name="ChooseInitialMyStoryMembershipFragment__only_share_with">Partager uniquement avec…</string>
+  <!--Story info header sent heading-->
+  <string name="StoryInfoHeader__sent">Envoyé</string>
+  <!--Story info header received heading-->
+  <string name="StoryInfoHeader__received">Reçu</string>
+  <!--Story info header file size heading-->
+  <string name="StoryInfoHeader__file_size">Taille du fichier</string>
+  <!--Story info "Sent to" header-->
+  <string name="StoryInfoBottomSheetDialogFragment__sent_to">Envoyé à</string>
+  <!--Story info "Sent from" header-->
+  <string name="StoryInfoBottomSheetDialogFragment__sent_from">Envoyé de</string>
+  <!--Story Info context menu label-->
+  <string name="StoryInfoBottomSheetDialogFragment__info">Info</string>
+  <!--StoriesPrivacySettingsFragment-->
+  <!--Explanation about how stories are deleted and managed-->
+  <string name="StoriesPrivacySettingsFragment__stories_automatically_disappear">Les stories sont automatiquement détruites après 24 heures. Identifiez les spectateurs autorisés à voir votre story ou créez de nouvelles stories en identifiant des spectateurs ou des groupes spécifiques.</string>
+  <!--Preference title to turn off stories-->
+  <string name="StoriesPrivacySettingsFragment__turn_off_stories">Quitter la fonction stories</string>
+  <!--Preference summary to turn off stories-->
+  <string name="StoriesPrivacySettingsFragment__if_you_opt_out">Si vous décidez de quitter la fonction Stories, vous ne pourrez plus en partager ni en consulter.</string>
+  <!--Preference title to turn on stories-->
+  <string name="StoriesPrivacySettingsFragment__turn_on_stories">Activer la fonction Stories</string>
+  <!--Preference summary to turn on stories-->
+  <string name="StoriesPrivacySettingsFragment__share_and_view">Partagez et consultez les stories de vos contacts. Elles sont automatiquement détruites après 24 heures.</string>
+  <!--Dialog title to turn off stories-->
+  <string name="StoriesPrivacySettingsFragment__turn_off_stories_question">Désactiver les stories ?</string>
+  <!--Dialog message to turn off stories-->
+  <string name="StoriesPrivacySettingsFragment__you_will_no_longer_be_able_to">Vous ne pourrez plus partager ni consulter de stories. Celles que vous avez récemment partagées restent visibles par vos contacts jusqu\'à leur expiration.</string>
+  <!--Page title when launched from stories landing screen-->
+  <string name="StoriesPrivacySettingsFragment__story_privacy">Confidentialité de la story</string>
+  <!--GroupStorySettingsFragment-->
+  <!--Section header for who can view a group story-->
+  <string name="GroupStorySettingsFragment__who_can_view_this_story">Qui peut voir cette story ?</string>
+  <!--Explanation of who can view a group story-->
+  <string name="GroupStorySettingsFragment__members_of_the_group_s">Les membres de ce groupe \" %1$s \" peuvent consulter et commenter votre story. Vous pouvez modifier les participants du groupe en question.</string>
+  <!--Preference label for removing this group story-->
+  <string name="GroupStorySettingsFragment__remove_group_story">Supprimer la story du groupe</string>
+  <!--Generic title for overflow menus-->
+  <string name="OverflowMenu__overflow_menu">Menu de débordement</string>
+  <!--SMS Export Service-->
+  <!--Displayed in the notification while export is running-->
+  <string name="SignalSmsExportService__exporting_messages">Exportation des messages…</string>
+  <!--ExportYourSmsMessagesFragment-->
+  <!--Title of the screen-->
+  <string name="ExportYourSmsMessagesFragment__export_your_sms_messages">Exportez vos SMS</string>
+  <!--Button label to begin export-->
+  <string name="ExportYourSmsMessagesFragment__continue">Poursuivre</string>
+  <!--ExportingSmsMessagesFragment-->
+  <!--Title of the screen-->
+  <string name="ExportingSmsMessagesFragment__exporting_sms_messages">Exportation de SMS</string>
+  <!--Progress indicator for export-->
+  <string name="ExportingSmsMessagesFragment__exporting_d_of_d">Exportation de %1$d sur %2$d…</string>
+  <!--ChooseANewDefaultSmsAppFragment-->
+  <!--Title of the screen-->
+  <string name="ChooseANewDefaultSmsAppFragment__choose_a_new">Choisissez une nouvelle application SMS par défaut</string>
+  <!--Button label to launch picker-->
+  <string name="ChooseANewDefaultSmsAppFragment__continue">Poursuivre</string>
+  <!--RemoveSmsMessagesDialogFragment-->
+  <!--Action button to keep messages-->
+  <string name="RemoveSmsMessagesDialogFragment__keep_messages">Conserver les messages</string>
+  <!--Action button to remove messages-->
+  <string name="RemoveSmsMessagesDialogFragment__remove_messages">Supprimer des messages</string>
+  <!--Title of dialog-->
+  <string name="RemoveSmsMessagesDialogFragment__remove_sms_messages">Supprimer vos SMS de Signal ?</string>
+  <!--Message of dialog-->
+  <string name="RemoveSmsMessagesDialogFragment__you_have_changed">Vous avez changé votre application SMS par défaut. Souhaitez-vous supprimer les SMS de Signal ?</string>
+  <!--SetSignalAsDefaultSmsAppFragment-->
+  <!--Title of the screen-->
+  <string name="SetSignalAsDefaultSmsAppFragment__first_set_signal_as_the_default_sms_app">Commencez par définir Signal comme application par défaut pour vos messages</string>
+  <!--Button label to start export-->
+  <string name="SetSignalAsDefaultSmsAppFragment__next">Suivant</string>
   <!--EOF-->
 </resources>

@@ -15,12 +15,12 @@ import org.signal.ringrtc.CallManager
 import org.thoughtcrime.securesms.BuildConfig
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.components.settings.DSLConfiguration
-import org.thoughtcrime.securesms.components.settings.DSLSettingsAdapter
 import org.thoughtcrime.securesms.components.settings.DSLSettingsFragment
 import org.thoughtcrime.securesms.components.settings.DSLSettingsText
 import org.thoughtcrime.securesms.components.settings.configure
 import org.thoughtcrime.securesms.database.LocalMetricsDatabase
 import org.thoughtcrime.securesms.database.LogDatabase
+import org.thoughtcrime.securesms.database.MegaphoneDatabase
 import org.thoughtcrime.securesms.database.SignalDatabase
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies
 import org.thoughtcrime.securesms.jobmanager.JobTracker
@@ -35,10 +35,13 @@ import org.thoughtcrime.securesms.jobs.StorageForcePushJob
 import org.thoughtcrime.securesms.jobs.SubscriptionKeepAliveJob
 import org.thoughtcrime.securesms.jobs.SubscriptionReceiptRequestResponseJob
 import org.thoughtcrime.securesms.keyvalue.SignalStore
+import org.thoughtcrime.securesms.megaphone.MegaphoneRepository
+import org.thoughtcrime.securesms.megaphone.Megaphones
 import org.thoughtcrime.securesms.payments.DataExportUtil
 import org.thoughtcrime.securesms.storage.StorageSyncHelper
 import org.thoughtcrime.securesms.util.ConversationUtil
 import org.thoughtcrime.securesms.util.FeatureFlags
+import org.thoughtcrime.securesms.util.adapter.mapping.MappingAdapter
 import org.thoughtcrime.securesms.util.navigation.safeNavigate
 import java.util.Optional
 import java.util.concurrent.TimeUnit
@@ -48,7 +51,7 @@ class InternalSettingsFragment : DSLSettingsFragment(R.string.preferences__inter
 
   private lateinit var viewModel: InternalSettingsViewModel
 
-  override fun bindAdapter(adapter: DSLSettingsAdapter) {
+  override fun bindAdapter(adapter: MappingAdapter) {
     val repository = InternalSettingsRepository(requireContext())
     val factory = InternalSettingsViewModel.Factory(repository)
     viewModel = ViewModelProvider(this, factory)[InternalSettingsViewModel::class.java]
@@ -432,6 +435,19 @@ class InternalSettingsFragment : DSLSettingsFragment(R.string.preferences__inter
       )
 
       clickPref(
+        title = DSLSettingsText.from(R.string.preferences__internal_reset_donation_megaphone),
+        onClick = {
+          SignalDatabase.remoteMegaphones.debugRemoveAll()
+          MegaphoneDatabase.getInstance(ApplicationDependencies.getApplication()).let {
+            it.delete(Megaphones.Event.REMOTE_MEGAPHONE)
+            it.markFirstVisible(Megaphones.Event.DONATE_Q2_2022, System.currentTimeMillis() - TimeUnit.DAYS.toMillis(31))
+          }
+          // Force repository database cache refresh
+          MegaphoneRepository(ApplicationDependencies.getApplication()).onFirstEverAppLaunch()
+        }
+      )
+
+      clickPref(
         title = DSLSettingsText.from(R.string.preferences__internal_fetch_release_channel),
         onClick = {
           SignalStore.releaseChannelValues().previousManifestMd5 = ByteArray(0)
@@ -483,6 +499,15 @@ class InternalSettingsFragment : DSLSettingsFragment(R.string.preferences__inter
         isChecked = state.disableStories,
         onClick = {
           viewModel.toggleStories()
+        }
+      )
+
+      clickPref(
+        title = DSLSettingsText.from(R.string.preferences__internal_clear_onboarding_state),
+        summary = DSLSettingsText.from(R.string.preferences__internal_clears_onboarding_flag_and_triggers_download_of_onboarding_stories),
+        isEnabled = state.canClearOnboardingState,
+        onClick = {
+          viewModel.onClearOnboardingState()
         }
       )
     }

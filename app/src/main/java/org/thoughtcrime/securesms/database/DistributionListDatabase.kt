@@ -47,6 +47,7 @@ class DistributionListDatabase constructor(context: Context?, databaseHelper: Si
     const val RECIPIENT_ID = ListTable.RECIPIENT_ID
     const val DISTRIBUTION_ID = ListTable.DISTRIBUTION_ID
     const val LIST_TABLE_NAME = ListTable.TABLE_NAME
+    const val PRIVACY_MODE = ListTable.PRIVACY_MODE
 
     fun insertInitialDistributionListAtCreationTime(db: net.zetetic.database.sqlcipher.SQLiteDatabase) {
       val recipientId = db.insert(
@@ -320,7 +321,19 @@ class DistributionListDatabase constructor(context: Context?, databaseHelper: Si
   }
 
   fun getList(listId: DistributionListId): DistributionListRecord? {
-    readableDatabase.query(ListTable.TABLE_NAME, null, "${ListTable.ID} = ? AND ${ListTable.IS_NOT_DELETED}", SqlUtil.buildArgs(listId), null, null, null).use { cursor ->
+    return getListByQuery("${ListTable.ID} = ? AND ${ListTable.IS_NOT_DELETED}", SqlUtil.buildArgs(listId))
+  }
+
+  fun getList(recipientId: RecipientId): DistributionListRecord? {
+    return getListByQuery("${ListTable.RECIPIENT_ID} = ? AND ${ListTable.IS_NOT_DELETED}", SqlUtil.buildArgs(recipientId))
+  }
+
+  fun getListByDistributionId(distributionId: DistributionId): DistributionListRecord? {
+    return getListByQuery("${ListTable.DISTRIBUTION_ID} = ? AND ${ListTable.IS_NOT_DELETED}", SqlUtil.buildArgs(distributionId))
+  }
+
+  private fun getListByQuery(query: String, args: Array<String>): DistributionListRecord? {
+    readableDatabase.query(ListTable.TABLE_NAME, null, query, args, null, null, null).use { cursor ->
       return if (cursor.moveToFirst()) {
         val id: DistributionListId = DistributionListId.from(cursor.requireLong(ListTable.ID))
         val privacyMode: DistributionListPrivacyMode = cursor.requireObject(ListTable.PRIVACY_MODE, DistributionListPrivacyMode.Serializer)
@@ -340,6 +353,24 @@ class DistributionListDatabase constructor(context: Context?, databaseHelper: Si
         null
       }
     }
+  }
+
+  /**
+   * Gets the raw string value of distribution ID of the desired row. Added for additional logging around the UUID issues we've seen.
+   */
+  fun getRawDistributionId(listId: DistributionListId): String? {
+    return readableDatabase
+      .select(ListTable.DISTRIBUTION_ID)
+      .from(ListTable.TABLE_NAME)
+      .where("${ListTable.ID} = ?", listId)
+      .run()
+      .use { cursor ->
+        if (cursor.moveToFirst()) {
+          cursor.requireString(ListTable.DISTRIBUTION_ID)
+        } else {
+          null
+        }
+      }
   }
 
   fun getListForStorageSync(listId: DistributionListId): DistributionListRecord? {
@@ -367,6 +398,16 @@ class DistributionListDatabase constructor(context: Context?, databaseHelper: Si
 
   fun getDistributionId(listId: DistributionListId): DistributionId? {
     readableDatabase.query(ListTable.TABLE_NAME, arrayOf(ListTable.DISTRIBUTION_ID), "${ListTable.ID} = ? AND ${ListTable.IS_NOT_DELETED}", SqlUtil.buildArgs(listId), null, null, null).use { cursor ->
+      return if (cursor.moveToFirst()) {
+        DistributionId.from(cursor.requireString(ListTable.DISTRIBUTION_ID))
+      } else {
+        null
+      }
+    }
+  }
+
+  fun getDistributionId(recipientId: RecipientId): DistributionId? {
+    readableDatabase.query(ListTable.TABLE_NAME, arrayOf(ListTable.DISTRIBUTION_ID), "${ListTable.RECIPIENT_ID} = ? AND ${ListTable.IS_NOT_DELETED}", SqlUtil.buildArgs(recipientId), null, null, null).use { cursor ->
       return if (cursor.moveToFirst()) {
         DistributionId.from(cursor.requireString(ListTable.DISTRIBUTION_ID))
       } else {
@@ -488,6 +529,13 @@ class DistributionListDatabase constructor(context: Context?, databaseHelper: Si
       .run()
   }
 
+  fun removeAllMembers(listId: DistributionListId, privacyMode: DistributionListPrivacyMode) {
+    writableDatabase
+      .delete(MembershipTable.TABLE_NAME)
+      .where("${MembershipTable.LIST_ID} = ? AND ${MembershipTable.PRIVACY_MODE} = ?", listId.serialize(), privacyMode.serialize())
+      .run()
+  }
+
   fun remapRecipient(oldId: RecipientId, newId: RecipientId) {
     val values = ContentValues().apply {
       put(MembershipTable.RECIPIENT_ID, newId.serialize())
@@ -515,7 +563,7 @@ class DistributionListDatabase constructor(context: Context?, databaseHelper: Si
   }
 
   fun getRecipientIdForSyncRecord(record: SignalStoryDistributionListRecord): RecipientId? {
-    val uuid: UUID = UuidUtil.parseOrNull(record.identifier) ?: return null
+    val uuid: UUID = requireNotNull(UuidUtil.parseOrNull(record.identifier)) { "Incoming record did not have a valid identifier." }
     val distributionId = DistributionId.from(uuid)
 
     return readableDatabase.query(
@@ -592,7 +640,7 @@ class DistributionListDatabase constructor(context: Context?, databaseHelper: Si
     SignalDatabase.recipients.updateStorageId(recipientId, update.new.id.raw)
 
     if (update.new.deletedAtTimestamp > 0L) {
-      if (distributionId.asUuid().equals(DistributionId.MY_STORY.asUuid())) {
+      if (distributionId == DistributionId.MY_STORY) {
         Log.w(TAG, "Refusing to delete My Story.")
         return
       }
@@ -643,5 +691,34 @@ class DistributionListDatabase constructor(context: Context?, databaseHelper: Si
 
   private fun createUniqueNameForUnknownDistributionId(): String {
     return "DELETED-${UUID.randomUUID()}"
+  }
+
+  fun excludeFromStory(recipientId: RecipientId, record: DistributionListRecord) {
+    excludeAllFromStory(listOf(recipientId), record)
+  }
+
+  fun excludeAllFromStory(recipientIds: List<RecipientId>, record: DistributionListRecord) {
+    writableDatabase.withinTransaction {
+      when (record.privacyMode) {
+        DistributionListPrivacyMode.ONLY_WITH -> {
+          recipientIds.forEach {
+            removeMemberFromList(record.id, record.privacyMode, it)
+          }
+        }
+        DistributionListPrivacyMode.ALL_EXCEPT -> {
+          recipientIds.forEach {
+            addMemberToList(record.id, record.privacyMode, it)
+          }
+        }
+        DistributionListPrivacyMode.ALL -> {
+          removeAllMembers(record.id, DistributionListPrivacyMode.ALL_EXCEPT)
+          setPrivacyMode(record.id, DistributionListPrivacyMode.ALL_EXCEPT)
+
+          recipientIds.forEach {
+            addMemberToList(record.id, DistributionListPrivacyMode.ALL_EXCEPT, it)
+          }
+        }
+      }
+    }
   }
 }

@@ -7,10 +7,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.groups.SelectionLimits
+import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.stories.settings.custom.PrivateStorySettingsFragment
 import org.thoughtcrime.securesms.stories.settings.my.MyStorySettingsFragment
+import org.thoughtcrime.securesms.stories.settings.privacy.ChooseInitialMyStoryMembershipBottomSheetDialogFragment
 import org.thoughtcrime.securesms.util.SpanUtil
 import org.thoughtcrime.securesms.util.adapter.mapping.PagingMappingAdapter
 import org.thoughtcrime.securesms.util.livedata.LiveDataUtil
@@ -21,10 +25,11 @@ class ContactSearchMediator(
   selectionLimits: SelectionLimits,
   displayCheckBox: Boolean,
   mapStateToConfiguration: (ContactSearchState) -> ContactSearchConfiguration,
-  private val contactSelectionPreFilter: (View?, Set<ContactSearchKey>) -> Set<ContactSearchKey> = { _, s -> s }
+  private val contactSelectionPreFilter: (View?, Set<ContactSearchKey>) -> Set<ContactSearchKey> = { _, s -> s },
+  performSafetyNumberChecks: Boolean = true
 ) {
 
-  private val viewModel: ContactSearchViewModel = ViewModelProvider(fragment, ContactSearchViewModel.Factory(selectionLimits, ContactSearchRepository())).get(ContactSearchViewModel::class.java)
+  private val viewModel: ContactSearchViewModel = ViewModelProvider(fragment, ContactSearchViewModel.Factory(selectionLimits, ContactSearchRepository(), performSafetyNumberChecks)).get(ContactSearchViewModel::class.java)
 
   init {
 
@@ -35,7 +40,7 @@ class ContactSearchMediator(
       mappingAdapter = adapter,
       displayCheckBox = displayCheckBox,
       recipientListener = this::toggleSelection,
-      storyListener = this::toggleSelection,
+      storyListener = this::toggleStorySelection,
       storyContextMenuCallbacks = StoryContextMenuCallbacks(),
       expandListener = { viewModel.expandSection(it.sectionKey) }
     )
@@ -79,12 +84,24 @@ class ContactSearchMediator(
     return viewModel.selectionState
   }
 
+  fun getErrorEvents(): Observable<ContactSearchError> {
+    return viewModel.errorEventsStream.observeOn(AndroidSchedulers.mainThread())
+  }
+
   fun addToVisibleGroupStories(groupStories: Set<ContactSearchKey.RecipientSearchKey.Story>) {
     viewModel.addToVisibleGroupStories(groupStories)
   }
 
   fun refresh() {
     viewModel.refresh()
+  }
+
+  private fun toggleStorySelection(view: View, contactSearchData: ContactSearchData.Story, isSelected: Boolean) {
+    if (contactSearchData.recipient.isMyStory && !SignalStore.storyValues().userHasBeenNotifiedAboutStories) {
+      ChooseInitialMyStoryMembershipBottomSheetDialogFragment.show(fragment.childFragmentManager)
+    } else {
+      toggleSelection(view, contactSearchData, isSelected)
+    }
   }
 
   private fun toggleSelection(view: View, contactSearchData: ContactSearchData, isSelected: Boolean) {

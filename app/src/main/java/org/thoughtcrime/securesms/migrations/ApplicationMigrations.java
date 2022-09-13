@@ -103,9 +103,14 @@ public class ApplicationMigrations {
     static final int STORY_DISTRIBUTION_LIST_SYNC  = 59;
     static final int EMOJI_VERSION_7               = 60;
     static final int MY_STORY_PRIVACY_MODE         = 61;
+    static final int REFRESH_EXPIRING_CREDENTIAL   = 62;
+    static final int EMOJI_SEARCH_INDEX_10         = 63;
+    static final int REFRESH_PNI_REGISTRATION_ID   = 64;
+    static final int KBS_MIGRATION_2               = 65;
+    static final int PNI_2                         = 66;
   }
 
-  public static final int CURRENT_VERSION = 61;
+  public static final int CURRENT_VERSION = 66;
 
   /**
    * This *must* be called after the {@link JobManager} has been instantiated, but *before* the call
@@ -449,6 +454,26 @@ public class ApplicationMigrations {
 
     if (lastSeenVersion < Version.MY_STORY_PRIVACY_MODE) {
       jobs.put(Version.MY_STORY_PRIVACY_MODE, new SyncDistributionListsMigrationJob());
+    }
+
+    if (lastSeenVersion < Version.REFRESH_EXPIRING_CREDENTIAL) {
+      jobs.put(Version.REFRESH_EXPIRING_CREDENTIAL, new AttributesMigrationJob());
+    }
+
+    if (lastSeenVersion < Version.EMOJI_SEARCH_INDEX_10) {
+      jobs.put(Version.EMOJI_SEARCH_INDEX_10, new EmojiDownloadMigrationJob());
+    }
+
+    if (lastSeenVersion < Version.REFRESH_PNI_REGISTRATION_ID) {
+      jobs.put(Version.REFRESH_PNI_REGISTRATION_ID, new AttributesMigrationJob());
+    }
+
+    if (lastSeenVersion < Version.KBS_MIGRATION_2) {
+      jobs.put(Version.KBS_MIGRATION_2, new KbsEnclaveMigrationJob());
+    }
+
+    if (lastSeenVersion < Version.PNI_2) {
+      jobs.put(Version.PNI_2, new PniMigrationJob());
     }
 
     return jobs;

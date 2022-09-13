@@ -51,7 +51,6 @@ import org.thoughtcrime.securesms.service.webrtc.state.WebRtcEphemeralState;
 import org.thoughtcrime.securesms.service.webrtc.state.WebRtcServiceState;
 import org.thoughtcrime.securesms.util.AppForegroundObserver;
 import org.thoughtcrime.securesms.util.BubbleUtil;
-import org.thoughtcrime.securesms.util.NetworkUtil;
 import org.thoughtcrime.securesms.util.RecipientAccessList;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
 import org.thoughtcrime.securesms.util.Util;
@@ -317,8 +316,8 @@ private void processStateless(@NonNull Function1<WebRtcEphemeralState, WebRtcEph
     process((s, p) -> p.handleSetUserAudioDevice(s, desiredDevice));
   }
 
-  public void setTelecomApproved(long callId) {
-    process((s, p) -> p.handleSetTelecomApproved(s, callId));
+  public void setTelecomApproved(long callId, @NonNull RecipientId recipientId) {
+    process((s, p) -> p.handleSetTelecomApproved(s, callId, recipientId));
   }
 
   public void dropCall(long callId) {
@@ -385,6 +384,21 @@ private void processStateless(@NonNull Function1<WebRtcEphemeralState, WebRtcEph
         });
       } catch (IOException | VerificationFailedException | CallException e) {
         Log.e(TAG, "error peeking for ringing check", e);
+      }
+    });
+  }
+
+  void requestGroupMembershipToken(@NonNull GroupId.V2 groupId, int groupCallHashCode) {
+    networkExecutor.execute(() -> {
+      try {
+        GroupExternalCredential credential = GroupManager.getGroupExternalCredential(context, groupId);
+        process((s, p) -> p.handleGroupMembershipProofResponse(s, groupCallHashCode, credential.getTokenBytes().toByteArray()));
+      } catch (IOException e) {
+        Log.w(TAG, "Unable to get group membership proof from service", e);
+        process((s, p) -> p.handleGroupCallEnded(s, groupCallHashCode, GroupCall.GroupCallEndReason.SFU_CLIENT_FAILED_TO_JOIN));
+      } catch (VerificationFailedException e) {
+        Log.w(TAG, "Unable to verify group membership proof", e);
+        process((s, p) -> p.handleGroupCallEnded(s, groupCallHashCode, GroupCall.GroupCallEndReason.DEVICE_EXPLICITLY_DISCONNECTED));
       }
     });
   }
@@ -513,12 +527,7 @@ private void processStateless(@NonNull Function1<WebRtcEphemeralState, WebRtcEph
   }
 
   @Override public void onNetworkRouteChanged(Remote remote, NetworkRoute networkRoute) {
-    Log.i(TAG, "onNetworkRouteChanged: localAdapterType: " + networkRoute.getLocalAdapterType());
-    try {
-      callManager.updateBandwidthMode(NetworkUtil.getCallingBandwidthMode(context, networkRoute.getLocalAdapterType()));
-    } catch (CallException e) {
-      Log.w(TAG, "Unable to update bandwidth mode on CallManager", e);
-    }
+    process((s, p) -> p.handleNetworkRouteChanged(s, networkRoute));
   }
 
   @Override 
@@ -639,7 +648,7 @@ private void processStateless(@NonNull Function1<WebRtcEphemeralState, WebRtcEph
     SignalServiceCallMessage callMessage   = SignalServiceCallMessage.forOpaque(opaqueMessage, true, null);
 
     networkExecutor.execute(() -> {
-      Recipient recipient = Recipient.resolved(RecipientId.from(ServiceId.from(uuid), null));
+      Recipient recipient = Recipient.resolved(RecipientId.from(ServiceId.from(uuid)));
       if (recipient.isBlocked()) {
         return;
       }
@@ -750,31 +759,7 @@ private void processStateless(@NonNull Function1<WebRtcEphemeralState, WebRtcEph
   @Override
   public void requestMembershipProof(@NonNull final GroupCall groupCall) {
     Log.i(TAG, "requestMembershipProof():");
-
-    Recipient recipient = serviceState.getCallInfoState().getCallRecipient();
-    if (!recipient.isPushV2Group()) {
-      Log.i(TAG, "Request membership proof for non-group");
-      return;
-    }
-
-    GroupCall currentGroupCall = serviceState.getCallInfoState().getGroupCall();
-    if (currentGroupCall == null || currentGroupCall.hashCode() != groupCall.hashCode()) {
-      Log.i(TAG, "Skipping group membership proof request, requested group call does not match current group call");
-      return;
-    }
-
-    networkExecutor.execute(() -> {
-      try {
-        GroupExternalCredential credential = GroupManager.getGroupExternalCredential(context, recipient.getGroupId().get().requireV2());
-        process((s, p) -> p.handleGroupRequestMembershipProof(s, groupCall.hashCode(), credential.getTokenBytes().toByteArray()));
-      } catch (IOException e) {
-        Log.w(TAG, "Unable to get group membership proof from service", e);
-        onEnded(groupCall, GroupCall.GroupCallEndReason.SFU_CLIENT_FAILED_TO_JOIN);
-      } catch (VerificationFailedException e) {
-        Log.w(TAG, "Unable to verify group membership proof", e);
-        onEnded(groupCall, GroupCall.GroupCallEndReason.DEVICE_EXPLICITLY_DISCONNECTED);
-      }
-    });
+    process((s, p) -> p.handleGroupRequestMembershipProof(s, groupCall.hashCode()));
   }
 
   @Override
@@ -825,6 +810,7 @@ private void processStateless(@NonNull Function1<WebRtcEphemeralState, WebRtcEph
       WebRtcViewModel.GroupCallState groupCallState = s.getCallInfoState().getGroupCallState();
 
       if (callState == CALL_INCOMING && (groupCallState == IDLE || groupCallState.isRinging())) {
+        Log.i(TAG, "Starting call activity from foreground listener");
         startCallCardActivityIfPossible();
       }
       ApplicationDependencies.getAppForegroundObserver().removeListener(this);

@@ -10,7 +10,6 @@ import org.thoughtcrime.securesms.dependencies.ApplicationDependencies
 import org.thoughtcrime.securesms.jobs.PushNotificationReceiveJob
 import org.thoughtcrime.securesms.messages.RestStrategy
 import org.thoughtcrime.securesms.util.concurrent.SerialMonoLifoExecutor
-import java.lang.IllegalStateException
 
 /**
  * Our goals with FCM processing are as follows:
@@ -40,8 +39,11 @@ object FcmFetchManager {
   @Volatile
   private var startedForeground = false
 
+  /**
+   * @return True if a service was successfully started, otherwise false.
+   */
   @JvmStatic
-  fun enqueue(context: Context, foreground: Boolean) {
+  fun enqueue(context: Context, foreground: Boolean): Boolean {
     synchronized(this) {
       try {
         if (foreground) {
@@ -61,10 +63,13 @@ object FcmFetchManager {
           activeCount++
           Log.i(TAG, "Incrementing active count to $activeCount")
         }
-      } catch (e: IllegalStateException) {
+      } catch (e: Exception) {
         Log.w(TAG, "Failed to start service!", e)
+        return false
       }
     }
+
+    return true
   }
 
   private fun fetch(context: Context) {

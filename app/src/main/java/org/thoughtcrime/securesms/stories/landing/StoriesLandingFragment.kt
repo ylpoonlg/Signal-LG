@@ -25,20 +25,19 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.components.settings.DSLConfiguration
-import org.thoughtcrime.securesms.components.settings.DSLSettingsAdapter
 import org.thoughtcrime.securesms.components.settings.DSLSettingsFragment
 import org.thoughtcrime.securesms.components.settings.DSLSettingsText
 import org.thoughtcrime.securesms.components.settings.configure
 import org.thoughtcrime.securesms.conversation.ConversationIntents
 import org.thoughtcrime.securesms.conversation.mutiselect.forward.MultiselectForwardFragment
 import org.thoughtcrime.securesms.conversation.mutiselect.forward.MultiselectForwardFragmentArgs
-import org.thoughtcrime.securesms.conversation.ui.error.SafetyNumberChangeDialog
 import org.thoughtcrime.securesms.database.model.MediaMmsMessageRecord
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord
 import org.thoughtcrime.securesms.database.model.StoryViewState
 import org.thoughtcrime.securesms.main.Material3OnScrollHelperBinder
 import org.thoughtcrime.securesms.mediasend.v2.MediaSelectionActivity
 import org.thoughtcrime.securesms.permissions.Permissions
+import org.thoughtcrime.securesms.safety.SafetyNumberBottomSheet
 import org.thoughtcrime.securesms.stories.StoryTextPostModel
 import org.thoughtcrime.securesms.stories.StoryViewerArgs
 import org.thoughtcrime.securesms.stories.dialogs.StoryContextMenu
@@ -49,6 +48,7 @@ import org.thoughtcrime.securesms.stories.tabs.ConversationListTab
 import org.thoughtcrime.securesms.stories.tabs.ConversationListTabsViewModel
 import org.thoughtcrime.securesms.stories.viewer.StoryViewerActivity
 import org.thoughtcrime.securesms.util.LifecycleDisposable
+import org.thoughtcrime.securesms.util.adapter.mapping.MappingAdapter
 import org.thoughtcrime.securesms.util.fragments.requireListener
 import org.thoughtcrime.securesms.util.visible
 import java.util.concurrent.TimeUnit
@@ -75,7 +75,7 @@ class StoriesLandingFragment : DSLSettingsFragment(layoutId = R.layout.stories_l
 
   private val tabsViewModel: ConversationListTabsViewModel by viewModels(ownerProducer = { requireActivity() })
 
-  private lateinit var adapter: DSLSettingsAdapter
+  private lateinit var adapter: MappingAdapter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -92,7 +92,7 @@ class StoriesLandingFragment : DSLSettingsFragment(layoutId = R.layout.stories_l
     viewModel.isTransitioningToAnotherScreen = false
   }
 
-  override fun bindAdapter(adapter: DSLSettingsAdapter) {
+  override fun bindAdapter(adapter: MappingAdapter) {
     this.adapter = adapter
 
     StoriesLandingItem.register(adapter)
@@ -172,9 +172,6 @@ class StoriesLandingFragment : DSLSettingsFragment(layoutId = R.layout.stories_l
         customPref(
           MyStoriesItem.Model(
             onClick = {
-              startActivityIfAble(Intent(requireContext(), MyStoriesActivity::class.java))
-            },
-            onClickThumbnail = {
               cameraFab.performClick()
             }
           )
@@ -207,44 +204,7 @@ class StoriesLandingFragment : DSLSettingsFragment(layoutId = R.layout.stories_l
     return StoriesLandingItem.Model(
       data = data,
       onRowClick = { model, preview ->
-        if (model.data.storyRecipient.isMyStory) {
-          startActivityIfAble(Intent(requireContext(), MyStoriesActivity::class.java))
-        } else if (model.data.primaryStory.messageRecord.isOutgoing && model.data.primaryStory.messageRecord.isFailed) {
-          if (model.data.primaryStory.messageRecord.isIdentityMismatchFailure) {
-            SafetyNumberChangeDialog.show(requireContext(), childFragmentManager, model.data.primaryStory.messageRecord)
-          } else {
-            StoryDialogs.resendStory(requireContext()) {
-              lifecycleDisposable += viewModel.resend(model.data.primaryStory.messageRecord).subscribe()
-            }
-          }
-        } else {
-          val options = ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), preview, ViewCompat.getTransitionName(preview) ?: "")
-
-          val record = model.data.primaryStory.messageRecord as MmsMessageRecord
-          val blur = record.slideDeck.thumbnailSlide?.placeholderBlur
-          val (text: StoryTextPostModel?, image: Uri?) = if (record.storyType.isTextStory) {
-            StoryTextPostModel.parseFrom(record) to null
-          } else {
-            null to record.slideDeck.thumbnailSlide?.uri
-          }
-
-          startActivityIfAble(
-            StoryViewerActivity.createIntent(
-              context = requireContext(),
-              storyViewerArgs = StoryViewerArgs(
-                recipientId = model.data.storyRecipient.id,
-                storyId = -1L,
-                isInHiddenStoryMode = model.data.isHidden,
-                storyThumbTextModel = text,
-                storyThumbUri = image,
-                storyThumbBlur = blur,
-                recipientIds = viewModel.getRecipientIds(model.data.isHidden, model.data.storyViewState == StoryViewState.UNVIEWED),
-                isUnviewedOnly = model.data.storyViewState == StoryViewState.UNVIEWED
-              )
-            ),
-            options.toBundle()
-          )
-        }
+        openStoryViewer(model, preview, false)
       },
       onForwardStory = {
         MultiselectForwardFragmentArgs.create(requireContext(), it.data.primaryStory.multiselectCollection.toSet()) { args ->
@@ -269,8 +229,58 @@ class StoriesLandingFragment : DSLSettingsFragment(layoutId = R.layout.stories_l
       },
       onDeleteStory = {
         handleDeleteStory(it)
+      },
+      onInfo = { model, preview ->
+        openStoryViewer(model, preview, true)
+      },
+      onAvatarClick = {
+        cameraFab.performClick()
       }
     )
+  }
+
+  private fun openStoryViewer(model: StoriesLandingItem.Model, preview: View, isFromInfoContextMenuAction: Boolean) {
+    if (model.data.storyRecipient.isMyStory) {
+      startActivityIfAble(Intent(requireContext(), MyStoriesActivity::class.java))
+    } else if (model.data.primaryStory.messageRecord.isOutgoing && model.data.primaryStory.messageRecord.isFailed) {
+      if (model.data.primaryStory.messageRecord.isIdentityMismatchFailure) {
+        SafetyNumberBottomSheet
+          .forMessageRecord(requireContext(), model.data.primaryStory.messageRecord)
+          .show(childFragmentManager)
+      } else {
+        StoryDialogs.resendStory(requireContext()) {
+          lifecycleDisposable += viewModel.resend(model.data.primaryStory.messageRecord).subscribe()
+        }
+      }
+    } else {
+      val options = ActivityOptionsCompat.makeSceneTransitionAnimation(requireActivity(), preview, ViewCompat.getTransitionName(preview) ?: "")
+
+      val record = model.data.primaryStory.messageRecord as MmsMessageRecord
+      val blur = record.slideDeck.thumbnailSlide?.placeholderBlur
+      val (text: StoryTextPostModel?, image: Uri?) = if (record.storyType.isTextStory) {
+        StoryTextPostModel.parseFrom(record) to null
+      } else {
+        null to record.slideDeck.thumbnailSlide?.uri
+      }
+
+      startActivityIfAble(
+        StoryViewerActivity.createIntent(
+          context = requireContext(),
+          storyViewerArgs = StoryViewerArgs(
+            recipientId = model.data.storyRecipient.id,
+            storyId = -1L,
+            isInHiddenStoryMode = model.data.isHidden,
+            storyThumbTextModel = text,
+            storyThumbUri = image,
+            storyThumbBlur = blur,
+            recipientIds = viewModel.getRecipientIds(model.data.isHidden, model.data.storyViewState == StoryViewState.UNVIEWED),
+            isUnviewedOnly = model.data.storyViewState == StoryViewState.UNVIEWED,
+            isFromInfoContextMenuAction = isFromInfoContextMenuAction
+          )
+        ),
+        options.toBundle()
+      )
+    }
   }
 
   private fun handleDeleteStory(model: StoriesLandingItem.Model) {

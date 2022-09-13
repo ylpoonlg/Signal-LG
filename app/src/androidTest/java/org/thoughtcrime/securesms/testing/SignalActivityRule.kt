@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import androidx.test.core.app.ActivityScenario
 import androidx.test.platform.app.InstrumentationRegistry
+import okhttp3.mockwebserver.MockResponse
 import org.junit.rules.ExternalResource
 import org.signal.libsignal.protocol.IdentityKey
 import org.signal.libsignal.protocol.SignalProtocolAddress
@@ -17,6 +18,7 @@ import org.thoughtcrime.securesms.crypto.ProfileKeyUtil
 import org.thoughtcrime.securesms.database.IdentityDatabase
 import org.thoughtcrime.securesms.database.SignalDatabase
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies
+import org.thoughtcrime.securesms.dependencies.InstrumentationApplicationDependencyProvider
 import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.net.DeviceTransferBlockingInterceptor
 import org.thoughtcrime.securesms.profiles.ProfileName
@@ -28,7 +30,11 @@ import org.thoughtcrime.securesms.registration.RegistrationUtil
 import org.thoughtcrime.securesms.util.Util
 import org.whispersystems.signalservice.api.profiles.SignalServiceProfile
 import org.whispersystems.signalservice.api.push.ACI
+import org.whispersystems.signalservice.api.push.SignalServiceAddress
+import org.whispersystems.signalservice.internal.ServiceResponse
+import org.whispersystems.signalservice.internal.ServiceResponseProcessor
 import org.whispersystems.signalservice.internal.push.VerifyAccountResponse
+import java.lang.IllegalArgumentException
 import java.util.UUID
 
 /**
@@ -37,7 +43,7 @@ import java.util.UUID
  *
  * To use: `@get:Rule val harness = SignalActivityRule()`
  */
-class SignalActivityRule : ExternalResource() {
+class SignalActivityRule(private val othersCount: Int = 4) : ExternalResource() {
 
   val application: Application = ApplicationDependencies.getApplication()
 
@@ -52,6 +58,8 @@ class SignalActivityRule : ExternalResource() {
     context = InstrumentationRegistry.getInstrumentation().targetContext
     self = setupSelf()
     others = setupOthers()
+
+    InstrumentationApplicationDependencyProvider.clearHandlers()
   }
 
   private fun setupSelf(): Recipient {
@@ -65,17 +73,21 @@ class SignalActivityRule : ExternalResource() {
 
     val registrationRepository = RegistrationRepository(application)
 
-    registrationRepository.registerAccountWithoutRegistrationLock(
+    InstrumentationApplicationDependencyProvider.addMockWebRequestHandlers(Put("/v2/keys") { MockResponse().success() })
+    val response: ServiceResponse<VerifyAccountResponse> = registrationRepository.registerAccountWithoutRegistrationLock(
       RegistrationData(
         code = "123123",
-        e164 = "+15554045550101",
+        e164 = "+15555550101",
         password = Util.getSecret(18),
         registrationId = registrationRepository.registrationId,
-        profileKey = registrationRepository.getProfileKey("+15554045550101"),
-        fcmToken = null
+        profileKey = registrationRepository.getProfileKey("+15555550101"),
+        fcmToken = null,
+        pniRegistrationId = registrationRepository.pniRegistrationId
       ),
       VerifyAccountResponse(UUID.randomUUID().toString(), UUID.randomUUID().toString(), false)
     ).blockingGet()
+
+    ServiceResponseProcessor.DefaultProcessor(response).resultOrThrow
 
     SignalStore.kbsValues().optOut()
     RegistrationUtil.maybeMarkRegistrationComplete(application)
@@ -87,9 +99,13 @@ class SignalActivityRule : ExternalResource() {
   private fun setupOthers(): List<RecipientId> {
     val others = mutableListOf<RecipientId>()
 
-    for (i in 0..4) {
+    if (othersCount !in 0 until 1000) {
+      throw IllegalArgumentException("$othersCount must be between 0 and 1000")
+    }
+
+    for (i in 0 until othersCount) {
       val aci = ACI.from(UUID.randomUUID())
-      val recipientId = RecipientId.from(aci, "+1555555101$i")
+      val recipientId = RecipientId.from(SignalServiceAddress(aci, "+15555551%03d".format(i)))
       SignalDatabase.recipients.setProfileName(recipientId, ProfileName.fromParts("Buddy", "#$i"))
       SignalDatabase.recipients.setProfileKeyIfAbsent(recipientId, ProfileKeyUtil.createNew())
       SignalDatabase.recipients.setCapabilities(recipientId, SignalServiceProfile.Capabilities(true, true, true, true, true, true, true))
@@ -101,7 +117,7 @@ class SignalActivityRule : ExternalResource() {
     return others
   }
 
-  inline fun <reified T : Activity> launchActivity(initIntent: Intent.() -> Unit): ActivityScenario<T> {
+  inline fun <reified T : Activity> launchActivity(initIntent: Intent.() -> Unit = {}): ActivityScenario<T> {
     return androidx.test.core.app.launchActivity(Intent(context, T::class.java).apply(initIntent))
   }
 

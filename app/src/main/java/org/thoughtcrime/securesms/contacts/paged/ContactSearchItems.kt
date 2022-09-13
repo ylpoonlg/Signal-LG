@@ -10,6 +10,8 @@ import org.thoughtcrime.securesms.components.AvatarImageView
 import org.thoughtcrime.securesms.components.FromTextView
 import org.thoughtcrime.securesms.components.menu.ActionItem
 import org.thoughtcrime.securesms.components.menu.SignalContextMenu
+import org.thoughtcrime.securesms.database.model.DistributionListPrivacyMode
+import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.util.adapter.mapping.LayoutFactory
 import org.thoughtcrime.securesms.util.adapter.mapping.MappingAdapter
@@ -25,6 +27,26 @@ private typealias RecipientClickListener = (View, ContactSearchData.KnownRecipie
  * Mapping Models and View Holders for ContactSearchData
  */
 object ContactSearchItems {
+
+  fun registerStoryItems(
+    mappingAdapter: MappingAdapter,
+    displayCheckBox: Boolean = false,
+    storyListener: StoryClickListener,
+    storyContextMenuCallbacks: StoryContextMenuCallbacks? = null
+  ) {
+    mappingAdapter.registerFactory(
+      StoryModel::class.java,
+      LayoutFactory({ StoryViewHolder(it, displayCheckBox, storyListener, storyContextMenuCallbacks) }, R.layout.contact_search_item)
+    )
+  }
+
+  fun registerHeaders(mappingAdapter: MappingAdapter) {
+    mappingAdapter.registerFactory(
+      HeaderModel::class.java,
+      LayoutFactory({ HeaderViewHolder(it) }, R.layout.contact_search_section_header)
+    )
+  }
+
   fun register(
     mappingAdapter: MappingAdapter,
     displayCheckBox: Boolean,
@@ -33,18 +55,12 @@ object ContactSearchItems {
     storyContextMenuCallbacks: StoryContextMenuCallbacks,
     expandListener: (ContactSearchData.Expand) -> Unit
   ) {
-    mappingAdapter.registerFactory(
-      StoryModel::class.java,
-      LayoutFactory({ StoryViewHolder(it, displayCheckBox, storyListener, storyContextMenuCallbacks) }, R.layout.contact_search_item)
-    )
+    registerStoryItems(mappingAdapter, displayCheckBox, storyListener, storyContextMenuCallbacks)
     mappingAdapter.registerFactory(
       RecipientModel::class.java,
       LayoutFactory({ KnownRecipientViewHolder(it, displayCheckBox, recipientListener) }, R.layout.contact_search_item)
     )
-    mappingAdapter.registerFactory(
-      HeaderModel::class.java,
-      LayoutFactory({ HeaderViewHolder(it) }, R.layout.contact_search_section_header)
-    )
+    registerHeaders(mappingAdapter)
     mappingAdapter.registerFactory(
       ExpandModel::class.java,
       LayoutFactory({ ExpandViewHolder(it, expandListener) }, R.layout.contacts_expand_item)
@@ -55,7 +71,7 @@ object ContactSearchItems {
     return MappingModelList(
       contactSearchData.filterNotNull().map {
         when (it) {
-          is ContactSearchData.Story -> StoryModel(it, selection.contains(it.contactSearchKey))
+          is ContactSearchData.Story -> StoryModel(it, selection.contains(it.contactSearchKey), SignalStore.storyValues().userHasBeenNotifiedAboutStories)
           is ContactSearchData.KnownRecipient -> RecipientModel(it, selection.contains(it.contactSearchKey))
           is ContactSearchData.Expand -> ExpandModel(it)
           is ContactSearchData.Header -> HeaderModel(it)
@@ -67,18 +83,23 @@ object ContactSearchItems {
   /**
    * Story Model
    */
-  private class StoryModel(val story: ContactSearchData.Story, val isSelected: Boolean) : MappingModel<StoryModel> {
+  private class StoryModel(val story: ContactSearchData.Story, val isSelected: Boolean, val hasBeenNotified: Boolean) : MappingModel<StoryModel> {
 
     override fun areItemsTheSame(newItem: StoryModel): Boolean {
       return newItem.story == story
     }
 
     override fun areContentsTheSame(newItem: StoryModel): Boolean {
-      return story.recipient.hasSameContent(newItem.story.recipient) && isSelected == newItem.isSelected
+      return story.recipient.hasSameContent(newItem.story.recipient) &&
+        isSelected == newItem.isSelected &&
+        hasBeenNotified == newItem.hasBeenNotified
     }
 
     override fun getChangePayload(newItem: StoryModel): Any? {
-      return if (story.recipient.hasSameContent(newItem.story.recipient) && newItem.isSelected != isSelected) {
+      return if (story.recipient.hasSameContent(newItem.story.recipient) &&
+        hasBeenNotified == newItem.hasBeenNotified &&
+        newItem.isSelected != isSelected
+      ) {
         0
       } else {
         null
@@ -86,7 +107,12 @@ object ContactSearchItems {
     }
   }
 
-  private class StoryViewHolder(itemView: View, displayCheckBox: Boolean, onClick: StoryClickListener, private val storyContextMenuCallbacks: StoryContextMenuCallbacks) : BaseRecipientViewHolder<StoryModel, ContactSearchData.Story>(itemView, displayCheckBox, onClick) {
+  private class StoryViewHolder(
+    itemView: View,
+    displayCheckBox: Boolean,
+    onClick: StoryClickListener,
+    private val storyContextMenuCallbacks: StoryContextMenuCallbacks?
+  ) : BaseRecipientViewHolder<StoryModel, ContactSearchData.Story>(itemView, displayCheckBox, onClick) {
     override fun isSelected(model: StoryModel): Boolean = model.isSelected
     override fun getData(model: StoryModel): ContactSearchData.Story = model.story
     override fun getRecipient(model: StoryModel): Recipient = model.story.recipient
@@ -95,26 +121,40 @@ object ContactSearchItems {
       number.visible = true
 
       val count = if (model.story.recipient.isGroup) {
-        model.story.recipient.participants.size
+        model.story.recipient.participantIds.size
       } else {
         model.story.viewerCount
       }
 
-      val pluralId = when {
-        model.story.recipient.isGroup -> R.plurals.ContactSearchItems__group_story_d_viewers
-        model.story.recipient.isMyStory -> R.plurals.SelectViewersFragment__d_viewers
-        else -> R.plurals.ContactSearchItems__private_story_d_viewers
+      if (model.story.recipient.isMyStory && !model.hasBeenNotified) {
+        number.setText(R.string.ContactSearchItems__tap_to_choose_your_viewers)
+      } else {
+        number.text = when {
+          model.story.recipient.isGroup -> context.resources.getQuantityString(R.plurals.ContactSearchItems__group_story_d_viewers, count, count)
+          model.story.recipient.isMyStory -> context.resources.getQuantityString(R.plurals.ContactSearchItems__my_story_s_dot_d_viewers, count, presentPrivacyMode(model.story.privacyMode), count)
+          else -> context.resources.getQuantityString(R.plurals.ContactSearchItems__private_story_d_viewers, count, count)
+        }
       }
+    }
 
-      number.text = context.resources.getQuantityString(pluralId, count, count)
+    override fun bindAvatar(model: StoryModel) {
+      if (model.story.recipient.isMyStory) {
+        avatar.setAvatarUsingProfile(Recipient.self())
+      } else {
+        super.bindAvatar(model)
+      }
     }
 
     override fun bindLongPress(model: StoryModel) {
+      if (storyContextMenuCallbacks == null) {
+        return
+      }
+
       itemView.setOnLongClickListener {
         val actions: List<ActionItem> = when {
-          model.story.recipient.isMyStory -> getMyStoryContextMenuActions(model)
-          model.story.recipient.isGroup -> getGroupStoryContextMenuActions(model)
-          model.story.recipient.isDistributionList -> getPrivateStoryContextMenuActions(model)
+          model.story.recipient.isMyStory -> getMyStoryContextMenuActions(model, storyContextMenuCallbacks)
+          model.story.recipient.isGroup -> getGroupStoryContextMenuActions(model, storyContextMenuCallbacks)
+          model.story.recipient.isDistributionList -> getPrivateStoryContextMenuActions(model, storyContextMenuCallbacks)
           else -> error("Unsupported story target. Not a group or distribution list.")
         }
 
@@ -126,31 +166,39 @@ object ContactSearchItems {
       }
     }
 
-    private fun getMyStoryContextMenuActions(model: StoryModel): List<ActionItem> {
+    private fun getMyStoryContextMenuActions(model: StoryModel, callbacks: StoryContextMenuCallbacks): List<ActionItem> {
       return listOf(
         ActionItem(R.drawable.ic_settings_24, context.getString(R.string.ContactSearchItems__story_settings)) {
-          storyContextMenuCallbacks.onOpenStorySettings(model.story)
+          callbacks.onOpenStorySettings(model.story)
         }
       )
     }
 
-    private fun getGroupStoryContextMenuActions(model: StoryModel): List<ActionItem> {
+    private fun getGroupStoryContextMenuActions(model: StoryModel, callbacks: StoryContextMenuCallbacks): List<ActionItem> {
       return listOf(
         ActionItem(R.drawable.ic_minus_circle_20, context.getString(R.string.ContactSearchItems__remove_story)) {
-          storyContextMenuCallbacks.onRemoveGroupStory(model.story, model.isSelected)
+          callbacks.onRemoveGroupStory(model.story, model.isSelected)
         }
       )
     }
 
-    private fun getPrivateStoryContextMenuActions(model: StoryModel): List<ActionItem> {
+    private fun getPrivateStoryContextMenuActions(model: StoryModel, callbacks: StoryContextMenuCallbacks): List<ActionItem> {
       return listOf(
         ActionItem(R.drawable.ic_settings_24, context.getString(R.string.ContactSearchItems__story_settings)) {
-          storyContextMenuCallbacks.onOpenStorySettings(model.story)
+          callbacks.onOpenStorySettings(model.story)
         },
         ActionItem(R.drawable.ic_delete_24, context.getString(R.string.ContactSearchItems__delete_story), R.color.signal_colorError) {
-          storyContextMenuCallbacks.onDeletePrivateStory(model.story, model.isSelected)
+          callbacks.onDeletePrivateStory(model.story, model.isSelected)
         }
       )
+    }
+
+    private fun presentPrivacyMode(privacyMode: DistributionListPrivacyMode): String {
+      return when (privacyMode) {
+        DistributionListPrivacyMode.ONLY_WITH -> context.getString(R.string.ContactSearchItems__only_share_with)
+        DistributionListPrivacyMode.ALL_EXCEPT -> context.getString(R.string.ChooseInitialMyStoryMembershipFragment__all_except)
+        DistributionListPrivacyMode.ALL -> context.getString(R.string.ChooseInitialMyStoryMembershipFragment__all_signal_connections)
+      }
     }
   }
 
@@ -206,19 +254,24 @@ object ContactSearchItems {
       }
 
       name.setText(getRecipient(model))
-      avatar.setAvatar(getRecipient(model))
       badge.setBadgeFromRecipient(getRecipient(model))
 
+      bindAvatar(model)
       bindNumberField(model)
       bindLabelField(model)
       bindSmsTagField(model)
     }
 
+    protected open fun bindAvatar(model: T) {
+      avatar.setAvatar(getRecipient(model))
+    }
+
     protected open fun bindNumberField(model: T) {
       number.visible = getRecipient(model).isGroup
       if (getRecipient(model).isGroup) {
-        number.text = getRecipient(model).participants
+        number.text = getRecipient(model).participantIds
           .take(10)
+          .map { id -> Recipient.resolved(id) }
           .sortedWith(IsSelfComparator()).joinToString(", ") {
             if (it.isSelf) {
               context.getString(R.string.ConversationTitleView_you)

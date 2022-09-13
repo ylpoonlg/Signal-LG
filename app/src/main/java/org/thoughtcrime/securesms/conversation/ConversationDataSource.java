@@ -26,7 +26,7 @@ import org.thoughtcrime.securesms.database.model.UpdateDescription;
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
-import org.thoughtcrime.securesms.util.Stopwatch;
+import org.signal.core.util.Stopwatch;
 import org.thoughtcrime.securesms.util.Util;
 import org.whispersystems.signalservice.api.push.ServiceId;
 
@@ -139,7 +139,7 @@ public class ConversationDataSource implements PagedDataSource<MessageId, Conver
     stopwatch.split("attachment-models");
 
     for (ServiceId serviceId : referencedIds) {
-      Recipient.resolved(RecipientId.from(serviceId, null));
+      Recipient.resolved(RecipientId.from(serviceId));
     }
     stopwatch.split("recipient-resolves");
 

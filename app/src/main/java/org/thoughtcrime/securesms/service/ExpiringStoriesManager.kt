@@ -8,6 +8,7 @@ import androidx.annotation.WorkerThread
 import org.signal.core.util.logging.Log
 import org.thoughtcrime.securesms.database.SignalDatabase
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies
+import org.thoughtcrime.securesms.keyvalue.SignalStore
 import java.util.concurrent.TimeUnit
 
 /**
@@ -31,7 +32,7 @@ class ExpiringStoriesManager(
 
   @WorkerThread
   override fun getNextClosestEvent(): Event? {
-    val oldestTimestamp = mmsDatabase.oldestStorySendTimestamp ?: return null
+    val oldestTimestamp = mmsDatabase.getOldestStorySendTimestamp(SignalStore.storyValues().userHasSeenOnboardingStory) ?: return null
 
     val timeSinceSend = System.currentTimeMillis() - oldestTimestamp
     val delay = (STORY_LIFESPAN - timeSinceSend).coerceAtLeast(0)
@@ -43,7 +44,7 @@ class ExpiringStoriesManager(
   @WorkerThread
   override fun executeEvent(event: Event) {
     val threshold = System.currentTimeMillis() - STORY_LIFESPAN
-    val deletes = mmsDatabase.deleteStoriesOlderThan(threshold)
+    val deletes = mmsDatabase.deleteStoriesOlderThan(threshold, SignalStore.storyValues().userHasSeenOnboardingStory)
     Log.i(TAG, "Deleted $deletes stories before $threshold")
   }
 

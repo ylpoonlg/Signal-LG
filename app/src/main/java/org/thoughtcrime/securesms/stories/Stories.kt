@@ -45,6 +45,8 @@ import kotlin.math.min
 
 object Stories {
 
+  private val TAG = Log.tag(Stories::class.java)
+
   const val MAX_BODY_SIZE = 700
 
   @JvmField
@@ -52,7 +54,7 @@ object Stories {
 
   @JvmStatic
   fun isFeatureAvailable(): Boolean {
-    return FeatureFlags.stories() && Recipient.self().storiesCapability == Recipient.Capability.SUPPORTED
+    return SignalStore.account().isRegistered && FeatureFlags.stories() && Recipient.self().storiesCapability == Recipient.Capability.SUPPORTED
   }
 
   @JvmStatic
@@ -60,11 +62,16 @@ object Stories {
     return isFeatureAvailable() && !SignalStore.storyValues().isFeatureDisabled
   }
 
-  fun getHeaderAction(fragmentManager: FragmentManager): HeaderAction {
+  fun getHeaderAction(onClick: () -> Unit): HeaderAction {
     return HeaderAction(
       R.string.ContactsCursorLoader_new_story,
-      R.drawable.ic_plus_20
-    ) {
+      R.drawable.ic_plus_20,
+      onClick
+    )
+  }
+
+  fun getHeaderAction(fragmentManager: FragmentManager): HeaderAction {
+    return getHeaderAction {
       ChooseStoryTypeBottomSheet().show(fragmentManager, BottomSheetUtil.STANDARD_BOTTOM_SHEET_FRAGMENT_TAG)
     }
   }
@@ -97,16 +104,17 @@ object Stories {
 
   @JvmStatic
   @WorkerThread
-  fun enqueueNextStoriesForDownload(recipientId: RecipientId, ignoreAutoDownloadConstraints: Boolean = false) {
+  fun enqueueNextStoriesForDownload(recipientId: RecipientId, force: Boolean = false, limit: Int) {
     val recipient = Recipient.resolved(recipientId)
-    if (!recipient.isSelf && (recipient.shouldHideStory() || !recipient.hasViewedStory())) {
+    if (!force && !recipient.isSelf && (recipient.shouldHideStory() || !recipient.hasViewedStory())) {
       return
     }
 
-    val unreadStoriesReader = SignalDatabase.mms.getUnreadStories(recipientId, FeatureFlags.storiesAutoDownloadMaximum())
-    while (unreadStoriesReader.next != null) {
-      val record = unreadStoriesReader.current as MmsMessageRecord
-      enqueueAttachmentsFromStoryForDownloadSync(record, ignoreAutoDownloadConstraints)
+    Log.d(TAG, "Enqueuing downloads for up to $limit stories for $recipientId (force: $force)")
+    SignalDatabase.mms.getUnreadStories(recipientId, limit).use { reader ->
+      reader.forEach {
+        enqueueAttachmentsFromStoryForDownloadSync(it as MmsMessageRecord, false)
+      }
     }
   }
 
@@ -119,13 +127,11 @@ object Stories {
   @WorkerThread
   private fun enqueueAttachmentsFromStoryForDownloadSync(record: MmsMessageRecord, ignoreAutoDownloadConstraints: Boolean) {
     SignalDatabase.attachments.getAttachmentsForMessage(record.id).filterNot { it.isSticker }.forEach {
-      if (it.transferState == AttachmentDatabase.TRANSFER_PROGRESS_PENDING) {
-        val job = AttachmentDownloadJob(record.id, it.attachmentId, ignoreAutoDownloadConstraints)
-        ApplicationDependencies.getJobManager().add(job)
-      }
+      val job = AttachmentDownloadJob(record.id, it.attachmentId, ignoreAutoDownloadConstraints)
+      ApplicationDependencies.getJobManager().add(job)
     }
 
-    if (record.hasLinkPreview()) {
+    if (record.hasLinkPreview() && record.linkPreviews[0].attachmentId != null) {
       ApplicationDependencies.getJobManager().add(
         AttachmentDownloadJob(record.id, record.linkPreviews[0].attachmentId, true)
       )
@@ -180,6 +186,15 @@ object Stories {
        * Valid to send because the content does not have a duration.
        */
       object None : DurationResult()
+    }
+
+    @JvmStatic
+    @WorkerThread
+    fun canPreUploadMedia(media: Media): Boolean {
+      return when {
+        MediaUtil.isVideo(media.mimeType) -> getSendRequirements(media) != SendRequirements.REQUIRES_CLIP
+        else -> true
+      }
     }
 
     @JvmStatic
@@ -296,10 +311,11 @@ object Stories {
      * Callers can utilize canClipMedia to determine if the given media can and should be clipped.
      */
     @JvmStatic
+    @WorkerThread
     fun clipMediaToStoryDuration(media: Media): List<Media> {
       val storyDurationUs = TimeUnit.MILLISECONDS.toMicros(MAX_VIDEO_DURATION_MILLIS)
       val startOffsetUs = media.transformProperties.map { it.videoTrimStartTimeUs }.orElse(0L)
-      val endOffsetUs = media.transformProperties.map { it.videoTrimEndTimeUs }.orElse(TimeUnit.MILLISECONDS.toMicros(media.duration))
+      val endOffsetUs = media.transformProperties.map { it.videoTrimEndTimeUs }.orElse(TimeUnit.MILLISECONDS.toMicros(getVideoDuration(media.uri)))
       val durationUs = endOffsetUs - startOffsetUs
 
       if (durationUs <= 0L) {

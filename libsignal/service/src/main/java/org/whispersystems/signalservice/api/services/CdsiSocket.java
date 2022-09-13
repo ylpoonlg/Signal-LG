@@ -33,6 +33,7 @@ import javax.net.ssl.X509TrustManager;
 
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.ConnectionSpec;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -50,24 +51,7 @@ final class CdsiSocket {
   private final String       baseUrl;
   private final String       mrEnclave;
 
-  private Cds2Client   client;
-
-  private static final byte[] CERTIFICATE = ("-----BEGIN CERTIFICATE-----\n"
-                                             + "      MIICjzCCAjSgAwIBAgIUImUM1lqdNInzg7SVUr9QGzknBqwwCgYIKoZIzj0EAwIw\n"
-                                             + "      aDEaMBgGA1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENv\n"
-                                             + "      cnBvcmF0aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJ\n"
-                                             + "      BgNVBAYTAlVTMB4XDTE4MDUyMTEwNDUxMFoXDTQ5MTIzMTIzNTk1OVowaDEaMBgG\n"
-                                             + "      A1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENvcnBvcmF0\n"
-                                             + "      aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJBgNVBAYT\n"
-                                             + "      AlVTMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEC6nEwMDIYZOj/iPWsCzaEKi7\n"
-                                             + "      1OiOSLRFhWGjbnBVJfVnkY4u3IjkDYYL0MxO4mqsyYjlBalTVYxFP2sJBK5zlKOB\n"
-                                             + "      uzCBuDAfBgNVHSMEGDAWgBQiZQzWWp00ifODtJVSv1AbOScGrDBSBgNVHR8ESzBJ\n"
-                                             + "      MEegRaBDhkFodHRwczovL2NlcnRpZmljYXRlcy50cnVzdGVkc2VydmljZXMuaW50\n"
-                                             + "      ZWwuY29tL0ludGVsU0dYUm9vdENBLmRlcjAdBgNVHQ4EFgQUImUM1lqdNInzg7SV\n"
-                                             + "      Ur9QGzknBqwwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwCgYI\n"
-                                             + "      KoZIzj0EAwIDSQAwRgIhAOW/5QkR+S9CiSDcNoowLuPRLsWGf/Yi7GSX94BgwTwg\n"
-                                             + "      AiEA4J0lrHoMs+Xo5o/sX6O9QWxHRAvZUGOdRQ7cvqRXaqI=\n"
-                                             + "      -----END CERTIFICATE-----").getBytes(StandardCharsets.UTF_8);
+  private Cds2Client client;
 
   CdsiSocket(SignalServiceConfiguration configuration, String mrEnclave) {
     this.baseUrl   = configuration.getSignalCdsiUrls()[0].getUrl();
@@ -75,12 +59,17 @@ final class CdsiSocket {
 
     Pair<SSLSocketFactory, X509TrustManager> socketFactory = createTlsSocketFactory(configuration.getSignalCdsiUrls()[0].getTrustStore());
 
-    this.okhttp = new OkHttpClient.Builder().sslSocketFactory(new Tls12SocketFactory(socketFactory.first()),
-                                                              socketFactory.second())
-                                            .connectionSpecs(Util.immutableList(ConnectionSpec.RESTRICTED_TLS))
-                                            .readTimeout(30, TimeUnit.SECONDS)
-                                            .connectTimeout(30, TimeUnit.SECONDS)
-                                            .build();
+    OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                                                   .sslSocketFactory(new Tls12SocketFactory(socketFactory.first()), socketFactory.second())
+                                                   .connectionSpecs(Util.immutableList(ConnectionSpec.RESTRICTED_TLS))
+                                                   .readTimeout(30, TimeUnit.SECONDS)
+                                                   .connectTimeout(30, TimeUnit.SECONDS);
+
+    for (Interceptor interceptor : configuration.getNetworkInterceptors()) {
+      builder.addInterceptor(interceptor);
+    }
+
+    this.okhttp = builder.build();
   }
 
   Observable<ClientResponse> connect(String username, String password, ClientRequest clientRequest, Consumer<byte[]> tokenSaver) {
@@ -110,10 +99,7 @@ final class CdsiSocket {
                 throw new IOException("Received a message before we were open!");
 
               case WAITING_FOR_CONNECTION:
-                client = Cds2Client.create_NOT_FOR_PRODUCTION(Hex.fromStringCondensed(mrEnclave),
-                                                              CERTIFICATE,
-                                                              bytes.toByteArray(),
-                                                              Instant.now().minus(Duration.ofHours(24)));
+                client = new Cds2Client(Hex.fromStringCondensed(mrEnclave), bytes.toByteArray(), Instant.now());
 
                 Log.d(TAG, "[onMessage] Sending initial handshake...");
                 webSocket.send(okio.ByteString.of(client.initialRequest()));

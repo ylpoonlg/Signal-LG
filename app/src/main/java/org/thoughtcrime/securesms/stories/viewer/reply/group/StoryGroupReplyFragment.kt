@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehaviorHack
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import org.signal.core.util.concurrent.SignalExecutors
 import org.signal.core.util.logging.Log
@@ -24,9 +26,13 @@ import org.thoughtcrime.securesms.components.emoji.MediaKeyboard
 import org.thoughtcrime.securesms.components.mention.MentionAnnotation
 import org.thoughtcrime.securesms.components.settings.DSLConfiguration
 import org.thoughtcrime.securesms.components.settings.configure
+import org.thoughtcrime.securesms.contacts.paged.ContactSearchKey
 import org.thoughtcrime.securesms.conversation.MarkReadHelper
 import org.thoughtcrime.securesms.conversation.colors.Colorizer
-import org.thoughtcrime.securesms.conversation.ui.error.SafetyNumberChangeDialog
+import org.thoughtcrime.securesms.conversation.ui.inlinequery.InlineQuery
+import org.thoughtcrime.securesms.conversation.ui.inlinequery.InlineQueryChangedListener
+import org.thoughtcrime.securesms.conversation.ui.inlinequery.InlineQueryResultsController
+import org.thoughtcrime.securesms.conversation.ui.inlinequery.InlineQueryViewModel
 import org.thoughtcrime.securesms.conversation.ui.mentions.MentionsPickerFragment
 import org.thoughtcrime.securesms.conversation.ui.mentions.MentionsPickerViewModel
 import org.thoughtcrime.securesms.database.model.Mention
@@ -43,6 +49,7 @@ import org.thoughtcrime.securesms.reactions.any.ReactWithAnyEmojiBottomSheetDial
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientId
 import org.thoughtcrime.securesms.recipients.ui.bottomsheet.RecipientBottomSheetDialogFragment
+import org.thoughtcrime.securesms.safety.SafetyNumberBottomSheet
 import org.thoughtcrime.securesms.sms.MessageSender
 import org.thoughtcrime.securesms.stories.viewer.reply.StoryViewsAndRepliesPagerChild
 import org.thoughtcrime.securesms.stories.viewer.reply.StoryViewsAndRepliesPagerParent
@@ -67,7 +74,7 @@ class StoryGroupReplyFragment :
   StoryReplyComposer.Callback,
   EmojiKeyboardCallback,
   ReactWithAnyEmojiBottomSheetDialogFragment.Callback,
-  SafetyNumberChangeDialog.Callback {
+  SafetyNumberBottomSheet.Callbacks {
 
   companion object {
     private val TAG = Log.tag(StoryGroupReplyFragment::class.java)
@@ -97,6 +104,10 @@ class StoryGroupReplyFragment :
 
   private val mentionsViewModel: MentionsPickerViewModel by viewModels(
     factoryProducer = { MentionsPickerViewModel.Factory() },
+    ownerProducer = { requireActivity() }
+  )
+
+  private val inlineQueryViewModel: InlineQueryViewModel by viewModels(
     ownerProducer = { requireActivity() }
   )
 
@@ -143,6 +154,8 @@ class StoryGroupReplyFragment :
   private var resendBody: CharSequence? = null
   private var resendMentions: List<Mention> = emptyList()
   private var resendReaction: String? = null
+
+  private lateinit var inlineQueryResultsController: InlineQueryResultsController
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     SignalExecutors.BOUNDED.execute {
@@ -226,7 +239,7 @@ class StoryGroupReplyFragment :
   override fun onDestroyView() {
     super.onDestroyView()
 
-    composer.input.setMentionQueryChangedListener(null)
+    composer.input.setInlineQueryChangedListener(null)
     composer.input.setMentionValidator(null)
   }
 
@@ -311,7 +324,9 @@ class StoryGroupReplyFragment :
     }
 
     if (messageRecord.isIdentityMismatchFailure) {
-      SafetyNumberChangeDialog.show(requireContext(), childFragmentManager, messageRecord)
+      SafetyNumberBottomSheet
+        .forMessageRecord(requireContext(), messageRecord)
+        .show(childFragmentManager)
     } else if (messageRecord.hasFailedWithNetworkFailures()) {
       MaterialAlertDialogBuilder(requireContext())
         .setMessage(R.string.conversation_activity__message_could_not_be_sent)
@@ -345,6 +360,7 @@ class StoryGroupReplyFragment :
 
           override fun onReactionSelected(emoji: String) {
             dialog.dismiss()
+            findListener<Callback>()?.onReactionEmojiSelected(emoji)
             sendReaction(emoji)
           }
 
@@ -370,7 +386,9 @@ class StoryGroupReplyFragment :
           if (error is UntrustedRecords.UntrustedRecordsException) {
             resendReaction = emoji
 
-            SafetyNumberChangeDialog.show(childFragmentManager, error.untrustedRecords)
+            SafetyNumberBottomSheet
+              .forIdentityRecordsAndDestination(error.untrustedRecords, ContactSearchKey.RecipientSearchKey.Story(groupRecipientId))
+              .show(childFragmentManager)
           } else {
             Log.w(TAG, "Failed to send reply", error)
             val context = context
@@ -416,23 +434,51 @@ class StoryGroupReplyFragment :
   }
 
   private fun initializeMentions() {
+    inlineQueryResultsController = InlineQueryResultsController(
+      requireContext(),
+      inlineQueryViewModel,
+      composer,
+      (requireView() as ViewGroup),
+      composer.input,
+      viewLifecycleOwner
+    )
+
     Recipient.live(groupRecipientId).observe(viewLifecycleOwner) { recipient ->
       mentionsViewModel.onRecipientChange(recipient)
 
-      composer.input.setMentionQueryChangedListener { query ->
-        if (recipient.isPushV2Group) {
-          ensureMentionsContainerFilled()
-          mentionsViewModel.onQueryChange(query)
+      composer.input.setInlineQueryChangedListener(object : InlineQueryChangedListener {
+        override fun onQueryChanged(inlineQuery: InlineQuery) {
+          when (inlineQuery) {
+            is InlineQuery.Mention -> {
+              if (recipient.isPushV2Group) {
+                ensureMentionsContainerFilled()
+                mentionsViewModel.onQueryChange(inlineQuery.query)
+              }
+              inlineQueryViewModel.onQueryChange(inlineQuery)
+            }
+            is InlineQuery.Emoji -> {
+              inlineQueryViewModel.onQueryChange(inlineQuery)
+              mentionsViewModel.onQueryChange(null)
+            }
+            is InlineQuery.NoQuery -> {
+              mentionsViewModel.onQueryChange(null)
+              inlineQueryViewModel.onQueryChange(inlineQuery)
+            }
+          }
         }
-      }
+
+        override fun clearQuery() {
+          onQueryChanged(InlineQuery.NoQuery)
+        }
+      })
 
       composer.input.setMentionValidator { annotations ->
         if (!recipient.isPushV2Group) {
           annotations
         } else {
 
-          val validRecipientIds: Set<String> = recipient.participants
-            .map { r -> MentionAnnotation.idToMentionAnnotationValue(r.id) }
+          val validRecipientIds: Set<String> = recipient.participantIds
+            .map { id -> MentionAnnotation.idToMentionAnnotationValue(id) }
             .toSet()
 
           annotations
@@ -445,6 +491,11 @@ class StoryGroupReplyFragment :
     mentionsViewModel.selectedRecipient.observe(viewLifecycleOwner) { recipient ->
       composer.input.replaceTextWithMention(recipient.getDisplayName(requireContext()), recipient.id)
     }
+
+    lifecycleDisposable += inlineQueryViewModel
+      .selection
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe { r -> composer.input.replaceText(r) }
 
     mentionsViewModel.isShowing.observe(viewLifecycleOwner) { updateNestedScrolling() }
   }
@@ -463,14 +514,16 @@ class StoryGroupReplyFragment :
     lifecycleDisposable += StoryGroupReplySender.sendReply(requireContext(), storyId, body, mentions)
       .observeOn(AndroidSchedulers.mainThread())
       .subscribeBy(
-        onError = {
-          if (it is UntrustedRecords.UntrustedRecordsException) {
+        onError = { throwable ->
+          if (throwable is UntrustedRecords.UntrustedRecordsException) {
             resendBody = body
             resendMentions = mentions
 
-            SafetyNumberChangeDialog.show(childFragmentManager, it.untrustedRecords)
+            SafetyNumberBottomSheet
+              .forIdentityRecordsAndDestination(throwable.untrustedRecords, ContactSearchKey.RecipientSearchKey.Story(groupRecipientId))
+              .show(childFragmentManager)
           } else {
-            Log.w(TAG, "Failed to send reply", it)
+            Log.w(TAG, "Failed to send reply", throwable)
             val context = context
             if (context != null) {
               Toast.makeText(context, R.string.message_details_recipient__failed_to_send, Toast.LENGTH_SHORT).show()
@@ -480,7 +533,7 @@ class StoryGroupReplyFragment :
       )
   }
 
-  override fun onSendAnywayAfterSafetyNumberChange(changedRecipients: MutableList<RecipientId>) {
+  override fun sendAnywayAfterSafetyNumberChangedInBottomSheet(destinations: List<ContactSearchKey.RecipientSearchKey>) {
     val resendBody = resendBody
     val resendReaction = resendReaction
     if (resendBody != null) {
@@ -490,7 +543,7 @@ class StoryGroupReplyFragment :
     }
   }
 
-  override fun onMessageResentAfterSafetyNumberChange() {
+  override fun onMessageResentAfterSafetyNumberChangeInBottomSheet() {
     Log.i(TAG, "Message resent")
   }
 
@@ -534,5 +587,6 @@ class StoryGroupReplyFragment :
   interface Callback {
     fun onStartDirectReply(recipientId: RecipientId)
     fun requestFullScreen(fullscreen: Boolean)
+    fun onReactionEmojiSelected(emoji: String)
   }
 }

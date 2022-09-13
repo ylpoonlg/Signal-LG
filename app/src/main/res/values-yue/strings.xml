@@ -41,6 +41,9 @@
   <string name="ApplicationPreferencesActivity_record_payments_recovery_phrase">記低付款恢復口訣</string>
   <string name="ApplicationPreferencesActivity_record_phrase">記低口訣</string>
   <string name="ApplicationPreferencesActivity_before_you_can_disable_your_pin">喺您可以停用您嘅 PIN 碼之前，您必須先記低您嘅付款恢復口訣，以確保您可以恢復您嘅付款帳戶。</string>
+  <!--NumericKeyboardView-->
+  <!--Back button on numeric keyboard-->
+  <string name="NumericKeyboardView__backspace">褪後一格</string>
   <!--AppProtectionPreferenceFragment-->
   <plurals name="AppProtectionPreferenceFragment_minutes">
     <item quantity="other">%d 分鐘</item>
@@ -167,22 +170,30 @@
   <!--Label for my stories when selecting who to send media to-->
   <string name="ContactsCursorLoader_my_stories">我嘅是日花生</string>
   <!--Action for creating a new story-->
-  <string name="ContactsCursorLoader_new_story">整多味是日花生</string>
+  <string name="ContactsCursorLoader_new_story">新增限時動態</string>
   <!--ContactsDatabase-->
   <string name="ContactsDatabase_message_s">寫個訊息畀 %s</string>
   <string name="ContactsDatabase_signal_call_s">同 %s 用 Signal 通話</string>
   <!--ContactNameEditActivity-->
+  <!--Toolbar title for contact name edit activity-->
+  <string name="ContactNameEditActivity__edit_name">編輯名稱</string>
   <string name="ContactNameEditActivity_given_name">名</string>
   <string name="ContactNameEditActivity_family_name">姓</string>
   <string name="ContactNameEditActivity_prefix">銜頭 (人名前)</string>
   <string name="ContactNameEditActivity_suffix">銜頭 (人名後)</string>
   <string name="ContactNameEditActivity_middle_name">中間名</string>
   <!--ContactShareEditActivity-->
+  <!--ContactShareEditActivity toolbar title-->
+  <string name="ContactShareEditActivity__send_contact">傳送俾聯絡人</string>
   <string name="ContactShareEditActivity_type_home">屋企</string>
   <string name="ContactShareEditActivity_type_mobile">手提</string>
   <string name="ContactShareEditActivity_type_work">公司</string>
   <string name="ContactShareEditActivity_type_missing">其他</string>
   <string name="ContactShareEditActivity_invalid_contact">揀選嘅聯絡人無效</string>
+  <!--Content descrption for name edit button on contact share edit activity-->
+  <string name="ContactShareEditActivity__edit_name">編輯名稱</string>
+  <!--Content description for user avatar in edit activity-->
+  <string name="ContactShareEditActivity__avatar">頭像</string>
   <!--ConversationItem-->
   <string name="ConversationItem_error_not_sent_tap_for_details">出唔到街，撳一下再話您知</string>
   <string name="ConversationItem_error_partially_not_delivered">出街出咗一半，撳一下再話您知</string>
@@ -221,7 +232,7 @@
   <string name="ConversationActivity_transport_insecure_sms_with_sim">唔安全嘅短訊 (%1$s)</string>
   <string name="ConversationActivity_transport_insecure_mms">唔安全嘅多媒體短訊</string>
   <!--A title for the option to send an SMS with a placeholder to put the name of their SIM card-->
-  <string name="ConversationActivity_transport_insecure_mms_with_sim">唔安全嘅多媒體短訊 (%1$s)</string>
+  <string name="ConversationActivity_transport_insecure_mms_with_sim">唔安全嘅多媒體訊息 (%1$s)</string>
   <string name="ConversationActivity_transport_signal">Signal 訊息</string>
   <string name="ConversationActivity_lets_switch_to_signal">不如我哋齊齊轉會 Signal %1$s</string>
   <string name="ConversationActivity_specify_recipient">請揀一位聯絡人吖</string>
@@ -272,6 +283,8 @@
     <item quantity="other">%d 個未讀訊息</item>
   </plurals>
   <!--ConversationFragment-->
+  <!--Toast text when contacts activity is not found-->
+  <string name="ConversationFragment__contacts_app_not_found">搵唔到聯絡人應用程式。</string>
   <plurals name="ConversationFragment_delete_selected_messages">
     <item quantity="other">係咪要刪除揀選嘅訊息？</item>
   </plurals>
@@ -314,7 +327,7 @@
   <string name="ConversationFragment_verify">驗證</string>
   <string name="ConversationFragment_not_now">遲啲先啦</string>
   <string name="ConversationFragment_your_safety_number_with_s_changed">您同 %s 之間嘅安全碼已經郁動過</string>
-  <string name="ConversationFragment_your_safety_number_with_s_changed_likey_because_they_reinstalled_signal">您同 %s 之間嘅安全碼已經郁動過，好可能係佢重新裝過 Signal 或者換咗部機。可以撳一下 [驗證] 去確認新嘅安全碼，如果您想嘅話。</string>
+  <string name="ConversationFragment_your_safety_number_with_s_changed_likey_because_they_reinstalled_signal">你同 %s 之間嘅安全碼已經改咗，可能係因為佢重新裝過 Signal 或者換咗部機。你可以㩒一下「驗證」嚟確認新嘅安全碼。呢個操作係選擇性嘅。</string>
   <!--Message shown to indicate which notification profile is on/active-->
   <string name="ConversationFragment__s_on">%1$s 揀揀單單</string>
   <!--Dialog title for block group link join requests-->
@@ -396,8 +409,20 @@
   <string name="CreateProfileActivity_error_setting_profile_photo">設定個人資料相嘅時候發生問題</string>
   <string name="CreateProfileActivity_problem_setting_profile">設定個人資料嘅時候發生問題</string>
   <string name="CreateProfileActivity_set_up_your_profile">設定您嘅個人資料</string>
-  <string name="CreateProfileActivity_signal_profiles_are_end_to_end_encrypted">您嘅個人資料係受到端對端加密。您嘅個人資料 (以及您之後所作嘅變化) 將會俾您嘅聯絡人睇到，而且當您發起或接受新嘅對話，又或者加入新嘅谷，亦會向別人展示。</string>
+  <string name="CreateProfileActivity_signal_profiles_are_end_to_end_encrypted">同你通訊嘅人、聯絡人同群組將會睇到你嘅個人檔案同埋相關更改。</string>
   <string name="CreateProfileActivity_set_avatar_description">設定頭像</string>
+  <!--ProfileCreateFragment-->
+  <!--Displayed at the top of the screen and explains how profiles can be viewed.-->
+  <string name="ProfileCreateFragment__profiles_are_visible_to_contacts_and_people_you_message">同你通訊嘅人、聯絡人同群組可以睇到你嘅個人檔案。</string>
+  <!--Title of clickable row to select phone number privacy settings-->
+  <string name="ProfileCreateFragment__who_can_find_me">邊個可以用電話號碼搵到我？</string>
+  <!--WhoCanSeeMyPhoneNumberFragment-->
+  <!--Toolbar title for this screen-->
+  <string name="WhoCanSeeMyPhoneNumberFragment__who_can_find_me_by_number">邊個可以用電話號碼搵到我？</string>
+  <!--Description for radio item stating anyone can see your phone number-->
+  <string name="WhoCanSeeMyPhoneNumberFragment__anyone_who_has">只要對方喺通訊錄入面儲存咗你個電話號碼，都會喺 Signal 嘅聯絡人度見到你。而其他人就可以喺搜尋度用你個電話號碼搵你。</string>
+  <!--Description for radio item stating no one will be able to see your phone number-->
+  <string name="WhoCanSeeMyPhoneNumberFragment__nobody_on_signal">冇人可以喺 Signal 度用你個電話號碼搵你。</string>
   <!--ChooseBackupFragment-->
   <string name="ChooseBackupFragment__restore_from_backup">係咪要攞返備份嚟還原？</string>
   <string name="ChooseBackupFragment__restore_your_messages_and_media">攞返本機備份嚟還原您嘅訊息同埋多媒體檔案。如果您而家唔做嘅話，遲啲就冇得再還原㗎喇。</string>
@@ -429,6 +454,8 @@
   <string name="BackupsPreferenceFragment__to_restore_a_backup">要還原一個備份嘅話，首先請重新裝過 Signal。開返個 app 出嚟，撳一下「還原備份」，然後揀返嗰一個備份檔。%1$s</string>
   <string name="BackupsPreferenceFragment__learn_more">講多啲畀我聽</string>
   <string name="BackupsPreferenceFragment__in_progress">幫緊您幫緊您…</string>
+  <!--Status text shown in backup preferences when verifying a backup-->
+  <string name="BackupsPreferenceFragment__verifying_backup">驗證緊備份…</string>
   <string name="BackupsPreferenceFragment__d_so_far">暫時去到 %1$d…</string>
   <!--Show percentage of completion of backup-->
   <string name="BackupsPreferenceFragment__s_so_far">暫時去到 %1$s%%…</string>
@@ -619,7 +646,7 @@
   <string name="AddGroupDetailsFragment__group_creation_failed">開唔到新谷。</string>
   <string name="AddGroupDetailsFragment__try_again_later">陣間再試下啦。</string>
   <!--Displayed when adding group details to an MMS Group-->
-  <string name="AddGroupDetailsFragment__youve_selected_a_contact_that_doesnt_support">您揀左一個唔支援 Signal 群組嘅聯絡人。所以呢個群組將會用多媒體短訊。只有您先可以睇到自訂多媒體短訊群組嘅名同埋相。</string>
+  <string name="AddGroupDetailsFragment__youve_selected_a_contact_that_doesnt_support">你揀咗一個唔支援 Signal 群組嘅聯絡人，所以呢個群組將會用多媒體訊息。只有你睇到自訂多媒體訊息群組嘅名同埋相。</string>
   <string name="AddGroupDetailsFragment__remove">移除</string>
   <string name="AddGroupDetailsFragment__sms_contact">短訊聯絡人</string>
   <string name="AddGroupDetailsFragment__remove_s_from_this_group">係咪要踼 %1$s 出呢個谷？</string>
@@ -681,6 +708,10 @@
   <string name="ManageProfileFragment_failed_to_set_avatar">頭像設定唔到</string>
   <string name="ManageProfileFragment_badges">襟章</string>
   <string name="ManageProfileFragment__edit_photo">改過幅相</string>
+  <!--Snackbar message after creating username-->
+  <string name="ManageProfileFragment__username_created">建立咗用戶名稱</string>
+  <!--Snackbar message after copying username-->
+  <string name="ManageProfileFragment__username_copied">複製咗用戶名稱</string>
   <!--ManageRecipientActivity-->
   <string name="ManageRecipientActivity_no_groups_in_common">無有緣相遇嘅谷</string>
   <plurals name="ManageRecipientActivity_d_groups_in_common">
@@ -853,6 +884,8 @@
   <string name="Megaphones_use_sms">發短訊</string>
   <string name="Megaphones_appearance">外觀</string>
   <string name="Megaphones_add_photo">加張相</string>
+  <!--Title of a bottom sheet to render messages that all quote a specific message-->
+  <string name="MessageQuotesBottomSheet_replies">回覆</string>
   <!--NotificationBarManager-->
   <string name="NotificationBarManager_signal_call_in_progress">Signal 通話中</string>
   <string name="NotificationBarManager__establishing_signal_call">籌備緊 Signal 通話</string>
@@ -1066,9 +1099,7 @@
   <string name="MessageRecord_a_message_from_s_couldnt_be_delivered">有一則 %s 發出嘅訊息送達唔到</string>
   <string name="MessageRecord_s_changed_their_phone_number">%1$s 已轉咗新電話冧把。</string>
   <!--Update item message shown in the release channel when someone is already a sustainer so we ask them if they want to boost.-->
-  <!-- Removed by excludeNonTranslatables <string name="MessageRecord_like_this_new_feature_say_thanks_with_a_boost">呢樣新嘢，唔知又啱唔啱您合尺？啱心水嘅話，不妨隨心幫我哋買支旗，話我哋知您 buy。</string> -->
-  <!--Update item message shown in the release channel when someone is not a sustainer so we ask them to consider becoming one-->
-  <!-- Removed by excludeNonTranslatables <string name="MessageRecord_signal_is_powered_by_people_like_you_become_a_sustainer_today">Signal 應援靠團伙。誠意召集課金師隨心捐獻，擔當我哋嘅後援。</string> -->
+  <string name="MessageRecord_like_this_new_feature_help_support_signal_with_a_one_time_donation">鍾唔鍾意呢個新功能呀？透過單次捐款支持 Signal 啦！</string>
   <!--Group Calling update messages-->
   <string name="MessageRecord_s_started_a_group_call_s">%1$s 已發起成谷通話 · %2$s</string>
   <string name="MessageRecord_s_is_in_the_group_call_s">%1$s 嚟到成谷通話 · %2$s</string>
@@ -1104,7 +1135,7 @@
   <string name="MessageRequestBottomView_this_legacy_group_can_no_longer_be_used">呢個舊版谷冇得繼續用，因為太大喇。谷嘅人數上限係 %1$d 人。</string>
   <string name="MessageRequestBottomView_continue_your_conversation_with_s_and_share_your_name_and_photo">係咪要繼續同 %1$s 對話，並同佢分享您嘅名同相？</string>
   <string name="MessageRequestBottomView_do_you_want_to_join_this_group_they_wont_know_youve_seen_their_messages_until_you_accept">係咪要加入呢個谷，並同個谷嘅所有成員分享您嘅名同相？您話䎺之前，佢哋都唔會知您睇過個訊息嘅。</string>
-  <string name="MessageRequestBottomView_do_you_want_to_join_this_group_you_wont_see_their_messages">係咪要加入呢個群組，仲同群組成員分享您嘅名同相？您要同意先可以睇到佢哋嘅訊息。</string>
+  <string name="MessageRequestBottomView_do_you_want_to_join_this_group_you_wont_see_their_messages">係咪要加入呢個群組，同群組成員分享你嘅名同相呀？你需要同意咗，先可以睇到佢哋嘅訊息。</string>
   <string name="MessageRequestBottomView_join_this_group_they_wont_know_youve_seen_their_messages_until_you_accept">係咪要加入呢個谷？您話䎺之前，佢哋都唔會知您睇過個訊息嘅。</string>
   <string name="MessageRequestBottomView_unblock_this_group_and_share_your_name_and_photo_with_its_members">係咪要解除封鎖呢個谷，並同個谷嘅所有成員分享您嘅名同相？您解除封鎖之前，都唔會收到佢哋任何嘅訊息。</string>
   <string name="MessageRequestProfileView_view">睇下</string>
@@ -1243,7 +1274,7 @@
   <!--Title for dialog warning about lacking bluetooth permissions during a call-->
   <string name="WebRtcCallActivity__bluetooth_permission_denied">藍牙權限被拒</string>
   <!--Message for dialog warning about lacking bluetooth permissions during a call and references the permission needed by name-->
-  <string name="WebRtcCallActivity__please_enable_the_nearby_devices_permission_to_use_bluetooth_during_a_call">請您啟用「附近裝置」權限嚟喺通話嗰陣用藍牙。</string>
+  <string name="WebRtcCallActivity__please_enable_the_nearby_devices_permission_to_use_bluetooth_during_a_call">請啟用「附近裝置」權限，先可以喺通話中使用藍牙。</string>
   <!--Positive action for bluetooth warning dialog to open settings-->
   <string name="WebRtcCallActivity__open_settings">打開設定</string>
   <!--Negative aciton for bluetooth warning dialog to dismiss dialog-->
@@ -1436,6 +1467,12 @@
   <!--SubmitDebugLogActivity-->
   <string name="SubmitDebugLogActivity_edit">有嘢改</string>
   <string name="SubmitDebugLogActivity_done">搞掂</string>
+  <!--Menu option to save a debug log file to disk.-->
+  <string name="SubmitDebugLogActivity_save">儲存</string>
+  <!--Error that is show in a toast when we fail to save a debug log file to disk.-->
+  <string name="SubmitDebugLogActivity_failed_to_save">儲存唔到</string>
+  <!--Toast that is show to notify that we have saved the debug log file to disk.-->
+  <string name="SubmitDebugLogActivity_save_complete">儲存完成</string>
   <string name="SubmitDebugLogActivity_tap_a_line_to_delete_it">撳一下就會剷走嗰一行</string>
   <string name="SubmitDebugLogActivity_submit">提交</string>
   <string name="SubmitDebugLogActivity_failed_to_submit_logs">提交唔到記錄檔</string>
@@ -1484,11 +1521,15 @@
   <string name="ThreadRecord_video">影片</string>
   <string name="ThreadRecord_chat_session_refreshed">傾偈階段已經重新整理</string>
   <!--Displayed in the notification when the user is sent a gift-->
-  <string name="ThreadRecord__you_received_a_gift">您收到一份禮品</string>
+  <string name="ThreadRecord__you_received_a_gift">你收到一份禮物</string>
   <!--Displayed in the notification when the user sends a gift-->
-  <string name="ThreadRecord__you_sent_a_gift">您送出咗一份禮品</string>
+  <string name="ThreadRecord__you_sent_a_gift">你送出咗一份禮物</string>
   <!--Displayed in the notification when the user has opened a received gift-->
-  <string name="ThreadRecord__you_redeemed_a_gift_badge">您換領咗一個禮品徽章</string>
+  <string name="ThreadRecord__you_redeemed_a_gift_badge">你換領咗一個餽贈徽章</string>
+  <!--Displayed in the conversation list when someone reacted to your story-->
+  <string name="ThreadRecord__reacted_s_to_your_story">用 %1$s 回應咗你嘅限時動態</string>
+  <!--Displayed in the conversation list when you reacted to someone\'s story-->
+  <string name="ThreadRecord__reacted_s_to_their_story">用 %1$s 回應咗佢嘅限時動態</string>
   <!--UpdateApkReadyListener-->
   <string name="UpdateApkReadyListener_Signal_update">Signal 更新</string>
   <string name="UpdateApkReadyListener_a_new_version_of_signal_is_available_tap_to_update">Signal 出咗新版本喇，撳一下以更新</string>
@@ -1499,6 +1540,8 @@
   <string name="UnverifiedSendDialog_send_message">係咪要傳送訊息？</string>
   <string name="UnverifiedSendDialog_send">傳送</string>
   <!--UsernameEditFragment-->
+  <!--Instructional text at the top of the username edit screen-->
+  <string name="UsernameEditFragment__choose_your_username">選擇你嘅用戶名稱</string>
   <string name="UsernameEditFragment_username">使用者名稱</string>
   <string name="UsernameEditFragment_delete">刪除</string>
   <string name="UsernameEditFragment_successfully_set_username">成功設定好使用者名稱。</string>
@@ -1510,10 +1553,17 @@
   <string name="UsernameEditFragment_usernames_cannot_begin_with_a_number">使用者名稱冇得用數目字開頭。</string>
   <string name="UsernameEditFragment_username_is_invalid">使用者名稱無效。</string>
   <string name="UsernameEditFragment_usernames_must_be_between_a_and_b_characters">使用者名稱一定要係 %1$d 至 %2$d 個字元之間。</string>
-  <string name="UsernameEditFragment_usernames_on_signal_are_optional">喺 Signal 唔係事必要整個使用者名稱嘅。若果您揀去整個使用者名稱嘅話，咁其他 Signal 使用者就唔使知您個電話冧把，都可以用您呢個使用者名稱去搵到您、同您聯絡囉。</string>
+  <!--Explanation about what usernames provide-->
+  <string name="UsernameEditFragment__usernames_let_others_message">用戶名稱可以俾其他人唔使用你個電話號碼搜尋，都可以傳送訊息俾你。系統會將用戶名稱同一組數字配對，咁就可以幫你嘅地址保密。</string>
+  <!--Dialog title for explanation about numbers at the end of the username-->
+  <string name="UsernameEditFragment__what_is_this_number">呢個號碼係咩嚟？</string>
+  <string name="UsernameEditFragment__these_digits_help_keep">呢組數字可以將你嘅用戶名稱保密，以免你受到無謂嘅訊息滋擾。請你淨係同你想同佢通訊嘅聯絡人同埋群組分享你嘅用戶名稱。如果你改咗個用戶名稱，就會收到一組新嘅數字。</string>
   <plurals name="UserNotificationMigrationJob_d_contacts_are_on_signal">
     <item quantity="other">%d 位聯絡人開咗 Signal 喇！</item>
   </plurals>
+  <!--UsernameShareBottomSheet-->
+  <!--Explanation of what the sheet enables the user to do-->
+  <string name="UsernameShareBottomSheet__copy_or_share_a_username_link">複製或者分享用戶名稱連結</string>
   <!--VerifyIdentityActivity-->
   <string name="VerifyIdentityActivity_your_contact_is_running_an_old_version_of_signal">您嘅聯絡人用緊舊版本嘅 Signal。請叫佢更新咗，先驗證您嘅安全碼。</string>
   <string name="VerifyIdentityActivity_your_contact_is_running_a_newer_version_of_Signal">您嘅聯絡人用緊新啲版本嘅 Signal，二維碼格式唔相容。請您更新咗先對比。</string>
@@ -1744,9 +1794,7 @@
   <string name="ConversationUpdateItem_view">睇下</string>
   <string name="ConversationUpdateItem_the_disappearing_message_time_will_be_set_to_s_when_you_message_them">當您發送訊息畀人嘅時候，過眼雲煙訊息倒數將會設定為 %1$s。</string>
   <!--Update item button text to show to boost a feature-->
-  <!-- Removed by excludeNonTranslatables <string name="ConversationUpdateItem_signal_boost">幫 Signal 買支旗</string> -->
-  <!--Update item button text to show to become a sustainer in the release notes channel-->
-  <!-- Removed by excludeNonTranslatables <string name="ConversationUpdateItem_become_a_sustainer">擔當後援</string> -->
+  <string name="ConversationUpdateItem_donate">課金</string>
   <!--audio_view-->
   <string name="audio_view__play_pause_accessibility_description">播放 … 暫停</string>
   <string name="audio_view__download_accessibility_description">下載</string>
@@ -1766,9 +1814,9 @@
   <!--Label indicating that the story being replied to no longer exists-->
   <string name="QuoteView_no_longer_available">已經收檔</string>
   <!--Label for quoted gift-->
-  <string name="QuoteView__gift">禮品</string>
+  <string name="QuoteView__gift">禮物</string>
   <!--conversation_fragment-->
-  <string name="conversation_fragment__scroll_to_the_bottom_content_description">拉到落最底</string>
+  <string name="conversation_fragment__scroll_to_the_bottom_content_description">碌到落最底</string>
   <!--BubbleOptOutTooltip-->
   <!--Message to inform the user of what Android chat bubbles are-->
   <string name="BubbleOptOutTooltip__description">氣泡係一項 Android 功能，Signal 傾偈用唔用氣泡就由得您揀。</string>
@@ -1979,16 +2027,16 @@
   <string name="HelpFragment__debug_log">除錯記錄檔：</string>
   <string name="HelpFragment__could_not_upload_logs">上載唔到記錄檔</string>
   <string name="HelpFragment__please_be_as_descriptive_as_possible">請您儘可能具體說明，幫我哋了解個問題。</string>
-  <!-- Removed by excludeNonTranslatables <string-array name="HelpFragment__categories_3">
-    <item>\-\- 請揀選一項 \-\-</item>
-    <item>有嘢軭咗</item>
-    <item>有某個功能就好嘞</item>
-    <item>有問題想問</item>
-    <item>想反映一下淺見</item>
+  <string-array name="HelpFragment__categories_4">
+    <item>\-\- 請選擇一個選項 \-\-</item>
+    <item>系統暫時停用</item>
+    <item>功能請求</item>
+    <item>問題</item>
+    <item>意見</item>
     <item>其他</item>
     <item>付款 (MobileCoin)</item>
-    <item>擔當後援同埋 Signal 集氣</item>
-  </string-array> -->
+    <item>捐款 &amp; 徽章</item>
+  </string-array>
   <!--ReactWithAnyEmojiBottomSheetDialogFragment-->
   <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">呢個訊息</string>
   <string name="ReactWithAnyEmojiBottomSheetDialogFragment__recently_used">最近用過</string>
@@ -2089,6 +2137,8 @@
   <!--Preference label for making one-time donations to Signal-->
   <string name="preferences__one_time_donation">單次捐款</string>
   <string name="preferences__privacy">私隱</string>
+  <!--Preference label for stories-->
+  <string name="preferences__stories">限時動態</string>
   <string name="preferences__mms_user_agent">MMS 使用者代理</string>
   <string name="preferences__advanced_mms_access_point_names">手動 MMS 設定</string>
   <string name="preferences__mmsc_url">MMSC URL</string>
@@ -2101,6 +2151,8 @@
   <string name="preferences__data_and_storage">數據同儲存空間</string>
   <string name="preferences__storage">儲存空間</string>
   <string name="preferences__payments">付款</string>
+  <!--Privacy settings payments section description-->
+  <string name="preferences__payment_lock">付款鎖定</string>
   <string name="preferences__payments_beta">付款 (測試版)</string>
   <string name="preferences__conversation_length_limit">對話長度上限</string>
   <string name="preferences__keep_messages">保留訊息</string>
@@ -2166,6 +2218,8 @@
   <string name="preferences_app_protection__who_can">准許邊個…</string>
   <string name="preferences_app_protection__app_access">App 存取</string>
   <string name="preferences_app_protection__communication">通訊</string>
+  <!--Privacy settings payments section title-->
+  <string name="preferences_app_protection__payments">付款</string>
   <string name="preferences_chats__chats">傾偈</string>
   <string name="preferences_data_and_storage__manage_storage">管理儲存空間</string>
   <string name="preferences_data_and_storage__calls">通話</string>
@@ -2267,6 +2321,14 @@
   <string name="PaymentsHomeFragment__activate">啟用</string>
   <string name="PaymentsHomeFragment__view_mobile_coin_terms">檢視 MobileCoin 條款</string>
   <string name="PaymentsHomeFragment__payments_not_available">Signal 付款已經曲終人散。您仍然可以將款項轉移去交易平台，但唔再能夠傳送或接收付款，又或增加款項。</string>
+  <!--Alert dialog title which shows up after a payment to turn on payment lock-->
+  <string name="PaymentsHomeFragment__turn_on">係咪要為日後嘅付款開啟付款鎖定？</string>
+  <!--Alert dialog description for why payment lock should be enabled before sending payments-->
+  <string name="PaymentsHomeFragment__add_an_additional_layer">加多一重安全保障，用 Android 螢幕鎖定或者指紋辨識功能嚟進行滙款。</string>
+  <!--Alert dialog button to enable payment lock-->
+  <string name="PaymentsHomeFragment__enable">開啟</string>
+  <!--Alert dialog button to not enable payment lock for now-->
+  <string name="PaymentsHomeFragment__not_now">暫時唔需要</string>
   <!--PaymentsAddMoneyFragment-->
   <string name="PaymentsAddMoneyFragment__add_funds">增加款項</string>
   <string name="PaymentsAddMoneyFragment__your_wallet_address">您嘅銀包位址</string>
@@ -2347,6 +2409,14 @@
   <string name="ConfirmPayment__payment_failed">付款失敗</string>
   <string name="ConfirmPayment__payment_will_continue_processing">付款將會繼續處理</string>
   <string name="ConfirmPaymentFragment__invalid_recipient">收款人唔啱噃</string>
+  <!--Biometric/Device authentication prompt title which comes up before sending a payment-->
+  <string name="ConfirmPaymentFragment__unlock_to_send_payment">解鎖去付款</string>
+  <!--Title of a dialog show when we were unable to present the user\'s screenlock before sending a payment-->
+  <string name="ConfirmPaymentFragment__failed_to_show_payment_lock">顯示唔到付款鎖定</string>
+  <!--Body of a dialog show when we were unable to present the user\'s screenlock before sending a payment-->
+  <string name="ConfirmPaymentFragment__you_enabled_payment_lock_in_the_settings">你已經喺設定度啟用咗付款鎖定，不過系統顯示唔到。</string>
+  <!--Button in a dialog that will take the user to the privacy settings-->
+  <string name="ConfirmPaymentFragment__go_to_settings">前往設定</string>
   <string name="ConfirmPaymentFragment__this_person_has_not_activated_payments">呢個人未有啟用付款</string>
   <string name="ConfirmPaymentFragment__unable_to_request_a_network_fee">請求唔到網絡費。要繼續呢次付款嘅話，請撳一下「確定」再試一次。</string>
   <!--CurrencyAmountFormatter_s_at_s-->
@@ -2619,10 +2689,16 @@
   <string name="BackupDialog_you_successfully_entered_your_backup_passphrase">您輸入嘅備份密碼正確無誤</string>
   <string name="BackupDialog_passphrase_was_not_correct">密碼有誤</string>
   <string name="LocalBackupJob_creating_signal_backup">建立緊 Signal 備份…</string>
+  <!--Title for progress notification shown in a system notification while verifying a recent backup.-->
+  <string name="LocalBackupJob_verifying_signal_backup">驗證緊 Signal 備份…</string>
   <string name="LocalBackupJobApi29_backup_failed">備份唔到</string>
   <string name="LocalBackupJobApi29_your_backup_directory_has_been_deleted_or_moved">您嘅備份目錄已經刪除或移動咗。</string>
   <string name="LocalBackupJobApi29_your_backup_file_is_too_large">您個備份檔案大得滯，裝唔落呢一度喎。</string>
   <string name="LocalBackupJobApi29_there_is_not_enough_space">唔夠空間，儲存唔到您嘅備份。</string>
+  <!--Error message shown if a newly created backup could not be verified as accurate-->
+  <string name="LocalBackupJobApi29_your_backup_could_not_be_verified">系統冇辦法建立同驗證你最近嘅備份。請你建立新嘅備份。</string>
+  <!--Error message shown if a very large attachment is encountered during the backup creation and causes the backup to fail-->
+  <string name="LocalBackupJobApi29_your_backup_contains_a_very_large_file">你嘅備份入面包含一個非常大型嘅檔案，而且冇辦法進行備份。請你刪除嗰個檔案，然後建立新嘅備份。</string>
   <string name="LocalBackupJobApi29_tap_to_manage_backups">撳一下去管理備份。</string>
   <string name="ProgressPreference_d_messages_so_far">目前為止 %d 個訊息</string>
   <string name="RegistrationActivity_wrong_number">個冧把錯咗</string>
@@ -2876,6 +2952,9 @@
   <string name="CallParticipant__you">您</string>
   <string name="CallParticipant__you_on_another_device">您 (用另一部機)</string>
   <string name="CallParticipant__s_on_another_device">%1$s (用另一部機)</string>
+  <!--WifiToCellularPopupWindow-->
+  <!--Message shown during a call when the WiFi network is unusable, and cellular data starts to be used for the call instead.-->
+  <string name="WifiToCellularPopupWindow__weak_wifi_switched_to_cellular">Wi-Fi 訊號微弱。已經轉咗用流動數據。</string>
   <!--DeleteAccountFragment-->
   <string name="DeleteAccountFragment__deleting_your_account_will">刪除您嘅帳戶嘅話，即會：</string>
   <string name="DeleteAccountFragment__enter_your_phone_number">輸入您嘅電話冧把</string>
@@ -2917,6 +2996,8 @@
   <string name="ShareActivity__send">傳送</string>
   <string name="ShareActivity__comma_s">、%1$s</string>
   <string name="ShareActivity__sharing_to_multiple_chats_is">淨係得 Signal 訊息，先支援同時分享畀多個傾偈</string>
+  <!--Toast when the incoming intent is invalid-->
+  <string name="ShareActivity__could_not_get_share_data_from_intent">系統攞唔到共享意圖數據。</string>
   <!--MultiShareDialogs-->
   <string name="MultiShareDialogs__failed_to_send_to_some_users">發送唔到畀部份使用者</string>
   <string name="MultiShareDialogs__you_can_only_share_with_up_to">您淨係可以分享畀最多 %1$d 個傾偈</string>
@@ -3116,6 +3197,12 @@
   <string name="ChatsSettingsFragment__enter_key_sends">Enter 掣唔換行當係傳送</string>
   <!--SmsSettingsFragment-->
   <string name="SmsSettingsFragment__use_as_default_sms_app">用嚟做預設嘅短訊 app</string>
+  <!--Preference title to export sms-->
+  <string name="SmsSettingsFragment__export_sms_messages">匯出短訊</string>
+  <!--Preference title to delete sms-->
+  <string name="SmsSettingsFragment__remove_sms_messages">移除短訊</string>
+  <!--Snackbar text to confirm deletion-->
+  <string name="SmsSettingsFragment__sms_messages_removed">短訊已經剷咗</string>
   <!--NotificationsSettingsFragment-->
   <string name="NotificationsSettingsFragment__messages">訊息</string>
   <string name="NotificationsSettingsFragment__calls">通話</string>
@@ -3142,6 +3229,19 @@
   <string name="PrivacySettingsFragment__signal_message_and_calls">Signal 訊息同通話、一律轉駁通話同封密發送人</string>
   <string name="PrivacySettingsFragment__default_timer_for_new_changes">為新嘅傾偈預設倒數限期</string>
   <string name="PrivacySettingsFragment__set_a_default_disappearing_message_timer_for_all_new_chats_started_by_you">幫您發起嘅所有新對話，都預先設定一個過眼雲煙訊息倒數限期。</string>
+  <!--Summary for stories preference to launch into story privacy settings-->
+  <string name="PrivacySettingsFragment__manage_your_stories">管理你嘅限時動態同埋分享對象</string>
+  <string name="PrivacySettingsFragment__payment_lock_require_lock">一定要用 Android 螢幕鎖定或者指紋辨識功能嚟進行滙款</string>
+  <!--Alert dialog title when payment lock cannot be enabled-->
+  <string name="PrivacySettingsFragment__cant_enable_title">啟用唔到付款鎖定</string>
+  <!--Alert dialog description to setup screen lock or fingerprint in phone settings-->
+  <string name="PrivacySettingsFragment__cant_enable_description">如果要用付款鎖定，就一定要先喺手機設定啟用螢幕鎖定或者指紋 ID。</string>
+  <!--Shown in a toast when we can\'t navigate to the user\'s system fingerprint settings-->
+  <string name="PrivacySettingsFragment__failed_to_navigate_to_system_settings">瀏覽唔到系統設定</string>
+  <!--Alert dialog button to go to phone settings-->
+  <string name="PrivacySettingsFragment__go_to_settings">前往設定</string>
+  <!--Alert dialog button to cancel the dialog-->
+  <string name="PrivacySettingsFragment__cancel">取消</string>
   <!--AdvancedPrivacySettingsFragment-->
   <string name="AdvancedPrivacySettingsFragment__show_status_icon">擺放狀態標誌</string>
   <string name="AdvancedPrivacySettingsFragment__show_an_icon">喺訊息詳情度顯示標誌，以表示呢個訊息係用封密發送人送遞嘅。</string>
@@ -3249,6 +3349,8 @@
   <string name="EmojiSearchFragment__no_results_found">查無結果</string>
   <string name="NotificationsSettingsFragment__unknown_ringtone">未知嘅鈴聲</string>
   <!--ConversationSettingsFragment-->
+  <!--Error toasted when no activity can handle the add contact intent-->
+  <string name="ConversationSettingsFragment__contacts_app_not_found">搵唔到聯絡人應用程式</string>
   <string name="ConversationSettingsFragment__send_message">傳送訊息</string>
   <string name="ConversationSettingsFragment__start_video_call">開始視像通話</string>
   <string name="ConversationSettingsFragment__start_audio_call">開始語音通話</string>
@@ -3348,6 +3450,10 @@
   <string name="MultiselectForwardFragment__share_with">分享畀</string>
   <string name="MultiselectForwardFragment__add_a_message">寫返句訊息</string>
   <string name="MultiselectForwardFragment__faster_forwards">更快趣嘅轉寄傳送門</string>
+  <!--Displayed when user selects a video that will be clipped before sharing to a story-->
+  <string name="MultiselectForwardFragment__videos_will_be_trimmed">影片會裁剪至 30 秒，然後用幾個限時動態傳送。</string>
+  <!--Displayed when user selects a video that cannot be sent as a story-->
+  <string name="MultiselectForwardFragment__videos_sent_to_stories_cant">發送至限時動態嘅影片唔可以超過 30 秒。</string>
   <string name="MultiselectForwardFragment__forwarded_messages_are_now">轉寄訊息，而家嗱嗱聲同您迅速純熟送出。</string>
   <plurals name="MultiselectForwardFragment_send_d_messages">
     <item quantity="other">傳送呢 %1$d 個訊息</item>
@@ -3361,6 +3467,8 @@
   <plurals name="MultiselectForwardFragment__couldnt_forward_messages">
     <item quantity="other">轉寄唔到，因為個訊息而家已經冇咗。</item>
   </plurals>
+  <!--Error message shown when attempting to select a group to forward/share but it\'s announcement only and you are not an admin-->
+  <string name="MultiselectForwardFragment__only_admins_can_send_messages_to_this_group">只有管理員可以向呢個群組傳送訊息。</string>
   <string name="MultiselectForwardFragment__limit_reached">頂晒櫳喇</string>
   <!--Media V2-->
   <string name="MediaReviewFragment__add_a_message">寫返句訊息</string>
@@ -3425,8 +3533,8 @@
   <string name="SubscribeLearnMoreBottomSheetDialogFragment__your_donation">擔當呢份使命，全靠您嘅捐款做後援，幫手補貼程式開發同營運嘅燈油火蠟，等世界上數以百萬計嘅人，都用到同一個 app 做私密通訊，開住個「爐」為對方焗一份蘋果派。無廣告、無追蹤、堅過石堅。</string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__thanks_for_your_support">多謝您嘅鼎力支持！</string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__thanks_for_the_boost">多謝您為我哋集氣！</string>
-  <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__youve_earned_s_badge_display">您得到「%s」徽章！不妨喺您嘅個人資料顯示徽章，等大家一呼百應，一齊捐款撐起 Signal。</string>
-  <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__youve_earned_a_boost_badge_display">您得到「贊助徽章」！不妨喺您嘅個人資料顯示徽章，等大家一呼百應，一齊捐款撐起 Signal。</string>
+  <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__youve_earned_s_badge_display">你獲得「%s」徽章！不妨喺你嘅個人檔案展示徽章，等大家一呼百應，一齊捐款撐起 Signal。</string>
+  <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__youve_earned_a_boost_badge_display">你獲得「捐款徽章」！不妨喺你嘅個人檔案展示徽章，等大家一呼百應，一齊捐款撐起 Signal。</string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__you_can_also">不妨考慮埋</string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__become_a_montly_sustainer">擔當月供課金計劃嘅後援。</string>
   <string name="SubscribeThanksForYourSupportBottomSheetDialogFragment__display_on_profile">掛上去個人資料度展示</string>
@@ -3452,7 +3560,7 @@
   <!--Preference heading for other ways to donate-->
   <string name="ManageDonationsFragment__other_ways_to_give">其他捐款方式</string>
   <!--Preference label to launch badge gifting-->
-  <string name="ManageDonationsFragment__gift_a_badge">贈送徽章</string>
+  <string name="ManageDonationsFragment__gift_a_badge">餽贈徽章</string>
   <string name="BoostFragment__give_signal_a_boost">Signal 賣旗籌款</string>
   <!--Description text in boost sheet-->
   <string name="BoostFragment__make_a_one_time">單次捐款奉送「集氣」襟章一枚，為期 %1$d 日，聊作心意。</string>
@@ -3478,11 +3586,11 @@
   <string name="ExpiredBadgeBottomSheetDialogFragment__add_a_boost">買多支旗</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__not_now">遲啲先啦</string>
   <!--Copy displayed when badge expires after user inactivity-->
-  <string name="ExpiredBadgeBottomSheetDialogFragment__your_recurring_monthly_donation_was_automatically">因為您冇用一段時間，所以您嘅每月定期捐款已經自動取消。您嘅個人資料唔會再顯示「%1$s」徽章。</string>
+  <string name="ExpiredBadgeBottomSheetDialogFragment__your_recurring_monthly_donation_was_automatically">由於你冇用 Signal 一段時間，所以你嘅每月定期捐款已經自動取消。你嘅個人檔案唔會再顯示「%1$s」徽章。</string>
   <!--Copy displayed when badge expires after payment failure-->
-  <string name="ExpiredBadgeBottomSheetDialogFragment__your_recurring_monthly_donation_was_canceled">因為我哋處理唔到您嘅付款，所以您嘅每月定期捐款已經取消。您嘅個人資料唔會再顯示徽章。</string>
+  <string name="ExpiredBadgeBottomSheetDialogFragment__your_recurring_monthly_donation_was_canceled">由於我哋處理唔到你嘅付款，所以你嘅每月定期捐款已經取消。你嘅個人檔案唔會再顯示徽章。</string>
   <!--Copy displayed when badge expires after a payment failure and we have a displayable charge failure reason-->
-  <string name="ExpiredBadgeBottomSheetDialogFragment__your_recurring_monthly_donation_was_canceled_s">您嘅每月定期捐款已經取消。%1$s 您嘅個人資料唔會再顯示「%2$s」徽章。</string>
+  <string name="ExpiredBadgeBottomSheetDialogFragment__your_recurring_monthly_donation_was_canceled_s">你嘅每月定期捐款已經取消。%1$s 你嘅個人檔案唔會再顯示「%2$s」徽章。</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__you_can">Signal 一切如常運作，並讓您自由使用。若要繼續支持呢個 app 並掛返起您個襟章，請立即續期。</string>
   <string name="ExpiredBadgeBottomSheetDialogFragment__renew_subscription">為課金計劃續期</string>
   <!--Button label to send user to Google Pay website-->
@@ -3503,13 +3611,13 @@
   <string name="DonationsErrors__still_processing">仲處理緊</string>
   <string name="DonationsErrors__couldnt_add_badge">加唔到個襟章</string>
   <!--Displayed when badge credential couldn\'t be verified-->
-  <string name="DonationsErrors__failed_to_validate_badge">驗證唔到徵章</string>
+  <string name="DonationsErrors__failed_to_validate_badge">無法驗證徵章</string>
   <!--Displayed when badge credential couldn\'t be verified-->
-  <string name="DonationsErrors__could_not_validate">驗證唔到伺服器回應。請聯絡支援團隊。</string>
+  <string name="DonationsErrors__could_not_validate">無法驗證伺服器回應。請聯絡支援團隊。</string>
   <!--Displayed as title when some generic error happens during gift badge sending-->
-  <string name="DonationsErrors__failed_to_send_gift_badge">傳送唔到禮品徽章</string>
+  <string name="DonationsErrors__failed_to_send_gift_badge">無法傳送餽贈徽章</string>
   <!--Displayed as message when some generic error happens during gift badge sending-->
-  <string name="DonationsErrors__could_not_send_gift_badge">傳送唔到禮品徽章。請聯絡支援團隊。</string>
+  <string name="DonationsErrors__could_not_send_gift_badge">無法傳送餽贈徽章。請聯絡支援團隊。</string>
   <string name="DonationsErrors__your_badge_could_not">您個襟章加唔到落去您個帳戶度，但有可能已經扣咗您數。請聯絡支援。</string>
   <string name="DonationsErrors__your_payment_is_still">仲處理緊您嘅付款。視乎您嘅上網速度，可能需時幾分鐘。</string>
   <string name="DonationsErrors__google_pay_unavailable">用唔到 Google Pay</string>
@@ -3520,15 +3628,15 @@
   <string name="NetworkFailure__network_error_check_your_connection_and_try_again">網絡有問題。請檢查您嘅連線，然後再試下啦。</string>
   <string name="NetworkFailure__retry">再試一次</string>
   <!--Displayed as a dialog title when the selected recipient for a gift doesn\'t support gifting-->
-  <string name="DonationsErrors__recipient_verification_failed">驗證唔到接收人。</string>
+  <string name="DonationsErrors__cant_send_gift">傳送唔到禮物</string>
   <!--Displayed as a dialog message when the selected recipient for a gift doesn\'t support gifting-->
-  <string name="DonationsErrors__target_does_not_support_gifting">對方唔支援送禮。</string>
+  <string name="DonationsErrors__target_does_not_support_gifting">呢個收件人用緊嘅 Signal 版本唔可以接收饋贈徽章。當佢哋更新咗最新版本，就可以接收禮物。</string>
   <!--Displayed as a dialog title when the user\'s profile could not be fetched, likely due to lack of internet-->
-  <string name="DonationsErrors__could_not_verify_recipient">驗證唔到接收人。</string>
+  <string name="DonationsErrors__couldnt_send_gift">傳送唔到禮物</string>
   <!--Displayed as a dialog message when the user\'s profile could not be fetched, likely due to lack of internet-->
-  <string name="DonationsErrors__please_check_your_network_connection">請檢查您嘅網路連線，然後再試一次。</string>
+  <string name="DonationsErrors__please_check_your_network_connection">由於發生網路錯誤，系統傳送唔到你嘅禮物。請檢查吓網路連線，然後再試過啦。</string>
   <!--Gift message view title-->
-  <string name="GiftMessageView__gift_badge">禮品徽章</string>
+  <string name="GiftMessageView__gift_badge">餽贈徽章</string>
   <!--Gift message view expiry information-->
   <plurals name="GiftMessageView__lasts_for_d_months">
     <item quantity="other">為期 %1$d 個月</item>
@@ -3540,7 +3648,7 @@
   <!--Gift badge redeeming action label-->
   <string name="GiftMessageView__redeeming">換領緊…</string>
   <!--Gift badge redeemed label-->
-  <string name="GiftMessageView__redeemed">換領咗</string>
+  <string name="GiftMessageView__redeemed">已換領</string>
   <!--Stripe decline code generic_failure-->
   <string name="DeclineCode__try_another_payment_method_or_contact_your_bank">試下轉另一個付款方法，又或者聯絡返您間銀行問清楚。</string>
   <!--Stripe decline code verify on Google Pay and try again-->
@@ -3712,7 +3820,7 @@
   <!--Donation receipts one-time tab label-->
   <string name="DonationReceiptListFragment__one_time">單次</string>
   <!--Donation receipts gift tab label-->
-  <string name="DonationReceiptListFragment__gift">禮品</string>
+  <string name="DonationReceiptListFragment__gift">禮物</string>
   <!--Donation receipts boost row label-->
   <string name="DonationReceiptListFragment__boost">集氣</string>
   <!--Donation receipts details title-->
@@ -3734,7 +3842,7 @@
   <!--Donation receipt type-->
   <string name="DonationReceiptDetailsFragment__s_dash_s">%1$s - %2$s</string>
   <!--Donation reciepts screen empty state title-->
-  <string name="DonationReceiptListFragment__no_receipts">無收據</string>
+  <string name="DonationReceiptListFragment__no_receipts">冇收據</string>
   <!--region "Stories Tab"-->
   <!--Label for Chats tab in home app screen-->
   <string name="ConversationListTabs__chats">傾偈</string>
@@ -3742,10 +3850,12 @@
   <string name="ConversationListTabs__stories">是日花生</string>
   <!--String for counts above 99 in conversation list tabs-->
   <string name="ConversationListTabs__99p">99+</string>
+  <!--Menu item on stories landing page-->
+  <string name="StoriesLandingFragment__story_privacy">限時動態私隱</string>
   <!--Title for "My Stories" row item in Stories landing page-->
   <string name="StoriesLandingFragment__my_stories">我嘅是日花生</string>
   <!--Subtitle for "My Stories" row item when user has not added stories-->
-  <string name="StoriesLandingFragment__add_a_story">發辦一味是日花生</string>
+  <string name="StoriesLandingFragment__tap_to_add_a_story">㩒一吓加入限時動態</string>
   <!--Displayed when there are no stories to display-->
   <string name="StoriesLandingFragment__no_recent_updates_to_show_right_now_tap_plus_to_add_to_your_story">目前未有新動靜有得睇。撳一下 + 加料落您放送嘅是日花生。</string>
   <!--Context menu option to hide a story-->
@@ -3758,6 +3868,8 @@
   <string name="StoriesLandingItem__share">分享…</string>
   <!--Context menu option to go to story chat-->
   <string name="StoriesLandingItem__go_to_chat">跳去傾偈</string>
+  <!--Context menu option to go to story info-->
+  <string name="StoriesLandingItem__info">詳細</string>
   <!--Label when a story is pending sending-->
   <string name="StoriesLandingItem__sending">送緊出去…</string>
   <!--Label when multiple stories are pending sending-->
@@ -3791,7 +3903,7 @@
   <!--Message of dialog to confirm deletion of story-->
   <string name="MyStories__this_story_will_be_deleted">呢味是日花生，您同埋收到佢嘅全世界都會剷走佢個囉噃。</string>
   <!--Toast shown when story media cannot be saved-->
-  <string name="MyStories__unable_to_save">儲存唔到</string>
+  <string name="MyStories__unable_to_save">無法儲存</string>
   <!--Displayed at bottom of story viewer when current item has views-->
   <plurals name="StoryViewerFragment__d_views">
     <item quantity="other">%1$d 次遊覽</item>
@@ -3800,6 +3912,8 @@
   <plurals name="StoryViewerFragment__d_replies">
     <item quantity="other">%1$d 個回覆</item>
   </plurals>
+  <!--Used when view receipts are disabled-->
+  <string name="StoryViewerPageFragment__views_off">已讀標記閂咗</string>
   <!--Used to join views and replies when both exist on a story item-->
   <string name="StoryViewerFragment__s_s">%1$s %2$s</string>
   <!--Displayed when viewing a post you sent-->
@@ -3812,6 +3926,18 @@
   <string name="StoryViewerPageFragment__reply_to_group">回覆群組</string>
   <!--Displayed when a story has no views-->
   <string name="StoryViewsFragment__no_views_yet">未有人遊覽</string>
+  <!--Displayed when user has disabled receipts-->
+  <string name="StoryViewsFragment__enable_read_receipts_to_see_whos_viewed_your_story">啟用已讀標記，就可以知道邊個睇過你嘅限時動態。</string>
+  <!--Button label displayed when user has disabled receipts-->
+  <string name="StoryViewsFragment__go_to_settings">前往設定</string>
+  <!--Dialog action to remove viewer from a story-->
+  <string name="StoryViewsFragment__remove">剷走佢</string>
+  <!--Dialog title when removing a viewer from a story-->
+  <string name="StoryViewsFragment__remove_viewer">係咪要移除瀏覽者呀？</string>
+  <!--Dialog message when removing a viewer from a story-->
+  <string name="StoryViewsFragment__s_will_still_be_able">%1$s 仍然可以睇到呢個貼文，但唔會睇到你以後喺 %2$s 分享嘅任何貼文喇。</string>
+  <!--Story View context menu action to remove them from a story-->
+  <string name="StoryViewItem__remove_viewer">移除瀏覽者</string>
   <!--Displayed when a story has no replies yet-->
   <string name="StoryGroupReplyFragment__no_replies_yet">未有人回覆</string>
   <!--Displayed for each user that reacted to a story when viewing replies-->
@@ -3830,24 +3956,34 @@
   <string name="StoryGroupReplyItem__copy">複製</string>
   <!--Context menu item to delete a story response-->
   <string name="StoryGroupReplyItem__delete">刪除</string>
-  <!--Story settings page title-->
-  <string name="StorySettingsFragment__story_settings">是日花生設定</string>
-  <!--Story settings private stories heading-->
-  <string name="StorySettingsFragment__private_stories">私伙放送是日花生</string>
-  <!--Note at bottom of story settings regarding who can see private stories.-->
-  <string name="StorySettingsFragment__private_stories_can_only_be_viewed">只有您加入嘅成員先可以睇到私人限時動態。只有您先可以睇到限時動態嘅名。</string>
-  <!--Option label for creating a new private story-->
-  <string name="StorySettingsFragment__new_private_story">整多味私伙放送是日花生</string>
   <!--Page title for My Story options-->
   <string name="MyStorySettingsFragment__my_story">我嘅是日花生</string>
   <!--Section heading for story visibility-->
-  <string name="MyStorySettingsFragment__who_can_see_this_story">邊個可以見到呢味是日花生</string>
+  <string name="MyStorySettingsFragment__who_can_view_this_story">邊個可以睇到呢個限時動態</string>
   <!--Clickable option for selecting people to hide your story from-->
   <string name="MyStorySettingsFragment__hide_story_from">隱藏是日花生唔俾佢睇</string>
-  <!--Summary of clickable option displaying how many people you have hidden your story from-->
+  <!--Privacy setting title for sending stories to all your signal connections-->
+  <string name="MyStorySettingsFragment__all_signal_connections">所有 Signal 人脈</string>
+  <!--Privacy setting description for sending stories to all your signal connections-->
+  <string name="MyStorySettingsFragment__share_with_all_connections">同所有人脈分享</string>
+  <!--Privacy setting title for sending stories to all except the specified connections-->
+  <string name="MyStorySettingsFragment__all_except">所有人，除咗…</string>
+  <!--Privacy setting description for sending stories to all except the specified connections-->
+  <string name="MyStorySettingsFragment__hide_your_story_from_specific_people">向指定用戶隱藏限時動態</string>
+  <!--Summary of clickable option displaying how many people you have excluded from your story-->
+  <plurals name="MyStorySettingsFragment__d_people_excluded">
+    <item quantity="other">排除咗 %1$d 個人</item>
+  </plurals>
+  <!--Privacy setting title for only sharing your story with specified connections-->
+  <string name="MyStorySettingsFragment__only_share_with">只係分享俾…</string>
+  <!--Privacy setting description for only sharing your story with specified connections-->
+  <string name="MyStorySettingsFragment__only_share_with_selected_people">只係同選定嘅人分享</string>
+  <!--Summary of clickable option displaying how many people you have included to send to in your story-->
   <plurals name="MyStorySettingsFragment__d_people">
     <item quantity="other">%1$d 個人</item>
   </plurals>
+  <!--My story privacy fine print about what the privacy settings are for-->
+  <string name="MyStorySettingsFragment__choose_who_can_view_your_story">選擇邊個可以睇到你嘅限時動態。呢個選擇唔會影響你喺更改前發送嘅限時動態。</string>
   <!--Section header for options related to replies and reactions-->
   <string name="MyStorySettingsFragment__replies_amp_reactions">回覆與心情</string>
   <!--Switchable option for allowing replies and reactions on your stories-->
@@ -3856,10 +3992,10 @@
   <string name="MyStorySettingsFragment__let_people_who_can_view_your_story_react_and_reply">可以遊覽是日花生嘅花生友，都開放畀佢哋回覆同畀心情</string>
   <!--Note about default sharing-->
   <string name="MyStorySettingsFragment__hide_your_story_from">隱藏您嘅是日花生唔俾某啲人睇到。您嘅是日花生預設會分享畀您嘅 %1$s遊覽。</string>
-  <!--Signal connections linked text that opens the Signal Connections sheet-->
-  <!-- Removed by excludeNonTranslatables <string name="MyStorySettingsFragment__signal_connections">Signal 交遊</string> -->
+  <!--Signal connections bolded text in the Signal Connections sheet-->
+  <string name="SignalConnectionsBottomSheet___signal_connections">Signal 人脈</string>
   <!--Displayed at the top of the signal connections sheet. Please remember to insert strong tag as required.-->
-  <string name="SignalConnectionsBottomSheet__signal_connections_are_people"><strong>Signal 交遊</strong>係您揀過信任嘅人，當您：</string>
+  <string name="SignalConnectionsBottomSheet__signal_connections_are_people">Signal 人脈係你透過以下方式揀過而值得信任嘅人：</string>
   <!--Signal connections sheet bullet point 1-->
   <string name="SignalConnectionsBottomSheet__starting_a_conversation">同佢發起過對話</string>
   <!--Signal connections sheet bullet point 2-->
@@ -3908,8 +4044,10 @@
   <string name="TextStoryPostSendFragment__search">搜尋</string>
   <!--Toast shown when an unexpected error occurs while sending a text story-->
   <string name="TextStoryPostSendFragment__an_unexpected_error_occurred_try_again">發生未知錯誤</string>
-  <!--Title for screen allowing user to hide "My Story" entries from specific people-->
-  <!-- Removed by excludeNonTranslatables <string name="HideStoryFromFragment__hide_story_from">隱藏是日花生唔俾佢睇…</string> -->
+  <!--Title for screen allowing user to exclude "My Story" entries from specific people-->
+  <string name="ChangeMyStoryMembershipFragment__all_except">所有人，除咗…</string>
+  <!--Title for screen allowing user to only share "My Story" entries with specific people-->
+  <string name="ChangeMyStoryMembershipFragment__only_share_with">只係分享俾…</string>
   <!--Done button label for hide story from screen-->
   <string name="HideStoryFromFragment__done">搞掂</string>
   <!--Dialog title for first time adding something to a story-->
@@ -4000,68 +4138,94 @@
   <!--Content description for expand contacts chevron-->
   <string name="ExpandModel__view_more">睇多啲</string>
   <string name="StoriesLinkPopup__visit_link">打開條拎去睇</string>
-  <!--Duration and price information-->
+  <!--Gift price and duration, formatted as: {price} dot {n} day duration-->
   <plurals name="GiftRowItem_s_dot_d_day_duration">
     <item quantity="other">%1$s · 為期 %2$d 日</item>
   </plurals>
   <!--Tagline for gift row items-->
-  <string name="GiftRowItem__send_a_gift_badge">送出一個禮品徽章</string>
+  <string name="GiftRowItem__send_a_gift_badge">送出餽贈徽章</string>
   <!--Headline text on start fragment for gifting a badge-->
-  <string name="GiftFlowStartFragment__gift_a_badge">贈送徽章</string>
+  <string name="GiftFlowStartFragment__gift_a_badge">餽贈徽章</string>
   <!--Description text on start fragment for gifting a badge-->
-  <string name="GiftFlowStartFragment__gift_someone_a_badge">用其他人嘅名義捐款俾 Signal 可以向對方送上一個徽章。呢個徽章會顯示喺佢嘅個人資料照片到。</string>
+  <string name="GiftFlowStartFragment__gift_someone_a_badge">用其他人嘅名義捐款俾 Signal，就可以為對方送上徽章。呢個徽章會顯示喺佢嘅個人檔案相片上面。</string>
   <!--Action button label for start fragment for gifting a badge-->
   <string name="GiftFlowStartFragment__next">下一步</string>
   <!--Title text on choose recipient page for badge gifting-->
-  <string name="GiftFlowRecipientSelectionFragment__choose_recipient">揀選接收人</string>
+  <string name="GiftFlowRecipientSelectionFragment__choose_recipient">選擇接收者</string>
   <!--Title text on confirm gift page-->
-  <string name="GiftFlowConfirmationFragment__confirm_gift">確認禮品</string>
+  <string name="GiftFlowConfirmationFragment__confirm_gift">確認餽贈</string>
   <!--Heading text specifying who the gift will be sent to-->
   <string name="GiftFlowConfirmationFragment__send_to">傳畀</string>
   <!--Text explaining that gift will be sent to the chosen recipient-->
-  <string name="GiftFlowConfirmationFragment__your_gift_will_be_sent_in">您嘅禮品會以一對一訊息傳送俾接收人。您可以喺下面加入自己嘅訊息。</string>
+  <string name="GiftFlowConfirmationFragment__your_gift_will_be_sent_in">你嘅禮物會以一對一訊息傳送俾接收者。你可以喺下面加入自己嘅訊息。</string>
   <!--Text explaining that this gift is a one time donation-->
-  <string name="GiftFlowConfirmationFragment__one_time_donation">一次性捐款</string>
+  <string name="GiftFlowConfirmationFragment__one_time_donation">單次捐款</string>
   <!--Hint for add message input-->
   <string name="GiftFlowConfirmationFragment__add_a_message">寫返句訊息</string>
   <!--Displayed in the dialog while verifying the chosen recipient-->
-  <string name="GiftFlowConfirmationFragment__verifying_recipient">驗證緊接收人…</string>
+  <string name="GiftFlowConfirmationFragment__verifying_recipient">驗證緊接收者…</string>
   <!--Title for sheet shown when opening a redeemed gift-->
-  <string name="ViewReceivedGiftBottomSheet__s_sent_you_a_gift">%1$s 送咗一份禮品俾您</string>
+  <string name="ViewReceivedGiftBottomSheet__s_sent_you_a_gift">%1$s 送咗一份禮物俾你</string>
   <!--Title for sheet shown when opening a sent gift-->
   <string name="ViewSentGiftBottomSheet__thanks_for_your_support">多謝您嘅鼎力支持！</string>
   <!--Description for sheet shown when opening a redeemed gift-->
-  <string name="ViewReceivedGiftBottomSheet__youve_received_a_gift_badge">%1$s 送咗一個禮品徽章俾您！不妨喺您嘅個人資料顯示呢個徽章，等大家一呼百應，一齊撐起 Signal。</string>
+  <string name="ViewReceivedGiftBottomSheet__youve_received_a_gift_badge">%1$s 送咗一個徽章俾你！不妨喺個人檔案展示呢個徽章，等大家一呼百應，一齊撐起 Signal。</string>
   <!--Description for sheet shown when opening a sent gift-->
-  <string name="ViewSentGiftBottomSheet__youve_gifted_a_badge">您送左一個徵章俾 %1$s。當佢接受咗之後就可以揀要顯示定係隱藏徽章。</string>
+  <string name="ViewSentGiftBottomSheet__youve_gifted_a_badge">你送左一個徵章俾 %1$s。當佢接受咗之後，就可以選擇顯示或者隱藏徽章。</string>
   <!--Primary action for pending gift sheet to redeem badge now-->
   <string name="ViewReceivedGiftSheet__redeem">換領</string>
   <!--Primary action for pending gift sheet to redeem badge later-->
   <string name="ViewReceivedGiftSheet__not_now">遲啲先啦</string>
   <!--Dialog text while redeeming a gift-->
-  <string name="ViewReceivedGiftSheet__redeeming_gift">換領緊禮品…</string>
+  <string name="ViewReceivedGiftSheet__redeeming_gift">換領緊禮物…</string>
   <!--Snackbar text when user presses "not now" on redemption sheet-->
-  <string name="ConversationFragment__you_can_redeem_your_badge_later">您可以稍後先換領徽章。</string>
+  <string name="ConversationFragment__you_can_redeem_your_badge_later">你可以稍後先換領徽章。</string>
   <!--Description text in gift thanks sheet-->
-  <string name="GiftThanksSheet__youve_gifted_a_badge_to_s">您送左一個徵章俾 %1$s。當佢接受咗之後就可以揀要顯示定係隱藏徽章。</string>
+  <string name="GiftThanksSheet__youve_gifted_a_badge_to_s">你送左一個徵章俾 %1$s。當佢接受咗之後，就可以選擇顯示或者隱藏徽章。</string>
   <!--Expired gift sheet title-->
-  <string name="ExpiredGiftSheetConfiguration__your_gift_badge_has_expired">您嘅禮品徽章已經過期</string>
+  <string name="ExpiredGiftSheetConfiguration__your_gift_badge_has_expired">你嘅餽贈徽章已經過期</string>
   <!--Expired gift sheet top description text-->
-  <string name="ExpiredGiftSheetConfiguration__your_gift_badge_has_expired_and_is">您嘅禮品徽章已經過期，其他人唔會再喺您嘅個人資料到見到徽章。</string>
+  <string name="ExpiredGiftSheetConfiguration__your_gift_badge_has_expired_and_is">你嘅餽贈徽章已經過期，其他人唔會再喺你嘅個人檔案度見到徽章。</string>
   <!--Expired gift sheet bottom description text-->
   <string name="ExpiredGiftSheetConfiguration__to_continue">如果您想繼續力撐為您而設嘅科技，請考慮做我哋月供課金計劃嘅後援金主。</string>
   <!--Expired gift sheet make a monthly donation button-->
   <string name="ExpiredGiftSheetConfiguration__make_a_monthly_donation">每月捐款</string>
   <!--Expired gift sheet not now button-->
   <string name="ExpiredGiftSheetConfiguration__not_now">遲啲先啦</string>
+  <!--My Story label designating that we will only share with the selected viewers.-->
+  <string name="ContactSearchItems__only_share_with">只係分享俾</string>
   <!--Label under name for private stories-->
   <plurals name="ContactSearchItems__private_story_d_viewers">
-    <item quantity="other">私伙放送是日花生 · %1$d 位花生友</item>
+    <item quantity="other">個人限時動態 · %1$d 個瀏覽者</item>
   </plurals>
   <!--Label under name for group stories-->
   <plurals name="ContactSearchItems__group_story_d_viewers">
-    <item quantity="other">成谷放送是日花生 · %1$d 位花生友</item>
+    <item quantity="other">群組限時動態 · %1$d 個瀏覽者</item>
   </plurals>
+  <!--Label under name for my story-->
+  <plurals name="ContactSearchItems__my_story_s_dot_d_viewers">
+    <item quantity="other">%1$s · %2$d 個瀏覽者</item>
+  </plurals>
+  <!--Label under name for My Story when first sending to my story-->
+  <string name="ContactSearchItems__tap_to_choose_your_viewers">㩒一吓就可以揀選你嘅瀏覽者</string>
+  <!--Label for context menu item to open story settings-->
+  <string name="ContactSearchItems__story_settings">是日花生設定</string>
+  <!--Label for context menu item to remove a group story from contact results-->
+  <string name="ContactSearchItems__remove_story">移除限時動態</string>
+  <!--Label for context menu item to delete a private story-->
+  <string name="ContactSearchItems__delete_story">刪除限時動態</string>
+  <!--Dialog title for removing a group story-->
+  <string name="ContactSearchMediator__remove_group_story">確定要移除群組限時動態？</string>
+  <!--Dialog message for removing a group story-->
+  <string name="ContactSearchMediator__this_will_remove">咁做會喺清單上移除限時動態。你仍然可以睇到呢個群組嘅限時動態。</string>
+  <!--Dialog action item for removing a group story-->
+  <string name="ContactSearchMediator__remove">剷走佢</string>
+  <!--Dialog title for deleting a private story-->
+  <string name="ContactSearchMediator__delete_story">係咪要刪除是日花生？</string>
+  <!--Dialog message for deleting a private story-->
+  <string name="ContactSearchMediator__delete_the_private">確定要刪除私人限時動態「%1$s」？</string>
+  <!--Dialog action item for deleting a private story-->
+  <string name="ContactSearchMediator__delete">刪除</string>
   <!--Gift expiry days remaining-->
   <plurals name="Gifts__d_days_remaining">
     <item quantity="other">剩返 %1$d 日</item>
@@ -4076,5 +4240,135 @@
   </plurals>
   <!--Gift expiry expired-->
   <string name="Gifts__expired">過咗期</string>
+  <!--Label indicating that a user can tap to advance to the next post in a story-->
+  <string name="StoryFirstTimeNavigationView__tap_to_advance">㩒一吓繼續操作</string>
+  <!--Label indicating swipe direction to skip current story-->
+  <string name="StoryFirstTimeNavigationView__swipe_up_to_skip">向上掃嚟略過</string>
+  <!--Label indicating swipe direction to exit story viewer-->
+  <string name="StoryFirstTimeNavigationView__swipe_right_to_exit">向右掃嚟退出</string>
+  <!--Button label to confirm understanding of story navigation-->
+  <string name="StoryFirstTimeNagivationView__got_it">明白</string>
+  <!--Content description for vertical context menu button in safety number sheet rows-->
+  <string name="SafetyNumberRecipientRowItem__open_context_menu">打開內容選單</string>
+  <!--Sub-line when a user is verified.-->
+  <string name="SafetyNumberRecipientRowItem__s_dot_verified">%1$s · 已驗證</string>
+  <!--Sub-line when a user is verified.-->
+  <string name="SafetyNumberRecipientRowItem__verified">驗證咗</string>
+  <!--Title of safety number changes bottom sheet when showing individual records-->
+  <string name="SafetyNumberBottomSheetFragment__safety_number_changes">安全碼變更</string>
+  <!--Message of safety number changes bottom sheet when showing individual records-->
+  <string name="SafetyNumberBottomSheetFragment__the_following_people">以下嘅聯絡人可能重新安裝咗 Signal 或者更換咗裝置。你可以㩒一吓接收者嚟確認新安全碼。呢個操作係選擇性嘅。</string>
+  <!--Title of safety number changes bottom sheet when not showing individual records-->
+  <string name="SafetyNumberBottomSheetFragment__safety_number_checkup">檢查安全碼</string>
+  <!--Title of safety number changes bottom sheet when not showing individual records and user has seen review screen-->
+  <string name="SafetyNumberBottomSheetFragment__safety_number_checkup_complete">完成檢查新安全碼</string>
+  <!--Message of safety number changes bottom sheet when not showing individual records and user has seen review screen-->
+  <string name="SafetyNumberBottomSheetFragment__all_connections_have_been_reviewed">已經審查晒所有人脈，㩒一吓傳送就可以繼續。</string>
+  <!--Message of safety number changes bottom sheet when not showing individual records-->
+  <string name="SafetyNumberBottomSheetFragment__you_have_d_connections">你有 %1$d 個人脈可能重新安裝咗 Signal 或者更換咗裝置。同佢哋分享你嘅限時動態之前，請先審查佢哋嘅安全碼，或者可以考慮喺你嘅限時動態入面將佢哋移除。</string>
+  <!--Menu action to launch safety number verification screen-->
+  <string name="SafetyNumberBottomSheetFragment__verify_safety_number">驗證安全碼</string>
+  <!--Menu action to remove user from story-->
+  <string name="SafetyNumberBottomSheetFragment__remove_from_story">喺限時動態入面移除</string>
+  <!--Action button at bottom of SafetyNumberBottomSheetFragment to send anyway-->
+  <string name="SafetyNumberBottomSheetFragment__send_anyway">照樣傳送</string>
+  <!--Action button at bottom of SafetyNumberBottomSheetFragment to review connections-->
+  <string name="SafetyNumberBottomSheetFragment__review_connections">審查人脈</string>
+  <!--Empty state copy for SafetyNumberBottomSheetFragment-->
+  <string name="SafetyNumberBottomSheetFragment__no_more_recipients_to_show">冇其他接收者喇</string>
+  <!--Done button on safety number review fragment-->
+  <string name="SafetyNumberReviewConnectionsFragment__done">完成</string>
+  <!--Title of safety number review fragment-->
+  <string name="SafetyNumberReviewConnectionsFragment__safety_number_changes">安全碼變更</string>
+  <!--Message of safety number review fragment-->
+  <plurals name="SafetyNumberReviewConnectionsFragment__d_recipients_may_have">
+    <item quantity="other">有 %1$d 個接收者可能重新安裝咗 Signal 或者更換咗裝置。你可以㩒一吓接收者嚟確認新安全碼。呢個操作係選擇性嘅。</item>
+  </plurals>
+  <!--Section header for 1:1 contacts in review fragment-->
+  <string name="SafetyNumberBucketRowItem__contacts">聯絡人</string>
+  <!--Context menu label for distribution list headers in review fragment-->
+  <string name="SafetyNumberReviewConnectionsFragment__remove_all">全部移除</string>
+  <!--Context menu label for 1:1 contacts to remove from send-->
+  <string name="SafetyNumberReviewConnectionsFragment__remove">剷走佢</string>
+  <!--Title of initial My Story settings configuration shown when sending to My Story for the first time-->
+  <string name="ChooseInitialMyStoryMembershipFragment__my_story_privacy">「我嘅限時動態」私隱設定</string>
+  <!--Subtitle of initial My Story settings configuration shown when sending to My Story for the first time-->
+  <string name="ChooseInitialMyStoryMembershipFragment__choose_who_can_see_posts_to_my_story_you_can_always_make_changes_in_settings">選擇邊個可以睇到「我嘅限時動態」貼文。你隨時可以喺設定入面更改。</string>
+  <!--All connections option for initial My Story settings configuration shown when sending to My Story for the first time-->
+  <string name="ChooseInitialMyStoryMembershipFragment__all_signal_connections">所有 Signal 嘅人脈</string>
+  <!--All connections except option for initial My Story settings configuration shown when sending to My Story for the first time-->
+  <string name="ChooseInitialMyStoryMembershipFragment__all_except">所有人，除咗…</string>
+  <!--Only with selected connections option for initial My Story settings configuration shown when sending to My Story for the first time-->
+  <string name="ChooseInitialMyStoryMembershipFragment__only_share_with">只係分享俾…</string>
+  <!--Story info header sent heading-->
+  <string name="StoryInfoHeader__sent">送出</string>
+  <!--Story info header received heading-->
+  <string name="StoryInfoHeader__received">收到</string>
+  <!--Story info header file size heading-->
+  <string name="StoryInfoHeader__file_size">檔案大小</string>
+  <!--Story info "Sent to" header-->
+  <string name="StoryInfoBottomSheetDialogFragment__sent_to">傳送咗俾</string>
+  <!--Story info "Sent from" header-->
+  <string name="StoryInfoBottomSheetDialogFragment__sent_from">係嚟自</string>
+  <!--Story Info context menu label-->
+  <string name="StoryInfoBottomSheetDialogFragment__info">詳細</string>
+  <!--StoriesPrivacySettingsFragment-->
+  <!--Explanation about how stories are deleted and managed-->
+  <string name="StoriesPrivacySettingsFragment__stories_automatically_disappear">限時動態會喺 24 小時後自動消失。你可以選擇限時動態嘅分享對象，亦都可以建立新嘅限時動態俾特定嘅對象或者群組。</string>
+  <!--Preference title to turn off stories-->
+  <string name="StoriesPrivacySettingsFragment__turn_off_stories">閂咗限時動態</string>
+  <!--Preference summary to turn off stories-->
+  <string name="StoriesPrivacySettingsFragment__if_you_opt_out">如果你選擇閂咗限時動態，就冇得再分享自己或者睇其他人嘅限時動態㗎喇。</string>
+  <!--Preference title to turn on stories-->
+  <string name="StoriesPrivacySettingsFragment__turn_on_stories">開啟限時動態</string>
+  <!--Preference summary to turn on stories-->
+  <string name="StoriesPrivacySettingsFragment__share_and_view">分享自己同睇其他人嘅限時動態。限時動態會喺 24 小時後自動消失。</string>
+  <!--Dialog title to turn off stories-->
+  <string name="StoriesPrivacySettingsFragment__turn_off_stories_question">係咪要閂咗限時動態呀？</string>
+  <!--Dialog message to turn off stories-->
+  <string name="StoriesPrivacySettingsFragment__you_will_no_longer_be_able_to">你之後就冇得再分享自己或者瀏覽其他人嘅限時動態㗎喇。而其他人喺限時完結之前都仲可以睇到你最近發佈嘅限時動態嘅。</string>
+  <!--Page title when launched from stories landing screen-->
+  <string name="StoriesPrivacySettingsFragment__story_privacy">限時動態私隱</string>
+  <!--GroupStorySettingsFragment-->
+  <!--Section header for who can view a group story-->
+  <string name="GroupStorySettingsFragment__who_can_view_this_story">邊個可以睇到呢個限時動態</string>
+  <!--Explanation of who can view a group story-->
+  <string name="GroupStorySettingsFragment__members_of_the_group_s">「%1$s」群組嘅成員可以睇到同埋回覆呢個限時動態。你可以更新群組聊天嘅成員資格。</string>
+  <!--Preference label for removing this group story-->
+  <string name="GroupStorySettingsFragment__remove_group_story">移除群組限時動態</string>
+  <!--Generic title for overflow menus-->
+  <string name="OverflowMenu__overflow_menu">溢位選單</string>
+  <!--SMS Export Service-->
+  <!--Displayed in the notification while export is running-->
+  <string name="SignalSmsExportService__exporting_messages">匯出緊訊息…</string>
+  <!--ExportYourSmsMessagesFragment-->
+  <!--Title of the screen-->
+  <string name="ExportYourSmsMessagesFragment__export_your_sms_messages">匯出你嘅短訊</string>
+  <!--Button label to begin export-->
+  <string name="ExportYourSmsMessagesFragment__continue">繼續</string>
+  <!--ExportingSmsMessagesFragment-->
+  <!--Title of the screen-->
+  <string name="ExportingSmsMessagesFragment__exporting_sms_messages">匯出緊短訊</string>
+  <!--Progress indicator for export-->
+  <string name="ExportingSmsMessagesFragment__exporting_d_of_d">匯出緊 %1$d / %2$d…</string>
+  <!--ChooseANewDefaultSmsAppFragment-->
+  <!--Title of the screen-->
+  <string name="ChooseANewDefaultSmsAppFragment__choose_a_new">請選擇新嘅預設短訊應用程式</string>
+  <!--Button label to launch picker-->
+  <string name="ChooseANewDefaultSmsAppFragment__continue">繼續</string>
+  <!--RemoveSmsMessagesDialogFragment-->
+  <!--Action button to keep messages-->
+  <string name="RemoveSmsMessagesDialogFragment__keep_messages">保留訊息</string>
+  <!--Action button to remove messages-->
+  <string name="RemoveSmsMessagesDialogFragment__remove_messages">移除訊息</string>
+  <!--Title of dialog-->
+  <string name="RemoveSmsMessagesDialogFragment__remove_sms_messages">係咪要剷走嚟自 Signal 嘅短訊？</string>
+  <!--Message of dialog-->
+  <string name="RemoveSmsMessagesDialogFragment__you_have_changed">你已經改咗預設嘅短訊應用程式，係咪要剷走嚟自 Signal 嘅短訊呀？</string>
+  <!--SetSignalAsDefaultSmsAppFragment-->
+  <!--Title of the screen-->
+  <string name="SetSignalAsDefaultSmsAppFragment__first_set_signal_as_the_default_sms_app">請先將 Signal 設定做預設嘅短訊應用程式</string>
+  <!--Button label to start export-->
+  <string name="SetSignalAsDefaultSmsAppFragment__next">下一步</string>
   <!--EOF-->
 </resources>

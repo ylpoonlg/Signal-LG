@@ -23,7 +23,10 @@ import org.whispersystems.signalservice.api.push.ServiceId;
 import org.whispersystems.signalservice.api.push.SignalServiceAddress;
 import org.whispersystems.signalservice.api.push.exceptions.MissingConfigurationException;
 import org.whispersystems.signalservice.api.util.CredentialsProvider;
+import org.whispersystems.signalservice.internal.ServiceResponse;
 import org.whispersystems.signalservice.internal.configuration.SignalServiceConfiguration;
+import org.whispersystems.signalservice.internal.push.IdentityCheckRequest;
+import org.whispersystems.signalservice.internal.push.IdentityCheckResponse;
 import org.whispersystems.signalservice.internal.push.PushServiceSocket;
 import org.whispersystems.signalservice.internal.push.SignalServiceEnvelopeEntity;
 import org.whispersystems.signalservice.internal.push.SignalServiceMessagesResult;
@@ -31,6 +34,7 @@ import org.whispersystems.signalservice.internal.sticker.StickerProtos;
 import org.whispersystems.signalservice.internal.util.Util;
 import org.whispersystems.signalservice.internal.util.concurrent.FutureTransformers;
 import org.whispersystems.signalservice.internal.util.concurrent.ListenableFuture;
+import org.whispersystems.signalservice.internal.websocket.ResponseMapper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -42,6 +46,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+
+import javax.annotation.Nonnull;
+
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * The primary interface for receiving Signal Service messages.
@@ -130,6 +138,10 @@ public class SignalServiceMessageReceiver {
     return new FileInputStream(destination);
   }
 
+  public Single<ServiceResponse<IdentityCheckResponse>> performIdentityCheck(@Nonnull IdentityCheckRequest request, @Nonnull Optional<UnidentifiedAccess> unidentifiedAccess, @Nonnull ResponseMapper<IdentityCheckResponse> responseMapper) {
+    return socket.performIdentityCheck(request, unidentifiedAccess, responseMapper);
+  }
+
   /**
    * Retrieves a SignalServiceAttachment.
    *
@@ -208,21 +220,21 @@ public class SignalServiceMessageReceiver {
                                              Optional.of(address),
                                              entity.getSourceDevice(),
                                              entity.getTimestamp(),
-                                             entity.getMessage(),
                                              entity.getContent(),
                                              entity.getServerTimestamp(),
                                              messageResult.getServerDeliveredTimestamp(),
                                              entity.getServerUuid(),
-                                             entity.getDestinationUuid());
+                                             entity.getDestinationUuid(),
+                                             entity.isUrgent());
       } else {
         envelope = new SignalServiceEnvelope(entity.getType(),
                                              entity.getTimestamp(),
-                                             entity.getMessage(),
                                              entity.getContent(),
                                              entity.getServerTimestamp(),
                                              messageResult.getServerDeliveredTimestamp(),
                                              entity.getServerUuid(),
-                                             entity.getDestinationUuid());
+                                             entity.getDestinationUuid(),
+                                             entity.isUrgent());
       }
 
       callback.onMessage(envelope);

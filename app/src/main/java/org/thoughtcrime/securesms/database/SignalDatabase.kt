@@ -16,8 +16,7 @@ import org.thoughtcrime.securesms.database.helpers.SignalDatabaseMigrations
 import org.thoughtcrime.securesms.database.helpers.SignalDatabaseMigrations.migrate
 import org.thoughtcrime.securesms.database.helpers.SignalDatabaseMigrations.migratePostTransaction
 import org.thoughtcrime.securesms.database.model.AvatarPickerDatabase
-import org.thoughtcrime.securesms.dependencies.ApplicationDependencies
-import org.thoughtcrime.securesms.jobs.RefreshPreKeysJob
+import org.thoughtcrime.securesms.jobs.PreKeysSyncJob
 import org.thoughtcrime.securesms.migrations.LegacyMigrationJob
 import org.thoughtcrime.securesms.migrations.LegacyMigrationJob.DatabaseUpgradeListener
 import org.thoughtcrime.securesms.service.KeyCachingService
@@ -73,6 +72,7 @@ open class SignalDatabase(private val context: Application, databaseSecret: Data
   val storySendsDatabase: StorySendsDatabase = StorySendsDatabase(context, this)
   val cdsDatabase: CdsDatabase = CdsDatabase(context, this)
   val remoteMegaphoneDatabase: RemoteMegaphoneDatabase = RemoteMegaphoneDatabase(context, this)
+  val pendingPniSignatureMessageDatabase: PendingPniSignatureMessageDatabase = PendingPniSignatureMessageDatabase(context, this)
 
   override fun onOpen(db: net.zetetic.database.sqlcipher.SQLiteDatabase) {
     db.setForeignKeyConstraintsEnabled(true)
@@ -108,6 +108,7 @@ open class SignalDatabase(private val context: Application, databaseSecret: Data
     db.execSQL(StorySendsDatabase.CREATE_TABLE)
     db.execSQL(CdsDatabase.CREATE_TABLE)
     db.execSQL(RemoteMegaphoneDatabase.CREATE_TABLE)
+    db.execSQL(PendingPniSignatureMessageDatabase.CREATE_TABLE)
     executeStatements(db, SearchDatabase.CREATE_TABLE)
     executeStatements(db, RemappedRecordsDatabase.CREATE_TABLE)
     executeStatements(db, MessageSendLogDatabase.CREATE_TABLE)
@@ -132,6 +133,7 @@ open class SignalDatabase(private val context: Application, databaseSecret: Data
     executeStatements(db, DonationReceiptDatabase.CREATE_INDEXS)
     db.execSQL(StorySendsDatabase.CREATE_INDEX)
     executeStatements(db, DistributionListDatabase.CREATE_INDEXES)
+    executeStatements(db, PendingPniSignatureMessageDatabase.CREATE_INDEXES)
 
     executeStatements(db, MessageSendLogDatabase.CREATE_TRIGGERS)
     executeStatements(db, ReactionDatabase.CREATE_TRIGGERS)
@@ -145,7 +147,7 @@ open class SignalDatabase(private val context: Application, databaseSecret: Data
       val masterSecret = KeyCachingService.getMasterSecret(context)
       if (masterSecret != null) SQLCipherMigrationHelper.migrateCiphertext(context, masterSecret, legacyDb, db, null) else TextSecurePreferences.setNeedsSqlCipherMigration(context, true)
       if (!PreKeyMigrationHelper.migratePreKeys(context, db)) {
-        ApplicationDependencies.getJobManager().add(RefreshPreKeysJob())
+        PreKeysSyncJob.enqueue()
       }
       SessionStoreMigrationHelper.migrateSessions(context, db)
       PreKeyMigrationHelper.cleanUpPreKeys(context)
@@ -503,5 +505,10 @@ open class SignalDatabase(private val context: Application, databaseSecret: Data
     @get:JvmName("remoteMegaphones")
     val remoteMegaphones: RemoteMegaphoneDatabase
       get() = instance!!.remoteMegaphoneDatabase
+
+    @get:JvmStatic
+    @get:JvmName("pendingPniSignatureMessages")
+    val pendingPniSignatureMessages: PendingPniSignatureMessageDatabase
+      get() = instance!!.pendingPniSignatureMessageDatabase
   }
 }

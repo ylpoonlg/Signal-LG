@@ -67,6 +67,7 @@ import org.thoughtcrime.securesms.jobs.ResumableUploadSpecJob;
 import org.thoughtcrime.securesms.jobs.SmsSendJob;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.linkpreview.LinkPreview;
+import org.thoughtcrime.securesms.mediasend.Media;
 import org.thoughtcrime.securesms.mms.MmsException;
 import org.thoughtcrime.securesms.mms.OutgoingMediaMessage;
 import org.thoughtcrime.securesms.mms.OutgoingSecureMediaMessage;
@@ -87,7 +88,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -102,8 +102,11 @@ public class MessageSender {
    * Suitable for a 1:1 conversation or a GV1 group only.
    */
   @WorkerThread
-  public static void sendProfileKey(final Context context, final long threadId) {
-    ApplicationDependencies.getJobManager().add(ProfileKeySendJob.create(context, threadId, false));
+  public static void sendProfileKey(final long threadId) {
+    ProfileKeySendJob job = ProfileKeySendJob.create(threadId, false);
+    if (job != null) {
+      ApplicationDependencies.getJobManager().add(job);
+    }
   }
 
   public static long send(final Context context,
@@ -144,10 +147,11 @@ public class MessageSender {
     MessageDatabase       database        = SignalDatabase.mms();
     List<Long>            messageIds      = new ArrayList<>(messages.size());
     List<Long>            threads         = new ArrayList<>(messages.size());
-    UploadDependencyGraph dependencyGraph = UploadDependencyGraph.EMPTY;
+    UploadDependencyGraph dependencyGraph;
 
     try {
       database.beginTransaction();
+
       for (OutgoingSecureMediaMessage message : messages) {
         long      allocatedThreadId = threadDatabase.getOrCreateValidThreadId(message.getRecipient(), -1L, message.getDistributionType());
         Recipient recipient         = message.getRecipient();
@@ -194,8 +198,13 @@ public class MessageSender {
         List<UploadDependencyGraph.Node> nodes     = dependencyGraph.getDependencyMap().get(message);
 
         if (nodes == null || nodes.isEmpty()) {
-          Log.d(TAG, "No attachments for given message. Skipping.");
-          continue;
+          if (message.getStoryType().isTextStory()) {
+            Log.d(TAG, "No attachments for given text story. Skipping.");
+            continue;
+          } else {
+            Log.e(TAG, "No attachments for given media story. Aborting.");
+            throw new MmsException("No attachment for story.");
+          }
         }
 
         List<AttachmentId> attachmentIds = nodes.stream().map(UploadDependencyGraph.Node::getAttachmentId).collect(Collectors.toList());
@@ -207,7 +216,8 @@ public class MessageSender {
 
       database.setTransactionSuccessful();
     } catch (MmsException e) {
-      Log.w(TAG, e);
+      Log.w(TAG, "Failed to send stories.", e);
+      return;
     } finally {
       database.endTransaction();
     }
@@ -319,9 +329,10 @@ public class MessageSender {
 
   public static void sendMediaBroadcast(@NonNull Context context,
                                         @NonNull List<OutgoingSecureMediaMessage> messages,
-                                        @NonNull Collection<PreUploadResult> preUploadResults)
+                                        @NonNull Collection<PreUploadResult> preUploadResults,
+                                        boolean overwritePreUploadMessageIds)
   {
-    Log.i(TAG, "Sending media broadcast to " + Stream.of(messages).map(m -> m.getRecipient().getId()).toList());
+    Log.i(TAG, "Sending media broadcast (overwrite: " + overwritePreUploadMessageIds + ") to " + Stream.of(messages).map(m -> m.getRecipient().getId()).toList());
     Preconditions.checkArgument(messages.size() > 0, "No messages!");
     Preconditions.checkArgument(Stream.of(messages).allMatch(m -> m.getAttachments().isEmpty()), "Messages can't have attachments! They should be pre-uploaded.");
 
@@ -333,31 +344,33 @@ public class MessageSender {
     List<String>               preUploadJobIds        = Stream.of(preUploadResults).map(PreUploadResult::getJobIds).flatMap(Stream::of).toList();
     List<Long>                 messageIds             = new ArrayList<>(messages.size());
     List<String>               messageDependsOnIds    = new ArrayList<>(preUploadJobIds);
+    OutgoingSecureMediaMessage primaryMessage         = messages.get(0);
 
     mmsDatabase.beginTransaction();
     try {
-      OutgoingSecureMediaMessage primaryMessage   = messages.get(0);
-      long                       primaryThreadId  = threadDatabase.getOrCreateThreadIdFor(primaryMessage.getRecipient(), primaryMessage.getDistributionType());
-      long                       primaryMessageId = mmsDatabase.insertMessageOutbox(applyUniversalExpireTimerIfNecessary(context, primaryMessage.getRecipient(), primaryMessage, primaryThreadId),
-                                                                                    primaryThreadId,
-                                                                                    false,
-                                                                                    null);
+      if (overwritePreUploadMessageIds) {
+        long primaryThreadId  = threadDatabase.getOrCreateThreadIdFor(primaryMessage.getRecipient(), primaryMessage.getDistributionType());
+        long primaryMessageId = mmsDatabase.insertMessageOutbox(applyUniversalExpireTimerIfNecessary(context, primaryMessage.getRecipient(), primaryMessage, primaryThreadId),
+                                                                primaryThreadId,
+                                                                false,
+                                                                null);
 
-      attachmentDatabase.updateMessageId(preUploadAttachmentIds, primaryMessageId, primaryMessage.getStoryType().isStory());
-      if (primaryMessage.getStoryType() != StoryType.NONE) {
-        for (final AttachmentId preUploadAttachmentId : preUploadAttachmentIds) {
-          attachmentDatabase.updateAttachmentCaption(preUploadAttachmentId, primaryMessage.getBody());
+        attachmentDatabase.updateMessageId(preUploadAttachmentIds, primaryMessageId, primaryMessage.getStoryType().isStory());
+        if (primaryMessage.getStoryType() != StoryType.NONE) {
+          for (final AttachmentId preUploadAttachmentId : preUploadAttachmentIds) {
+            attachmentDatabase.updateAttachmentCaption(preUploadAttachmentId, primaryMessage.getBody());
+          }
         }
+        messageIds.add(primaryMessageId);
       }
-      messageIds.add(primaryMessageId);
 
       List<DatabaseAttachment> preUploadAttachments = Stream.of(preUploadAttachmentIds)
                                                             .map(attachmentDatabase::getAttachment)
                                                             .toList();
 
       if (messages.size() > 0) {
-        List<OutgoingSecureMediaMessage> secondaryMessages    = messages.subList(1, messages.size());
-        List<List<AttachmentId>>         attachmentCopies     = new ArrayList<>();
+        List<OutgoingSecureMediaMessage> secondaryMessages = overwritePreUploadMessageIds ? messages.subList(1, messages.size()) : messages;
+        List<List<AttachmentId>>         attachmentCopies  = new ArrayList<>();
 
         for (int i = 0; i < preUploadAttachmentIds.size(); i++) {
           attachmentCopies.add(new ArrayList<>(messages.size()));
@@ -379,7 +392,7 @@ public class MessageSender {
 
           attachmentDatabase.updateMessageId(attachmentIds, messageId, secondaryMessage.getStoryType().isStory());
           if (primaryMessage.getStoryType() != StoryType.NONE) {
-            for (final AttachmentId preUploadAttachmentId : preUploadAttachmentIds) {
+            for (final AttachmentId preUploadAttachmentId : attachmentIds) {
               attachmentDatabase.updateAttachmentCaption(preUploadAttachmentId, primaryMessage.getBody());
             }
           }
@@ -435,7 +448,7 @@ public class MessageSender {
    * @return A result if the attachment was enqueued, or null if it failed to enqueue or shouldn't
    *         be enqueued (like in the case of a local self-send).
    */
-  public static @Nullable PreUploadResult preUploadPushAttachment(@NonNull Context context, @NonNull Attachment attachment, @Nullable Recipient recipient, boolean isStoryClip) {
+  public static @Nullable PreUploadResult preUploadPushAttachment(@NonNull Context context, @NonNull Attachment attachment, @Nullable Recipient recipient, @NonNull Media media) {
     if (isLocalSelfSend(context, recipient, false)) {
       return null;
     }
@@ -455,7 +468,7 @@ public class MessageSender {
                              .then(uploadJob)
                              .enqueue();
 
-      return new PreUploadResult(isStoryClip, databaseAttachment.getAttachmentId(), Arrays.asList(compressionJob.getId(), resumableUploadSpecJob.getId(), uploadJob.getId()));
+      return new PreUploadResult(media, databaseAttachment.getAttachmentId(), Arrays.asList(compressionJob.getId(), resumableUploadSpecJob.getId(), uploadJob.getId()));
     } catch (MmsException e) {
       Log.w(TAG, "preUploadPushAttachment() - Failed to upload!", e);
       return null;
@@ -743,24 +756,20 @@ public class MessageSender {
   }
 
   public static class PreUploadResult implements Parcelable {
-    private final boolean      isVideo;
-    private final AttachmentId attachmentId;
+    private final Media              media;
+    private final AttachmentId       attachmentId;
     private final Collection<String> jobIds;
 
-    PreUploadResult(boolean isVideo, @NonNull AttachmentId attachmentId, @NonNull Collection<String> jobIds) {
-      this.isVideo      = isVideo;
+    PreUploadResult(@NonNull Media media, @NonNull AttachmentId attachmentId, @NonNull Collection<String> jobIds) {
+      this.media        = media;
       this.attachmentId = attachmentId;
       this.jobIds       = jobIds;
     }
 
     private PreUploadResult(Parcel in) {
       this.attachmentId = in.readParcelable(AttachmentId.class.getClassLoader());
-      this.jobIds  = ParcelUtil.readStringCollection(in);
-      this.isVideo = ParcelUtil.readBoolean(in);
-    }
-
-    public boolean isVideo() {
-      return isVideo;
+      this.jobIds       = ParcelUtil.readStringCollection(in);
+      this.media        = in.readParcelable(Media.class.getClassLoader());
     }
 
     public @NonNull AttachmentId getAttachmentId() {
@@ -769,6 +778,10 @@ public class MessageSender {
 
     public @NonNull Collection<String> getJobIds() {
       return jobIds;
+    }
+
+    public @NonNull Media getMedia() {
+      return media;
     }
 
     public static final Creator<PreUploadResult> CREATOR = new Creator<PreUploadResult>() {
@@ -792,7 +805,7 @@ public class MessageSender {
     public void writeToParcel(Parcel dest, int flags) {
       dest.writeParcelable(attachmentId, flags);
       ParcelUtil.writeStringCollection(dest, jobIds);
-      ParcelUtil.writeBoolean(dest, isVideo);
+      dest.writeParcelable(media, flags);
     }
   }
 
