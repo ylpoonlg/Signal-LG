@@ -11,9 +11,9 @@
       "type": "UNIVERSAL",
       "filters": [],
       "attributes": [],
-      "versionCode": 112200,
-      "versionName": "5.49.2",
-      "outputFile": "Signal-Android-play-prod-universal-release-5.49.2.apk"
+      "versionCode": 112800,
+      "versionName": "5.50.4",
+      "outputFile": "Signal-Android-play-prod-universal-release-5.50.4.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -24,9 +24,9 @@
         }
       ],
       "attributes": [],
-      "versionCode": 112201,
-      "versionName": "5.49.2",
-      "outputFile": "Signal-Android-play-prod-armeabi-v7a-release-5.49.2.apk"
+      "versionCode": 112801,
+      "versionName": "5.50.4",
+      "outputFile": "Signal-Android-play-prod-armeabi-v7a-release-5.50.4.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -37,9 +37,9 @@
         }
       ],
       "attributes": [],
-      "versionCode": 112202,
-      "versionName": "5.49.2",
-      "outputFile": "Signal-Android-play-prod-arm64-v8a-release-5.49.2.apk"
+      "versionCode": 112802,
+      "versionName": "5.50.4",
+      "outputFile": "Signal-Android-play-prod-arm64-v8a-release-5.50.4.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -50,9 +50,9 @@
         }
       ],
       "attributes": [],
-      "versionCode": 112204,
-      "versionName": "5.49.2",
-      "outputFile": "Signal-Android-play-prod-x86_64-release-5.49.2.apk"
+      "versionCode": 112804,
+      "versionName": "5.50.4",
+      "outputFile": "Signal-Android-play-prod-x86_64-release-5.50.4.apk"
     },
     {
       "type": "ONE_OF_MANY",
@@ -63,9 +63,9 @@
         }
       ],
       "attributes": [],
-      "versionCode": 112203,
-      "versionName": "5.49.2",
-      "outputFile": "Signal-Android-play-prod-x86-release-5.49.2.apk"
+      "versionCode": 112803,
+      "versionName": "5.50.4",
+      "outputFile": "Signal-Android-play-prod-x86-release-5.50.4.apk"
     }
   ],
   "elementType": "File"
