@@ -1,0 +1,292 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"configure_pkg_config"
+		],
+		"files" : 
+		[
+			"/media/LG/Coding/Android Studio/Signal-LG/libwebp/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 326,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 197,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 327,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 371,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 197,
+				"parent" : 4
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 407,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 197,
+				"parent" : 6
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 424,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 197,
+				"parent" : 8
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 729,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 739,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 771,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/sharpyuv/libsharpyuv.pc"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/build/intermediates/cxx/RelWithDebInfo/4du3x2j1/obj/x86/libsharpyuv.so"
+			],
+			"targetId" : "sharpyuv::@91ecdd311bb4d766aad5",
+			"targetIndex" : 1,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "include/webp/sharpyuv",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/libwebp/sharpyuv/sharpyuv.h",
+				"/media/LG/Coding/Android Studio/Signal-LG/libwebp/sharpyuv/sharpyuv_csp.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/src/libwebpdecoder.pc"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/src/libwebp.pc"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 9,
+			"component" : "Unspecified",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/src/demux/libwebpdemux.pc"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 10,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"libwebp/libcpufeatures-webp.a"
+			],
+			"targetId" : "cpufeatures-webp::@91ecdd311bb4d766aad5",
+			"targetIndex" : 0,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 10,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/build/intermediates/cxx/RelWithDebInfo/4du3x2j1/obj/x86/libwebpdecoder.so"
+			],
+			"targetId" : "webpdecoder::@91ecdd311bb4d766aad5",
+			"targetIndex" : 5,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 10,
+			"component" : "Unspecified",
+			"destination" : "include/webp",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/libwebp/src/webp/decode.h",
+				"/media/LG/Coding/Android Studio/Signal-LG/libwebp/src/webp/types.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 10,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/build/intermediates/cxx/RelWithDebInfo/4du3x2j1/obj/x86/libwebp.so"
+			],
+			"targetId" : "webp::@91ecdd311bb4d766aad5",
+			"targetIndex" : 3,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 10,
+			"component" : "Unspecified",
+			"destination" : "include/webp",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/libwebp/src/webp/decode.h",
+				"/media/LG/Coding/Android Studio/Signal-LG/libwebp/src/webp/encode.h",
+				"/media/LG/Coding/Android Studio/Signal-LG/libwebp/src/webp/types.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 10,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/build/intermediates/cxx/RelWithDebInfo/4du3x2j1/obj/x86/libwebpdemux.so"
+			],
+			"targetId" : "webpdemux::@91ecdd311bb4d766aad5",
+			"targetIndex" : 6,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 10,
+			"component" : "Unspecified",
+			"destination" : "include/webp",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/libwebp/src/webp/decode.h",
+				"/media/LG/Coding/Android Studio/Signal-LG/libwebp/src/webp/demux.h",
+				"/media/LG/Coding/Android Studio/Signal-LG/libwebp/src/webp/mux_types.h",
+				"/media/LG/Coding/Android Studio/Signal-LG/libwebp/src/webp/types.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 11,
+			"component" : "Unspecified",
+			"destination" : "share/WebP/cmake",
+			"exportName" : "WebPTargets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "sharpyuv::@91ecdd311bb4d766aad5",
+					"index" : 1
+				},
+				{
+					"id" : "cpufeatures-webp::@91ecdd311bb4d766aad5",
+					"index" : 0
+				},
+				{
+					"id" : "webpdecoder::@91ecdd311bb4d766aad5",
+					"index" : 5
+				},
+				{
+					"id" : "webp::@91ecdd311bb4d766aad5",
+					"index" : 3
+				},
+				{
+					"id" : "webpdemux::@91ecdd311bb4d766aad5",
+					"index" : 6
+				}
+			],
+			"paths" : 
+			[
+				"libwebp/CMakeFiles/Export/share/WebP/cmake/WebPTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 12,
+			"component" : "Unspecified",
+			"destination" : "share/WebP/cmake",
+			"paths" : 
+			[
+				"/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/WebPConfigVersion.cmake",
+				"/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/WebPConfig.cmake"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "libwebp",
+		"source" : "/media/LG/Coding/Android Studio/Signal-LG/libwebp"
+	}
+}

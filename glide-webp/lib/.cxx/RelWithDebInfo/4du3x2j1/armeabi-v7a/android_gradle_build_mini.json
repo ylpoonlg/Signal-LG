@@ -1,0 +1,88 @@
+{
+  "buildFiles": [
+    "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/src/main/cpp/CMakeLists.txt",
+    "/media/LG/Coding/Android Studio/Signal-LG/libwebp/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/long/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/long/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "webpdecoder::@91ecdd311bb4d766aad5": {
+      "artifactName": "webpdecoder",
+      "abi": "armeabi-v7a",
+      "output": "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/build/intermediates/cxx/RelWithDebInfo/4du3x2j1/obj/armeabi-v7a/libwebpdecoder.so",
+      "runtimeFiles": []
+    },
+    "webputils::@91ecdd311bb4d766aad5": {
+      "artifactName": "webputils",
+      "abi": "armeabi-v7a",
+      "runtimeFiles": []
+    },
+    "signalwebp::@6890427a1f51a3e7e1df": {
+      "artifactName": "signalwebp",
+      "abi": "armeabi-v7a",
+      "output": "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/build/intermediates/cxx/RelWithDebInfo/4du3x2j1/obj/armeabi-v7a/libsignalwebp.so",
+      "runtimeFiles": []
+    },
+    "webpdsp::@91ecdd311bb4d766aad5": {
+      "artifactName": "webpdsp",
+      "abi": "armeabi-v7a",
+      "runtimeFiles": []
+    },
+    "webpdspdecode::@91ecdd311bb4d766aad5": {
+      "artifactName": "webpdspdecode",
+      "abi": "armeabi-v7a",
+      "runtimeFiles": []
+    },
+    "webputilsdecode::@91ecdd311bb4d766aad5": {
+      "artifactName": "webputilsdecode",
+      "abi": "armeabi-v7a",
+      "runtimeFiles": []
+    },
+    "cpufeatures-webp::@91ecdd311bb4d766aad5": {
+      "artifactName": "cpufeatures-webp",
+      "abi": "armeabi-v7a",
+      "output": "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/armeabi-v7a/libwebp/libcpufeatures-webp.a",
+      "runtimeFiles": []
+    },
+    "webpdemux::@91ecdd311bb4d766aad5": {
+      "artifactName": "webpdemux",
+      "abi": "armeabi-v7a",
+      "output": "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/build/intermediates/cxx/RelWithDebInfo/4du3x2j1/obj/armeabi-v7a/libwebpdemux.so",
+      "runtimeFiles": []
+    },
+    "sharpyuv::@91ecdd311bb4d766aad5": {
+      "artifactName": "sharpyuv",
+      "abi": "armeabi-v7a",
+      "output": "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/build/intermediates/cxx/RelWithDebInfo/4du3x2j1/obj/armeabi-v7a/libsharpyuv.so",
+      "runtimeFiles": []
+    },
+    "webpencode::@91ecdd311bb4d766aad5": {
+      "artifactName": "webpencode",
+      "abi": "armeabi-v7a",
+      "runtimeFiles": []
+    },
+    "webp::@91ecdd311bb4d766aad5": {
+      "artifactName": "webp",
+      "abi": "armeabi-v7a",
+      "output": "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/build/intermediates/cxx/RelWithDebInfo/4du3x2j1/obj/armeabi-v7a/libwebp.so",
+      "runtimeFiles": []
+    },
+    "webpdecode::@91ecdd311bb4d766aad5": {
+      "artifactName": "webpdecode",
+      "abi": "armeabi-v7a",
+      "runtimeFiles": []
+    }
+  }
+}
