@@ -1,0 +1,402 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_a5ad0 && [1/2] Building C object CMakeFiles/cmTC_a5ad0.dir/src.c.o
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c:13:3: warning: implicit declaration of function 'pthread_cancel' is invalid in C99 [-Wimplicit-function-declaration]
+  pthread_cancel(thread);
+  ^
+1 warning generated.
+[2/2] Linking C executable cmTC_a5ad0
+FAILED: cmTC_a5ad0 
+: && /home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_a5ad0.dir/src.c.o -o cmTC_a5ad0  -latomic -lm && :
+ld: error: undefined symbol: pthread_cancel
+>>> referenced by src.c:13
+>>>               CMakeFiles/cmTC_a5ad0.dir/src.c.o:(main)
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_f8be3 && [1/2] Building C object CMakeFiles/cmTC_f8be3.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_f8be3
+FAILED: cmTC_f8be3 
+: && /home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -DCHECK_FUNCTION_EXISTS=pthread_create -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_f8be3.dir/CheckFunctionExists.c.o -o cmTC_f8be3  -lpthreads  -latomic -lm && :
+ld: error: unable to find library -lpthreads
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if the function pthread_create exists in the pthread failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_5eea6 && [1/2] Building C object CMakeFiles/cmTC_5eea6.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_5eea6
+FAILED: cmTC_5eea6 
+: && /home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -DCHECK_FUNCTION_EXISTS=pthread_create -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments -Wl,--gc-sections CMakeFiles/cmTC_5eea6.dir/CheckFunctionExists.c.o -o cmTC_5eea6  -lpthread  -latomic -lm && :
+ld: error: unable to find library -lpthread
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+ninja: build stopped: subcommand failed.
+
+
+
+Determining if files GLUT/glut.h exist failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_8f526 && [1/2] Building C object CMakeFiles/cmTC_8f526.dir/HAVE_GLUT_GLUT_H.c.o
+FAILED: CMakeFiles/cmTC_8f526.dir/HAVE_GLUT_GLUT_H.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_8f526.dir/HAVE_GLUT_GLUT_H.c.o -MF CMakeFiles/cmTC_8f526.dir/HAVE_GLUT_GLUT_H.c.o.d -o CMakeFiles/cmTC_8f526.dir/HAVE_GLUT_GLUT_H.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CheckIncludeFiles/HAVE_GLUT_GLUT_H.c'
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CheckIncludeFiles/HAVE_GLUT_GLUT_H.c:2:10: fatal error: 'GLUT/glut.h' file not found
+#include <GLUT/glut.h>
+         ^~~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source:
+/* */
+#include <GLUT/glut.h>
+
+
+int main(void){return 0;}
+
+Determining if files GL/glut.h exist failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_42fe5 && [1/2] Building C object CMakeFiles/cmTC_42fe5.dir/HAVE_GL_GLUT_H.c.o
+FAILED: CMakeFiles/cmTC_42fe5.dir/HAVE_GL_GLUT_H.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_42fe5.dir/HAVE_GL_GLUT_H.c.o -MF CMakeFiles/cmTC_42fe5.dir/HAVE_GL_GLUT_H.c.o.d -o CMakeFiles/cmTC_42fe5.dir/HAVE_GL_GLUT_H.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CheckIncludeFiles/HAVE_GL_GLUT_H.c'
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CheckIncludeFiles/HAVE_GL_GLUT_H.c:2:10: fatal error: 'GL/glut.h' file not found
+#include <GL/glut.h>
+         ^~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source:
+/* */
+#include <GL/glut.h>
+
+
+int main(void){return 0;}
+
+Determining if files OpenGL/glut.h exist failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_e3c5b && [1/2] Building C object CMakeFiles/cmTC_e3c5b.dir/HAVE_OPENGL_GLUT_H.c.o
+FAILED: CMakeFiles/cmTC_e3c5b.dir/HAVE_OPENGL_GLUT_H.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_e3c5b.dir/HAVE_OPENGL_GLUT_H.c.o -MF CMakeFiles/cmTC_e3c5b.dir/HAVE_OPENGL_GLUT_H.c.o.d -o CMakeFiles/cmTC_e3c5b.dir/HAVE_OPENGL_GLUT_H.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CheckIncludeFiles/HAVE_OPENGL_GLUT_H.c'
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CheckIncludeFiles/HAVE_OPENGL_GLUT_H.c:2:10: fatal error: 'OpenGL/glut.h' file not found
+#include <OpenGL/glut.h>
+         ^~~~~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source:
+/* */
+#include <OpenGL/glut.h>
+
+
+int main(void){return 0;}
+
+Determining if files shlwapi.h exist failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_77d1d && [1/2] Building C object CMakeFiles/cmTC_77d1d.dir/HAVE_SHLWAPI_H.c.o
+FAILED: CMakeFiles/cmTC_77d1d.dir/HAVE_SHLWAPI_H.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_77d1d.dir/HAVE_SHLWAPI_H.c.o -MF CMakeFiles/cmTC_77d1d.dir/HAVE_SHLWAPI_H.c.o.d -o CMakeFiles/cmTC_77d1d.dir/HAVE_SHLWAPI_H.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CheckIncludeFiles/HAVE_SHLWAPI_H.c'
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CheckIncludeFiles/HAVE_SHLWAPI_H.c:2:10: fatal error: 'shlwapi.h' file not found
+#include <shlwapi.h>
+         ^~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source:
+/* */
+#include <shlwapi.h>
+
+
+int main(void){return 0;}
+
+Determining if files wincodec.h exist failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_e7756 && [1/2] Building C object CMakeFiles/cmTC_e7756.dir/HAVE_WINCODEC_H.c.o
+FAILED: CMakeFiles/cmTC_e7756.dir/HAVE_WINCODEC_H.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_e7756.dir/HAVE_WINCODEC_H.c.o -MF CMakeFiles/cmTC_e7756.dir/HAVE_WINCODEC_H.c.o.d -o CMakeFiles/cmTC_e7756.dir/HAVE_WINCODEC_H.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CheckIncludeFiles/HAVE_WINCODEC_H.c'
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CheckIncludeFiles/HAVE_WINCODEC_H.c:2:10: fatal error: 'wincodec.h' file not found
+#include <wincodec.h>
+         ^~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source:
+/* */
+#include <wincodec.h>
+
+
+int main(void){return 0;}
+
+Determining if files windows.h exist failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_05c75 && [1/2] Building C object CMakeFiles/cmTC_05c75.dir/HAVE_WINDOWS_H.c.o
+FAILED: CMakeFiles/cmTC_05c75.dir/HAVE_WINDOWS_H.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_05c75.dir/HAVE_WINDOWS_H.c.o -MF CMakeFiles/cmTC_05c75.dir/HAVE_WINDOWS_H.c.o.d -o CMakeFiles/cmTC_05c75.dir/HAVE_WINDOWS_H.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CheckIncludeFiles/HAVE_WINDOWS_H.c'
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CheckIncludeFiles/HAVE_WINDOWS_H.c:2:10: fatal error: 'windows.h' file not found
+#include <windows.h>
+         ^~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source:
+/* */
+#include <windows.h>
+
+
+int main(void){return 0;}
+
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS32 failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_627a1 && [1/2] Building C object CMakeFiles/cmTC_627a1.dir/src.c.o
+FAILED: CMakeFiles/cmTC_627a1.dir/src.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot -DWEBP_HAVE_FLAG_MIPS32 -I"/media/LG/Coding/Android Studio/Signal-LG/libwebp" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_627a1.dir/src.c.o -MF CMakeFiles/cmTC_627a1.dir/src.c.o.d -o CMakeFiles/cmTC_627a1.dir/src.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c'
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/media/LG/Coding/Android Studio/Signal-LG/libwebp/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS32)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS32 failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_baedd && [1/2] Building C object CMakeFiles/cmTC_baedd.dir/src.c.o
+FAILED: CMakeFiles/cmTC_baedd.dir/src.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot -DWEBP_HAVE_FLAG_MIPS32 -I"/media/LG/Coding/Android Studio/Signal-LG/libwebp" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread -mips32 -fPIE -MD -MT CMakeFiles/cmTC_baedd.dir/src.c.o -MF CMakeFiles/cmTC_baedd.dir/src.c.o.d -o CMakeFiles/cmTC_baedd.dir/src.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c'
+error: unknown target CPU 'mips32'
+note: valid target CPU values are: nocona, core2, penryn, bonnell, atom, silvermont, slm, goldmont, goldmont-plus, tremont, nehalem, corei7, westmere, sandybridge, corei7-avx, ivybridge, core-avx-i, haswell, core-avx2, broadwell, skylake, skylake-avx512, skx, cascadelake, cooperlake, cannonlake, icelake-client, rocketlake, icelake-server, tigerlake, sapphirerapids, alderlake, knl, knm, k8, athlon64, athlon-fx, opteron, k8-sse3, athlon64-sse3, opteron-sse3, amdfam10, barcelona, btver1, btver2, bdver1, bdver2, bdver3, bdver4, znver1, znver2, znver3, x86-64, x86-64-v2, x86-64-v3, x86-64-v4
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/media/LG/Coding/Android Studio/Signal-LG/libwebp/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS32)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS_DSP_R2 failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_28988 && [1/2] Building C object CMakeFiles/cmTC_28988.dir/src.c.o
+FAILED: CMakeFiles/cmTC_28988.dir/src.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot -DWEBP_HAVE_FLAG_MIPS_DSP_R2 -I"/media/LG/Coding/Android Studio/Signal-LG/libwebp" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_28988.dir/src.c.o -MF CMakeFiles/cmTC_28988.dir/src.c.o.d -o CMakeFiles/cmTC_28988.dir/src.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c'
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/media/LG/Coding/Android Studio/Signal-LG/libwebp/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS_DSP_R2)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MIPS_DSP_R2 failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_03992 && [1/2] Building C object CMakeFiles/cmTC_03992.dir/src.c.o
+FAILED: CMakeFiles/cmTC_03992.dir/src.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot -DWEBP_HAVE_FLAG_MIPS_DSP_R2 -I"/media/LG/Coding/Android Studio/Signal-LG/libwebp" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread -mdspr2 -fPIE -MD -MT CMakeFiles/cmTC_03992.dir/src.c.o -MF CMakeFiles/cmTC_03992.dir/src.c.o.d -o CMakeFiles/cmTC_03992.dir/src.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c'
+clang: warning: argument unused during compilation: '-mdspr2' [-Wunused-command-line-argument]
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/media/LG/Coding/Android Studio/Signal-LG/libwebp/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MIPS_DSP_R2)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test FLAG_-mno-dspr2 failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_a8161 && [1/2] Building C object CMakeFiles/cmTC_a8161.dir/src.c.o
+clang: warning: argument unused during compilation: '-mdspr2' [-Wunused-command-line-argument]
+clang: warning: argument unused during compilation: '-mno-dspr2' [-Wunused-command-line-argument]
+In file included from <built-in>:372:
+<command line>:3:14: warning: ISO C99 requires whitespace after the macro name [-Wc99-extensions]
+#define FLAG_-mno-dspr2 1
+             ^
+1 warning generated.
+[2/2] Linking C executable cmTC_a8161
+
+
+Source file was:
+int main(void) {return 0;}
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_NEON failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_0b749 && [1/2] Building C object CMakeFiles/cmTC_0b749.dir/src.c.o
+FAILED: CMakeFiles/cmTC_0b749.dir/src.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot -DWEBP_HAVE_FLAG_NEON -I"/media/LG/Coding/Android Studio/Signal-LG/libwebp" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_0b749.dir/src.c.o -MF CMakeFiles/cmTC_0b749.dir/src.c.o.d -o CMakeFiles/cmTC_0b749.dir/src.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c'
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/media/LG/Coding/Android Studio/Signal-LG/libwebp/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_NEON)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_NEON failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_13ea6 && [1/2] Building C object CMakeFiles/cmTC_13ea6.dir/src.c.o
+FAILED: CMakeFiles/cmTC_13ea6.dir/src.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot -DWEBP_HAVE_FLAG_NEON -I"/media/LG/Coding/Android Studio/Signal-LG/libwebp" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread -mfpu=neon -fPIE -MD -MT CMakeFiles/cmTC_13ea6.dir/src.c.o -MF CMakeFiles/cmTC_13ea6.dir/src.c.o.d -o CMakeFiles/cmTC_13ea6.dir/src.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c'
+clang: warning: argument unused during compilation: '-mfpu=neon' [-Wunused-command-line-argument]
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/media/LG/Coding/Android Studio/Signal-LG/libwebp/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_NEON)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MSA failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_5f4eb && [1/2] Building C object CMakeFiles/cmTC_5f4eb.dir/src.c.o
+FAILED: CMakeFiles/cmTC_5f4eb.dir/src.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot -DWEBP_HAVE_FLAG_MSA -I"/media/LG/Coding/Android Studio/Signal-LG/libwebp" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread  -fPIE -MD -MT CMakeFiles/cmTC_5f4eb.dir/src.c.o -MF CMakeFiles/cmTC_5f4eb.dir/src.c.o.d -o CMakeFiles/cmTC_5f4eb.dir/src.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c'
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/media/LG/Coding/Android Studio/Signal-LG/libwebp/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MSA)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test WEBP_HAVE_FLAG_MSA failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_8fedc && [1/2] Building C object CMakeFiles/cmTC_8fedc.dir/src.c.o
+FAILED: CMakeFiles/cmTC_8fedc.dir/src.c.o 
+/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=x86_64-none-linux-android21 --sysroot=/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot -DWEBP_HAVE_FLAG_MSA -I"/media/LG/Coding/Android Studio/Signal-LG/libwebp" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -pthread -mmsa -fPIE -MD -MT CMakeFiles/cmTC_8fedc.dir/src.c.o -MF CMakeFiles/cmTC_8fedc.dir/src.c.o.d -o CMakeFiles/cmTC_8fedc.dir/src.c.o -c '/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c'
+clang: warning: argument unused during compilation: '-mmsa' [-Wunused-command-line-argument]
+/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp/src.c:5:9: error: use of undeclared identifier 'this'
+        this is not valid code
+        ^
+1 error generated.
+ninja: build stopped: subcommand failed.
+
+
+Source file was:
+
+      #include "/media/LG/Coding/Android Studio/Signal-LG/libwebp/cmake/../src/dsp/dsp.h"
+      int main(void) {
+        #if !defined(WEBP_USE_MSA)
+        this is not valid code
+        #endif
+        return 0;
+      }
+    
+Performing C SOURCE FILE Test FLAG_-mno-msa failed with the following output:
+Change Dir: /media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86_64/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/home/long/Android/Sdk/cmake/3.22.1/bin/ninja cmTC_fd99a && [1/2] Building C object CMakeFiles/cmTC_fd99a.dir/src.c.o
+clang: warning: argument unused during compilation: '-mmsa' [-Wunused-command-line-argument]
+clang: warning: argument unused during compilation: '-mno-msa' [-Wunused-command-line-argument]
+In file included from <built-in>:372:
+<command line>:3:14: warning: ISO C99 requires whitespace after the macro name [-Wc99-extensions]
+#define FLAG_-mno-msa 1
+             ^
+1 warning generated.
+[2/2] Linking C executable cmTC_fd99a
+
+
+Source file was:
+int main(void) {return 0;}

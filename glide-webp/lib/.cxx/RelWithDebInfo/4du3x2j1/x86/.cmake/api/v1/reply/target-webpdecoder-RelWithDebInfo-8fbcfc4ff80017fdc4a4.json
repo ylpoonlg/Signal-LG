@@ -1,0 +1,457 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/build/intermediates/cxx/RelWithDebInfo/4du3x2j1/obj/x86/libwebpdecoder.so"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"install",
+			"target_link_libraries",
+			"add_compile_options",
+			"add_definitions",
+			"include_directories",
+			"target_include_directories"
+		],
+		"files" : 
+		[
+			"/media/LG/Coding/Android Studio/Signal-LG/libwebp/CMakeLists.txt",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 355,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 729,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 361,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 5,
+				"parent" : 4
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 342,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 246,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 180,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 169,
+				"parent" : 0
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 362,
+				"parent" : 0
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "cpufeatures-webp::@91ecdd311bb4d766aad5"
+		},
+		{
+			"id" : "webpdspdecode::@91ecdd311bb4d766aad5"
+		},
+		{
+			"id" : "webpdecode::@91ecdd311bb4d766aad5"
+		},
+		{
+			"id" : "webputilsdecode::@91ecdd311bb4d766aad5"
+		}
+	],
+	"id" : "webpdecoder::@91ecdd311bb4d766aad5",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 2,
+				"path" : "lib"
+			},
+			{
+				"backtrace" : 2,
+				"path" : "lib"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "/usr/local"
+		}
+	},
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "libwebp/libcpufeatures-webp.a",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-pthread",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-ldl",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-latomic -lm",
+				"role" : "libraries"
+			}
+		],
+		"language" : "C",
+		"sysroot" : 
+		{
+			"path" : "/home/long/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/sysroot"
+		}
+	},
+	"name" : "webpdecoder",
+	"nameOnDisk" : "libwebpdecoder.so",
+	"paths" : 
+	{
+		"build" : "libwebp",
+		"source" : "/media/LG/Coding/Android Studio/Signal-LG/libwebp"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Object Libraries",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29,
+				30,
+				31,
+				32,
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdecode.dir/src/dec/alpha_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdecode.dir/src/dec/buffer_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdecode.dir/src/dec/frame_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdecode.dir/src/dec/idec_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdecode.dir/src/dec/io_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdecode.dir/src/dec/quant_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdecode.dir/src/dec/tree_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdecode.dir/src/dec/vp8_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdecode.dir/src/dec/vp8l_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdecode.dir/src/dec/webp_dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/alpha_processing.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/cpu.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/dec.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/dec_clip_tables.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/filters.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/lossless.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/rescaler.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/upsampling.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/yuv.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/alpha_processing_sse41.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/dec_sse41.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/lossless_sse41.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/upsampling_sse41.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/yuv_sse41.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/alpha_processing_sse2.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/dec_sse2.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/filters_sse2.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/lossless_sse2.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/rescaler_sse2.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/upsampling_sse2.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webpdspdecode.dir/src/dsp/yuv_sse2.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webputilsdecode.dir/src/utils/bit_reader_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webputilsdecode.dir/src/utils/color_cache_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webputilsdecode.dir/src/utils/filters_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webputilsdecode.dir/src/utils/huffman_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webputilsdecode.dir/src/utils/quant_levels_dec_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webputilsdecode.dir/src/utils/rescaler_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webputilsdecode.dir/src/utils/random_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webputilsdecode.dir/src/utils/thread_utils.c.o",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"isGenerated" : true,
+			"path" : "/media/LG/Coding/Android Studio/Signal-LG/glide-webp/lib/.cxx/RelWithDebInfo/4du3x2j1/x86/libwebp/CMakeFiles/webputilsdecode.dir/src/utils/utils.c.o",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "SHARED_LIBRARY"
+}
