@@ -19,6 +19,7 @@ https://docs.gradle.org/current/userguide/dependency_verification.html
       <trusted-artifacts>
          <trust file=".*-javadoc[.]jar" regex="true"/>
          <trust file=".*-sources[.]jar" regex="true"/>
+         <trust file=".*-src[.]zip" regex="true"/>
          <trust file=".*[.]pom" regex="true"/>
       </trusted-artifacts>
    </configuration>
