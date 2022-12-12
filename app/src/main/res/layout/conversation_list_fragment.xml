@@ -123,9 +123,9 @@
                 android:theme="@style/Widget.Material3.FloatingActionButton.Secondary"
                 android:transitionName="camera_fab"
                 android:visibility="gone"
-                app:backgroundTint="@color/signal_colorSurfaceVariant"
+                app:backgroundTint="@color/orange_700"
                 app:srcCompat="@drawable/symbol_camera_24"
-                app:tint="@color/signal_colorOnSurface"
+                app:tint="@color/white"
                 app:shapeAppearanceOverlay="@style/Signal.ShapeOverlay.Rounded.Fab"
                 tools:visibility="visible" />
 
@@ -140,9 +140,9 @@
                 android:theme="@style/Widget.Material3.FloatingActionButton.Secondary"
                 android:transitionName="new_convo_fab"
                 android:visibility="gone"
-                app:backgroundTint="@color/signal_colorPrimaryContainer"
+                app:backgroundTint="@color/orange_500"
                 app:srcCompat="@drawable/symbol_edit_24"
-                app:tint="@color/signal_colorOnSurface"
+                app:tint="@color/white"
                 app:shapeAppearanceOverlay="@style/Signal.ShapeOverlay.Rounded.Fab"
                 tools:visibility="visible" />
 
