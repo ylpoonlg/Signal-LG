@@ -1909,11 +1909,13 @@
     <string name="MediaPreviewActivity_media_delete_confirmation_title">係咪要刪除訊息？</string>
     <string name="MediaPreviewActivity_media_delete_confirmation_message">咁就會永久刪除呢個訊息個囉噃。</string>
     <string name="MediaPreviewActivity_s_to_s">%1$s 畀 %2$s</string>
-    
+    <!-- All media preview title when viewing media send by you to another recipient (allows changing of \'You\' based on context) -->
     <string name="MediaPreviewActivity_you_to_s">您畀 %1$s</string>
-    
+    <!-- All media preview title when viewing media sent by another recipient to you (allows changing of \'You\' based on context) -->
     <string name="MediaPreviewActivity_s_to_you">%1$s 畀您</string>
     <string name="MediaPreviewActivity_media_no_longer_available">多媒體檔案已經冇咗。</string>
+    <!-- Notifying the user that the device has encountered a technical issue and is unable to render a video. -->
+    <string name="MediaPreviewActivity_unable_to_play_media">媒體播放唔到。</string>
     <string name="MediaPreviewActivity_error_finding_message">查找訊息時發生錯誤。</string>
     <string name="MediaPreviewActivity_cant_find_an_app_able_to_share_this_media">搵唔到一個可以分享呢個媒體檔案嘅 app。</string>
     <string name="MediaPreviewActivity_dismiss_due_to_error">關閉</string>
@@ -4237,8 +4239,9 @@
 
     <string name="Boost__enter_custom_amount">輸入自訂金額</string>
     <string name="Boost__one_time_contribution">單次捐款</string>
-    
-    <string name="Boost__the_minimum_amount_you_can_donate_is_s">The minimum amount you can donate is %1$s</string>
+
+    <!-- Error label when the amount is smaller than what we can accept -->
+    <string name="Boost__the_minimum_amount_you_can_donate_is_s">你可以捐款的最低金額為 %1$s</string>
 
     <string name="MySupportPreference__s_per_month">每月 %1$s</string>
     <string name="MySupportPreference__renews_s">到 %1$s 續期</string>

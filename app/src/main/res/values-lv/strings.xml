@@ -2055,6 +2055,8 @@
     <!-- All media preview title when viewing media sent by another recipient to you (allows changing of \'You\' based on context) -->
     <string name="MediaPreviewActivity_s_to_you">%1$s jums</string>
     <string name="MediaPreviewActivity_media_no_longer_available">Mediju fails vairs nav pieejams</string>
+    <!-- Notifying the user that the device has encountered a technical issue and is unable to render a video. -->
+    <string name="MediaPreviewActivity_unable_to_play_media">Unable to play media.</string>
     <string name="MediaPreviewActivity_error_finding_message">Meklējot ziņu, radās kļūda.</string>
     <string name="MediaPreviewActivity_cant_find_an_app_able_to_share_this_media">Nevar atrast lietotni, kas varētu kopīgot šo multivides saturu.</string>
     <string name="MediaPreviewActivity_dismiss_due_to_error">Aizvērt</string>
@@ -4440,7 +4442,7 @@
     <string name="Boost__enter_custom_amount">Ievadīt pielāgotu summu</string>
     <string name="Boost__one_time_contribution">Vienreizēja ieguldījums</string>
     <!-- Error label when the amount is smaller than what we can accept -->
-    <string name="Boost__the_minimum_amount_you_can_donate_is_s">The minimum amount you can donate is %1$s</string>
+    <string name="Boost__the_minimum_amount_you_can_donate_is_s">Minimālā ziedojuma summa ir %1$s</string>
 
     <string name="MySupportPreference__s_per_month">%1$s/mēnesī</string>
     <string name="MySupportPreference__renews_s">Atjaunojas %1$s</string>
@@ -5566,7 +5568,7 @@
     <!-- EOF -->
 
     <!-- PaypalCompleteOrderBottomSheet -->
-    <string name="PaypalCompleteOrderBottomSheet__donate">Ziedojiet</string>
+    <string name="PaypalCompleteOrderBottomSheet__donate">Ziedot</string>
     <string name="PaypalCompleteOrderBottomSheet__payment">Maksājums</string>
 
 </resources>

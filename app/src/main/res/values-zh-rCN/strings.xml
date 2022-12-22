@@ -1911,6 +1911,8 @@
     <!-- All media preview title when viewing media sent by another recipient to you (allows changing of \'You\' based on context) -->
     <string name="MediaPreviewActivity_s_to_you">%1$s发送给您</string>
     <string name="MediaPreviewActivity_media_no_longer_available">媒体已失效。</string>
+    <!-- Notifying the user that the device has encountered a technical issue and is unable to render a video. -->
+    <string name="MediaPreviewActivity_unable_to_play_media">Unable to play media.</string>
     <string name="MediaPreviewActivity_error_finding_message">查找消息时出错。</string>
     <string name="MediaPreviewActivity_cant_find_an_app_able_to_share_this_media">未找到可分享此媒体的应用。</string>
     <string name="MediaPreviewActivity_dismiss_due_to_error">关闭</string>
@@ -4236,7 +4238,7 @@
     <string name="Boost__enter_custom_amount">输入自定义金额</string>
     <string name="Boost__one_time_contribution">单次捐款</string>
     <!-- Error label when the amount is smaller than what we can accept -->
-    <string name="Boost__the_minimum_amount_you_can_donate_is_s">The minimum amount you can donate is %1$s</string>
+    <string name="Boost__the_minimum_amount_you_can_donate_is_s">捐款的最小金额是 %1$s</string>
 
     <string name="MySupportPreference__s_per_month">%1$s/月</string>
     <string name="MySupportPreference__renews_s">到 %1$s 续期</string>

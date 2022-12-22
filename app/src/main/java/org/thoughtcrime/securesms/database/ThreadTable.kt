@@ -15,11 +15,13 @@ import org.signal.core.util.delete
 import org.signal.core.util.logging.Log
 import org.signal.core.util.or
 import org.signal.core.util.readToList
+import org.signal.core.util.readToSingleLong
 import org.signal.core.util.requireBoolean
 import org.signal.core.util.requireInt
 import org.signal.core.util.requireLong
 import org.signal.core.util.requireString
 import org.signal.core.util.select
+import org.signal.core.util.toSingleLine
 import org.signal.core.util.update
 import org.signal.core.util.withinTransaction
 import org.signal.libsignal.zkgroup.InvalidInputException
@@ -1071,13 +1073,7 @@ class ThreadTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTa
       .from(TABLE_NAME)
       .where("$RECIPIENT_ID = ?", recipientId)
       .run()
-      .use { cursor ->
-        return if (cursor.moveToFirst()) {
-          cursor.requireLong(ID)
-        } else {
-          -1
-        }
-      }
+      .readToSingleLong(-1)
   }
 
   fun getOrCreateValidThreadId(recipient: Recipient, candidateId: Long): Long {
@@ -1455,6 +1451,10 @@ class ThreadTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTa
       check(primary != null)
       check(secondary != null)
 
+      for (table in threadIdDatabaseTables) {
+        table.remapThread(secondary.threadId, primary.threadId)
+      }
+
       writableDatabase
         .delete(TABLE_NAME)
         .where("$ID = ?", secondary.threadId)
@@ -1633,10 +1633,6 @@ class ThreadTable(context: Context, databaseHelper: SignalDatabase) : DatabaseTa
 
   fun readerFor(cursor: Cursor): Reader {
     return Reader(cursor)
-  }
-
-  private fun String.toSingleLine(): String {
-    return this.trimIndent().split("\n").joinToString(separator = " ")
   }
 
   private fun ConversationFilter.toQuery(): String {
