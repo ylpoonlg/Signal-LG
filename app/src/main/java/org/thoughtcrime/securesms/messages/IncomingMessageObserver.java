@@ -131,8 +131,12 @@ public class IncomingMessageObserver {
     }
   }
 
+  public synchronized void removeDecryptionDrainedListener(@NonNull Runnable listener) {
+    decryptionDrainedListeners.remove(listener);
+  }
+
   public boolean isDecryptionDrained() {
-    return decryptionDrained || networkAccess.isCensored();
+    return decryptionDrained;
   }
 
   public void notifyDecryptionsDrained() {
@@ -179,8 +183,7 @@ public class IncomingMessageObserver {
 
     return registered &&
            (appVisible || !fcmEnabled || forceWebsocket || Util.hasItems(keepAliveTokens)) &&
-           hasNetwork &&
-           !networkAccess.isCensored();
+           hasNetwork;
   }
 
   private synchronized void waitForConnectionNecessary() {

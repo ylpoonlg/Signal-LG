@@ -74,7 +74,7 @@ class ThanksForYourSupportBottomSheetDialogFragment : FixedRoundedCornerBottomSh
           .append(
             SpanUtil.clickable(
               getString(R.string.SubscribeThanksForYourSupportBottomSheetDialogFragment__become_a_montly_sustainer),
-              ContextCompat.getColor(requireContext(), R.color.signal_accent_primary),
+              ContextCompat.getColor(requireContext(), R.color.signal_accent_primary)
             ) {
               requireActivity().finish()
               requireActivity().startActivity(AppSettingsActivity.subscriptions(requireContext()))
@@ -111,7 +111,7 @@ class ThanksForYourSupportBottomSheetDialogFragment : FixedRoundedCornerBottomSh
       lottie.visible = true
       lottie.playAnimation()
       lottie.addAnimatorListener(object : AnimationCompleteListener() {
-        override fun onAnimationEnd(animation: Animator?) {
+        override fun onAnimationEnd(animation: Animator) {
           lottie.removeAnimatorListener(this)
           lottie.setMinAndMaxFrame(30, 91)
           lottie.repeatMode = LottieDrawable.RESTART

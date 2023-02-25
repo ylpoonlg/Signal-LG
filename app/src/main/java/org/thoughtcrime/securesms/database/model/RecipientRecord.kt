@@ -113,7 +113,8 @@ data class RecipientRecord(
     val identityStatus: VerifiedStatus,
     val isArchived: Boolean,
     val isForcedUnread: Boolean,
-    val unregisteredTimestamp: Long
+    val unregisteredTimestamp: Long,
+    val systemNickname: String?
   )
 
   data class Capabilities(
@@ -125,11 +126,13 @@ data class RecipientRecord(
     val storiesCapability: Recipient.Capability,
     val giftBadgesCapability: Recipient.Capability,
     val pnpCapability: Recipient.Capability,
+    val paymentActivation: Recipient.Capability
   ) {
     companion object {
       @JvmField
       val UNKNOWN = Capabilities(
         0,
+        Recipient.Capability.UNKNOWN,
         Recipient.Capability.UNKNOWN,
         Recipient.Capability.UNKNOWN,
         Recipient.Capability.UNKNOWN,

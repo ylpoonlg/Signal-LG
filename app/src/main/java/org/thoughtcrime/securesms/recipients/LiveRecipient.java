@@ -15,7 +15,7 @@ import org.signal.core.util.ThreadUtil;
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.database.DistributionListTables;
 import org.thoughtcrime.securesms.database.GroupTable;
-import org.thoughtcrime.securesms.database.GroupTable.GroupRecord;
+import org.thoughtcrime.securesms.database.model.GroupRecord;
 import org.thoughtcrime.securesms.database.RecipientTable;
 import org.thoughtcrime.securesms.database.SignalDatabase;
 import org.thoughtcrime.securesms.database.model.DistributionListRecord;
@@ -30,6 +30,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 public final class LiveRecipient {
 
@@ -41,20 +42,22 @@ public final class LiveRecipient {
   private final LiveData<Recipient>           observableLiveDataResolved;
   private final Set<RecipientForeverObserver> observers;
   private final Observer<Recipient>           foreverObserver;
-  private final AtomicReference<Recipient> recipient;
-  private final RecipientTable             recipientTable;
-  private final GroupTable                 groupDatabase;
-  private final DistributionListTables distributionListTables;
-  private final MutableLiveData<Object> refreshForceNotify;
+  private final AtomicReference<Recipient>    recipient;
+  private final RecipientTable                recipientTable;
+  private final GroupTable                    groupDatabase;
+  private final DistributionListTables        distributionListTables;
+  private final MutableLiveData<Object>       refreshForceNotify;
+  private final BehaviorSubject<Recipient>    subject;
 
   LiveRecipient(@NonNull Context context, @NonNull Recipient defaultRecipient) {
     this.context                  = context.getApplicationContext();
     this.liveData                 = new MutableLiveData<>(defaultRecipient);
-    this.recipient      = new AtomicReference<>(defaultRecipient);
-    this.recipientTable = SignalDatabase.recipients();
-    this.groupDatabase  = SignalDatabase.groups();
-    this.distributionListTables = SignalDatabase.distributionLists();
-    this.observers              = new CopyOnWriteArraySet<>();
+    this.subject                  = BehaviorSubject.createDefault(defaultRecipient);
+    this.recipient                = new AtomicReference<>(defaultRecipient);
+    this.recipientTable           = SignalDatabase.recipients();
+    this.groupDatabase            = SignalDatabase.groups();
+    this.distributionListTables   = SignalDatabase.distributionLists();
+    this.observers                = new CopyOnWriteArraySet<>();
     this.foreverObserver          = recipient -> {
       ThreadUtil.postToMain(() -> {
         for (RecipientForeverObserver o : observers) {
@@ -81,6 +84,13 @@ public final class LiveRecipient {
   }
 
   /**
+   * @return An rx-flavored {@link Observable}.
+   */
+  public @NonNull Observable<Recipient> observable() {
+    return subject.distinctUntilChanged(Recipient::hasSameContent);
+  }
+
+  /**
    * Watch the recipient for changes. The callback will only be invoked if the provided lifecycle is
    * in a valid state. No need to remove the observer. If you do wish to remove the observer (if,
    * for instance, you wish to remove the listener before the end of the owner's lifecycle), you can
@@ -95,19 +105,6 @@ public final class LiveRecipient {
    */
   public void removeObservers(@NonNull LifecycleOwner owner) {
     ThreadUtil.runOnMain(() -> observableLiveData.removeObservers(owner));
-  }
-
-  public Observable<Recipient> asObservable() {
-    return Observable.create(emitter -> {
-      Recipient current = recipient.get();
-      if (current != null && current.getId() != RecipientId.UNKNOWN) {
-        emitter.onNext(current);
-      }
-
-      RecipientForeverObserver foreverObserver = emitter::onNext;
-      observeForever(foreverObserver);
-      emitter.setCancellable(() -> removeForeverObserver(foreverObserver));
-    });
   }
 
   /**
@@ -243,6 +240,7 @@ public final class LiveRecipient {
   synchronized void set(@NonNull Recipient recipient) {
     this.recipient.set(recipient);
     this.liveData.postValue(recipient);
+    this.subject.onNext(recipient);
   }
 
   @Override

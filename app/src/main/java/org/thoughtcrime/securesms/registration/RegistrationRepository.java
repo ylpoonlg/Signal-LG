@@ -1,10 +1,12 @@
 package org.thoughtcrime.securesms.registration;
 
 import android.app.Application;
+import android.app.backup.BackupManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import androidx.core.app.NotificationManagerCompat;
 
 import org.signal.core.util.logging.Log;
 import org.signal.libsignal.protocol.state.PreKeyRecord;
@@ -25,11 +27,11 @@ import org.thoughtcrime.securesms.jobmanager.JobManager;
 import org.thoughtcrime.securesms.jobs.DirectoryRefreshJob;
 import org.thoughtcrime.securesms.jobs.RotateCertificateJob;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
+import org.thoughtcrime.securesms.notifications.NotificationIds;
 import org.thoughtcrime.securesms.pin.PinState;
 import org.thoughtcrime.securesms.push.AccountManagerFactory;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
-import org.thoughtcrime.securesms.registration.VerifyAccountRepository.VerifyAccountWithRegistrationLockResponse;
 import org.thoughtcrime.securesms.service.DirectoryRefreshListener;
 import org.thoughtcrime.securesms.service.RotateSignedPreKeyListener;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
@@ -40,6 +42,7 @@ import org.whispersystems.signalservice.api.push.PNI;
 import org.whispersystems.signalservice.api.push.ServiceIdType;
 import org.whispersystems.signalservice.api.push.SignalServiceAddress;
 import org.whispersystems.signalservice.internal.ServiceResponse;
+import org.whispersystems.signalservice.internal.push.BackupAuthCheckProcessor;
 import org.whispersystems.signalservice.internal.push.VerifyAccountResponse;
 
 import java.io.IOException;
@@ -93,27 +96,18 @@ public final class RegistrationRepository {
     return profileKey;
   }
 
-  public Single<ServiceResponse<VerifyAccountResponse>> registerAccountWithoutRegistrationLock(@NonNull RegistrationData registrationData,
-                                                                                               @NonNull VerifyAccountResponse response)
+  public Single<ServiceResponse<VerifyResponse>> registerAccount(@NonNull RegistrationData registrationData,
+                                                                 @NonNull VerifyResponse response,
+                                                                 boolean setRegistrationLockEnabled)
   {
-    return registerAccount(registrationData, response, null, null);
-  }
-
-  public Single<ServiceResponse<VerifyAccountResponse>> registerAccountWithRegistrationLock(@NonNull RegistrationData registrationData,
-                                                                                            @NonNull VerifyAccountWithRegistrationLockResponse response,
-                                                                                            @NonNull String pin)
-  {
-    return registerAccount(registrationData, response.getVerifyAccountResponse(), pin, response.getKbsData());
-  }
-
-  private Single<ServiceResponse<VerifyAccountResponse>> registerAccount(@NonNull RegistrationData registrationData,
-                                                                         @NonNull VerifyAccountResponse response,
-                                                                         @Nullable String pin,
-                                                                         @Nullable KbsPinData kbsData)
-  {
-    return Single.<ServiceResponse<VerifyAccountResponse>>fromCallable(() -> {
+    return Single.<ServiceResponse<VerifyResponse>>fromCallable(() -> {
       try {
-        registerAccountInternal(registrationData, response, pin, kbsData);
+        String pin = response.getPin();
+        registerAccountInternal(registrationData, response.getVerifyAccountResponse(), pin, response.getKbsData(), setRegistrationLockEnabled);
+
+        if (pin != null && !pin.isEmpty()) {
+          PinState.onPinChangedOrCreated(context, pin, SignalStore.pinValues().getKeyboardType());
+        }
 
         JobManager jobManager = ApplicationDependencies.getJobManager();
         jobManager.add(new DirectoryRefreshJob(false));
@@ -133,7 +127,8 @@ public final class RegistrationRepository {
   private void registerAccountInternal(@NonNull RegistrationData registrationData,
                                        @NonNull VerifyAccountResponse response,
                                        @Nullable String pin,
-                                       @Nullable KbsPinData kbsData)
+                                       @Nullable KbsPinData kbsData,
+                                       boolean setRegistrationLockEnabled)
       throws IOException
   {
     ACI     aci    = ACI.parseOrThrow(response.getUuid());
@@ -179,9 +174,12 @@ public final class RegistrationRepository {
     SignalStore.account().setServicePassword(registrationData.getPassword());
     SignalStore.account().setRegistered(true);
     TextSecurePreferences.setPromptedPushRegistration(context, true);
-    TextSecurePreferences.setUnauthorizedReceived(context, false);
+    NotificationManagerCompat.from(context).cancel(NotificationIds.UNREGISTERED_NOTIFICATION_ID);
 
-    PinState.onRegistration(context, kbsData, pin, hasPin);
+    PinState.onRegistration(context, kbsData, pin, hasPin, setRegistrationLockEnabled);
+
+    ApplicationDependencies.closeConnections();
+    ApplicationDependencies.getIncomingMessageObserver();
   }
 
   private void generateAndRegisterPreKeys(@NonNull ServiceIdType serviceIdType,
@@ -217,5 +215,17 @@ public final class RegistrationRepository {
     }
 
     return null;
+  }
+
+  public Single<BackupAuthCheckProcessor> getKbsAuthCredential(@NonNull RegistrationData registrationData) {
+    SignalServiceAccountManager accountManager = AccountManagerFactory.createUnauthenticated(context, registrationData.getE164(), SignalServiceAddress.DEFAULT_DEVICE_ID, registrationData.getPassword());
+
+    return accountManager.checkBackupAuthCredentials(registrationData.getE164(), SignalStore.kbsValues().getKbsAuthTokenList())
+                         .map(BackupAuthCheckProcessor::new)
+                         .doOnSuccess(processor -> {
+                           if (SignalStore.kbsValues().removeAuthTokens(processor.getInvalid())) {
+                             new BackupManager(context).dataChanged();
+                           }
+                         });
   }
 }

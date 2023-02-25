@@ -10,6 +10,7 @@ import org.signal.core.util.concurrent.SignalExecutors;
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.database.GroupTable;
 import org.thoughtcrime.securesms.database.SignalDatabase;
+import org.thoughtcrime.securesms.database.model.GroupRecord;
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
 import org.thoughtcrime.securesms.groups.GroupManager;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
@@ -78,13 +79,15 @@ class DeleteAccountRepository {
 
       int groupsLeft = 0;
       try (GroupTable.Reader groups = SignalDatabase.groups().getGroups()) {
-        GroupTable.GroupRecord groupRecord = groups.getNext();
+        GroupRecord groupRecord = groups.getNext();
         onDeleteAccountEvent.accept(new DeleteAccountEvent.LeaveGroupsProgress(groups.getCount(), 0));
         Log.i(TAG, "deleteAccount: found " + groups.getCount() + " groups to leave.");
 
         while (groupRecord != null) {
           if (groupRecord.getId().isPush() && groupRecord.isActive()) {
-            GroupManager.leaveGroup(ApplicationDependencies.getApplication(), groupRecord.getId().requirePush());
+            if (!groupRecord.isV1Group()) {
+              GroupManager.leaveGroup(ApplicationDependencies.getApplication(), groupRecord.getId().requirePush());
+            }
             onDeleteAccountEvent.accept(new DeleteAccountEvent.LeaveGroupsProgress(groups.getCount(), ++groupsLeft));
           }
 

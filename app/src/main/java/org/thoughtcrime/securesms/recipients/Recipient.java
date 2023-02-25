@@ -650,8 +650,9 @@ public class Recipient {
     String name = Util.getFirstNonEmpty(getGroupName(context),
                                         getSystemProfileName().getGivenName(),
                                         getProfileName().getGivenName(),
-                                        getDisplayName(context),
-                                        getUsername().orElse(null));
+                                        getE164().orElse(null),
+                                        getUsername().orElse(null),
+                                        getDisplayName(context));
 
     return StringUtil.isolateBidi(name);
   }
@@ -1024,6 +1025,10 @@ public class Recipient {
     return capabilities.getPnpCapability();
   }
 
+  public @NonNull Capability getPaymentActivationCapability() {
+    return capabilities.getPaymentActivation();
+  }
+
   public @Nullable byte[] getProfileKey() {
     return profileKey;
   }
@@ -1037,7 +1042,11 @@ public class Recipient {
   }
 
   public @NonNull UnidentifiedAccessMode getUnidentifiedAccessMode() {
-    return unidentifiedAccessMode;
+    if (getPni().isPresent() && getPni().equals(getServiceId())) {
+      return UnidentifiedAccessMode.DISABLED;
+    } else {
+      return unidentifiedAccessMode;
+    }
   }
 
   public @Nullable ChatWallpaper getWallpaper() {
@@ -1213,6 +1222,10 @@ public class Recipient {
       return value;
     }
 
+    public boolean isSupported() {
+      return this == SUPPORTED;
+    }
+
     public static Capability deserialize(int value) {
       switch (value) {
         case 0:  return UNKNOWN;
@@ -1277,7 +1290,6 @@ public class Recipient {
            expireMessages == other.expireMessages &&
            Objects.equals(profileAvatarFileDetails, other.profileAvatarFileDetails) &&
            profileSharing == other.profileSharing &&
-           lastProfileFetch == other.lastProfileFetch &&
            forceSmsSelection == other.forceSmsSelection &&
            Objects.equals(serviceId, other.serviceId) &&
            Objects.equals(username, other.username) &&
@@ -1353,7 +1365,7 @@ public class Recipient {
     }
 
     public @NonNull FallbackContactPhoto getPhotoForDistributionList() {
-      return new ResourceContactPhoto(R.drawable.ic_stories_24, R.drawable.ic_stories_24, R.drawable.ic_stories_24);
+      return new ResourceContactPhoto(R.drawable.symbol_stories_24, R.drawable.symbol_stories_24, R.drawable.symbol_stories_24);
     }
   }
 

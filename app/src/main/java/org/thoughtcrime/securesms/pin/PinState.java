@@ -43,7 +43,8 @@ public final class PinState {
   public static synchronized void onRegistration(@NonNull Context context,
                                                  @Nullable KbsPinData kbsData,
                                                  @Nullable String pin,
-                                                 boolean hasPinToRestore)
+                                                 boolean hasPinToRestore,
+                                                 boolean setRegistrationLockEnabled)
   {
     Log.i(TAG, "onRegistration()");
 
@@ -56,9 +57,13 @@ public final class PinState {
       TextSecurePreferences.setRegistrationLockLastReminderTime(context, System.currentTimeMillis());
       TextSecurePreferences.setRegistrationLockNextReminderInterval(context, RegistrationLockReminders.INITIAL_INTERVAL);
     } else if (kbsData != null && pin != null) {
-      Log.i(TAG, "Registration Lock V2");
-      TextSecurePreferences.setV1RegistrationLockEnabled(context, false);
-      SignalStore.kbsValues().setV2RegistrationLockEnabled(true);
+      if (setRegistrationLockEnabled) {
+        Log.i(TAG, "Registration Lock V2");
+        TextSecurePreferences.setV1RegistrationLockEnabled(context, false);
+        SignalStore.kbsValues().setV2RegistrationLockEnabled(true);
+      } else {
+        Log.i(TAG, "ReRegistration Skip SMS");
+      }
       SignalStore.kbsValues().setKbsMasterKey(kbsData, pin);
       SignalStore.pinValues().resetPinReminders();
       resetPinRetryCount(context, pin);
@@ -129,6 +134,7 @@ public final class PinState {
       bestEffortRefreshAttributes();
     } else {
       Log.i(TAG, "Not the first time setting a PIN. Enclave: " + kbsEnclave.getEnclaveName());
+      ApplicationDependencies.getJobManager().add(new RefreshAttributesJob());
     }
   }
 

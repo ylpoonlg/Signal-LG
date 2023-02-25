@@ -241,12 +241,14 @@ class DonateToSignalViewModel(
           state.copy(
             oneTimeDonationState = state.oneTimeDonationState.copy(
               boosts = boostList,
+              selectedBoost = null,
               selectedCurrency = currency,
               donationStage = DonateToSignalState.DonationStage.READY,
               selectableCurrencyCodes = availableCurrencies.map(Currency::getCurrencyCode),
               isCustomAmountFocused = false,
               customAmount = FiatMoney(
-                BigDecimal.ZERO, currency
+                BigDecimal.ZERO,
+                currency
               )
             )
           )

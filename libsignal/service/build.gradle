@@ -22,11 +22,6 @@ compileJava {
     options.release = 8
 }
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
-
 configurations {
     ideaTestFixturesImplementation { extendsFrom testFixturesImplementation; canBeConsumed false; canBeResolved true }
 }
@@ -35,6 +30,7 @@ dependencies {
     implementation libs.google.protobuf.javalite
     api libs.google.libphonenumber
     api libs.jackson.core
+    api libs.jackson.module.kotlin
 
     implementation libs.libsignal.client
     api libs.square.okhttp3

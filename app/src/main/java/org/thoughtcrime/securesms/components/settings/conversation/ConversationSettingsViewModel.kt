@@ -34,7 +34,7 @@ import java.util.Optional
 
 sealed class ConversationSettingsViewModel(
   private val repository: ConversationSettingsRepository,
-  specificSettingsState: SpecificSettingsState,
+  specificSettingsState: SpecificSettingsState
 ) : ViewModel() {
 
   private val openedMediaCursors = HashSet<Cursor>()
@@ -164,7 +164,8 @@ sealed class ConversationSettingsViewModel(
             contactLinkState = when {
               recipient.isSelf || recipient.isReleaseNotes || recipient.isBlocked -> ContactLinkState.NONE
               recipient.isSystemContact -> ContactLinkState.OPEN
-              else -> ContactLinkState.ADD
+              recipient.hasE164() -> ContactLinkState.ADD
+              else -> ContactLinkState.NONE
             }
           )
         )
@@ -276,7 +277,7 @@ sealed class ConversationSettingsViewModel(
             isMuted = recipient.isMuted,
             isMuteAvailable = true,
             isSearchAvailable = true,
-            isAddToStoryAvailable = recipient.isPushV2Group && !recipient.isBlocked && isActive
+            isAddToStoryAvailable = recipient.isPushV2Group && !recipient.isBlocked && isActive && !SignalStore.storyValues().isFeatureDisabled
           ),
           canModifyBlockedState = RecipientUtil.isBlockable(recipient),
           specificSettingsState = state.requireGroupSettingsState().copy(
@@ -406,7 +407,6 @@ sealed class ConversationSettingsViewModel(
     override fun onAddToGroup() {
       repository.getGroupCapacity(groupId) { capacityResult ->
         if (capacityResult.getRemainingCapacity() > 0) {
-
           internalEvents.onNext(
             ConversationSettingsEvent.AddMembersToGroup(
               groupId,
@@ -479,7 +479,7 @@ sealed class ConversationSettingsViewModel(
   class Factory(
     private val recipientId: RecipientId? = null,
     private val groupId: GroupId? = null,
-    private val repository: ConversationSettingsRepository,
+    private val repository: ConversationSettingsRepository
   ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

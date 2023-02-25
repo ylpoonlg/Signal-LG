@@ -58,6 +58,7 @@ import org.thoughtcrime.securesms.database.SignalDatabase;
 import org.thoughtcrime.securesms.giph.ui.GiphyActivity;
 import org.thoughtcrime.securesms.maps.PlacePickerActivity;
 import org.thoughtcrime.securesms.mediapreview.MediaIntentFactory;
+import org.thoughtcrime.securesms.mediapreview.MediaPreviewCache;
 import org.thoughtcrime.securesms.mediapreview.MediaPreviewV2Fragment;
 import org.thoughtcrime.securesms.mediasend.v2.MediaSelectionActivity;
 import org.thoughtcrime.securesms.payments.CanNotSendPaymentDialog;
@@ -412,12 +413,16 @@ public class AttachmentManager {
   }
 
   public static void selectLocation(Fragment fragment, int requestCode, @ColorInt int chatColor) {
-    Permissions.with(fragment)
-               .request(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-               .ifNecessary()
-               .withPermanentDenialDialog(fragment.getString(R.string.AttachmentManager_signal_requires_location_information_in_order_to_attach_a_location))
-               .onAllGranted(() -> PlacePickerActivity.startActivityForResultAtCurrentLocation(fragment, requestCode, chatColor))
-               .execute();
+    if (Permissions.hasAny(fragment.requireContext(), Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+      PlacePickerActivity.startActivityForResultAtCurrentLocation(fragment, requestCode, chatColor);
+    } else {
+      Permissions.with(fragment)
+                 .request(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+                 .ifNecessary()
+                 .withPermanentDenialDialog(fragment.getString(R.string.AttachmentManager_signal_requires_location_information_in_order_to_attach_a_location))
+                 .onSomeGranted((permissions) -> PlacePickerActivity.startActivityForResultAtCurrentLocation(fragment, requestCode, chatColor))
+                 .execute();
+    }
   }
 
   public static void selectGif(Fragment fragment, int requestCode, RecipientId id, MessageSendType sendType, boolean isForMms, CharSequence textTrimmed) {
@@ -450,7 +455,7 @@ public class AttachmentManager {
                        intent.putExtra(PaymentsActivity.EXTRA_PAYMENTS_STARTING_ACTION, R.id.action_directly_to_createPayment);
                        intent.putExtra(PaymentsActivity.EXTRA_STARTING_ARGUMENTS, new CreatePaymentFragmentArgs.Builder(new PayeeParcelable(recipient.getId())).setFinishOnConfirm(true).build().toBundle());
                        fragment.startActivity(intent);
-                     } else if (FeatureFlags.paymentsRequestActivateFlow()) {
+                     } else if (FeatureFlags.paymentsRequestActivateFlow() && recipient.getPaymentActivationCapability().isSupported()) {
                        showRequestToActivatePayments(fragment.requireContext(), recipient);
                      } else {
                        RecipientHasNotEnabledPaymentsDialog.show(fragment.requireContext());
@@ -463,8 +468,8 @@ public class AttachmentManager {
         .setTitle(context.getString(R.string.AttachmentManager__not_activated_payments, recipient.getShortDisplayName(context)))
         .setMessage(context.getString(R.string.AttachmentManager__request_to_activate_payments))
         .setPositiveButton(context.getString(R.string.AttachmentManager__send_request), (dialog, which) -> {
-          OutgoingMediaMessage outgoingMessage = OutgoingMediaMessage.requestToActivatePaymentsMessage(recipient, System.currentTimeMillis(), 0);
-          MessageSender.send(context, outgoingMessage, SignalDatabase.threads().getOrCreateThreadIdFor(recipient), false, null, null);
+          OutgoingMessage outgoingMessage = OutgoingMessage.requestToActivatePaymentsMessage(recipient, System.currentTimeMillis(), 0);
+          MessageSender.send(context, outgoingMessage, SignalDatabase.threads().getOrCreateThreadIdFor(recipient), MessageSender.SendType.SIGNAL, null, null);
         })
         .setNegativeButton(context.getString(R.string.AttachmentManager__cancel), null)
         .show();
@@ -527,7 +532,8 @@ public class AttachmentManager {
           false,
           false,
           MediaTable.Sorting.Newest,
-          slide.isVideoGif());
+          slide.isVideoGif(),
+          new MediaIntentFactory.SharedElementArgs());
       context.startActivity(MediaIntentFactory.create(context, args));
     }
   }
@@ -535,7 +541,10 @@ public class AttachmentManager {
   private class ThumbnailClickListener implements View.OnClickListener {
     @Override
     public void onClick(View v) {
-      if (slide.isPresent()) previewImageDraft(slide.get());
+      if (slide.isPresent()) {
+        MediaPreviewCache.INSTANCE.setDrawable(((ThumbnailView) v).getImageDrawable());
+        previewImageDraft(slide.get());
+      }
     }
   }
 

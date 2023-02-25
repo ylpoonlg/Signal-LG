@@ -148,7 +148,7 @@ class EditNotificationProfileFragment : DSLSettingsFragment(layoutId = R.layout.
         NotificationProfileNamePreset.Model("\uD83D\uDE34", R.string.EditNotificationProfileFragment__sleep, onClick),
         NotificationProfileNamePreset.Model("\uD83D\uDE97", R.string.EditNotificationProfileFragment__driving, onClick),
         NotificationProfileNamePreset.Model("\uD83D\uDE0A", R.string.EditNotificationProfileFragment__downtime, onClick),
-        NotificationProfileNamePreset.Model("\uD83D\uDCA1", R.string.EditNotificationProfileFragment__focus, onClick),
+        NotificationProfileNamePreset.Model("\uD83D\uDCA1", R.string.EditNotificationProfileFragment__focus, onClick)
       )
     )
   }
@@ -178,7 +178,7 @@ class EditNotificationProfileFragment : DSLSettingsFragment(layoutId = R.layout.
       emojiView?.setImageDrawable(drawable)
       viewModel.onEmojiSelected(emoji)
     } else {
-      emojiView?.setImageResource(R.drawable.ic_add_emoji)
+      emojiView?.setImageResource(R.drawable.symbol_emoji_plus_24)
       viewModel.onEmojiSelected("")
     }
   }

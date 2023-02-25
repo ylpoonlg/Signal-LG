@@ -22,6 +22,7 @@ import org.thoughtcrime.securesms.preferences.EditProxyViewModel;
 import org.thoughtcrime.securesms.util.BottomSheetUtil;
 import org.thoughtcrime.securesms.util.LifecycleDisposable;
 import org.thoughtcrime.securesms.util.ThemeUtil;
+import org.thoughtcrime.securesms.util.WindowUtil;
 import org.thoughtcrime.securesms.util.views.CircularProgressMaterialButton;
 
 /**
@@ -81,6 +82,12 @@ public final class ProxyBottomSheetFragment extends BottomSheetDialogFragment {
     cancelButton.setOnClickListener(v -> dismiss());
   }
 
+  @Override
+  public void onResume() {
+    super.onResume();
+    WindowUtil.initializeScreenshotSecurity(requireContext(), requireDialog().getWindow());
+  }
+
   private void initViewModel() {
     this.viewModel = new ViewModelProvider(this).get(EditProxyViewModel.class);
 
@@ -102,6 +109,11 @@ public final class ProxyBottomSheetFragment extends BottomSheetDialogFragment {
   }
 
   private void presentEvents(@NonNull EditProxyViewModel.Event event) {
+    if (isStateSaved()) {
+      Log.w(TAG, "Got an event after state had been saved. Dropping. " + event.name());
+      return;
+    }
+
     switch (event) {
       case PROXY_SUCCESS:
         Toast.makeText(requireContext(), R.string.ProxyBottomSheetFragment_successfully_connected_to_proxy, Toast.LENGTH_LONG).show();

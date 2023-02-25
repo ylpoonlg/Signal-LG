@@ -132,7 +132,7 @@ class DonationCheckoutDelegate(
         }
         .show()
     } else {
-      Log.w(TAG, "Stripe action failed: ${result.action}")
+      Log.w(TAG, "Processor action failed: ${result.action}")
     }
   }
 
@@ -247,7 +247,8 @@ class DonationCheckoutDelegate(
 
       Log.d(TAG, "Displaying donation error dialog.", true)
       errorDialog = DonationErrorDialogs.show(
-        fragment!!.requireContext(), throwable,
+        fragment!!.requireContext(),
+        throwable,
         object : DonationErrorDialogs.DialogCallback() {
           var tryCCAgain = false
 

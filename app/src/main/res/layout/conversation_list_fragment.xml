@@ -50,16 +50,24 @@
             android:id="@+id/recycler_coordinator_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:elevation="0dp"
             app:expanded="false"
             app:layout_behavior="org.thoughtcrime.securesms.conversationlist.ConversationFilterBehavior">
 
-            <org.thoughtcrime.securesms.conversationlist.ConversationListFilterPullView
-                android:id="@+id/pull_view"
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed|exitUntilCollapsed"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@color/signal_colorSurface1"
-                app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-                app:layout_scrollInterpolator="@android:anim/decelerate_interpolator" />
+                android:layout_height="wrap_content">
+
+                <org.thoughtcrime.securesms.conversationlist.chatfilter.ConversationListFilterPullView
+                    android:id="@+id/pull_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:background="@color/signal_colorBackground"
+                    app:layout_scrollInterpolator="@android:anim/linear_interpolator" />
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -112,8 +120,9 @@
                 android:transitionName="camera_fab"
                 android:visibility="gone"
                 app:backgroundTint="@color/orange_700"
-                app:srcCompat="@drawable/ic_camera_outline_24"
+                app:srcCompat="@drawable/symbol_camera_24"
                 app:tint="@color/white"
+                app:shapeAppearanceOverlay="@style/Signal.ShapeOverlay.Rounded.Fab"
                 tools:visibility="visible" />
 
             <org.thoughtcrime.securesms.components.registration.PulsingFloatingActionButton
@@ -128,8 +137,9 @@
                 android:transitionName="new_convo_fab"
                 android:visibility="gone"
                 app:backgroundTint="@color/orange_500"
-                app:srcCompat="@drawable/ic_compose_outline_24"
+                app:srcCompat="@drawable/symbol_edit_24"
                 app:tint="@color/white"
+                app:shapeAppearanceOverlay="@style/Signal.ShapeOverlay.Rounded.Fab"
                 tools:visibility="visible" />
 
             <ViewStub

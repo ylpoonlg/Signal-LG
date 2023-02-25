@@ -53,7 +53,9 @@ object StoriesLandingItem {
     val onGoToChat: (Model) -> Unit,
     val onSave: (Model) -> Unit,
     val onDeleteStory: (Model) -> Unit,
-    val onInfo: (Model, View) -> Unit
+    val onInfo: (Model, View) -> Unit,
+    val onLockList: () -> Unit,
+    val onUnlockList: () -> Unit
   ) : MappingModel<Model> {
     override fun areItemsTheSame(newItem: Model): Boolean {
       return data.storyRecipient.id == newItem.data.storyRecipient.id
@@ -133,7 +135,6 @@ object StoriesLandingItem {
     private val addToStoriesView: View = itemView.findViewById(R.id.add_to_story)
 
     override fun bind(model: Model) {
-
       presentDateOrStatus(model)
       setUpClickListeners(model)
 
@@ -230,7 +231,7 @@ object StoriesLandingItem {
       icon.setImageResource(
         when {
           model.data.hasReplies -> R.drawable.ic_messages_solid_20
-          else -> R.drawable.ic_reply_24_solid_tinted
+          else -> R.drawable.symbol_reply_fill_24
         }
       )
 
@@ -294,7 +295,11 @@ object StoriesLandingItem {
 
     private fun displayContext(model: Model) {
       itemView.isSelected = true
-      StoryContextMenu.show(context, itemView, storyPreview, model) { itemView.isSelected = false }
+      model.onLockList()
+      StoryContextMenu.show(context, itemView, storyPreview, model) {
+        itemView.isSelected = false
+        model.onUnlockList()
+      }
     }
 
     private fun clearGlide() {

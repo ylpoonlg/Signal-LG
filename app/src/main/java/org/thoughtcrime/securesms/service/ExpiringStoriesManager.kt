@@ -24,7 +24,7 @@ class ExpiringStoriesManager(
     private val STORY_LIFESPAN = TimeUnit.HOURS.toMillis(24)
   }
 
-  private val mmsDatabase = SignalDatabase.mms
+  private val mmsDatabase = SignalDatabase.messages
 
   init {
     scheduleIfNecessary()
@@ -52,7 +52,7 @@ class ExpiringStoriesManager(
   override fun getDelayForEvent(event: Event): Long = event.delay
 
   @WorkerThread
-  override fun scheduleAlarm(application: Application, delay: Long) {
+  override fun scheduleAlarm(application: Application, event: Event, delay: Long) {
     setAlarm(application, delay, ExpireStoriesAlarm::class.java)
   }
 

@@ -10,7 +10,6 @@ import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.crypto.ReentrantSessionLock;
 import org.thoughtcrime.securesms.database.GroupTable;
 import org.thoughtcrime.securesms.database.MessageTable.SyncMessageId;
-import org.thoughtcrime.securesms.database.MmsSmsTable;
 import org.thoughtcrime.securesms.database.SignalDatabase;
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
 import org.thoughtcrime.securesms.groups.GroupChangeBusyException;
@@ -66,12 +65,10 @@ public class IncomingMessageProcessor {
   public class Processor implements Closeable {
 
     private final Context     context;
-    private final MmsSmsTable mmsSmsDatabase;
     private final JobManager  jobManager;
 
     private Processor(@NonNull Context context) {
       this.context           = context;
-      this.mmsSmsDatabase    = SignalDatabase.mmsSms();
       this.jobManager        = ApplicationDependencies.getJobManager();
     }
 
@@ -141,7 +138,7 @@ public class IncomingMessageProcessor {
         stopwatch.split("group-check");
 
         try {
-          MessageContentProcessor processor = MessageContentProcessor.forNormalContent(context);
+          MessageContentProcessor processor = MessageContentProcessor.create(context);
           processor.process(result.getState(), result.getContent(), result.getException(), envelope.getTimestamp(), -1);
           return null;
         } catch (IOException | GroupChangeBusyException e) {
@@ -160,7 +157,7 @@ public class IncomingMessageProcessor {
       Recipient sender = Recipient.externalPush(envelope.getSourceAddress());
       Log.i(TAG, "Received server receipt. Sender: " + sender.getId() + ", Device: " + envelope.getSourceDevice() + ", Timestamp: " + envelope.getTimestamp());
 
-      mmsSmsDatabase.incrementDeliveryReceiptCount(new SyncMessageId(sender.getId(), envelope.getTimestamp()), System.currentTimeMillis());
+      SignalDatabase.messages().incrementDeliveryReceiptCount(new SyncMessageId(sender.getId(), envelope.getTimestamp()), System.currentTimeMillis());
       SignalDatabase.messageLog().deleteEntryForRecipient(envelope.getTimestamp(), sender.getId(), envelope.getSourceDevice());
     }
 

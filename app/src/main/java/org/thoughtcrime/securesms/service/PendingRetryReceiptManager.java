@@ -33,7 +33,7 @@ public final class PendingRetryReceiptManager extends TimedEventManager<PendingR
     super(application, "PendingRetryReceiptManager");
 
     this.pendingCache    = ApplicationDependencies.getPendingRetryReceiptCache();
-    this.messageDatabase = SignalDatabase.sms();
+    this.messageDatabase = SignalDatabase.messages();
 
     scheduleIfNecessary();
   }
@@ -71,7 +71,7 @@ public final class PendingRetryReceiptManager extends TimedEventManager<PendingR
 
   @AnyThread
   @Override
-  protected void scheduleAlarm(@NonNull Application application, long delay) {
+  protected void scheduleAlarm(@NonNull Application application, PendingRetryReceiptModel event, long delay) {
     setAlarm(application, delay, PendingRetryReceiptAlarm.class);
   }
 
