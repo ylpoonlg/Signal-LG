@@ -543,6 +543,15 @@
     <!-- ConversationTypingView -->
     <string name="ConversationTypingView__plus_d">+%1$d</string>
 
+    <!-- Title for a reminder bottom sheet to users who have re-registered that they need to go back to re-link their devices. -->
+    <string name="RelinkDevicesReminderFragment__relink_your_devices">Re-link your devices</string>
+    <!-- Description for a reminder bottom sheet to users who have re-registered that they need to go back to re-link their devices. -->
+    <string name="RelinkDevicesReminderFragment__the_devices_you_added_were_unlinked">The devices you added were unlinked when your device was unregistered. Go to Settings to re-link any devices.</string>
+    <!-- Button label for the re-link devices bottom sheet reminder to navigate to the Devices page in the settings. -->
+    <string name="RelinkDevicesReminderFragment__open_settings">Отворити подешавања</string>
+    <!-- Button label for the re-link devices bottom sheet reminder to dismiss the pop up. -->
+    <string name="RelinkDevicesReminderFragment__later">Касније</string>
+
     <!-- CreateGroupActivity -->
     <string name="CreateGroupActivity__select_members">Одаберите чланове</string>
 
@@ -1167,8 +1176,8 @@
     <string name="Megaphones_new_group">Нова група</string>
     <string name="Megaphones_invite_friends">Позивница пријатељима</string>
     <string name="Megaphones_use_sms">Користи СМС</string>
-    <string name="Megaphones_appearance">Изглед</string>
-    <string name="Megaphones_add_photo">Додајте слику</string>
+    <string name="Megaphones_chat_colors">Chat colors</string>
+    <string name="Megaphones_add_a_profile_photo">Додајте фотографију за профил</string>
 
     <!-- Title of a bottom sheet to render messages that all quote a specific message -->
     <string name="MessageQuotesBottomSheet_replies">Одговора</string>
@@ -3014,7 +3023,7 @@
     <string name="PaymentsDetailsFragment__sent_payment">Пошаљи уплату</string>
     <string name="PaymentsDetailsFragment__received_payment">Примљена уплата</string>
     <string name="PaymentsDeatilsFragment__payment_completed_s">Уплата завршена %1$s</string>
-    <string name="PaymentsDetailsFragment__block_number">Блокирај број</string>
+    <string name="PaymentsDetailsFragment__block_number">Број блока</string>
 
     <!-- PaymentsTransferFragment -->
     <string name="PaymentsTransferFragment__transfer">Пренос</string>
@@ -3454,6 +3463,18 @@
     <string name="BackupUtil_unknown">Непозната</string>
     <string name="preferences_app_protection__see_my_phone_number">Види мој број телефона</string>
     <string name="preferences_app_protection__find_me_by_phone_number">Проналази ме по броју телефона</string>
+    <!-- Phone number heading displayed as a screen title -->
+    <string name="preferences_app_protection__phone_number">Број телефона</string>
+    <!-- Subtext below option to launch into phone number privacy settings screen -->
+    <string name="preferences_app_protection__choose_who_can_see">Одаберите ко може да види ваш број телефона и ко може да вам се обрати у Signal-у преко њега.</string>
+    <!-- Section title above two radio buttons for enabling and disabling phone number display -->
+    <string name="PhoneNumberPrivacySettingsFragment__who_can_see_my_number">Ко може да види мој број</string>
+    <!-- Subtext below radio buttons when who can see my number is set to nobody -->
+    <string name="PhoneNumberPrivacySettingsFragment__nobody_will_see">Nobody will see your phone number on Signal</string>
+    <!-- Section title above two radio buttons for enabling and disabling whether users can find me by my phone number  -->
+    <string name="PhoneNumberPrivacySettingsFragment__who_can_find_me_by_number">Ко може да ме пронађе преко броја телефона</string>
+    <!-- Subtext below radio buttons when who can see my number is set to everyone -->
+    <string name="PhoneNumberPrivacySettingsFragment__your_phone_number">Ваш број телефона ће бити видљив људима и групама којима шаљете поруке. Људи који имају ваш број у својим контактима на телефону такође ће га видети у Signal-у.</string>
     <string name="PhoneNumberPrivacy_everyone">Сви</string>
     <string name="PhoneNumberPrivacy_my_contacts">Моји контакти</string>
     <string name="PhoneNumberPrivacy_nobody">никога</string>
@@ -4556,7 +4577,7 @@
     <string name="DonationsErrors__your_donation_could_not_be_sent">Ваша донација није послата због грешке у мрежи. Проверите да ли сте повезани и пробајте поново.</string>
 
     <!-- Gift message view title -->
-    <string name="GiftMessageView__donation_to_s">Донација за пријатеља (%1$s)</string>
+    <string name="GiftMessageView__donation_on_behalf_of_s">Donation on behalf of %1$s</string>
     <!-- Gift message view title for incoming donations -->
     <string name="GiftMessageView__s_donated_to_signal_on">%1$s је дао/ла донацију Signal-у у ваше име</string>
     <!-- Gift badge redeem action label -->

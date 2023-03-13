@@ -543,6 +543,15 @@
     <!-- ConversationTypingView -->
     <string name="ConversationTypingView__plus_d">+%1$d</string>
 
+    <!-- Title for a reminder bottom sheet to users who have re-registered that they need to go back to re-link their devices. -->
+    <string name="RelinkDevicesReminderFragment__relink_your_devices">Re-link your devices</string>
+    <!-- Description for a reminder bottom sheet to users who have re-registered that they need to go back to re-link their devices. -->
+    <string name="RelinkDevicesReminderFragment__the_devices_you_added_were_unlinked">The devices you added were unlinked when your device was unregistered. Go to Settings to re-link any devices.</string>
+    <!-- Button label for the re-link devices bottom sheet reminder to navigate to the Devices page in the settings. -->
+    <string name="RelinkDevicesReminderFragment__open_settings">Отваряне на настройките</string>
+    <!-- Button label for the re-link devices bottom sheet reminder to dismiss the pop up. -->
+    <string name="RelinkDevicesReminderFragment__later">По-късно</string>
+
     <!-- CreateGroupActivity -->
     <string name="CreateGroupActivity__select_members">Избери членове</string>
 
@@ -961,9 +970,9 @@
 
     <!-- UsernameOutOfSyncReminder -->
     <!-- Displayed above the conversation list when a user needs to address an issue with their username -->
-    <string name="UsernameOutOfSyncReminder__something_went_wrong">Something went wrong with your username, it\'s no longer assigned to your account. You can try and set it again or choose a new one.</string>
+    <string name="UsernameOutOfSyncReminder__something_went_wrong">Нещо се обърка с вашето потребителско име, то вече не е свързано с акаунта ви. Можете да опитате да го зададете отново или да си изберете друго.</string>
     <!-- Action text to navigate user to manually fix the issue with their username -->
-    <string name="UsernameOutOfSyncReminder__fix_now">Fix now</string>
+    <string name="UsernameOutOfSyncReminder__fix_now">Коригиране сега</string>
 
 
     <!-- ManageRecipientActivity -->
@@ -1167,8 +1176,8 @@
     <string name="Megaphones_new_group">Нова група</string>
     <string name="Megaphones_invite_friends">Покани приятели</string>
     <string name="Megaphones_use_sms">Ползвай SMS</string>
-    <string name="Megaphones_appearance">Облик</string>
-    <string name="Megaphones_add_photo">Добави снимка</string>
+    <string name="Megaphones_chat_colors">Chat colors</string>
+    <string name="Megaphones_add_a_profile_photo">Добави профилна снимка</string>
 
     <!-- Title of a bottom sheet to render messages that all quote a specific message -->
     <string name="MessageQuotesBottomSheet_replies">Отговори</string>
@@ -1596,15 +1605,15 @@
   <!-- Removed by excludeNonTranslatables <string name="PinRestoreLockedFragment_learn_more_url" translatable="false">https://support.signal.org/hc/articles/360007059792</string> -->
 
     <!-- Dialog button text indicating user wishes to send an sms code isntead of skipping it -->
-    <string name="ReRegisterWithPinFragment_send_sms_code">Send SMS code</string>
+    <string name="ReRegisterWithPinFragment_send_sms_code">Изпращане на код чрез SMS</string>
     <!-- Email subject used when user contacts support about an issue with the reregister flow. -->
-    <string name="ReRegisterWithPinFragment_support_email_subject">Signal Registration - Need Help with reregister PIN for Android</string>
+    <string name="ReRegisterWithPinFragment_support_email_subject">Регистрация за Signal - Необходима помощ с пререгистриране на ПИН за Android</string>
     <!-- Dialog message shown in reregister flow when tapping a informational button to to learn about pins or contact support for help -->
-    <string name="ReRegisterWithPinFragment_need_help_local">Your PIN is a %1$d+ digit code you created that can be numeric or alphanumeric.\n\nIf you can’t remember your PIN, you can create a new one.</string>
+    <string name="ReRegisterWithPinFragment_need_help_local">Вашият ПИН е създаден от вас код с %1$d+ цифри, който може да съдържа само цифри или цифри и букви.\n\nАко не си спомняте своя ПИН, можете да си създадете нов.</string>
     <!-- Dialog message shown in reregister flow when user requests to skip this flow and return to the normal flow -->
-    <string name="ReRegisterWithPinFragment_skip_local">If you can’t remember your PIN, you can create a new one.</string>
+    <string name="ReRegisterWithPinFragment_skip_local">Ако не си спомняте своя ПИН, можете да си създадете нов.</string>
     <!-- Dialog message shown in reregister flow when user uses up all of their guesses for their pin and we are going to move on -->
-    <string name="ReRegisterWithPinFragment_out_of_guesses_local">You\'ve run out of PIN guesses, but you can still access your Signal account by creating a new PIN.</string>
+    <string name="ReRegisterWithPinFragment_out_of_guesses_local">Нямате повече опити за познаване на ПИН кода, но все пак можете да отворите своя акаунт в Signal, като си създадете нов ПИН.</string>
 
     <!-- PinOptOutDialog -->
     <string name="PinOptOutDialog_warning">Внимание</string>
@@ -1791,7 +1800,7 @@
     <string name="RegistrationActivity_signal_needs_access_to_your_contacts_in_order_to_connect_with_friends">Signal се нуждае от разрешението за контакти, за да ви помага да се свързвате с приятели. Контактите ви се качват чрез откриването на частни контакти на Signal, което означава, че са криптирани от край до край и никога не се виждат от услугата Signal.</string>
     <string name="RegistrationActivity_rate_limited_to_service">Направихте прекалено много опити за регистриране на този номер. Моля, опитайте отново по-късно.</string>
     <!--    During registration, if the user attempts (and fails) to register, we display this error message with a number of minutes timer they are allowed to try again.-->
-    <string name="RegistrationActivity_rate_limited_to_try_again">You\'ve made too many attempts to register this number. Please try again in %1$s.</string>
+    <string name="RegistrationActivity_rate_limited_to_try_again">Направихте прекалено много опити за регистриране на този номер. Моля, опитайте отново след %1$s.</string>
     <string name="RegistrationActivity_unable_to_connect_to_service">Неуспешно свързване с услугата. Моля, проверете мрежовата връзка и опитайте отново.</string>
     <string name="RegistrationActivity_non_standard_number_format">Нестандартен формат на номера</string>
     <string name="RegistrationActivity_the_number_you_entered_appears_to_be_a_non_standard">Въведеният от вас номер (%1$s) изглежда е в нестандартен формат.\n\nДа нямате предвид %2$s?</string>
@@ -1799,9 +1808,9 @@
     <!--    Small "toast" notification to the user confirming that they have requested a new code via voice call.-->
     <string name="RegistrationActivity_call_requested">Поискано повикване</string>
     <!--    Small "toast" notification to the user confirming that they have requested a new code via SMS.-->
-    <string name="RegistrationActivity_sms_requested">SMS requested</string>
+    <string name="RegistrationActivity_sms_requested">Поискан е SMS</string>
     <!--    Small "toast" notification to the user confirming that they have requested a new code (through an unspecified channel).-->
-    <string name="RegistrationActivity_code_requested">Verification code requested</string>
+    <string name="RegistrationActivity_code_requested">Поискан е код за потвърждение</string>
     <plurals name="RegistrationActivity_debug_log_hint">
         <item quantity="one">Сега сте %1$d стъпка от изпращането на дебъг лога.</item>
         <item quantity="other">Сега сте на %1$d стъпки от изпращането на дебъг лог.</item>
@@ -1822,13 +1831,13 @@
     <string name="RegistrationActivity_verification_code">Код за потвърждение</string>
     <string name="RegistrationActivity_resend_code">Изпращане на нов код</string>
     <!--    A title for a bottom sheet dialog offering to help a user having trouble entering their verification code.-->
-    <string name="RegistrationActivity_support_bottom_sheet_title">Having trouble registering?</string>
+    <string name="RegistrationActivity_support_bottom_sheet_title">Имате затруднения с регистрирането?</string>
     <!--    A list of suggestions to try for a user having trouble entering their verification code.-->
-    <string name="RegistrationActivity_support_bottom_sheet_body_suggestions">• Make sure your phone has a cellular signal to receive your SMS or call\n • Confirm you can receive a phone call to the number\n • Check that you have entered your phone number correctly.</string>
+    <string name="RegistrationActivity_support_bottom_sheet_body_suggestions">• Уверете се, че телефонът ви има обхват, за да получите SMS или обаждане\n • Потвърдете, че можете да получавате телефонни обаждания до номера\n • Проверете дали сте въвели телефонния си номер правилно.</string>
     <!--    A call to action for a user having trouble entering the verification to seek further help. -->
-    <string name="RegistrationActivity_support_bottom_sheet_body_call_to_action">For more information, please follow these troubleshooting steps or Contact Support</string>
+    <string name="RegistrationActivity_support_bottom_sheet_body_call_to_action">За повече информация, следвайте тези стъпки за отстраняване на неизправности или се свържете с поддръжката ни</string>
     <!--    A clickable piece of text that will take the user to our website with additional suggestions.-->
-    <string name="RegistrationActivity_support_bottom_sheet_cta_troubleshooting_steps_substring">these troubleshooting steps</string>
+    <string name="RegistrationActivity_support_bottom_sheet_cta_troubleshooting_steps_substring">тези стъпки за отстраняване на неизправности</string>
     <!--    A clickable piece of text that will pre-fill a request for support email in the user\'s email app.-->
     <string name="RegistrationActivity_support_bottom_sheet_cta_contact_support_substring">Връзка с отдела за поддръжка</string>
 
@@ -3339,7 +3348,7 @@
     <string name="RegistrationLockFragment__enter_your_pin">Въведете своя ПИН</string>
     <string name="RegistrationLockFragment__enter_the_pin_you_created">Въведете ПИН кода, който сте създали за своя акаунт. Той е различен от кода за потвърждение през SMS.</string>
     <!-- Info text shown above a pin entry text box describing what pin they should be entering. -->
-    <string name="RegistrationLockFragment__enter_the_pin_you_created_for_your_account">Enter the PIN you created for your account.</string>
+    <string name="RegistrationLockFragment__enter_the_pin_you_created_for_your_account">Въведете ПИН кода, който сте създали за акаунта си.</string>
     <string name="RegistrationLockFragment__enter_alphanumeric_pin">Въведете ПИН от букви и цифри</string>
     <string name="RegistrationLockFragment__enter_numeric_pin">Въведете ПИН от цифри</string>
     <string name="RegistrationLockFragment__incorrect_pin_try_again">Грешен ПИН. Опитайте отново.</string>
@@ -3446,7 +3455,7 @@
     <!--    Countdown to when the user can request a new code via phone call during registration.-->
     <string name="RegistrationActivity_call_me_instead_available_in">Обадете ми се (%1$02d:%2$02d)</string>
     <!--    Countdown to when the user can request a new SMS code during registration.-->
-    <string name="RegistrationActivity_resend_sms_available_in">Resend Code (%1$02d:%2$02d)</string>
+    <string name="RegistrationActivity_resend_sms_available_in">Повторно изпращане на кода (%1$02d:%2$02d)</string>
     <string name="RegistrationActivity_contact_signal_support">Връзка с поддръжката на Signal</string>
     <string name="RegistrationActivity_code_support_subject">Регистрация за Signal - Код за потвърждение за Android</string>
     <string name="RegistrationActivity_incorrect_code">Некоректен код</string>
@@ -3454,6 +3463,18 @@
     <string name="BackupUtil_unknown">Непознат</string>
     <string name="preferences_app_protection__see_my_phone_number">Виж телефонния номер</string>
     <string name="preferences_app_protection__find_me_by_phone_number">Намери ме по Телефонен номер</string>
+    <!-- Phone number heading displayed as a screen title -->
+    <string name="preferences_app_protection__phone_number">Телефонен номер</string>
+    <!-- Subtext below option to launch into phone number privacy settings screen -->
+    <string name="preferences_app_protection__choose_who_can_see">Изберете кой може да вижда телефонния ви номер и кой може да се свързва с вас в Signal чрез него.</string>
+    <!-- Section title above two radio buttons for enabling and disabling phone number display -->
+    <string name="PhoneNumberPrivacySettingsFragment__who_can_see_my_number">Кой може да вижда номера ми</string>
+    <!-- Subtext below radio buttons when who can see my number is set to nobody -->
+    <string name="PhoneNumberPrivacySettingsFragment__nobody_will_see">Nobody will see your phone number on Signal</string>
+    <!-- Section title above two radio buttons for enabling and disabling whether users can find me by my phone number  -->
+    <string name="PhoneNumberPrivacySettingsFragment__who_can_find_me_by_number">Кой може да ме намери по номер</string>
+    <!-- Subtext below radio buttons when who can see my number is set to everyone -->
+    <string name="PhoneNumberPrivacySettingsFragment__your_phone_number">Вашият телефонен номер ще се вижда от хората и групите, на които пращате съобщения. Хората, които имат вашия номер в контактите на телефона си, ще го виждат и в Signal.</string>
     <string name="PhoneNumberPrivacy_everyone">Всички</string>
     <string name="PhoneNumberPrivacy_my_contacts">Моите контакти</string>
     <string name="PhoneNumberPrivacy_nobody">Никой</string>
@@ -3715,11 +3736,11 @@
     <string name="WifiToCellularPopupWindow__weak_wifi_switched_to_cellular">Слаба Wi-Fi мрежа. Превключено е към мобилни данни.</string>
 
     <!-- DeleteAccountFragment -->
-    <string name="DeleteAccountFragment__deleting_your_account_will">Изтриването на профила Ви ще:</string>
+    <string name="DeleteAccountFragment__deleting_your_account_will">Изтриването на акаунта ви ще доведе до:</string>
     <string name="DeleteAccountFragment__enter_your_phone_number">Въведете телефонния си номер</string>
     <string name="DeleteAccountFragment__delete_account">Изтриване на акаунт</string>
-    <string name="DeleteAccountFragment__delete_your_account_info_and_profile_photo">Изтриване на информацията за профила ви и снимката ви</string>
-    <string name="DeleteAccountFragment__delete_all_your_messages">Изтриване на всички съобщения</string>
+    <string name="DeleteAccountFragment__delete_your_account_info_and_profile_photo">Изтриване на информацията за акаунта и профилната ви снимка</string>
+    <string name="DeleteAccountFragment__delete_all_your_messages">Изтриване на всички ваши съобщения</string>
     <string name="DeleteAccountFragment__delete_s_in_your_payments_account">Изтриване на %1$s от вашия акаунт за плащания</string>
     <string name="DeleteAccountFragment__no_country_code">Не е избран код на държава</string>
     <string name="DeleteAccountFragment__no_number">Не е посочен номер</string>
@@ -4556,7 +4577,7 @@
     <string name="DonationsErrors__your_donation_could_not_be_sent">Вашето дарение не беше изпратено заради мрежова грешка. Проверете връзката си и опитайте отново.</string>
 
     <!-- Gift message view title -->
-    <string name="GiftMessageView__donation_to_s">Дарение за %1$s</string>
+    <string name="GiftMessageView__donation_on_behalf_of_s">Donation on behalf of %1$s</string>
     <!-- Gift message view title for incoming donations -->
     <string name="GiftMessageView__s_donated_to_signal_on">%1$s дари на Signal от ваше име</string>
     <!-- Gift badge redeem action label -->

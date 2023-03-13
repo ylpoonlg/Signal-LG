@@ -603,6 +603,15 @@
     <!-- ConversationTypingView -->
     <string name="ConversationTypingView__plus_d">+%1$d</string>
 
+    <!-- Title for a reminder bottom sheet to users who have re-registered that they need to go back to re-link their devices. -->
+    <string name="RelinkDevicesReminderFragment__relink_your_devices">Re-link your devices</string>
+    <!-- Description for a reminder bottom sheet to users who have re-registered that they need to go back to re-link their devices. -->
+    <string name="RelinkDevicesReminderFragment__the_devices_you_added_were_unlinked">The devices you added were unlinked when your device was unregistered. Go to Settings to re-link any devices.</string>
+    <!-- Button label for the re-link devices bottom sheet reminder to navigate to the Devices page in the settings. -->
+    <string name="RelinkDevicesReminderFragment__open_settings">Oscail socruithe</string>
+    <!-- Button label for the re-link devices bottom sheet reminder to dismiss the pop up. -->
+    <string name="RelinkDevicesReminderFragment__later">Níos déanaí</string>
+
     <!-- CreateGroupActivity -->
     <string name="CreateGroupActivity__select_members">Baill a Roghnú</string>
 
@@ -1075,9 +1084,9 @@
 
     <!-- UsernameOutOfSyncReminder -->
     <!-- Displayed above the conversation list when a user needs to address an issue with their username -->
-    <string name="UsernameOutOfSyncReminder__something_went_wrong">Something went wrong with your username, it\'s no longer assigned to your account. You can try and set it again or choose a new one.</string>
+    <string name="UsernameOutOfSyncReminder__something_went_wrong">Bhí fadhb le d\'ainm úsáideora, níl sé sannta do do chuntas a thuilleadh. Is féidir leat athshocrú a thriail nó ceann nua a roghnú.</string>
     <!-- Action text to navigate user to manually fix the issue with their username -->
-    <string name="UsernameOutOfSyncReminder__fix_now">Fix now</string>
+    <string name="UsernameOutOfSyncReminder__fix_now">Deisigh anois</string>
 
 
     <!-- ManageRecipientActivity -->
@@ -1311,8 +1320,8 @@
     <string name="Megaphones_new_group">Baicle nua</string>
     <string name="Megaphones_invite_friends">Tabhair cuirí do chairde</string>
     <string name="Megaphones_use_sms">Bain feidhm as SMS</string>
-    <string name="Megaphones_appearance">Cuma</string>
-    <string name="Megaphones_add_photo">Cuir grianghraf leis</string>
+    <string name="Megaphones_chat_colors">Chat colors</string>
+    <string name="Megaphones_add_a_profile_photo">Cuir grianghraf próifíle leis</string>
 
     <!-- Title of a bottom sheet to render messages that all quote a specific message -->
     <string name="MessageQuotesBottomSheet_replies">Freagraí</string>
@@ -1788,15 +1797,15 @@
   <!-- Removed by excludeNonTranslatables <string name="PinRestoreLockedFragment_learn_more_url" translatable="false">https://support.signal.org/hc/articles/360007059792</string> -->
 
     <!-- Dialog button text indicating user wishes to send an sms code isntead of skipping it -->
-    <string name="ReRegisterWithPinFragment_send_sms_code">Send SMS code</string>
+    <string name="ReRegisterWithPinFragment_send_sms_code">Seol cód SMS</string>
     <!-- Email subject used when user contacts support about an issue with the reregister flow. -->
-    <string name="ReRegisterWithPinFragment_support_email_subject">Signal Registration - Need Help with reregister PIN for Android</string>
+    <string name="ReRegisterWithPinFragment_support_email_subject">Clárú Signal — Cabhair Uait le UAP a athchlárú le haghaidh Android</string>
     <!-- Dialog message shown in reregister flow when tapping a informational button to to learn about pins or contact support for help -->
     <string name="ReRegisterWithPinFragment_need_help_local">Cód %1$d+ digit a chruthaigh tú is ea d\'UAP, idir uimhriúil nó alfa-uimhriúil.\n\nMura féidir leat cuimhneamh ar d\'UAP, is féidir leat ceann nua a chruthú.</string>
     <!-- Dialog message shown in reregister flow when user requests to skip this flow and return to the normal flow -->
     <string name="ReRegisterWithPinFragment_skip_local">Mura féidir leat cuimhneamh ar d\'UAP, is féidir leat ceann nua a chruthú.</string>
     <!-- Dialog message shown in reregister flow when user uses up all of their guesses for their pin and we are going to move on -->
-    <string name="ReRegisterWithPinFragment_out_of_guesses_local">You\'ve run out of PIN guesses, but you can still access your Signal account by creating a new PIN.</string>
+    <string name="ReRegisterWithPinFragment_out_of_guesses_local">Tá an líon tomhas ar UAP úsáidte agat; is féidir leat do chuntas Signal a rochtain fós, áfach, ach UAP nua a chruthú.</string>
 
     <!-- PinOptOutDialog -->
     <string name="PinOptOutDialog_warning">Rabhadh</string>
@@ -2001,7 +2010,7 @@
     <string name="RegistrationActivity_signal_needs_access_to_your_contacts_in_order_to_connect_with_friends">Teastaíonn cead teagmhálaithe ó Signal chun cabhrú leat nascadh le cairde. Uaslódáiltear do theagmhálaithe trí aimsiú príobháideach teagmhálaithe de chuid Signal, rud a chiallaíonn go bhfuil siad criptithe ó cheann ceann agus dofheicthe sa tseirbhís Signal i gcónaí.</string>
     <string name="RegistrationActivity_rate_limited_to_service">Rinne tú an iomarca iarrachtaí ar an uimhir seo a chlárú. Bain triail eile as ar ball.</string>
     <!--    During registration, if the user attempts (and fails) to register, we display this error message with a number of minutes timer they are allowed to try again.-->
-    <string name="RegistrationActivity_rate_limited_to_try_again">You\'ve made too many attempts to register this number. Please try again in %1$s.</string>
+    <string name="RegistrationActivity_rate_limited_to_try_again">Tá an iomarca iarrachtaí déanta agat leis an uimhir sin a chlárú. Triail arís i gceann %1$s.</string>
     <string name="RegistrationActivity_unable_to_connect_to_service">Ní féidir ceangal a bhunú leis an tseirbhís. Deimhnigh go bhfuil tú ceangailte leis an líonra agus bain triail eile as.</string>
     <string name="RegistrationActivity_non_standard_number_format">Formáid uimhreacha neamhchaighdeánach</string>
     <string name="RegistrationActivity_the_number_you_entered_appears_to_be_a_non_standard">Is cosúil go bhfuil formáid neamhchaighdeánach ar an uimhir a chuir tú isteach (%1$s).\n\nAn raibh %2$s i gceist agat?</string>
@@ -2009,9 +2018,9 @@
     <!--    Small "toast" notification to the user confirming that they have requested a new code via voice call.-->
     <string name="RegistrationActivity_call_requested">Glao iarrtha</string>
     <!--    Small "toast" notification to the user confirming that they have requested a new code via SMS.-->
-    <string name="RegistrationActivity_sms_requested">SMS requested</string>
+    <string name="RegistrationActivity_sms_requested">SMS iarrtha</string>
     <!--    Small "toast" notification to the user confirming that they have requested a new code (through an unspecified channel).-->
-    <string name="RegistrationActivity_code_requested">Verification code requested</string>
+    <string name="RegistrationActivity_code_requested">Cód fíoraithe iarrtha</string>
     <plurals name="RegistrationActivity_debug_log_hint">
         <item quantity="one">Tá %1$d chéim fágtha anois roimh loga dífhabhtaithe a chur isteach.</item>
         <item quantity="two">Tá %1$d chéim fágtha anois roimh loga dífhabhtaithe a chur isteach.</item>
@@ -2035,15 +2044,15 @@
     <string name="RegistrationActivity_verification_code">Cód Fíoraithe</string>
     <string name="RegistrationActivity_resend_code">Athsheol Cód</string>
     <!--    A title for a bottom sheet dialog offering to help a user having trouble entering their verification code.-->
-    <string name="RegistrationActivity_support_bottom_sheet_title">Having trouble registering?</string>
+    <string name="RegistrationActivity_support_bottom_sheet_title">Deacracht agat le clárú?</string>
     <!--    A list of suggestions to try for a user having trouble entering their verification code.-->
-    <string name="RegistrationActivity_support_bottom_sheet_body_suggestions">• Make sure your phone has a cellular signal to receive your SMS or call\n • Confirm you can receive a phone call to the number\n • Check that you have entered your phone number correctly.</string>
+    <string name="RegistrationActivity_support_bottom_sheet_body_suggestions">• Cinntigh go bhfuil comhartha móibíleach ag do ghuthán chun do SMS nó glao a fháil\n • Deimhnigh gur féidir leat glao gutháin a fháil ar an uimhir\n • Cinntigh gur chuir tú d\'uimhir ghutháin isteach i gceart.</string>
     <!--    A call to action for a user having trouble entering the verification to seek further help. -->
-    <string name="RegistrationActivity_support_bottom_sheet_body_call_to_action">For more information, please follow these troubleshooting steps or Contact Support</string>
+    <string name="RegistrationActivity_support_bottom_sheet_body_call_to_action">Le tuilleadh faisnéise a fháil, lean na céimeanna fabhtcheartaithe seo nó déan teagmháil leis an bhFoireann Tacaíochta</string>
     <!--    A clickable piece of text that will take the user to our website with additional suggestions.-->
-    <string name="RegistrationActivity_support_bottom_sheet_cta_troubleshooting_steps_substring">these troubleshooting steps</string>
+    <string name="RegistrationActivity_support_bottom_sheet_cta_troubleshooting_steps_substring">na céimeanna fabhtcheartaithe seo</string>
     <!--    A clickable piece of text that will pre-fill a request for support email in the user\'s email app.-->
-    <string name="RegistrationActivity_support_bottom_sheet_cta_contact_support_substring">Déan Teagmháil le Foireann Tacaíochta Signal</string>
+    <string name="RegistrationActivity_support_bottom_sheet_cta_contact_support_substring">Déan Teagmháil leis an bhFoireann Tacaíochta</string>
 
     <!-- RegistrationLockV2Dialog -->
     <string name="RegistrationLockV2Dialog_turn_on_registration_lock">An bhfuil fonn ort Glas Clárúcháin a chur ar siúl?</string>
@@ -3603,7 +3612,7 @@
     <string name="RegistrationLockFragment__enter_your_pin">Cuir isteach d\'UAP</string>
     <string name="RegistrationLockFragment__enter_the_pin_you_created">Cuir isteach an UAP a chruthaigh tú don chuntas seo. Ní ionann é seo agus an cód deimhniúcháin SMS.</string>
     <!-- Info text shown above a pin entry text box describing what pin they should be entering. -->
-    <string name="RegistrationLockFragment__enter_the_pin_you_created_for_your_account">Enter the PIN you created for your account.</string>
+    <string name="RegistrationLockFragment__enter_the_pin_you_created_for_your_account">Cuir isteach an UAP a chruthaigh tú do do chuntas.</string>
     <string name="RegistrationLockFragment__enter_alphanumeric_pin">Cuir isteach UAP alfa-uimhriúil</string>
     <string name="RegistrationLockFragment__enter_numeric_pin">Cuir isteach UAP uimhriúil</string>
     <string name="RegistrationLockFragment__incorrect_pin_try_again">UAP mhícheart. Bain triail eile as.</string>
@@ -3725,7 +3734,7 @@
     <!--    Countdown to when the user can request a new code via phone call during registration.-->
     <string name="RegistrationActivity_call_me_instead_available_in">Glaoigh orm (%1$02d:%2$02d)</string>
     <!--    Countdown to when the user can request a new SMS code during registration.-->
-    <string name="RegistrationActivity_resend_sms_available_in">Resend Code (%1$02d:%2$02d)</string>
+    <string name="RegistrationActivity_resend_sms_available_in">Athsheol Cód (%1$02d:%2$02d)</string>
     <string name="RegistrationActivity_contact_signal_support">Déan teagmháil le foireann tacaíochta Signal</string>
     <string name="RegistrationActivity_code_support_subject">Clárúchán Signal — Cód Deimhniúcháin ar Android</string>
     <string name="RegistrationActivity_incorrect_code">Cód mícheart</string>
@@ -3733,6 +3742,18 @@
     <string name="BackupUtil_unknown">Anaithnid</string>
     <string name="preferences_app_protection__see_my_phone_number">See My Phone Number</string>
     <string name="preferences_app_protection__find_me_by_phone_number">Find Me by Phone Number</string>
+    <!-- Phone number heading displayed as a screen title -->
+    <string name="preferences_app_protection__phone_number">Uimhir Ghutháin</string>
+    <!-- Subtext below option to launch into phone number privacy settings screen -->
+    <string name="preferences_app_protection__choose_who_can_see">Roghnaigh na daoine atá in ann d\'uimhir ghutháin a fheiceáil agus teagmháil a dhéanamh leat ar Signal léi.</string>
+    <!-- Section title above two radio buttons for enabling and disabling phone number display -->
+    <string name="PhoneNumberPrivacySettingsFragment__who_can_see_my_number">Na daoine atá in ann m\'uimhir a fheiceáil</string>
+    <!-- Subtext below radio buttons when who can see my number is set to nobody -->
+    <string name="PhoneNumberPrivacySettingsFragment__nobody_will_see">Nobody will see your phone number on Signal</string>
+    <!-- Section title above two radio buttons for enabling and disabling whether users can find me by my phone number  -->
+    <string name="PhoneNumberPrivacySettingsFragment__who_can_find_me_by_number">Na daoine atá in ann mé a aimsiú le m\'uimhir</string>
+    <!-- Subtext below radio buttons when who can see my number is set to everyone -->
+    <string name="PhoneNumberPrivacySettingsFragment__your_phone_number">Beidh d\'uimhir ghutháin infheicthe ag daoine agus grúpaí a seolann tú teachtaireachtaí chucu. Daoine a bhfuil d\'uimhir ina gcuid teagmhálaithe gutháin acu, feicfidh siad an uimhir ar Signal freisin.</string>
     <string name="PhoneNumberPrivacy_everyone">Gach duine</string>
     <string name="PhoneNumberPrivacy_my_contacts">My Contacts</string>
     <string name="PhoneNumberPrivacy_nobody">Duine ar bith</string>
@@ -4000,11 +4021,11 @@
     <string name="WifiToCellularPopupWindow__weak_wifi_switched_to_cellular">Wi-Fi lag. Athraíodh go comhartha móibíleach.</string>
 
     <!-- DeleteAccountFragment -->
-    <string name="DeleteAccountFragment__deleting_your_account_will">Má dhéanann tú do chuntas a scriosadh, is é an toradh a bheidh air ná:</string>
+    <string name="DeleteAccountFragment__deleting_your_account_will">Tarlóidh an méid seo a leanas le scriosadh do chuntais:</string>
     <string name="DeleteAccountFragment__enter_your_phone_number">Cuir isteach d\'uimhir ghuthàn</string>
     <string name="DeleteAccountFragment__delete_account">Scrios cuntas</string>
-    <string name="DeleteAccountFragment__delete_your_account_info_and_profile_photo">Scrios faisnéis do chuntais agus an grianghraf próifíle</string>
-    <string name="DeleteAccountFragment__delete_all_your_messages">Scrios do theachtaireachtaí go léir</string>
+    <string name="DeleteAccountFragment__delete_your_account_info_and_profile_photo">Déanfar faisnéis do chuntais agus an grianghraf próifíle a scriosadh</string>
+    <string name="DeleteAccountFragment__delete_all_your_messages">Déanfar do theachtaireachtaí go léir a scriosadh</string>
     <string name="DeleteAccountFragment__delete_s_in_your_payments_account">Scrios %1$s i do chuntas íocaíochtaí</string>
     <string name="DeleteAccountFragment__no_country_code">Níl aon chód tíre sonraithe</string>
     <string name="DeleteAccountFragment__no_number">Níl aon uimhir sonraithe</string>
@@ -4865,7 +4886,7 @@
     <string name="DonationsErrors__your_donation_could_not_be_sent">Níorbh fhéidir do thabhartas a sheoladh de dheasca earráid líonra. Seiceáil do nasc agus triail arís.</string>
 
     <!-- Gift message view title -->
-    <string name="GiftMessageView__donation_to_s">Tabhartas do %1$s</string>
+    <string name="GiftMessageView__donation_on_behalf_of_s">Donation on behalf of %1$s</string>
     <!-- Gift message view title for incoming donations -->
     <string name="GiftMessageView__s_donated_to_signal_on">Thug %1$s tabhartas do Signal ar do shon</string>
     <!-- Gift badge redeem action label -->

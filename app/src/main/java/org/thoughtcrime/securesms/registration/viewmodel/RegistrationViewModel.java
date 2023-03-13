@@ -12,6 +12,7 @@ import androidx.savedstate.SavedStateRegistryOwner;
 import org.signal.core.util.Stopwatch;
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
+import org.thoughtcrime.securesms.jobs.NewRegistrationUsernameSyncJob;
 import org.thoughtcrime.securesms.jobs.StorageAccountRestoreJob;
 import org.thoughtcrime.securesms.jobs.StorageSyncJob;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
@@ -35,10 +36,14 @@ import org.whispersystems.signalservice.api.push.exceptions.IncorrectCodeExcepti
 import org.whispersystems.signalservice.internal.ServiceResponse;
 import org.whispersystems.signalservice.internal.contacts.entities.TokenResponse;
 import org.whispersystems.signalservice.internal.push.RegistrationSessionMetadataResponse;
+import org.whispersystems.util.Base64;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Single;
@@ -87,7 +92,11 @@ public final class RegistrationViewModel extends BaseRegistrationViewModel {
   }
 
   public @Nullable String getFcmToken() {
-    return savedState.get(STATE_FCM_TOKEN);
+    String token = savedState.get(STATE_FCM_TOKEN);
+    if (token == null || token.isEmpty()) {
+      return null;
+    }
+    return token;
   }
 
   @MainThread
@@ -122,6 +131,7 @@ public final class RegistrationViewModel extends BaseRegistrationViewModel {
   }
 
   public void setUserSkippedReRegisterFlow(boolean userSkippedReRegisterFlow) {
+    Log.i(TAG, "User skipped re-register flow.");
     this.userSkippedReRegisterFlow = userSkippedReRegisterFlow;
     if (userSkippedReRegisterFlow) {
       setAutoShowSmsConfirmDialog(true);
@@ -303,6 +313,7 @@ public final class RegistrationViewModel extends BaseRegistrationViewModel {
     }
 
     return verifyAccountRepository.registerAccount(null, registrationData, null, null)
+                                  .observeOn(Schedulers.io())
                                   .onErrorReturn(ServiceResponse::forUnknownError)
                                   .map(VerifyResponseWithoutKbs::new)
                                   .flatMap(processor -> {
@@ -328,8 +339,7 @@ public final class RegistrationViewModel extends BaseRegistrationViewModel {
                                     } else {
                                       return Single.just(processor);
                                     }
-                                  })
-                                  .observeOn(AndroidSchedulers.mainThread());
+                                  });
   }
 
   public @NonNull Single<Boolean> canEnterSkipSmsFlow() {
@@ -339,6 +349,7 @@ public final class RegistrationViewModel extends BaseRegistrationViewModel {
 
     return Single.just(hasRecoveryPassword())
                  .flatMap(hasRecoveryPassword -> {
+                   Log.i(TAG, "Checking if user has existing recovery password: " + hasRecoveryPassword);
                    if (hasRecoveryPassword) {
                      return Single.just(true);
                    } else {
@@ -348,7 +359,24 @@ public final class RegistrationViewModel extends BaseRegistrationViewModel {
   }
 
   private Single<Boolean> checkForValidKbsAuthCredentials() {
-    return registrationRepository.getKbsAuthCredential(getRegistrationData())
+    final List<String> kbsAuthTokenList = SignalStore.kbsValues().getKbsAuthTokenList();
+    List<String> usernamePasswords = kbsAuthTokenList
+        .stream()
+        .limit(10)
+        .map(t -> {
+          try {
+            return new String(Base64.decode(t.replace("Basic ", "").trim()), StandardCharsets.ISO_8859_1);
+          } catch (IOException e) {
+            return null;
+          }
+        })
+        .collect(Collectors.toList());
+
+    if (usernamePasswords.isEmpty()) {
+      return Single.just(false);
+    }
+
+    return registrationRepository.getKbsAuthCredential(getRegistrationData(), usernamePasswords)
                                  .flatMap(p -> {
                                    if (p.getValid() != null) {
                                      return kbsRepository.getToken(p.getValid())
@@ -381,7 +409,11 @@ public final class RegistrationViewModel extends BaseRegistrationViewModel {
     ApplicationDependencies.getJobManager().runSynchronously(new StorageAccountRestoreJob(), StorageAccountRestoreJob.LIFESPAN);
     stopwatch.split("AccountRestore");
 
-    ApplicationDependencies.getJobManager().runSynchronously(new StorageSyncJob(), TimeUnit.SECONDS.toMillis(10));
+    ApplicationDependencies
+        .getJobManager()
+        .startChain(new StorageSyncJob())
+        .then(new NewRegistrationUsernameSyncJob())
+        .enqueueAndBlockUntilCompletion(TimeUnit.SECONDS.toMillis(10));
     stopwatch.split("ContactRestore");
 
     try {

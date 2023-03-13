@@ -112,7 +112,7 @@ public final class EnterPhoneNumberFragment extends LoggingFragment implements R
 
     if (viewModel.isReregister()) {
       cancel.setVisibility(View.VISIBLE);
-      cancel.setOnClickListener(v -> Navigation.findNavController(v).navigateUp());
+      cancel.setOnClickListener(v -> requireActivity().finish());
     } else {
       cancel.setVisibility(View.GONE);
     }
@@ -299,6 +299,9 @@ public final class EnterPhoneNumberFragment extends LoggingFragment implements R
                                                               String.format(getString(R.string.RegistrationActivity_the_number_you_specified_s_is_invalid), viewModel.getNumber().getFullFormattedNumber()));
                                     } else if (processor.isNonNormalizedNumber()) {
                                       handleNonNormalizedNumberError(processor.getOriginalNumber(), processor.getNormalizedNumber(), mode);
+                                    } else if (processor.isTokenRejected()) {
+                                      Log.i(TAG, "The server did not accept the information.", processor.getError());
+                                      showErrorDialog(register.getContext(), getString(R.string.RegistrationActivity_we_need_to_verify_that_youre_human));
                                     } else {
                                       Log.i(TAG, "Unknown error during verification code request", processor.getError());
                                       showErrorDialog(register.getContext(), getString(R.string.RegistrationActivity_unable_to_connect_to_service));
@@ -352,15 +355,14 @@ public final class EnterPhoneNumberFragment extends LoggingFragment implements R
   public void onStart() {
     super.onStart();
     String sessionE164 = viewModel.getSessionE164();
-    if (sessionE164 != null && viewModel.getSessionId() != null) {
+    if (sessionE164 != null && viewModel.getSessionId() != null && viewModel.getCaptchaToken() == null) {
       checkIfSessionIsInProgressAndAdvance(sessionE164);
     }
   }
 
   private void checkIfSessionIsInProgressAndAdvance(@NonNull String sessionE164) {
     NavController  navController  = NavHostFragment.findNavController(this);
-    MccMncProducer mccMncProducer = new MccMncProducer(requireContext());
-    Disposable request = viewModel.validateSession(sessionE164, mccMncProducer.getMcc(), mccMncProducer.getMnc())
+    Disposable request = viewModel.validateSession(sessionE164)
                                   .observeOn(AndroidSchedulers.mainThread())
                                   .subscribe(processor -> {
                                     if (processor.hasResult() && processor.canSubmitProofImmediately()) {

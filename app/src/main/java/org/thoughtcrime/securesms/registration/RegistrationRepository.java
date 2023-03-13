@@ -174,6 +174,7 @@ public final class RegistrationRepository {
     SignalStore.account().setServicePassword(registrationData.getPassword());
     SignalStore.account().setRegistered(true);
     TextSecurePreferences.setPromptedPushRegistration(context, true);
+    TextSecurePreferences.setUnauthorizedReceived(context, false);
     NotificationManagerCompat.from(context).cancel(NotificationIds.UNREGISTERED_NOTIFICATION_ID);
 
     PinState.onRegistration(context, kbsData, pin, hasPin, setRegistrationLockEnabled);
@@ -217,10 +218,10 @@ public final class RegistrationRepository {
     return null;
   }
 
-  public Single<BackupAuthCheckProcessor> getKbsAuthCredential(@NonNull RegistrationData registrationData) {
+  public Single<BackupAuthCheckProcessor> getKbsAuthCredential(@NonNull RegistrationData registrationData, List<String> usernamePasswords) {
     SignalServiceAccountManager accountManager = AccountManagerFactory.createUnauthenticated(context, registrationData.getE164(), SignalServiceAddress.DEFAULT_DEVICE_ID, registrationData.getPassword());
 
-    return accountManager.checkBackupAuthCredentials(registrationData.getE164(), SignalStore.kbsValues().getKbsAuthTokenList())
+    return accountManager.checkBackupAuthCredentials(registrationData.getE164(), usernamePasswords)
                          .map(BackupAuthCheckProcessor::new)
                          .doOnSuccess(processor -> {
                            if (SignalStore.kbsValues().removeAuthTokens(processor.getInvalid())) {
