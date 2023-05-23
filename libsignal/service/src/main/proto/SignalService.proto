@@ -51,6 +51,7 @@ message Content {
   optional bytes               decryptionErrorMessage       = 8;
   optional StoryMessage        storyMessage                 = 9;
   optional PniSignatureMessage pniSignatureMessage          = 10;
+  optional EditMessage         editMessage                  = 11;
 }
 
 message CallMessage {
@@ -470,6 +471,7 @@ message SyncMessage {
     optional bool                       isRecipientUpdate        = 6 [default = false];
     optional StoryMessage               storyMessage             = 8;
     repeated StoryMessageRecipient      storyMessageRecipients   = 9;
+    optional EditMessage                editMessage              = 10;
   }
 
   message Contacts {
@@ -554,11 +556,6 @@ message SyncMessage {
     optional bytes storageService = 1;
   }
 
-  message PniIdentity {
-    optional bytes publicKey  = 1;
-    optional bytes privateKey = 2;
-  }
-
   message MessageRequestResponse {
     enum Type {
       UNKNOWN          = 0;
@@ -607,6 +604,8 @@ message SyncMessage {
       UNKNOWN_TYPE = 0;
       AUDIO_CALL   = 1;
       VIDEO_CALL   = 2;
+      GROUP_CALL   = 3;
+      AD_HOC_CALL  = 4;
     }
 
     enum Direction {
@@ -619,14 +618,15 @@ message SyncMessage {
       UNKNOWN_ACTION = 0;
       ACCEPTED       = 1;
       NOT_ACCEPTED   = 2;
+      DELETE         = 3;
     }
 
-    optional bytes     peerUuid  = 1;
-    optional uint64    id        = 2;
-    optional uint64    timestamp = 3;
-    optional Type      type      = 4;
-    optional Direction direction = 5;
-    optional Event     event     = 6;
+    optional bytes     conversationId = 1;
+    optional uint64    id             = 2;
+    optional uint64    timestamp      = 3;
+    optional Type      type           = 4;
+    optional Direction direction      = 5;
+    optional Event     event          = 6;
   }
 
   optional Sent                   sent                   = 1;
@@ -645,7 +645,7 @@ message SyncMessage {
   optional MessageRequestResponse messageRequestResponse = 14;
   optional OutgoingPayment        outgoingPayment        = 15;
   repeated Viewed                 viewed                 = 16;
-  optional PniIdentity            pniIdentity            = 17;
+  reserved                      /*pniIdentity*/            17;
   optional PniChangeNumber        pniChangeNumber        = 18;
   optional CallEvent              callEvent              = 19;
 }
@@ -769,4 +769,9 @@ message DecryptionErrorMessage {
 message PniSignatureMessage {
   optional bytes pni       = 1;
   optional bytes signature = 2;
+}
+
+message EditMessage {
+  optional uint64      targetSentTimestamp = 1;
+  optional DataMessage dataMessage         = 2;
 }

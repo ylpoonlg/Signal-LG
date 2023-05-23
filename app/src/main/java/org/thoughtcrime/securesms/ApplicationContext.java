@@ -16,7 +16,6 @@
  */
 package org.thoughtcrime.securesms;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 
@@ -35,8 +34,6 @@ import org.signal.core.util.concurrent.SignalExecutors;
 import org.signal.core.util.logging.AndroidLogger;
 import org.signal.core.util.logging.Log;
 import org.signal.core.util.tracing.Tracer;
-import org.signal.donations.GooglePayApi;
-import org.signal.donations.StripeApi;
 import org.signal.glide.SignalGlideCodecs;
 import org.signal.libsignal.protocol.logging.SignalProtocolLoggerProvider;
 import org.signal.ringrtc.CallManager;
@@ -92,7 +89,6 @@ import org.thoughtcrime.securesms.storage.StorageSyncHelper;
 import org.thoughtcrime.securesms.util.AppForegroundObserver;
 import org.thoughtcrime.securesms.util.AppStartup;
 import org.thoughtcrime.securesms.util.DynamicTheme;
-import org.thoughtcrime.securesms.util.Environment;
 import org.thoughtcrime.securesms.util.FeatureFlags;
 import org.thoughtcrime.securesms.util.SignalLocalMetrics;
 import org.thoughtcrime.securesms.util.SignalUncaughtExceptionHandler;
@@ -147,8 +143,7 @@ public class ApplicationContext extends MultiDexApplication implements AppForegr
 
     super.onCreate();
 
-    AppStartup.getInstance().addBlocking("security-provider", this::initializeSecurityProvider)
-                            .addBlocking("sqlcipher-init", () -> {
+    AppStartup.getInstance().addBlocking("sqlcipher-init", () -> {
                               SqlCipherLibraryLoader.load();
                               SignalDatabase.init(this,
                                                   DatabaseSecretProvider.getOrCreateDatabaseSecret(this),
@@ -158,6 +153,7 @@ public class ApplicationContext extends MultiDexApplication implements AppForegr
                               initializeLogging();
                               Log.i(TAG, "onCreate()");
                             })
+                            .addBlocking("security-provider", this::initializeSecurityProvider)
                             .addBlocking("crash-handling", this::initializeCrashHandling)
                             .addBlocking("rx-init", this::initializeRx)
                             .addBlocking("event-bus", () -> EventBus.builder().logNoSubscriberMessages(false).installDefaultEventBus())
@@ -179,7 +175,6 @@ public class ApplicationContext extends MultiDexApplication implements AppForegr
                             .addBlocking("ring-rtc", this::initializeRingRtc)
                             .addBlocking("glide", () -> SignalGlideModule.setRegisterGlideComponents(new SignalGlideComponents()))
                             .addNonBlocking(() -> GlideApp.get(this))
-                            .addNonBlocking(this::checkIsGooglePayReady)
                             .addNonBlocking(this::cleanAvatarStorage)
                             .addNonBlocking(this::initializeRevealableMessageManager)
                             .addNonBlocking(this::initializePendingRetryReceiptManager)
@@ -197,6 +192,7 @@ public class ApplicationContext extends MultiDexApplication implements AppForegr
                             .addNonBlocking(() -> ApplicationDependencies.getGiphyMp4Cache().onAppStart(this))
                             .addNonBlocking(this::ensureProfileUploaded)
                             .addNonBlocking(() -> ApplicationDependencies.getExpireStoriesManager().scheduleIfNecessary())
+                            .addPostRender(() -> ApplicationDependencies.getDeletedCallEventManager().scheduleIfNecessary())
                             .addPostRender(() -> RateLimitUtil.retryAllRateLimitedMessages(this))
                             .addPostRender(this::initializeExpiringMessageManager)
                             .addPostRender(() -> SignalStore.settings().setDefaultSms(Util.isDefaultSmsProvider(this)))
@@ -214,7 +210,6 @@ public class ApplicationContext extends MultiDexApplication implements AppForegr
                             .addPostRender(StoryOnboardingDownloadJob.Companion::enqueueIfNeeded)
                             .addPostRender(PnpInitializeDevicesJob::enqueueIfNecessary)
                             .addPostRender(() -> ApplicationDependencies.getExoPlayerPool().getPoolStats().getMaxUnreserved())
-                            .addPostRender(() -> SignalDatabase.groupCallRings().removeOldRings())
                             .addPostRender(() -> ApplicationDependencies.getRecipientCache().warmUp())
                             .execute();
 
@@ -277,13 +272,6 @@ public class ApplicationContext extends MultiDexApplication implements AppForegr
   }
 
   private void initializeSecurityProvider() {
-    try {
-      Class.forName("org.signal.aesgcmprovider.AesGcmCipher");
-    } catch (ClassNotFoundException e) {
-      Log.e(TAG, "Failed to find AesGcmCipher class");
-      throw new ProviderInitializationException();
-    }
-
     int aesPosition = Security.insertProviderAt(new AesGcmProvider(), 1);
     Log.i(TAG, "Installed AesGcmProvider: " + aesPosition);
 
@@ -474,18 +462,6 @@ public class ApplicationContext extends MultiDexApplication implements AppForegr
   @WorkerThread
   private void cleanAvatarStorage() {
     AvatarPickerStorage.cleanOrphans(this);
-  }
-
-  @SuppressLint("CheckResult")
-  private void checkIsGooglePayReady() {
-    GooglePayApi.queryIsReadyToPay(
-        this,
-        new StripeApi.Gateway(Environment.Donations.getStripeConfiguration()),
-        Environment.Donations.getGooglePayConfiguration()
-    ).subscribe(
-        /* onComplete = */ () -> SignalStore.donationsValues().setGooglePayReady(true),
-        /* onError    = */ t -> SignalStore.donationsValues().setGooglePayReady(false)
-    );
   }
 
   @WorkerThread

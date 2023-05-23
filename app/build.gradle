@@ -46,8 +46,8 @@ ktlint {
     version = "0.47.1"
 }
 
-def canonicalVersionCode = 1229
-def canonicalVersionName = "6.14.2-lg.0"
+def canonicalVersionCode = 1265
+def canonicalVersionName = "6.21.2-lg.0"
 
 def postFixSize = 100
 def abiPostFix = ['universal'   : 0,
@@ -67,10 +67,13 @@ def selectableVariants = [
         'nightlyPnpRelease',
         'playProdDebug',
         'playProdSpinner',
+        'playProdCanary',
         'playProdPerf',
+        'playProdBenchmark',
         'playProdInstrumentation',
         'playProdRelease',
         'playStagingDebug',
+        'playStagingCanary',
         'playStagingSpinner',
         'playStagingPerf',
         'playStagingInstrumentation',
@@ -179,7 +182,6 @@ android {
         buildConfigField "String", "STORAGE_URL", "\"https://storage.signal.org\""
         buildConfigField "String", "SIGNAL_CDN_URL", "\"https://cdn.signal.org\""
         buildConfigField "String", "SIGNAL_CDN2_URL", "\"https://cdn2.signal.org\""
-        buildConfigField "String", "SIGNAL_CONTACT_DISCOVERY_URL", "\"https://api.directory.signal.org\""
         buildConfigField "String", "SIGNAL_CDSI_URL", "\"https://cdsi.signal.org\""
         buildConfigField "String", "SIGNAL_SERVICE_STATUS_URL", "\"uptime.signal.org\""
         buildConfigField "String", "SIGNAL_KEY_BACKUP_URL", "\"https://api.backup.signal.org\""
@@ -193,7 +195,6 @@ android {
         buildConfigField "String[]", "SIGNAL_STORAGE_IPS", storage_ips
         buildConfigField "String[]", "SIGNAL_CDN_IPS", cdn_ips
         buildConfigField "String[]", "SIGNAL_CDN2_IPS", cdn2_ips
-        buildConfigField "String[]", "SIGNAL_CDS_IPS", cds_ips
         buildConfigField "String[]", "SIGNAL_KBS_IPS", kbs_ips
         buildConfigField "String[]", "SIGNAL_SFU_IPS", sfu_ips
         buildConfigField "String[]", "SIGNAL_CONTENT_PROXY_IPS", content_proxy_ips
@@ -219,6 +220,7 @@ android {
         buildConfigField "String", "BUILD_VARIANT_TYPE", "\"unset\""
         buildConfigField "String", "BADGE_STATIC_ROOT", "\"https://updates2.signal.org/static/badges/\""
         buildConfigField "String", "STRIPE_PUBLISHABLE_KEY", "\"pk_live_6cmGZopuTsV8novGgJJW9JpC00vLIgtQ1D\""
+        buildConfigField "boolean", "TRACING_ENABLED", "false"
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
@@ -228,7 +230,7 @@ android {
 
         splits {
             abi {
-                enable true
+                enable !project.hasProperty('generateBaselineProfile')
                 reset()
                 include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
                 universalApk true
@@ -304,6 +306,25 @@ android {
             minifyEnabled true
             matchingFallbacks = ['debug']
             buildConfigField "String", "BUILD_VARIANT_TYPE", "\"Perf\""
+            buildConfigField "boolean", "TRACING_ENABLED", "true"
+        }
+
+        benchmark {
+            initWith debug
+            isDefault false
+            debuggable false
+            minifyEnabled true
+            matchingFallbacks = ['debug']
+            buildConfigField "String", "BUILD_VARIANT_TYPE", "\"Benchmark\""
+            buildConfigField "boolean", "TRACING_ENABLED", "true"
+        }
+
+        canary {
+            initWith debug
+            isDefault false
+            minifyEnabled false
+            matchingFallbacks = ['debug']
+            buildConfigField "String", "BUILD_VARIANT_TYPE", "\"Canary\""
         }
     }
 
@@ -352,7 +373,6 @@ android {
             buildConfigField "String", "STORAGE_URL", "\"https://storage-staging.signal.org\""
             buildConfigField "String", "SIGNAL_CDN_URL", "\"https://cdn-staging.signal.org\""
             buildConfigField "String", "SIGNAL_CDN2_URL", "\"https://cdn2-staging.signal.org\""
-            buildConfigField "String", "SIGNAL_CONTACT_DISCOVERY_URL", "\"https://api-staging.directory.signal.org\""
             buildConfigField "String", "SIGNAL_CDSI_URL", "\"https://cdsi.staging.signal.org\""
             buildConfigField "String", "SIGNAL_KEY_BACKUP_URL", "\"https://api-staging.backup.signal.org\""
             buildConfigField "org.thoughtcrime.securesms.KbsEnclave", "KBS_ENCLAVE", "new org.thoughtcrime.securesms.KbsEnclave(\"39963b736823d5780be96ab174869a9499d56d66497aa8f9b2244f777ebc366b\", " +
@@ -424,7 +444,6 @@ android {
 }
 
 dependencies {
-    implementation libs.androidx.core.ktx
     implementation libs.androidx.fragment.ktx
     lintChecks project(':lintchecks')
 
@@ -462,6 +481,9 @@ dependencies {
     implementation libs.androidx.autofill
     implementation libs.androidx.biometric
     implementation libs.androidx.sharetarget
+    implementation libs.androidx.profileinstaller
+    implementation libs.androidx.asynclayoutinflater
+    implementation libs.androidx.asynclayoutinflater.appcompat
 
     implementation (libs.firebase.messaging) {
         exclude group: 'com.google.firebase', module: 'firebase-core'
@@ -496,12 +518,6 @@ dependencies {
 
     implementation(libs.mobilecoin) {
         exclude group: 'com.google.protobuf'
-    }
-
-    implementation(libs.signal.argon2) {
-        artifact {
-            type = "aar"
-        }
     }
 
     implementation libs.signal.ringrtc
@@ -540,9 +556,11 @@ dependencies {
         exclude group: 'org.freemarker'
     }
     implementation libs.dnsjava
+    implementation libs.kotlinx.collections.immutable
 
     spinnerImplementation project(":spinner")
-    spinnerImplementation libs.square.leakcanary
+
+    canaryImplementation libs.square.leakcanary
 
     testImplementation testLibs.junit.junit
     testImplementation testLibs.assertj.core

@@ -25,10 +25,8 @@ import org.signal.libsignal.zkgroup.VerificationFailedException;
 import org.signal.libsignal.zkgroup.profiles.ClientZkProfileOperations;
 import org.signal.libsignal.zkgroup.profiles.ExpiringProfileKeyCredential;
 import org.signal.libsignal.zkgroup.profiles.ProfileKey;
-import org.signal.libsignal.zkgroup.profiles.ProfileKeyCredential;
 import org.signal.libsignal.zkgroup.profiles.ProfileKeyCredentialRequest;
 import org.signal.libsignal.zkgroup.profiles.ProfileKeyCredentialRequestContext;
-import org.signal.libsignal.zkgroup.profiles.ProfileKeyCredentialResponse;
 import org.signal.libsignal.zkgroup.profiles.ProfileKeyVersion;
 import org.signal.libsignal.zkgroup.receipts.ReceiptCredentialPresentation;
 import org.signal.libsignal.zkgroup.receipts.ReceiptCredentialRequest;
@@ -49,7 +47,6 @@ import org.whispersystems.signalservice.api.messages.SignalServiceAttachmentRemo
 import org.whispersystems.signalservice.api.messages.calls.CallingResponse;
 import org.whispersystems.signalservice.api.messages.calls.TurnServerInfo;
 import org.whispersystems.signalservice.api.messages.multidevice.DeviceInfo;
-import org.whispersystems.signalservice.api.messages.multidevice.VerifyDeviceResponse;
 import org.whispersystems.signalservice.api.payments.CurrencyConversions;
 import org.whispersystems.signalservice.api.profiles.ProfileAndCredential;
 import org.whispersystems.signalservice.api.profiles.SignalServiceProfile;
@@ -213,6 +210,7 @@ public class PushServiceSocket {
   private static final String DELETE_ACCOUNT_PATH        = "/v1/accounts/me";
   private static final String CHANGE_NUMBER_PATH         = "/v2/accounts/number";
   private static final String IDENTIFIER_REGISTERED_PATH = "/v1/accounts/account/%s";
+  private static final String REQUEST_ACCOUNT_DATA_PATH  = "/v2/accounts/data_report";
 
   private static final String PREKEY_METADATA_PATH      = "/v2/keys?identity=%s";
   private static final String PREKEY_PATH               = "/v2/keys/%s?identity=%s";
@@ -416,6 +414,10 @@ public class PushServiceSocket {
     } catch (NotFoundException e) {
       return false;
     }
+  }
+
+  public String getAccountDataReport() throws IOException {
+    return makeServiceRequest(REQUEST_ACCOUNT_DATA_PATH, "GET", null);
   }
 
   public CdsiAuthResponse getCdsiAuth() throws IOException {
@@ -2141,12 +2143,6 @@ public class PushServiceSocket {
     return connections[random.nextInt(connections.length)];
   }
 
-  public ProfileKeyCredential parseResponse(UUID uuid, ProfileKey profileKey, ProfileKeyCredentialResponse profileKeyCredentialResponse) throws VerificationFailedException {
-    ProfileKeyCredentialRequestContext profileKeyCredentialRequestContext = clientZkProfileOperations.createProfileKeyCredentialRequestContext(random, uuid, profileKey);
-
-    return clientZkProfileOperations.receiveProfileKeyCredential(profileKeyCredentialRequestContext, profileKeyCredentialResponse);
-  }
-
   /**
    * Converts {@link IOException} on body byte reading to {@link PushNetworkException}.
    */
@@ -2520,26 +2516,34 @@ public class PushServiceSocket {
 
     @Override
     public void handle(int responseCode, ResponseBody body) throws NonSuccessfulResponseCodeException, PushNetworkException {
-      switch (responseCode) {
-        case 403:
-          throw new IncorrectRegistrationRecoveryPasswordException();
-        case 404:
-          throw new NoSuchSessionException();
-        case 409:
-          RegistrationSessionMetadataJson response;
-          try {
-            response = JsonUtil.fromJson(body.string(), RegistrationSessionMetadataJson.class);
-          } catch (IOException e) {
-            Log.e(TAG, "Unable to read response body.", e);
-            throw new NonSuccessfulResponseCodeException(409);
-          }
-          if (response.pushChallengedRequired()) {
-            throw new PushChallengeRequiredException();
-          } else if (response.captchaRequired()) {
-            throw new CaptchaRequiredException();
-          } else {
-            throw new HttpConflictException();
-          }
+      if (responseCode == 403) {
+        throw new IncorrectRegistrationRecoveryPasswordException();
+      } else if (responseCode == 404) {
+        throw new NoSuchSessionException();
+      } else if (responseCode == 409) {
+        RegistrationSessionMetadataJson response;
+        try {
+          response = JsonUtil.fromJson(body.string(), RegistrationSessionMetadataJson.class);
+        } catch (IOException e) {
+          Log.e(TAG, "Unable to read response body.", e);
+          throw new NonSuccessfulResponseCodeException(409);
+        }
+        if (response.pushChallengedRequired()) {
+          throw new PushChallengeRequiredException();
+        } else if (response.captchaRequired()) {
+          throw new CaptchaRequiredException();
+        } else {
+          throw new HttpConflictException();
+        }
+      } else if (responseCode == 502) {
+        VerificationCodeFailureResponseBody response;
+        try {
+          response = JsonUtil.fromJson(body.string(), VerificationCodeFailureResponseBody.class);
+        } catch (IOException e) {
+          Log.e(TAG, "Unable to read response body.", e);
+          throw new NonSuccessfulResponseCodeException(502);
+        }
+        throw new ExternalServiceFailureException(response.getPermanentFailure(), response.getReason());
       }
     }
   }
@@ -2625,7 +2629,7 @@ public class PushServiceSocket {
     RegistrationSessionMetadataHeaders responseHeaders = new RegistrationSessionMetadataHeaders(serverDeliveredTimestamp);
     RegistrationSessionMetadataJson responseBody = JsonUtil.fromJson(readBodyString(response), RegistrationSessionMetadataJson.class);
 
-    return new RegistrationSessionMetadataResponse(responseHeaders, responseBody);
+    return new RegistrationSessionMetadataResponse(responseHeaders, responseBody, null);
   }
 
   public static final class GroupHistory {
