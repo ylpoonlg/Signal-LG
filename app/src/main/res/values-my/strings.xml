@@ -24,14 +24,14 @@
     <string name="save">သိမ်းထားမည်</string>
     <string name="note_to_self">မိမိမှတ်စု</string>
 
-    <!-- Alternate label for the Signal Application in the device\'s home screen launcher -->
-    <string name="app_icon_label_weather">Weather</string>
-    <!-- Alternate label for the Signal Application in the device\'s home screen launcher -->
-    <string name="app_icon_label_notes">Notes</string>
-    <!-- Alternate label for the Signal Application in the device\'s home screen launcher -->
-    <string name="app_icon_label_news">News</string>
-    <!-- Alternate label for the Signal Application in the device\'s home screen launcher -->
-    <string name="app_icon_label_waves">Waves</string>
+    <!-- Alternate label for the Signal Application in the device\'s home screen launcher, as in a weather/climate application. -->
+    <string name="app_icon_label_weather">မိုးလေဝသ</string>
+    <!-- Alternate label for the Signal Application in the device\'s home screen launcher, as in a note-taking application.-->
+    <string name="app_icon_label_notes">မှတ်စုများ</string>
+    <!-- Alternate label for the Signal Application in the device\'s home screen launcher, as in a news/journalism application. -->
+    <string name="app_icon_label_news">သတင်း</string>
+    <!-- Alternate label for the Signal Application in the device\'s home screen launcher, as in waves of the ocean. -->
+    <string name="app_icon_label_waves">လှိုင်းများ</string>
 
     <!-- AlbumThumbnailView -->
   <!-- Removed by excludeNonTranslatables <string name="AlbumThumbnailView_plus" translatable="false">\+%d</string> -->
@@ -194,7 +194,7 @@
     <string name="CameraContacts_signal_groups">Signal အဖွဲ့များ</string>
     <!-- A warning shown in a toast when  -->
     <plurals name="CameraContacts_you_can_share_with_a_maximum_of_n_conversations">
-        <item quantity="other">You can share with a maximum of %1$d chats.</item>
+        <item quantity="other">အများဆုံး ချက်(တ်) %1$d ခုထံ မျှဝေနိုင်သည်။</item>
     </plurals>
     <string name="CameraContacts_select_signal_recipients">Signal လက်ခံရရှိသူများကို ရွေးချယ်ပါ</string>
     <string name="CameraContacts_no_signal_contacts">Signal အဆက်အသွယ်များ မရှိပါ</string>
@@ -491,6 +491,10 @@
     <string name="ConversationFragment__update_build">Signal ကို အပ်ဒိတ်လုပ်ပါ။</string>
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">Signal ကို ပြန်လည်၍မှတ်ပုံတင်ရန်</string>
+    <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
+    <string name="ConversationFragment__content_description_back_button">အနောက်သို့ ပြန်သွားပါ။</string>
+    <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
+    <string name="ConversationFragment__content_description_launch_signal_button">Signal ကို ဖွင့်ရန်</string>
     <!-- Label for a button displayed in conversation list to clear the chat filter -->
     <string name="ConversationListFragment__clear_filter">စစ်ထုတ်မှုကို ရှင်းရန်</string>
     <!-- Notice on chat list when no unread chats are available, centered on display -->
@@ -1607,6 +1611,8 @@
     <string name="Recipient_you">သင်</string>
     <!-- Name of recipient representing user\'s \'My Story\' -->
     <string name="Recipient_my_story">ကျွန်ုပ်၏ စတိုရီ</string>
+    <!-- Name of recipient for a call link without a name -->
+    <string name="Recipient_signal_call">Signal ကောလ်</string>
 
     <!-- RecipientPreferencesActivity -->
     <string name="RecipientPreferenceActivity_block">ဘလော့ခ်ရန်</string>
@@ -2105,11 +2111,11 @@
     <string name="MessageNotifier_s_in_s">%2$s ရှိ %1$s</string>
     <!-- Text shown in a system notification that is used to summary how many messages you received. -->
     <plurals name="MessageNotifier_d_messages">
-        <item quantity="other">%1$d messages</item>
+        <item quantity="other">မက်ဆေ့ချ် %1$d စောင်</item>
     </plurals>
     <!-- Text shown in a system notification that is used to summary how many chats have new messages. -->
     <plurals name="MessageNotifier_d_chats">
-        <item quantity="other">%1$d chats</item>
+        <item quantity="other">ချက်(တ်) %1$d ခု</item>
     </plurals>
     <string name="MessageNotifier_d_new_messages_in_d_conversations">ချက်(တ်) %2$d ခုတွင် မက်ဆေ့ချ်အသစ်ပေါင်း %1$d စောင် ရှိသည်</string>
     <string name="MessageNotifier_most_recent_from_s">%1$s ထံမှ နောက်ဆုံးစာများ</string>
@@ -2173,9 +2179,8 @@
     <string name="QuickResponseService_quick_response_unavailable_when_Signal_is_locked">Signal လော့ခ်ကျသွားသည့်အခါ ချက်ချင်းမတုံ့ပြန်နိုင်ပါ!</string>
     <string name="QuickResponseService_problem_sending_message">စာပို့ခြင်းအခက်အခဲ</string>
 
-    <!-- SaveAttachmentTask -->
-    <string name="SaveAttachmentTask_saved_to">%1$s တွင် သိမ်းဆည်းပြီးပါပြီ</string>
-    <string name="SaveAttachmentTask_saved">သိမ်းပြီး</string>
+    <!-- A small toast notification to let the user know their image/video/audio was downloaded and saved to their device, accessible in other apps. -->
+    <string name="SaveAttachmentTask_saved">မီဒီယာ သိမ်းဆည်းပြီး</string>
 
     <!-- SearchToolbar -->
     <string name="SearchToolbar_search">ရှာရန်</string>
@@ -2809,27 +2814,27 @@
     <string name="preferences__theme">Theme</string>
     <string name="preferences__chat_color_and_wallpaper">ချက်(တ်) အရောင်နှင့် နောက်ခံပုံ</string>
     <!-- Clickable settings text allowing the user to change the icon visible on their phone\'s home screen. -->
-    <string name="preferences__app_icon">App Icon</string>
+    <string name="preferences__app_icon">အက်ပ်အိုင်ကွန်</string>
     <!-- Approval for changing the app icon. -->
     <string name="preferences__app_icon_dialog_ok">အိုကေ</string>
     <!-- Cancelling the operation of changing the app icon. -->
     <string name="preferences__app_icon_dialog_cancel">မလုပ်တော့ပါ</string>
     <!-- Title for the confirmation dialog of changing the app icon. -->
-    <string name="preferences__app_icon_dialog_title">Change app icon and name to \"%1$s\"</string>
+    <string name="preferences__app_icon_dialog_title">အက်ပ်အိုင်ကွန်နှင့် အမည်ကို \"%1$s\" ဟု ပြောင်းခြင်း</string>
     <!-- Description for the confirmation dialog of changing the app icon. -->
-    <string name="preferences__app_icon_dialog_description">Signal will need to close to change the app icon and name. Notifications will always display the default Signal icon and name.</string>
+    <string name="preferences__app_icon_dialog_description">အက်ပ်အိုင်ကွန်နှင့် အမည်ကို ပြောင်းရန်အတွက် Signal ကို ပိတ်ရန် လိုအပ်ပါသည်။ အသိပေးချက်များတွင် ပုံသေ Signal အိုင်ကွန်နှင့် အမည်ကိုသာ အမြဲတမ်းပြသပါမည်။</string>
     <!-- Visible warning label for the limitations of changing the app icon with learn more call to action. -->
-    <string name="preferences__app_icon_warning_learn_more">Select an app icon and name, which will be visible on your phone\'s home screen and app drawer. Notifications will always display the default Signal icon and name. Learn more</string>
+    <string name="preferences__app_icon_warning_learn_more">သင့်ဖုန်း၏ ပင်မမျက်နှာပြင်နှင့် အက်ပ်အံဆွဲတွင် မြင်တွေ့နိုင်မည့် အက်ပ်အိုင်ကွန်နှင့် အမည်တစ်ခုကို ရွေးချယ်ပါ။ အသိပေးချက်များတွင် ပုံသေ Signal အိုင်ကွန်နှင့် အမည်ကိုသာ အမြဲတမ်းပြသပါမည်။ ပိုမို လေ့လာရန်</string>
     <!-- Visible warning label for the limitations of changing the app icon. -->
-    <string name="preferences__app_icon_warning">App icons and names are visible on the home screen and app drawer.</string>
+    <string name="preferences__app_icon_warning">အက်ပ်အိုင်ကွန်များနှင့် အမည်များကို ပင်မမျက်နှာပြင်နှင့် အက်ပ်အံဆွဲတွင် မြင်တွေ့နိုင်ပါသည်။</string>
     <!-- Visible warning label explaining that changing the app icon and name does not affect notifications. -->
-    <string name="preferences__app_icon_notification_warning">Notifications will always display the default Signal icon and name.</string>
+    <string name="preferences__app_icon_notification_warning">အသိပေးချက်များတွင် ပုံသေ Signal အိုင်ကွန်နှင့် အမည်ကိုသာ အမြဲတမ်းပြသပါမည်။</string>
     <!--Call to action to get more information about the limitations of the change app icon functionality. -->
-    <string name="preferences__app_icon_learn_more">Learn more</string>
+    <string name="preferences__app_icon_learn_more">ပိုမို လေ့လာရန်</string>
     <!--Text description of the app icon option for visually impaired users. -->
-    <string name="preferences__app_icon_content_description">Icon for %1$s</string>
+    <string name="preferences__app_icon_content_description">%1$s အတွက် အိုင်ကွန်</string>
     <!--Text description of a graphic illustrating the limitations of the app icon change. -->
-    <string name="preferences__graphic_illustrating_where_the_replacement_app_icon_will_be_visible">Graphic illustrating where the replacement app icon will be visible.</string>
+    <string name="preferences__graphic_illustrating_where_the_replacement_app_icon_will_be_visible">အစားထိုး အက်ပ်အိုင်ကွန်အား မြင်တွေ့နိုင်မည့် နေရာကို သရုပ်ဖော်ပြသသည့် ဂရပ်ဖစ်ပုံ။</string>
     <string name="preferences__disable_pin">ပင်နံပါတ်ပိတ်ပါ</string>
     <string name="preferences__enable_pin">ပင်နံပါတ်ဖွင့်ပါ</string>
     <string name="preferences__if_you_disable_the_pin_you_will_lose_all_data">ပင်နံပါတ်ကို ပိတ်ထားလျှင် သင်မှ​ ကိုယ်တိုင် အရန်ပြုပြင်ထားခြင်းမရှိခဲ့လျှင် Signal ပေါ်ပြန်စာရင်းသွင်းသောအခါ ဒေတာအားလုံးကို ဆုံးရှူံးပါလိမ့်မည်။ ပင်နံပါတ်ကို ပိတ်ထားစဉ် မှတ်ပုံတင်ခြင်းသော့ကို သင်ဖွင့်၍ မရပါ။</string>
@@ -2867,7 +2872,7 @@
     <string name="preferences_storage__this_will_permanently_delete_all_message_history_and_media">သင့်စက်ရှိ %1$s ထက်ကြာသော မက်ဆေ့ချ်မှတ်တမ်းနှင့် မီဒီယာများအားလုံးကို အပြီးဖျက်သွားပါမည်။</string>
     <!-- The body of an alert dialog that is shown when confirming a trim operation. Trimming will delete all but the most recent messages in a chat. The placeholder represents how many messages are kept in each chat. All older messages are deleted. -->
     <plurals name="preferences_storage__this_will_permanently_trim_all_conversations_to_the_d_most_recent_messages">
-        <item quantity="other">This will permanently trim all chats to the %1$s most recent messages.</item>
+        <item quantity="other">၎င်းသည် ချက်(တ်)များအားလုံးကို နောက်ဆုံးမက်ဆေ့ချ် %1$s စောင်ထိ အပြီးအပိုင် ဖြတ်လိုက်ပါမည်။</item>
     </plurals>
     <string name="preferences_storage__this_will_delete_all_message_history_and_media_from_your_device">သင့်စက်ရှိ မက်ဆေ့ချ်မှတ်တမ်းနှင့် မီဒီယာများအားလုံးကို အပြီးဖျက်သွားပါမည်။</string>
     <string name="preferences_storage__are_you_sure_you_want_to_delete_all_message_history">မက်ဆေ့ချ်မှတ်တမ်းများ အားလုံးကို ဖျက်လိုသည်မှာ သေချာပါသလား။</string>
@@ -4224,9 +4229,11 @@
     <string name="HelpSettingsFragment__contact_us">ကျွန်ုပ်တို့ကိုဆက်သွယ်ရန်</string>
     <string name="HelpSettingsFragment__version">ဗားရှင်း</string>
     <string name="HelpSettingsFragment__debug_log">ပြစ်ချက်မှတ်တမ်း</string>
+    <!--    Header for the screen that displays the licenses of the open-source software dependencies of the Signal app-->
+    <string name="HelpSettingsFragment__licenses">လိုင်စင်များ</string>
     <string name="HelpSettingsFragment__terms_amp_privacy_policy">လိုက်နာဆောင်ရွက်ရမည့် အချက်များ</string>
     <string name="HelpFragment__copyright_signal_messenger">မူပိုင်ခွင့် Signal Messenger</string>
-    <string name="HelpFragment__licenced_under_the_agplv3">Licensed under the GNU AGPLv3</string>
+    <string name="HelpFragment__licenced_under_the_agplv3">GNU AGPLv3 အတိုင်း ခွင့်ပြုထားသည်</string>
 
     <!-- DataAndStorageSettingsFragment -->
     <string name="DataAndStorageSettingsFragment__media_quality">ဓာတ်ပုံ အရည်အသွေး</string>
@@ -5800,6 +5807,8 @@
     <string name="CallLogAdapter__return">နောက်ပြန်သွားရန်</string>
     <!-- Call state template when there is more than one call collapsed into a single row. D is a number > 1 and S is a call info string (like Missed) -->
     <string name="CallLogAdapter__d_s">(%1$d) ကောလ် %2$s</string>
+    <!-- Status text on call links -->
+    <string name="CallLogAdapter__call_link">ကောလ်လင့်ခ်</string>
 
     <!-- Call Log context menu -->
     <!-- Displayed as a context menu item to start a video call -->
@@ -5943,6 +5952,12 @@
     <string name="CallLinkDetailsFragment__share_link">လင့်ခ်ဝေမျှရန်</string>
     <!-- Displayed in a text row, allowing the user to delete the call link -->
     <string name="CallLinkDetailsFragment__delete_call_link">ကောလ်လင့်ခ် ဖျက်ရန်</string>
+    <!-- Displayed whenever a name change, revocation, etc, fails. -->
+    <string name="CallLinkDetailsFragment__couldnt_save_changes">အပြောင်းအလဲများကို သိမ်းဆည်း၍မရပါ။ သင့်ကွန်ရက် ချိတ်ဆက်မှုကို စစ်ဆေးပြီး ထပ်ကြိုးစားပါ။</string>
+    <!-- Displayed as title in dialog when user attempts to delete the link -->
+    <string name="CallLinkDetailsFragment__delete_link">လင့်ခ်ကို ဖျက်မည်လား။</string>
+    <!-- Displayed as body in dialog when user attempts to delete the link -->
+    <string name="CallLinkDetailsFragment__this_link_will_no_longer_work">ဤလင့်ခ်သည် ၎င်းကို ရရှိထားသူမှန်သမျှအတွက် အလုပ်လုပ်တော့မည်မဟုတ်ပါ။</string>
 
     <!-- Button label for the share button in the username link settings -->
     <string name="UsernameLinkSettings_share_button_label">ဝေမျှမယ်</string>
@@ -5966,6 +5981,13 @@
     <string name="UsernameLinkSettings_qr_scan_description">သင့်အဆက်အသွယ်၏ စက်ပေါ်တွင် QR ကုဒ်ကို စကန်ဖတ်ပါ။</string>
     <!-- App bar title for the username QR code color picker screen -->
     <string name="UsernameLinkSettings_color_picker_app_bar_title">အရောင်</string>
+    <!-- Body of a dialog that is displayed when we failed to read a username QR code. -->
+    <string name="UsernameLinkSettings_qr_result_invalid">QR ကုဒ် မမှန်ကန်ပါ။</string>
+    <!-- Body of a dialog that is displayed when the username we looked up could not be found. -->
+    <string name="UsernameLinkSettings_qr_result_not_found">သုံးစွဲသူအမည် %1$s ဖြင့် သုံးစွဲသူကို ရှာမတွေ့ပါ။</string>
+    <!-- Body of a dialog that is displayed when we experienced a network error when looking up a username. -->
+    <string name="UsernameLinkSettings_qr_result_network_error">ကွန်ရက် အမှားအယွင်းတစ်ခု ကြုံတွေ့ခဲ့ရပါသည်။ ထပ်ကြိုးစားကြည့်ပါ။</string>
+
 
     <!-- EOF -->
 </resources>

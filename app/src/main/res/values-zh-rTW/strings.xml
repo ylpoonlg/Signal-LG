@@ -24,14 +24,14 @@
     <string name="save">儲存</string>
     <string name="note_to_self">給自己的筆記</string>
 
-    <!-- Alternate label for the Signal Application in the device\'s home screen launcher -->
-    <string name="app_icon_label_weather">Weather</string>
-    <!-- Alternate label for the Signal Application in the device\'s home screen launcher -->
-    <string name="app_icon_label_notes">Notes</string>
-    <!-- Alternate label for the Signal Application in the device\'s home screen launcher -->
-    <string name="app_icon_label_news">News</string>
-    <!-- Alternate label for the Signal Application in the device\'s home screen launcher -->
-    <string name="app_icon_label_waves">Waves</string>
+    <!-- Alternate label for the Signal Application in the device\'s home screen launcher, as in a weather/climate application. -->
+    <string name="app_icon_label_weather">天氣</string>
+    <!-- Alternate label for the Signal Application in the device\'s home screen launcher, as in a note-taking application.-->
+    <string name="app_icon_label_notes">筆記</string>
+    <!-- Alternate label for the Signal Application in the device\'s home screen launcher, as in a news/journalism application. -->
+    <string name="app_icon_label_news">新聞</string>
+    <!-- Alternate label for the Signal Application in the device\'s home screen launcher, as in waves of the ocean. -->
+    <string name="app_icon_label_waves">波浪</string>
 
     <!-- AlbumThumbnailView -->
   <!-- Removed by excludeNonTranslatables <string name="AlbumThumbnailView_plus" translatable="false">\+%d</string> -->
@@ -194,7 +194,7 @@
     <string name="CameraContacts_signal_groups">Signal 群組</string>
     <!-- A warning shown in a toast when  -->
     <plurals name="CameraContacts_you_can_share_with_a_maximum_of_n_conversations">
-        <item quantity="other">You can share with a maximum of %1$d chats.</item>
+        <item quantity="other">你可以分享最多 %1$d 個聊天。</item>
     </plurals>
     <string name="CameraContacts_select_signal_recipients">選擇 Signal 收件人</string>
     <string name="CameraContacts_no_signal_contacts">沒有 Signal 聯絡人</string>
@@ -314,7 +314,7 @@
     <!-- Dialog error message shown when user can\'t download a their own video message via a linked device due to a permanent failure (e.g., unable to decrypt) -->
     <string name="ConversationItem_cant_download_video_you_will_need_to_send_it_again">無法下載影片。你需要再次傳送。</string>
     <!-- Display as the timestamp footer in a message bubble in a conversation when a message has been edited. The timestamp will go from \'11m\' to \'edited 11m\' -->
-    <string name="ConversationItem_edited_timestamp_footer">%1$s前已編輯</string>
+    <string name="ConversationItem_edited_timestamp_footer">%1$s 前已編輯</string>
 
     <!-- ConversationActivity -->
     <string name="ConversationActivity_add_attachment">新增附檔</string>
@@ -491,6 +491,10 @@
     <string name="ConversationFragment__update_build">更新 Signal</string>
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">重新註冊 Signal</string>
+    <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
+    <string name="ConversationFragment__content_description_back_button">導向返回。</string>
+    <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
+    <string name="ConversationFragment__content_description_launch_signal_button">開啟 Signal</string>
     <!-- Label for a button displayed in conversation list to clear the chat filter -->
     <string name="ConversationListFragment__clear_filter">清除篩選器</string>
     <!-- Notice on chat list when no unread chats are available, centered on display -->
@@ -1607,6 +1611,8 @@
     <string name="Recipient_you">你</string>
     <!-- Name of recipient representing user\'s \'My Story\' -->
     <string name="Recipient_my_story">我的限時動態</string>
+    <!-- Name of recipient for a call link without a name -->
+    <string name="Recipient_signal_call">Signal 通話</string>
 
     <!-- RecipientPreferencesActivity -->
     <string name="RecipientPreferenceActivity_block">封鎖</string>
@@ -2105,11 +2111,11 @@
     <string name="MessageNotifier_s_in_s">%1$s在%2$s</string>
     <!-- Text shown in a system notification that is used to summary how many messages you received. -->
     <plurals name="MessageNotifier_d_messages">
-        <item quantity="other">%1$d messages</item>
+        <item quantity="other">%1$d 則訊息</item>
     </plurals>
     <!-- Text shown in a system notification that is used to summary how many chats have new messages. -->
     <plurals name="MessageNotifier_d_chats">
-        <item quantity="other">%1$d chats</item>
+        <item quantity="other">%1$d 個聊天</item>
     </plurals>
     <string name="MessageNotifier_d_new_messages_in_d_conversations">來自 %2$d 個聊天的 %1$d 則新訊息</string>
     <string name="MessageNotifier_most_recent_from_s">最新來自：%1$s</string>
@@ -2173,9 +2179,8 @@
     <string name="QuickResponseService_quick_response_unavailable_when_Signal_is_locked">當 Signal 鎖定時無法使用快速回覆！</string>
     <string name="QuickResponseService_problem_sending_message">傳送訊息出現問題！</string>
 
-    <!-- SaveAttachmentTask -->
-    <string name="SaveAttachmentTask_saved_to">儲存到 %1$s</string>
-    <string name="SaveAttachmentTask_saved">已儲存</string>
+    <!-- A small toast notification to let the user know their image/video/audio was downloaded and saved to their device, accessible in other apps. -->
+    <string name="SaveAttachmentTask_saved">多媒體已儲存</string>
 
     <!-- SearchToolbar -->
     <string name="SearchToolbar_search">搜尋</string>
@@ -2809,27 +2814,27 @@
     <string name="preferences__theme">主題</string>
     <string name="preferences__chat_color_and_wallpaper">聊天顏色與壁紙</string>
     <!-- Clickable settings text allowing the user to change the icon visible on their phone\'s home screen. -->
-    <string name="preferences__app_icon">App Icon</string>
+    <string name="preferences__app_icon">應用程式圖示</string>
     <!-- Approval for changing the app icon. -->
     <string name="preferences__app_icon_dialog_ok">確定</string>
     <!-- Cancelling the operation of changing the app icon. -->
     <string name="preferences__app_icon_dialog_cancel">取消</string>
     <!-- Title for the confirmation dialog of changing the app icon. -->
-    <string name="preferences__app_icon_dialog_title">Change app icon and name to \"%1$s\"</string>
+    <string name="preferences__app_icon_dialog_title">將應用程式圖示和名稱更改為「%1$s」</string>
     <!-- Description for the confirmation dialog of changing the app icon. -->
-    <string name="preferences__app_icon_dialog_description">Signal will need to close to change the app icon and name. Notifications will always display the default Signal icon and name.</string>
+    <string name="preferences__app_icon_dialog_description">Signal 需要關閉才能更改應用程式圖示和名稱。通知依然會以預設的 Signal 圖示和名稱來顯示。</string>
     <!-- Visible warning label for the limitations of changing the app icon with learn more call to action. -->
-    <string name="preferences__app_icon_warning_learn_more">Select an app icon and name, which will be visible on your phone\'s home screen and app drawer. Notifications will always display the default Signal icon and name. Learn more</string>
+    <string name="preferences__app_icon_warning_learn_more">選擇應用程式圖示和名稱，這將顯示在手機的主螢幕和應用抽屜中。通知依然會以預設的 Signal 圖示和名稱來顯示。了解 更多</string>
     <!-- Visible warning label for the limitations of changing the app icon. -->
-    <string name="preferences__app_icon_warning">App icons and names are visible on the home screen and app drawer.</string>
+    <string name="preferences__app_icon_warning">應用程式圖示和名稱可在手機的主螢幕和應用抽屜中見到。</string>
     <!-- Visible warning label explaining that changing the app icon and name does not affect notifications. -->
-    <string name="preferences__app_icon_notification_warning">Notifications will always display the default Signal icon and name.</string>
+    <string name="preferences__app_icon_notification_warning">通知依然會以預設的 Signal 圖示和名稱來顯示。</string>
     <!--Call to action to get more information about the limitations of the change app icon functionality. -->
-    <string name="preferences__app_icon_learn_more">Learn more</string>
+    <string name="preferences__app_icon_learn_more">了解 更多</string>
     <!--Text description of the app icon option for visually impaired users. -->
-    <string name="preferences__app_icon_content_description">Icon for %1$s</string>
+    <string name="preferences__app_icon_content_description">適用 %1$s 的圖示</string>
     <!--Text description of a graphic illustrating the limitations of the app icon change. -->
-    <string name="preferences__graphic_illustrating_where_the_replacement_app_icon_will_be_visible">Graphic illustrating where the replacement app icon will be visible.</string>
+    <string name="preferences__graphic_illustrating_where_the_replacement_app_icon_will_be_visible">圖解說明了替代應用程式圖示可見的位置。</string>
     <string name="preferences__disable_pin">停用 PIN 碼</string>
     <string name="preferences__enable_pin">啟用 PIN 碼</string>
     <string name="preferences__if_you_disable_the_pin_you_will_lose_all_data">如果你停用 PIN 碼，則除非你進行手動備份和還原，否則當你重新註冊 Signal 時，將會遺失所有資料。停用 PIN 碼時無法開啟註冊鎖定。</string>
@@ -2867,7 +2872,7 @@
     <string name="preferences_storage__this_will_permanently_delete_all_message_history_and_media">這將從裝置中永久刪除所有早於%1$s時間的訊息歷史記錄和媒體檔案。</string>
     <!-- The body of an alert dialog that is shown when confirming a trim operation. Trimming will delete all but the most recent messages in a chat. The placeholder represents how many messages are kept in each chat. All older messages are deleted. -->
     <plurals name="preferences_storage__this_will_permanently_trim_all_conversations_to_the_d_most_recent_messages">
-        <item quantity="other">This will permanently trim all chats to the %1$s most recent messages.</item>
+        <item quantity="other">這將會永久刪減所有聊天至最近 %1$s 則訊息。</item>
     </plurals>
     <string name="preferences_storage__this_will_delete_all_message_history_and_media_from_your_device">這將從你的裝置中永久刪除所有訊息歷史記錄和媒體檔案。</string>
     <string name="preferences_storage__are_you_sure_you_want_to_delete_all_message_history">你確定要刪除所有訊息歷史記錄嗎?</string>
@@ -4224,9 +4229,11 @@
     <string name="HelpSettingsFragment__contact_us">與我們聯繫</string>
     <string name="HelpSettingsFragment__version">版本</string>
     <string name="HelpSettingsFragment__debug_log">除錯紀錄</string>
+    <!--    Header for the screen that displays the licenses of the open-source software dependencies of the Signal app-->
+    <string name="HelpSettingsFragment__licenses">許可證</string>
     <string name="HelpSettingsFragment__terms_amp_privacy_policy">服務條款與隱私權政策</string>
     <string name="HelpFragment__copyright_signal_messenger">Signal Messenger 版權所有</string>
-    <string name="HelpFragment__licenced_under_the_agplv3">Licensed under the GNU AGPLv3</string>
+    <string name="HelpFragment__licenced_under_the_agplv3">依據 GNU AGPLv3 的條款授權</string>
 
     <!-- DataAndStorageSettingsFragment -->
     <string name="DataAndStorageSettingsFragment__media_quality">媒體檔品質</string>
@@ -5800,6 +5807,8 @@
     <string name="CallLogAdapter__return">返回</string>
     <!-- Call state template when there is more than one call collapsed into a single row. D is a number > 1 and S is a call info string (like Missed) -->
     <string name="CallLogAdapter__d_s">(%1$d) %2$s</string>
+    <!-- Status text on call links -->
+    <string name="CallLogAdapter__call_link">通話連結</string>
 
     <!-- Call Log context menu -->
     <!-- Displayed as a context menu item to start a video call -->
@@ -5943,6 +5952,12 @@
     <string name="CallLinkDetailsFragment__share_link">分享連結</string>
     <!-- Displayed in a text row, allowing the user to delete the call link -->
     <string name="CallLinkDetailsFragment__delete_call_link">刪除通話連結</string>
+    <!-- Displayed whenever a name change, revocation, etc, fails. -->
+    <string name="CallLinkDetailsFragment__couldnt_save_changes">無法儲存變更。請檢查你的網路連線，然後再試一次。</string>
+    <!-- Displayed as title in dialog when user attempts to delete the link -->
+    <string name="CallLinkDetailsFragment__delete_link">要刪除連結嗎？</string>
+    <!-- Displayed as body in dialog when user attempts to delete the link -->
+    <string name="CallLinkDetailsFragment__this_link_will_no_longer_work">此連結將不再適用於任何人。</string>
 
     <!-- Button label for the share button in the username link settings -->
     <string name="UsernameLinkSettings_share_button_label">分享</string>
@@ -5966,6 +5981,13 @@
     <string name="UsernameLinkSettings_qr_scan_description">請掃描你聯絡人裝置上的二維碼。</string>
     <!-- App bar title for the username QR code color picker screen -->
     <string name="UsernameLinkSettings_color_picker_app_bar_title">顏色</string>
+    <!-- Body of a dialog that is displayed when we failed to read a username QR code. -->
+    <string name="UsernameLinkSettings_qr_result_invalid">二維碼無效。</string>
+    <!-- Body of a dialog that is displayed when the username we looked up could not be found. -->
+    <string name="UsernameLinkSettings_qr_result_not_found">找不到使用 %1$s 用戶名稱的用戶。</string>
+    <!-- Body of a dialog that is displayed when we experienced a network error when looking up a username. -->
+    <string name="UsernameLinkSettings_qr_result_network_error">遇到網路問題。請重試。</string>
+
 
     <!-- EOF -->
 </resources>

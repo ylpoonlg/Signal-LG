@@ -24,14 +24,14 @@
     <string name="save">保存</string>
     <string name="note_to_self">备忘录</string>
 
-    <!-- Alternate label for the Signal Application in the device\'s home screen launcher -->
-    <string name="app_icon_label_weather">Weather</string>
-    <!-- Alternate label for the Signal Application in the device\'s home screen launcher -->
+    <!-- Alternate label for the Signal Application in the device\'s home screen launcher, as in a weather/climate application. -->
+    <string name="app_icon_label_weather">天气</string>
+    <!-- Alternate label for the Signal Application in the device\'s home screen launcher, as in a note-taking application.-->
     <string name="app_icon_label_notes">笔记</string>
-    <!-- Alternate label for the Signal Application in the device\'s home screen launcher -->
-    <string name="app_icon_label_news">News</string>
-    <!-- Alternate label for the Signal Application in the device\'s home screen launcher -->
-    <string name="app_icon_label_waves">Waves</string>
+    <!-- Alternate label for the Signal Application in the device\'s home screen launcher, as in a news/journalism application. -->
+    <string name="app_icon_label_news">新闻</string>
+    <!-- Alternate label for the Signal Application in the device\'s home screen launcher, as in waves of the ocean. -->
+    <string name="app_icon_label_waves">波浪</string>
 
     <!-- AlbumThumbnailView -->
   <!-- Removed by excludeNonTranslatables <string name="AlbumThumbnailView_plus" translatable="false">\+%d</string> -->
@@ -194,7 +194,7 @@
     <string name="CameraContacts_signal_groups">Signal 群组</string>
     <!-- A warning shown in a toast when  -->
     <plurals name="CameraContacts_you_can_share_with_a_maximum_of_n_conversations">
-        <item quantity="other">You can share with a maximum of %1$d chats.</item>
+        <item quantity="other">您最多可与 %1$d 个聊天分享。</item>
     </plurals>
     <string name="CameraContacts_select_signal_recipients">选择 Signal 收件人</string>
     <string name="CameraContacts_no_signal_contacts">没有 Signal 联系人</string>
@@ -491,6 +491,10 @@
     <string name="ConversationFragment__update_build">升级 Signal</string>
     <!-- Action shown to allow a user to re-register as they are no longer registered -->
     <string name="ConversationFragment__reregister_signal">重新注册 Signal</string>
+    <!-- Label for a button displayed in the conversation toolbar to return to the previous screen. -->
+    <string name="ConversationFragment__content_description_back_button">向后导航。</string>
+    <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
+    <string name="ConversationFragment__content_description_launch_signal_button">打开 Signal</string>
     <!-- Label for a button displayed in conversation list to clear the chat filter -->
     <string name="ConversationListFragment__clear_filter">清除筛选</string>
     <!-- Notice on chat list when no unread chats are available, centered on display -->
@@ -1607,6 +1611,8 @@
     <string name="Recipient_you">您</string>
     <!-- Name of recipient representing user\'s \'My Story\' -->
     <string name="Recipient_my_story">我的动态</string>
+    <!-- Name of recipient for a call link without a name -->
+    <string name="Recipient_signal_call">Signal 通话</string>
 
     <!-- RecipientPreferencesActivity -->
     <string name="RecipientPreferenceActivity_block">屏蔽</string>
@@ -2105,11 +2111,11 @@
     <string name="MessageNotifier_s_in_s">%2$s中的%1$s</string>
     <!-- Text shown in a system notification that is used to summary how many messages you received. -->
     <plurals name="MessageNotifier_d_messages">
-        <item quantity="other">%1$d messages</item>
+        <item quantity="other">%1$d 条消息</item>
     </plurals>
     <!-- Text shown in a system notification that is used to summary how many chats have new messages. -->
     <plurals name="MessageNotifier_d_chats">
-        <item quantity="other">%1$d chats</item>
+        <item quantity="other">%1$d 个聊天</item>
     </plurals>
     <string name="MessageNotifier_d_new_messages_in_d_conversations">%2$d 个聊天中有 %1$d 条新消息</string>
     <string name="MessageNotifier_most_recent_from_s">最新消息来自：%1$s</string>
@@ -2173,9 +2179,8 @@
     <string name="QuickResponseService_quick_response_unavailable_when_Signal_is_locked">Signal 锁定时不可使用快速回复。</string>
     <string name="QuickResponseService_problem_sending_message">发送消息时出现问题！</string>
 
-    <!-- SaveAttachmentTask -->
-    <string name="SaveAttachmentTask_saved_to">已保存至 %1$s</string>
-    <string name="SaveAttachmentTask_saved">已保存</string>
+    <!-- A small toast notification to let the user know their image/video/audio was downloaded and saved to their device, accessible in other apps. -->
+    <string name="SaveAttachmentTask_saved">媒体已保存</string>
 
     <!-- SearchToolbar -->
     <string name="SearchToolbar_search">搜索</string>
@@ -2809,27 +2814,27 @@
     <string name="preferences__theme">主题</string>
     <string name="preferences__chat_color_and_wallpaper">聊天颜色与墙纸</string>
     <!-- Clickable settings text allowing the user to change the icon visible on their phone\'s home screen. -->
-    <string name="preferences__app_icon">App Icon</string>
+    <string name="preferences__app_icon">应用图标</string>
     <!-- Approval for changing the app icon. -->
     <string name="preferences__app_icon_dialog_ok">好</string>
     <!-- Cancelling the operation of changing the app icon. -->
     <string name="preferences__app_icon_dialog_cancel">取消</string>
     <!-- Title for the confirmation dialog of changing the app icon. -->
-    <string name="preferences__app_icon_dialog_title">Change app icon and name to \"%1$s\"</string>
+    <string name="preferences__app_icon_dialog_title">更改应用图标并将其命名为“%1$s”</string>
     <!-- Description for the confirmation dialog of changing the app icon. -->
-    <string name="preferences__app_icon_dialog_description">Signal will need to close to change the app icon and name. Notifications will always display the default Signal icon and name.</string>
+    <string name="preferences__app_icon_dialog_description">Signal 需要关闭以更改应用图标和名称。通知将始终显示默认的 Signal 图标和名称。</string>
     <!-- Visible warning label for the limitations of changing the app icon with learn more call to action. -->
-    <string name="preferences__app_icon_warning_learn_more">Select an app icon and name, which will be visible on your phone\'s home screen and app drawer. Notifications will always display the default Signal icon and name. Learn more</string>
+    <string name="preferences__app_icon_warning_learn_more">请选择一个应用图标和名称，这将显示在您手机的主屏幕和应用程序抽屉中。通知将始终显示默认的 Signal 图标和名称。了解详情</string>
     <!-- Visible warning label for the limitations of changing the app icon. -->
-    <string name="preferences__app_icon_warning">App icons and names are visible on the home screen and app drawer.</string>
+    <string name="preferences__app_icon_warning">应用图标和名称将显示在主屏幕和应用程序抽屉中。</string>
     <!-- Visible warning label explaining that changing the app icon and name does not affect notifications. -->
-    <string name="preferences__app_icon_notification_warning">Notifications will always display the default Signal icon and name.</string>
+    <string name="preferences__app_icon_notification_warning">通知将始终显示默认的 Signal 图标和名称。</string>
     <!--Call to action to get more information about the limitations of the change app icon functionality. -->
-    <string name="preferences__app_icon_learn_more">Learn more</string>
+    <string name="preferences__app_icon_learn_more">了解详情</string>
     <!--Text description of the app icon option for visually impaired users. -->
-    <string name="preferences__app_icon_content_description">Icon for %1$s</string>
+    <string name="preferences__app_icon_content_description">%1$s 的图标</string>
     <!--Text description of a graphic illustrating the limitations of the app icon change. -->
-    <string name="preferences__graphic_illustrating_where_the_replacement_app_icon_will_be_visible">Graphic illustrating where the replacement app icon will be visible.</string>
+    <string name="preferences__graphic_illustrating_where_the_replacement_app_icon_will_be_visible">图片说明了替代的应用图标将在哪里可见。</string>
     <string name="preferences__disable_pin">禁用 PIN 码</string>
     <string name="preferences__enable_pin">启用 PIN 码</string>
     <string name="preferences__if_you_disable_the_pin_you_will_lose_all_data">如果禁用 PIN 码，重新注册 Signal 时全部数据将丢失，除非使用手动备份并还原。PIN 码禁用时，无法启用注册锁定。</string>
@@ -2867,7 +2872,7 @@
     <string name="preferences_storage__this_will_permanently_delete_all_message_history_and_media">这将从您的设备中永久删除所有早于 %1$s的消息记录和媒体文件。</string>
     <!-- The body of an alert dialog that is shown when confirming a trim operation. Trimming will delete all but the most recent messages in a chat. The placeholder represents how many messages are kept in each chat. All older messages are deleted. -->
     <plurals name="preferences_storage__this_will_permanently_trim_all_conversations_to_the_d_most_recent_messages">
-        <item quantity="other">This will permanently trim all chats to the %1$s most recent messages.</item>
+        <item quantity="other">这将永久删减所有聊天，使之仅保留最近 %1$s 条消息。</item>
     </plurals>
     <string name="preferences_storage__this_will_delete_all_message_history_and_media_from_your_device">这将从您的设备中永久删除所有消息记录和媒体文件。</string>
     <string name="preferences_storage__are_you_sure_you_want_to_delete_all_message_history">您确定要删除所有消息记录吗？</string>
@@ -4224,9 +4229,11 @@
     <string name="HelpSettingsFragment__contact_us">联系我们</string>
     <string name="HelpSettingsFragment__version">版本</string>
     <string name="HelpSettingsFragment__debug_log">调试日志</string>
+    <!--    Header for the screen that displays the licenses of the open-source software dependencies of the Signal app-->
+    <string name="HelpSettingsFragment__licenses">许可证</string>
     <string name="HelpSettingsFragment__terms_amp_privacy_policy">条款和隐私政策</string>
     <string name="HelpFragment__copyright_signal_messenger">版权所有 Signal Messenger</string>
-    <string name="HelpFragment__licenced_under_the_agplv3">Licensed under the GNU AGPLv3</string>
+    <string name="HelpFragment__licenced_under_the_agplv3">根据 GNU AGPLv3 授权许可</string>
 
     <!-- DataAndStorageSettingsFragment -->
     <string name="DataAndStorageSettingsFragment__media_quality">媒体质量</string>
@@ -5800,6 +5807,8 @@
     <string name="CallLogAdapter__return">返回</string>
     <!-- Call state template when there is more than one call collapsed into a single row. D is a number > 1 and S is a call info string (like Missed) -->
     <string name="CallLogAdapter__d_s">(%1$d) %2$s</string>
+    <!-- Status text on call links -->
+    <string name="CallLogAdapter__call_link">通话链接</string>
 
     <!-- Call Log context menu -->
     <!-- Displayed as a context menu item to start a video call -->
@@ -5943,6 +5952,12 @@
     <string name="CallLinkDetailsFragment__share_link">分享链接</string>
     <!-- Displayed in a text row, allowing the user to delete the call link -->
     <string name="CallLinkDetailsFragment__delete_call_link">删除通话链接</string>
+    <!-- Displayed whenever a name change, revocation, etc, fails. -->
+    <string name="CallLinkDetailsFragment__couldnt_save_changes">无法保存更改，请检查您的互联网连接并重试。</string>
+    <!-- Displayed as title in dialog when user attempts to delete the link -->
+    <string name="CallLinkDetailsFragment__delete_link">要删除链接吗？</string>
+    <!-- Displayed as body in dialog when user attempts to delete the link -->
+    <string name="CallLinkDetailsFragment__this_link_will_no_longer_work">删除后，拥有链接的任何人将无法再使用此链接。</string>
 
     <!-- Button label for the share button in the username link settings -->
     <string name="UsernameLinkSettings_share_button_label">分享</string>
@@ -5966,6 +5981,13 @@
     <string name="UsernameLinkSettings_qr_scan_description">请扫描您的联系人设备上的二维码。</string>
     <!-- App bar title for the username QR code color picker screen -->
     <string name="UsernameLinkSettings_color_picker_app_bar_title">颜色</string>
+    <!-- Body of a dialog that is displayed when we failed to read a username QR code. -->
+    <string name="UsernameLinkSettings_qr_result_invalid">二维码已失效。</string>
+    <!-- Body of a dialog that is displayed when the username we looked up could not be found. -->
+    <string name="UsernameLinkSettings_qr_result_not_found">无法找到用户名为%1$s的用户。</string>
+    <!-- Body of a dialog that is displayed when we experienced a network error when looking up a username. -->
+    <string name="UsernameLinkSettings_qr_result_network_error">网络连接出错，请重试。</string>
+
 
     <!-- EOF -->
 </resources>

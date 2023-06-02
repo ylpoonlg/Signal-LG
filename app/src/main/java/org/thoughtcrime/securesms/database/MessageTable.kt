@@ -1032,15 +1032,6 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
       type = type or MessageTypes.KEY_EXCHANGE_IDENTITY_DEFAULT_BIT
     }
 
-    val recipient = Recipient.resolved(message.authorId)
-
-    val groupRecipient: Recipient? = if (message.groupId == null) {
-      null
-    } else {
-      val id = recipients.getOrInsertFromPossiblyMigratedGroupId(message.groupId!!)
-      Recipient.resolved(id)
-    }
-
     val silent = message.isIdentityUpdate ||
       message.isIdentityVerified ||
       message.isIdentityDefault ||
@@ -1053,7 +1044,7 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
         Util.isDefaultSmsProvider(context)
       )
 
-    val threadId: Long = if (groupRecipient == null) threads.getOrCreateThreadIdFor(recipient) else threads.getOrCreateThreadIdFor(groupRecipient)
+    val threadId: Long = if (message.groupId == null) threads.getOrCreateThreadIdFor(message.authorId, false) else threads.getOrCreateThreadIdFor(RecipientId.from(message.groupId!!), true)
 
     if (tryToCollapseJoinRequestEvents) {
       val result = collapseJoinRequestEventsIfPossible(threadId, message as IncomingGroupUpdateMessage)
@@ -1098,7 +1089,7 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
       }
 
       if (message.subscriptionId != -1) {
-        recipients.setDefaultSubscriptionId(recipient.id, message.subscriptionId)
+        recipients.setDefaultSubscriptionId(message.authorId, message.subscriptionId)
       }
       writableDatabase.setTransactionSuccessful()
     } finally {
@@ -1942,7 +1933,7 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
   fun getMessageEditHistory(id: Long): MmsReader {
     val cursor = readableDatabase.select(*MMS_PROJECTION)
       .from(TABLE_NAME)
-      .where("$TABLE_NAME.$ID = ? OR $TABLE_NAME.$LATEST_REVISION_ID = ?", id, id)
+      .where("$TABLE_NAME.$ID = ? OR $TABLE_NAME.$ORIGINAL_MESSAGE_ID = ?", id, id)
       .orderBy("$TABLE_NAME.$DATE_SENT ASC")
       .run()
 
@@ -2561,7 +2552,7 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
       quoteAttachments += retrieved.quote.attachments
     }
 
-    val messageId = insertMediaMessage(
+    val (messageId, insertedAttachments) = insertMediaMessage(
       threadId = threadId,
       body = retrieved.body,
       attachments = retrieved.attachments,
@@ -2616,7 +2607,7 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
       ApplicationDependencies.getDatabaseObserver().notifyStoryObservers(threads.getRecipientIdForThreadId(threadId)!!)
     }
 
-    return Optional.of(InsertResult(messageId, threadId))
+    return Optional.of(InsertResult(messageId, threadId, insertedAttachments = insertedAttachments))
   }
 
   @Throws(MmsException::class)
@@ -3033,7 +3024,7 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
 
     val updatedBodyAndMentions = MentionUtil.updateBodyAndMentionsWithPlaceholders(message.body, message.mentions)
     val bodyRanges = message.bodyRanges.adjustBodyRanges(updatedBodyAndMentions.bodyAdjustments)
-    val messageId = insertMediaMessage(
+    val (messageId, insertedAttachments) = insertMediaMessage(
       threadId = threadId,
       body = updatedBodyAndMentions.bodyAsString,
       attachments = message.attachments,
@@ -3140,7 +3131,7 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
     insertListener: InsertListener?,
     updateThread: Boolean,
     unarchive: Boolean
-  ): Long {
+  ): kotlin.Pair<Long, Map<Attachment, AttachmentId>?> {
     val mentionsSelf = mentions.any { Recipient.resolved(it.recipientId).isSelf }
     val allAttachments: MutableList<Attachment> = mutableListOf()
 
@@ -3154,11 +3145,11 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
       contentValues.put(MESSAGE_RANGES, messageRanges.toByteArray())
     }
 
-    val messageId = writableDatabase.withinTransaction { db ->
+    val (messageId, insertedAttachments) = writableDatabase.withinTransaction { db ->
       val messageId = db.insert(TABLE_NAME, null, contentValues)
       if (messageId < 0) {
         Log.w(TAG, "Tried to insert media message but failed. Assuming duplicate.")
-        return@withinTransaction -1
+        return@withinTransaction kotlin.Pair(-1L, null)
       }
 
       SignalDatabase.mentions.insert(threadId, messageId, mentions)
@@ -3191,11 +3182,11 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
         }
       }
 
-      messageId
+      kotlin.Pair(messageId, insertedAttachments)
     }
 
     if (messageId < 0) {
-      return messageId
+      return kotlin.Pair(messageId, insertedAttachments)
     }
 
     insertListener?.onComplete()
@@ -3207,7 +3198,7 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
       threads.update(threadId, unarchive)
     }
 
-    return messageId
+    return kotlin.Pair(messageId, insertedAttachments)
   }
 
   /**
@@ -4668,7 +4659,7 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
     return readableDatabase
       .select(*MMS_PROJECTION)
       .from(TABLE_NAME)
-      .where("$NOTIFIED = 0 AND $STORY_TYPE = 0 AND ($READ = 0 OR $REACTIONS_UNREAD = 1 ${if (stickyQuery.isNotEmpty()) "OR ($stickyQuery)" else ""})")
+      .where("$NOTIFIED = 0 AND $STORY_TYPE = 0 AND $LATEST_REVISION_ID IS NULL AND ($READ = 0 OR $REACTIONS_UNREAD = 1 ${if (stickyQuery.isNotEmpty()) "OR ($stickyQuery)" else ""})")
       .orderBy("$DATE_RECEIVED ASC")
       .run()
   }
@@ -4922,7 +4913,8 @@ open class MessageTable(context: Context?, databaseHelper: SignalDatabase) : Dat
 
   data class InsertResult(
     val messageId: Long,
-    val threadId: Long
+    val threadId: Long,
+    val insertedAttachments: Map<Attachment, AttachmentId>? = null
   )
 
   data class MmsNotificationInfo(
