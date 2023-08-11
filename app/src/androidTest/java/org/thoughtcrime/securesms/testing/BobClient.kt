@@ -32,6 +32,7 @@ import org.whispersystems.signalservice.api.push.DistributionId
 import org.whispersystems.signalservice.api.push.ServiceId
 import org.whispersystems.signalservice.api.push.SignalServiceAddress
 import org.whispersystems.signalservice.internal.push.SignalServiceProtos
+import java.lang.UnsupportedOperationException
 import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.locks.ReentrantLock
@@ -49,7 +50,7 @@ class BobClient(val serviceId: ServiceId, val e164: String, val identityKeyPair:
   private val serviceAddress = SignalServiceAddress(serviceId, e164)
   private val registrationId = KeyHelper.generateRegistrationId(false)
   private val aciStore = BobSignalServiceAccountDataStore(registrationId, identityKeyPair)
-  private val senderCertificate = FakeClientHelpers.createCertificateFor(trustRoot, serviceId.uuid(), e164, 1, identityKeyPair.publicKey.publicKey, 31337)
+  private val senderCertificate = FakeClientHelpers.createCertificateFor(trustRoot, serviceId.rawUuid, e164, 1, identityKeyPair.publicKey.publicKey, 31337)
   private val sessionLock = object : SignalSessionLock {
     private val lock = ReentrantLock()
 
@@ -168,6 +169,10 @@ class BobClient(val serviceId: ServiceId, val e164: String, val identityKeyPair:
     override fun getSenderKeySharedWith(distributionId: DistributionId?): MutableSet<SignalProtocolAddress> = throw UnsupportedOperationException()
     override fun markSenderKeySharedWith(distributionId: DistributionId?, addresses: MutableCollection<SignalProtocolAddress>?) = throw UnsupportedOperationException()
     override fun clearSenderKeySharedWith(addresses: MutableCollection<SignalProtocolAddress>?) = throw UnsupportedOperationException()
+    override fun storeLastResortKyberPreKey(kyberPreKeyId: Int, kyberPreKeyRecord: KyberPreKeyRecord) = throw UnsupportedOperationException()
+    override fun removeKyberPreKey(kyberPreKeyId: Int) = throw UnsupportedOperationException()
+    override fun loadLastResortKyberPreKeys(): List<KyberPreKeyRecord> = throw UnsupportedOperationException()
+
     override fun isMultiDevice(): Boolean = throw UnsupportedOperationException()
   }
 }

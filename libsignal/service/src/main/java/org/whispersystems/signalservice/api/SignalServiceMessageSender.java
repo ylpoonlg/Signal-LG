@@ -65,8 +65,8 @@ import org.whispersystems.signalservice.api.messages.multidevice.ViewOnceOpenMes
 import org.whispersystems.signalservice.api.messages.multidevice.ViewedMessage;
 import org.whispersystems.signalservice.api.messages.shared.SharedContact;
 import org.whispersystems.signalservice.api.push.DistributionId;
-import org.whispersystems.signalservice.api.push.PNI;
 import org.whispersystems.signalservice.api.push.ServiceId;
+import org.whispersystems.signalservice.api.push.ServiceId.PNI;
 import org.whispersystems.signalservice.api.push.SignalServiceAddress;
 import org.whispersystems.signalservice.api.push.exceptions.AuthorizationFailedException;
 import org.whispersystems.signalservice.api.push.exceptions.MalformedResponseException;
@@ -87,6 +87,7 @@ import org.whispersystems.signalservice.api.util.Uint64Util;
 import org.whispersystems.signalservice.api.util.UuidUtil;
 import org.whispersystems.signalservice.api.websocket.WebSocketUnavailableException;
 import org.whispersystems.signalservice.internal.configuration.SignalServiceConfiguration;
+import org.whispersystems.signalservice.internal.crypto.AttachmentDigest;
 import org.whispersystems.signalservice.internal.crypto.PaddingInputStream;
 import org.whispersystems.signalservice.internal.push.AttachmentV2UploadAttributes;
 import org.whispersystems.signalservice.internal.push.AttachmentV3UploadAttributes;
@@ -122,8 +123,10 @@ import org.whispersystems.signalservice.internal.push.exceptions.GroupStaleDevic
 import org.whispersystems.signalservice.internal.push.exceptions.InvalidUnidentifiedAccessHeaderException;
 import org.whispersystems.signalservice.internal.push.exceptions.MismatchedDevicesException;
 import org.whispersystems.signalservice.internal.push.exceptions.StaleDevicesException;
-import org.whispersystems.signalservice.internal.push.http.AttachmentCipherOutputStreamFactory;
 import org.whispersystems.signalservice.internal.push.http.CancelationSignal;
+import org.whispersystems.signalservice.internal.push.http.IncrementalAttachmentCipherOutputStreamFactory;
+import org.whispersystems.signalservice.internal.push.http.LegacyAttachmentCipherOutputStreamFactory;
+import org.whispersystems.signalservice.internal.push.http.OutputStreamFactory;
 import org.whispersystems.signalservice.internal.push.http.PartialSendBatchCompleteListener;
 import org.whispersystems.signalservice.internal.push.http.PartialSendCompleteListener;
 import org.whispersystems.signalservice.internal.push.http.ResumableUploadSpec;
@@ -438,7 +441,7 @@ public class SignalServiceMessageSender {
                                            long targetSentTimestamp)
       throws UntrustedIdentityException, IOException
   {
-    Log.d(TAG, "[" + message.getTimestamp() + "] Sending an edit message.");
+    Log.d(TAG, "[" + message.getTimestamp() + "] Sending an edit message for " + targetSentTimestamp + ".");
 
     Content content = createEditMessageContent(new SignalServiceEditMessage(targetSentTimestamp, message));
 
@@ -638,15 +641,69 @@ public class SignalServiceMessageSender {
     return results;
   }
 
+  /**
+   * Sends an edit message to a group using client-side fanout.
+   *
+   * @param partialListener A listener that will be called when an individual send is completed. Will be invoked on an arbitrary background thread, *not*
+   *                        the calling thread.
+   */
+  public List<SendMessageResult> sendEditMessage(List<SignalServiceAddress>             recipients,
+                                                 List<Optional<UnidentifiedAccessPair>> unidentifiedAccess,
+                                                 boolean                                isRecipientUpdate,
+                                                 ContentHint                            contentHint,
+                                                 SignalServiceDataMessage               message,
+                                                 LegacyGroupEvents                      sendEvents,
+                                                 PartialSendCompleteListener            partialListener,
+                                                 CancelationSignal                      cancelationSignal,
+                                                 boolean                                urgent,
+                                                 long                                   targetSentTimestamp)
+      throws IOException, UntrustedIdentityException
+  {
+    Log.d(TAG, "[" + message.getTimestamp() + "] Sending a edit message to " + recipients.size() + " recipients.");
+
+    Content                 content            = createEditMessageContent(new SignalServiceEditMessage(targetSentTimestamp, message));
+    EnvelopeContent         envelopeContent    = EnvelopeContent.encrypted(content, contentHint, message.getGroupId());
+    long                    timestamp          = message.getTimestamp();
+    List<SendMessageResult> results            = sendMessage(recipients, getTargetUnidentifiedAccess(unidentifiedAccess), timestamp, envelopeContent, false, partialListener, cancelationSignal, urgent, false);
+    boolean                 needsSyncInResults = false;
+
+    sendEvents.onMessageSent();
+
+    for (SendMessageResult result : results) {
+      if (result.getSuccess() != null && result.getSuccess().isNeedsSync()) {
+        needsSyncInResults = true;
+        break;
+      }
+    }
+
+    if (needsSyncInResults || aciStore.isMultiDevice()) {
+      Optional<SignalServiceAddress> recipient = Optional.empty();
+      if (!message.getGroupContext().isPresent() && recipients.size() == 1) {
+        recipient = Optional.of(recipients.get(0));
+      }
+
+      Content         syncMessage        = createMultiDeviceSentTranscriptContent(content, recipient, timestamp, results, isRecipientUpdate, Collections.emptySet());
+      EnvelopeContent syncMessageContent = EnvelopeContent.encrypted(syncMessage, ContentHint.IMPLICIT, Optional.empty());
+
+      sendMessage(localAddress, Optional.empty(), timestamp, syncMessageContent, false, null, false, false);
+    }
+
+    sendEvents.onSyncMessageSent();
+
+    return results;
+  }
+
   public SendMessageResult sendSyncMessage(SignalServiceDataMessage dataMessage)
       throws IOException, UntrustedIdentityException
   {
+    Log.d(TAG, "[" + dataMessage.getTimestamp() + "] Sending self-sync message.");
     return sendSyncMessage(createSelfSendSyncMessage(dataMessage), Optional.empty());
   }
 
   public SendMessageResult sendSelfSyncEditMessage(SignalServiceEditMessage editMessage)
       throws IOException, UntrustedIdentityException
   {
+    Log.d(TAG, "[" + editMessage.getDataMessage().getTimestamp() + "] Sending self-sync edit message for " + editMessage.getTargetSentTimestamp() + ".");
     return sendSyncMessage(createSelfSendSyncEditMessage(editMessage), Optional.empty());
   }
 
@@ -688,6 +745,10 @@ public class SignalServiceMessageSender {
       urgent  = message.getRequest().get().isUrgent();
     } else if (message.getCallEvent().isPresent()) {
       content = createCallEventContent(message.getCallEvent().get());
+    } else if (message.getCallLinkUpdate().isPresent()) {
+      content = createCallLinkUpdateContent(message.getCallLinkUpdate().get());
+    } else if (message.getCallLogEvent().isPresent()) {
+      content = createCallLogEventContent(message.getCallLogEvent().get());
     } else {
       throw new IOException("Unsupported sync message!");
     }
@@ -708,7 +769,7 @@ public class SignalServiceMessageSender {
    * @param pniChangeNumber - Linked device specific updated PNI details
    * @return Encrypted {@link OutgoingPushMessage} to be included in the change number request sent to the server
    */
-  public @Nonnull OutgoingPushMessage getEncryptedSyncPniChangeNumberMessage(int deviceId, @Nonnull SyncMessage.PniChangeNumber pniChangeNumber)
+  public @Nonnull OutgoingPushMessage getEncryptedSyncPniInitializeDeviceMessage(int deviceId, @Nonnull SyncMessage.PniChangeNumber pniChangeNumber)
       throws UntrustedIdentityException, IOException, InvalidKeyException
   {
     SyncMessage.Builder syncMessage     = createSyncMessageBuilder().setPniChangeNumber(pniChangeNumber);
@@ -723,18 +784,20 @@ public class SignalServiceMessageSender {
   }
 
   public SignalServiceAttachmentPointer uploadAttachment(SignalServiceAttachmentStream attachment) throws IOException {
-    byte[]             attachmentKey    = attachment.getResumableUploadSpec().map(ResumableUploadSpec::getSecretKey).orElseGet(() -> Util.getSecretBytes(64));
-    byte[]             attachmentIV     = attachment.getResumableUploadSpec().map(ResumableUploadSpec::getIV).orElseGet(() -> Util.getSecretBytes(16));
-    long               paddedLength     = PaddingInputStream.getPaddedSize(attachment.getLength());
-    InputStream        dataStream       = new PaddingInputStream(attachment.getInputStream(), attachment.getLength());
-    long               ciphertextLength = AttachmentCipherOutputStream.getCiphertextLength(paddedLength);
-    PushAttachmentData attachmentData   = new PushAttachmentData(attachment.getContentType(),
-                                                                 dataStream,
-                                                                 ciphertextLength,
-                                                                 new AttachmentCipherOutputStreamFactory(attachmentKey, attachmentIV),
-                                                                 attachment.getListener(),
-                                                                 attachment.getCancelationSignal(),
-                                                                 attachment.getResumableUploadSpec().orElse(null));
+    byte[]              attachmentKey       = attachment.getResumableUploadSpec().map(ResumableUploadSpec::getSecretKey).orElseGet(() -> Util.getSecretBytes(64));
+    byte[]              attachmentIV        = attachment.getResumableUploadSpec().map(ResumableUploadSpec::getIV).orElseGet(() -> Util.getSecretBytes(16));
+    long                paddedLength        = PaddingInputStream.getPaddedSize(attachment.getLength());
+    InputStream         dataStream          = new PaddingInputStream(attachment.getInputStream(), attachment.getLength());
+    long                ciphertextLength    = AttachmentCipherOutputStream.getCiphertextLength(paddedLength);
+    OutputStreamFactory outputStreamFactory = attachment.isIncremental() ? new IncrementalAttachmentCipherOutputStreamFactory(attachmentKey, attachmentIV)
+                                                                         : new LegacyAttachmentCipherOutputStreamFactory(attachmentKey, attachmentIV);
+    PushAttachmentData  attachmentData      = new PushAttachmentData(attachment.getContentType(),
+                                                                     dataStream,
+                                                                     ciphertextLength,
+                                                                     outputStreamFactory,
+                                                                     attachment.getListener(),
+                                                                     attachment.getCancelationSignal(),
+                                                                     attachment.getResumableUploadSpec().orElse(null));
 
     if (attachment.getResumableUploadSpec().isPresent()) {
       return uploadAttachmentV3(attachment, attachmentKey, attachmentData);
@@ -762,7 +825,7 @@ public class SignalServiceMessageSender {
       v2UploadAttributes = socket.getAttachmentV2UploadAttributes();
     }
 
-    Pair<Long, byte[]> attachmentIdAndDigest = socket.uploadAttachment(attachmentData, v2UploadAttributes);
+    Pair<Long, AttachmentDigest> attachmentIdAndDigest = socket.uploadAttachment(attachmentData, v2UploadAttributes);
 
     return new SignalServiceAttachmentPointer(0,
                                               new SignalServiceAttachmentRemoteId(attachmentIdAndDigest.first()),
@@ -771,7 +834,8 @@ public class SignalServiceMessageSender {
                                               Optional.of(Util.toIntExact(attachment.getLength())),
                                               attachment.getPreview(),
                                               attachment.getWidth(), attachment.getHeight(),
-                                              Optional.of(attachmentIdAndDigest.second()),
+                                              Optional.of(attachmentIdAndDigest.second().getDigest()),
+                                              Optional.ofNullable(attachmentIdAndDigest.second().getIncrementalDigest()),
                                               attachment.getFileName(),
                                               attachment.getVoiceNote(),
                                               attachment.isBorderless(),
@@ -811,7 +875,7 @@ public class SignalServiceMessageSender {
   }
 
   private SignalServiceAttachmentPointer uploadAttachmentV3(SignalServiceAttachmentStream attachment, byte[] attachmentKey, PushAttachmentData attachmentData) throws IOException {
-    byte[] digest = socket.uploadAttachment(attachmentData);
+    AttachmentDigest digest = socket.uploadAttachment(attachmentData);
     return new SignalServiceAttachmentPointer(attachmentData.getResumableUploadSpec().getCdnNumber(),
                                               new SignalServiceAttachmentRemoteId(attachmentData.getResumableUploadSpec().getCdnKey()),
                                               attachment.getContentType(),
@@ -820,7 +884,8 @@ public class SignalServiceMessageSender {
                                               attachment.getPreview(),
                                               attachment.getWidth(),
                                               attachment.getHeight(),
-                                              Optional.of(digest),
+                                              Optional.of(digest.getDigest()),
+                                              Optional.ofNullable(digest.getIncrementalDigest()),
                                               attachment.getFileName(),
                                               attachment.getVoiceNote(),
                                               attachment.isBorderless(),
@@ -885,7 +950,7 @@ public class SignalServiceMessageSender {
     byte[] signature = localPniIdentity.signAlternateIdentity(aciStore.getIdentityKeyPair().getPublicKey());
 
     return SignalServiceProtos.PniSignatureMessage.newBuilder()
-        .setPni(UuidUtil.toByteString(localPni.uuid()))
+        .setPni(UuidUtil.toByteString(localPni.getRawUuid()))
         .setSignature(ByteString.copyFrom(signature))
         .build();
   }
@@ -1031,7 +1096,7 @@ public class SignalServiceMessageSender {
       DataMessage.Quote.Builder quoteBuilder = DataMessage.Quote.newBuilder()
                                                                 .setId(message.getQuote().get().getId())
                                                                 .setText(message.getQuote().get().getText())
-                                                                .setAuthorUuid(message.getQuote().get().getAuthor().toString())
+                                                                .setAuthorAci(message.getQuote().get().getAuthor().toString())
                                                                 .setType(message.getQuote().get().getType().getProtoType());
 
       List<SignalServiceDataMessage.Mention> mentions = message.getQuote().get().getMentions();
@@ -1040,7 +1105,7 @@ public class SignalServiceMessageSender {
           quoteBuilder.addBodyRanges(BodyRange.newBuilder()
                                               .setStart(mention.getStart())
                                               .setLength(mention.getLength())
-                                              .setMentionUuid(mention.getServiceId().toString()));
+                                              .setMentionAci(mention.getServiceId().toString()));
         }
 
         builder.setRequiredProtocolVersion(Math.max(DataMessage.ProtocolVersion.MENTIONS_VALUE, builder.getRequiredProtocolVersion()));
@@ -1088,7 +1153,7 @@ public class SignalServiceMessageSender {
         builder.addBodyRanges(BodyRange.newBuilder()
                                        .setStart(mention.getStart())
                                        .setLength(mention.getLength())
-                                       .setMentionUuid(mention.getServiceId().toString()));
+                                       .setMentionAci(mention.getServiceId().toString()));
       }
       builder.setRequiredProtocolVersion(Math.max(DataMessage.ProtocolVersion.MENTIONS_VALUE, builder.getRequiredProtocolVersion()));
     }
@@ -1123,7 +1188,7 @@ public class SignalServiceMessageSender {
                                                                          .setEmoji(message.getReaction().get().getEmoji())
                                                                          .setRemove(message.getReaction().get().isRemove())
                                                                          .setTargetSentTimestamp(message.getReaction().get().getTargetSentTimestamp())
-                                                                         .setTargetAuthorUuid(message.getReaction().get().getTargetAuthor().toString());
+                                                                         .setTargetAuthorAci(message.getReaction().get().getTargetAuthor().toString());
 
       builder.setReaction(reactionBuilder.build());
       builder.setRequiredProtocolVersion(Math.max(DataMessage.ProtocolVersion.REACTIONS_VALUE, builder.getRequiredProtocolVersion()));
@@ -1167,7 +1232,7 @@ public class SignalServiceMessageSender {
       SignalServiceDataMessage.StoryContext storyContext = message.getStoryContext().get();
 
       builder.setStoryContext(DataMessage.StoryContext.newBuilder()
-                                                      .setAuthorUuid(storyContext.getAuthorServiceId().toString())
+                                                      .setAuthorAci(storyContext.getAuthorServiceId().toString())
                                                       .setSentTimestamp(storyContext.getSentTimestamp()));
     }
 
@@ -1333,7 +1398,7 @@ public class SignalServiceMessageSender {
     for (SendMessageResult result : sendMessageResults) {
       if (result.getSuccess() != null) {
         sentMessage.addUnidentifiedStatus(SyncMessage.Sent.UnidentifiedDeliveryStatus.newBuilder()
-                                                                                     .setDestinationUuid(result.getAddress().getServiceId().toString())
+                                                                                     .setDestinationServiceId(result.getAddress().getServiceId().toString())
                                                                                      .setUnidentified(result.getSuccess().isUnidentified())
                                                                                      .build());
 
@@ -1341,7 +1406,7 @@ public class SignalServiceMessageSender {
     }
 
     if (recipient.isPresent()) {
-      sentMessage.setDestinationUuid(recipient.get().getServiceId().toString());
+      sentMessage.setDestinationServiceId(recipient.get().getServiceId().toString());
       if (recipient.get().getNumber().isPresent()) {
         sentMessage.setDestinationE164(recipient.get().getNumber().get());
       }
@@ -1379,7 +1444,7 @@ public class SignalServiceMessageSender {
   private SyncMessage.Sent.StoryMessageRecipient createStoryMessageRecipient(SignalServiceStoryMessageRecipient storyMessageRecipient) {
     return SyncMessage.Sent.StoryMessageRecipient.newBuilder()
                                                  .addAllDistributionListIds(storyMessageRecipient.getDistributionListIds())
-                                                 .setDestinationUuid(storyMessageRecipient.getSignalServiceAddress().getIdentifier())
+                                                 .setDestinationServiceId(storyMessageRecipient.getSignalServiceAddress().getIdentifier())
                                                  .setIsAllowedToReply(storyMessageRecipient.isAllowedToReply())
                                                  .build();
   }
@@ -1391,7 +1456,7 @@ public class SignalServiceMessageSender {
     for (ReadMessage readMessage : readMessages) {
       builder.addRead(SyncMessage.Read.newBuilder()
                                       .setTimestamp(readMessage.getTimestamp())
-                                      .setSenderUuid(readMessage.getSender().toString()));
+                                      .setSenderAci(readMessage.getSender().toString()));
     }
 
     return container.setSyncMessage(builder).build();
@@ -1404,7 +1469,7 @@ public class SignalServiceMessageSender {
     for (ViewedMessage readMessage : readMessages) {
       builder.addViewed(SyncMessage.Viewed.newBuilder()
                                           .setTimestamp(readMessage.getTimestamp())
-                                          .setSenderUuid(readMessage.getSender().toString()));
+                                          .setSenderAci(readMessage.getSender().toString()));
     }
 
     return container.setSyncMessage(builder).build();
@@ -1416,7 +1481,7 @@ public class SignalServiceMessageSender {
 
     builder.setViewOnceOpen(SyncMessage.ViewOnceOpen.newBuilder()
                                                     .setTimestamp(readMessage.getTimestamp())
-                                                    .setSenderUuid(readMessage.getSender().toString()));
+                                                    .setSenderAci(readMessage.getSender().toString()));
 
     return container.setSyncMessage(builder).build();
   }
@@ -1427,7 +1492,7 @@ public class SignalServiceMessageSender {
     SyncMessage.Blocked.Builder blockedMessage = SyncMessage.Blocked.newBuilder();
 
     for (SignalServiceAddress address : blocked.getAddresses()) {
-      blockedMessage.addUuids(address.getServiceId().toString());
+      blockedMessage.addAcis(address.getServiceId().toString());
       if (address.getNumber().isPresent()) {
         blockedMessage.addNumbers(address.getNumber().get());
       }
@@ -1527,7 +1592,7 @@ public class SignalServiceMessageSender {
     }
 
     if (message.getPerson().isPresent()) {
-      responseMessage.setThreadUuid(message.getPerson().get().toString());
+      responseMessage.setThreadAci(message.getPerson().get().toString());
     }
 
     switch (message.getType()) {
@@ -1560,7 +1625,7 @@ public class SignalServiceMessageSender {
     SyncMessage.OutgoingPayment.Builder paymentMessage = SyncMessage.OutgoingPayment.newBuilder();
 
     if (message.getRecipient().isPresent()) {
-      paymentMessage.setRecipientUuid(message.getRecipient().get().toString());
+      paymentMessage.setRecipientServiceId(message.getRecipient().get().toString());
     }
 
     if (message.getNote().isPresent()) {
@@ -1612,7 +1677,7 @@ public class SignalServiceMessageSender {
 
     verifiedMessageBuilder.setNullMessage(ByteString.copyFrom(nullMessage));
     verifiedMessageBuilder.setIdentityKey(ByteString.copyFrom(verifiedMessage.getIdentityKey().serialize()));
-    verifiedMessageBuilder.setDestinationUuid(verifiedMessage.getDestination().getServiceId().toString());
+    verifiedMessageBuilder.setDestinationAci(verifiedMessage.getDestination().getServiceId().toString());
 
 
     switch(verifiedMessage.getVerified()) {
@@ -1640,6 +1705,20 @@ public class SignalServiceMessageSender {
   private Content createCallEventContent(SyncMessage.CallEvent proto) {
     Content.Builder     container = Content.newBuilder();
     SyncMessage.Builder builder   = createSyncMessageBuilder().setCallEvent(proto);
+
+    return container.setSyncMessage(builder).build();
+  }
+
+  private Content createCallLinkUpdateContent(SyncMessage.CallLinkUpdate proto) {
+    Content.Builder     container = Content.newBuilder();
+    SyncMessage.Builder builder   = createSyncMessageBuilder().setCallLinkUpdate(proto);
+
+    return container.setSyncMessage(builder).build();
+  }
+
+  private Content createCallLogEventContent(SyncMessage.CallLogEvent proto) {
+    Content.Builder     container = Content.newBuilder();
+    SyncMessage.Builder builder   = createSyncMessageBuilder().setCallLogEvent(proto);
 
     return container.setSyncMessage(builder).build();
   }
@@ -1849,24 +1928,28 @@ public class SignalServiceMessageSender {
         results.add(futureResult.get());
       } catch (ExecutionException e) {
         if (e.getCause() instanceof UntrustedIdentityException) {
-          Log.w(TAG, e);
+          Log.w(TAG, "[" + timestamp + "] Hit identity mismatch: " + recipient.getIdentifier(), e);
           results.add(SendMessageResult.identityFailure(recipient, ((UntrustedIdentityException) e.getCause()).getIdentityKey()));
         } else if (e.getCause() instanceof UnregisteredUserException) {
-          Log.w(TAG, "[" + timestamp + "] Found unregistered user.");
+          Log.w(TAG, "[" + timestamp + "] Hit unregistered user: " + recipient.getIdentifier());
           results.add(SendMessageResult.unregisteredFailure(recipient));
         } else if (e.getCause() instanceof PushNetworkException) {
-          Log.w(TAG, e);
+          Log.w(TAG, "[" + timestamp + "] Hit network failure: " + recipient.getIdentifier(), e);
           results.add(SendMessageResult.networkFailure(recipient));
         } else if (e.getCause() instanceof ServerRejectedException) {
-          Log.w(TAG, e);
+          Log.w(TAG, "[" + timestamp + "] Hit server rejection: " + recipient.getIdentifier(), e);
           throw ((ServerRejectedException) e.getCause());
         } else if (e.getCause() instanceof ProofRequiredException) {
-          Log.w(TAG, e);
+          Log.w(TAG, "[" + timestamp + "] Hit proof required: " + recipient.getIdentifier(), e);
           results.add(SendMessageResult.proofRequiredFailure(recipient, (ProofRequiredException) e.getCause()));
         } else if (e.getCause() instanceof RateLimitException) {
-          Log.w(TAG, e);
+          Log.w(TAG, "[" + timestamp + "] Hit rate limit: " + recipient.getIdentifier(), e);
           results.add(SendMessageResult.rateLimitFailure(recipient, (RateLimitException) e.getCause()));
+        } else if (e.getCause() instanceof InvalidPreKeyException) {
+          Log.w(TAG, "[" + timestamp + "] Hit invalid prekey: " + recipient.getIdentifier(), e);
+          results.add(SendMessageResult.invalidPreKeyFailure(recipient));
         } else {
+          Log.w(TAG, "[" + timestamp + "] Hit unknown exception: " + recipient.getIdentifier(), e);
           throw new IOException(e);
         }
       } catch (InterruptedException e) {
@@ -2317,10 +2400,10 @@ public class SignalServiceMessageSender {
 
   // Visible for testing only
   public OutgoingPushMessage getEncryptedMessage(SignalServiceAddress         recipient,
-                                                  Optional<UnidentifiedAccess> unidentifiedAccess,
-                                                  int                          deviceId,
-                                                  EnvelopeContent              plaintext,
-                                                  boolean                      story)
+                                                 Optional<UnidentifiedAccess> unidentifiedAccess,
+                                                 int                          deviceId,
+                                                 EnvelopeContent              plaintext,
+                                                 boolean                      story)
       throws IOException, InvalidKeyException, UntrustedIdentityException
   {
     SignalProtocolAddress signalProtocolAddress = new SignalProtocolAddress(recipient.getIdentifier(), deviceId);
@@ -2331,6 +2414,8 @@ public class SignalServiceMessageSender {
         List<PreKeyBundle> preKeys = getPreKeys(recipient, unidentifiedAccess, deviceId, story);
 
         for (PreKeyBundle preKey : preKeys) {
+          Log.d(TAG, "Initializing prekey session for " + signalProtocolAddress);
+
           try {
             SignalProtocolAddress preKeyAddress  = new SignalProtocolAddress(recipient.getIdentifier(), preKey.getDeviceId());
             SignalSessionBuilder  sessionBuilder = new SignalSessionBuilder(sessionLock, new SessionBuilder(aciStore, preKeyAddress));
@@ -2344,7 +2429,7 @@ public class SignalServiceMessageSender {
           eventListener.get().onSecurityEvent(recipient);
         }
       } catch (InvalidKeyException e) {
-        throw new IOException(e);
+        throw new InvalidPreKeyException(signalProtocolAddress, e);
       }
     }
 

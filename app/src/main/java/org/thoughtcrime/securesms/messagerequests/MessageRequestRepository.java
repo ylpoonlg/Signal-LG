@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 
-import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import kotlin.Unit;
@@ -146,10 +145,15 @@ public final class MessageRequestRepository {
     } else {
       if (RecipientUtil.isMessageRequestAccepted(context, threadId)) {
         return MessageRequestState.NONE;
-      } else if (RecipientUtil.isRecipientHidden(threadId)) {
-        return MessageRequestState.INDIVIDUAL_HIDDEN;
       } else {
-        return MessageRequestState.INDIVIDUAL;
+        Recipient.HiddenState hiddenState = RecipientUtil.getRecipientHiddenState(threadId);
+        if (hiddenState == Recipient.HiddenState.NOT_HIDDEN) {
+          return MessageRequestState.INDIVIDUAL;
+        } else if (hiddenState == Recipient.HiddenState.HIDDEN) {
+          return MessageRequestState.NONE_HIDDEN;
+        } else {
+          return MessageRequestState.INDIVIDUAL_HIDDEN;
+        }
       }
     }
   }

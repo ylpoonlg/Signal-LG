@@ -106,6 +106,10 @@
     <!-- BackgroundMessageRetriever -->
     <string name="BackgroundMessageRetriever_checking_for_messages">Vérification de la présence de messages…</string>
 
+    <!-- Fcm notifications -->
+    <!-- Notification we show when there may be messages for you, but we cannot connect to the server to check -->
+    <string name="FcmFetchManager__you_may_have_messages">Vous pourriez avoir de nouveaux messages</string>
+
     <!-- BlockedUsersActivity -->
     <string name="BlockedUsersActivity__blocked_users">Utilisateurs bloqués</string>
     <string name="BlockedUsersActivity__add_blocked_user">Ajouter un utilisateur bloqué</string>
@@ -236,6 +240,12 @@
     <string name="CommunicationActions_call">Appeler</string>
     <string name="CommunicationActions_insecure_call">Appel non sécurisé</string>
     <string name="CommunicationActions_carrier_charges_may_apply">Les frais de l’opérateur pourraient s’appliquer. Le numéro que vous appelez n’est pas inscrit auprès de Signal. Cet appel sera effectué par votre opérateur de réseau mobile et non par Internet.</string>
+    <string name="CommunicationActions_cant_join_call">Impossible de rejoindre l’appel</string>
+    <string name="CommunicationActions_this_call_link_is_no_longer_valid">Le lien de cet appel n’est plus valide.</string>
+    <!-- Title on dialog when call link url cannot be parsed -->
+    <string name="CommunicationActions_invalid_link">Invalid link</string>
+    <!-- Message on dialog when call link url cannot be parsed -->
+    <string name="CommunicationActions_this_is_not_a_valid_call_link">This is not a valid call link. Make sure the entire link is intact and correct before attempting to join.</string>
 
     <!-- ConfirmIdentityDialog -->
 
@@ -316,6 +326,8 @@
     <string name="ConversationItem_cant_download_video_you_will_need_to_send_it_again">Impossible de télécharger la vidéo. {0} doit l’envoyer à nouveau.</string>
     <!-- Display as the timestamp footer in a message bubble in a conversation when a message has been edited. The timestamp will go from \'11m\' to \'edited 11m\' -->
     <string name="ConversationItem_edited_timestamp_footer">Modifié il y a %1$s</string>
+    <!-- Displayed if the link preview in the conversation item is for a call link call -->
+    <string name="ConversationItem__join_call">Me joindre à l’appel</string>
 
     <!-- ConversationActivity -->
     <string name="ConversationActivity_add_attachment">Ajouter un fichier joint</string>
@@ -334,6 +346,11 @@
     <plurals name="ConversationActivity_edit_message_too_old">
         <item quantity="one">Les modifications peuvent être appliquées uniquement dans un délai de %1$d heure à compter de l’envoi du message.</item>
         <item quantity="other">Les modifications peuvent être appliquées uniquement dans un délai de %1$d heures à compter de l’envoi du message.</item>
+    </plurals>
+    <!-- Warning dialog text shown to user if they try to edit a message too many times. Where %1$d is replaced with the number of edits -->
+    <plurals name="ConversationActivity_edit_message_too_many_edits">
+        <item quantity="one">%1$d modification peut-être appliquée à ce message.</item>
+        <item quantity="other">%1$d modifications seulement peuvent être appliquées à ce message.</item>
     </plurals>
 
     <string name="ConversationActivity_invalid_recipient">Le destinataire est invalide</string>
@@ -503,6 +520,9 @@
     <string name="ConversationFragment__content_description_back_button">Retour</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
     <string name="ConversationFragment__content_description_launch_signal_button">Ouvrez Signal</string>
+    <!-- Dialog title shown when more than one contact in a group conversation is no longer verified -->
+    <string name="ConversationFragment__no_longer_verified">N’est plus marqué comme vérifié</string>
+
     <!-- Label for a button displayed in conversation list to clear the chat filter -->
     <string name="ConversationListFragment__clear_filter">Supprimer le filtre</string>
     <!-- Notice on chat list when no unread chats are available, centered on display -->
@@ -876,12 +896,19 @@
     <string name="LinkPreviewView_no_link_preview_available">Aucun aperçu du lien n’est proposé</string>
     <string name="LinkPreviewView_this_group_link_is_not_active">Ce lien de groupe est inactif</string>
     <string name="LinkPreviewView_domain_date">%1$s · %2$s</string>
+    <!-- Description for Call Link url previews -->
+    <string name="LinkPreviewView__use_this_link_to_join_a_signal_call">Utiliser ce lien pour rejoindre un appel Signal</string>
 
     <!-- LinkPreviewRepository -->
     <plurals name="LinkPreviewRepository_d_members">
         <item quantity="one">%1$d membre</item>
         <item quantity="other">%1$d membres</item>
     </plurals>
+
+    <!-- Title for dialog asking user to submit logs for debugging slow notification issues -->
+    <string name="PromptLogsSlowNotificationsDialog__title">We noticed notifications are delayed. Submit debug log?</string>
+    <!-- Message for dialog asking user to submit logs for debugging slow notification issues -->
+    <string name="PromptLogsSlowNotificationsDialog__message">Debug logs helps us diagnose and fix the issue, and do not contain identifying information.</string>
 
     <!-- PendingMembersActivity -->
     <string name="PendingMembersActivity_pending_group_invites">Invitations au groupe en attente</string>
@@ -1104,7 +1131,7 @@
     <string name="ImageEditorHud_draw_to_blur_additional_faces_or_areas">Dessinez pour rendre d’autres visages et zones flous</string>
 
     <!-- InputPanel -->
-    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">Touchez et maintenez pour enregistrer un message vocal, relâchez pour l’envoyer.</string>
+    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">Appuyer longuement : enregistrer. Relâcher : envoyer.</string>
     <!-- Message shown if the user tries to switch a conversation from Signal to SMS -->
     <string name="InputPanel__sms_messaging_is_no_longer_supported_in_signal">La messagerie SMS n’est plus prise en charge dans Signal.</string>
     <!-- When editing a message, label shown above the text input field in the composer -->
@@ -1210,10 +1237,7 @@
     <string name="MessageQuotesBottomSheet_replies">Réponses</string>
 
     <!-- NotificationBarManager -->
-    <string name="NotificationBarManager_signal_call_in_progress">Appel Signal en cours</string>
     <string name="NotificationBarManager__establishing_signal_call">Établissement de l’appel Signal</string>
-    <string name="NotificationBarManager__incoming_signal_call">Appel Signal entrant</string>
-    <string name="NotificationBarManager__incoming_signal_group_call">Appel de groupe entrant sur Signal</string>
     <!-- Temporary notification shown when starting the calling service -->
     <string name="NotificationBarManager__starting_signal_call_service">Démarrage du service d\'appel Signal</string>
     <string name="NotificationBarManager__stopping_signal_call_service">Arrêt du service d’appel de Signal</string>
@@ -1477,12 +1501,14 @@
 
     <!-- Group Calling update messages -->
     <string name="MessageRecord_s_started_a_group_call_s">%1$s a lancé un appel de groupe · %2$s</string>
+    <string name="MessageRecord_you_started_a_group_call_s">Vous avez lancé un appel de groupe · %1$s</string>
     <string name="MessageRecord_s_is_in_the_group_call_s">%1$s fait partie de l’appel de groupe · %2$s</string>
     <string name="MessageRecord_you_are_in_the_group_call_s1">Vous faites partie de l’appel de groupe · %1$s</string>
     <string name="MessageRecord_s_and_s_are_in_the_group_call_s1">%1$s et %2$s font partie de l’appel de groupe · %3$s</string>
     <string name="MessageRecord_group_call_s">Appel de groupe · %1$s</string>
 
     <string name="MessageRecord_s_started_a_group_call">%1$s a lancé un appel de groupe</string>
+    <string name="MessageRecord_you_started_a_group_call">Vous avez lancé un appel de groupe</string>
     <string name="MessageRecord_s_is_in_the_group_call">%1$s fait partie de l’appel de groupe</string>
     <string name="MessageRecord_you_are_in_the_group_call">Vous faites partie de l’appel de groupe</string>
     <string name="MessageRecord_s_and_s_are_in_the_group_call">%1$s et %2$s font partie de l’appel de groupe</string>
@@ -1620,8 +1646,8 @@
         <item quantity="other">Il vous reste %1$d essais. Si vous épuisez le nombre limite d’essais, vous pouvez créer un nouveau PIN. Vous pouvez vous inscrire et utiliser votre compte, mais vous perdrez certains paramètres enregistrés tels que les informations de votre profil.</item>
     </plurals>
     <string name="PinRestoreEntryFragment_signal_registration_need_help_with_pin">Inscription à Signal – Besoin d’aide avec le NIP sur Android</string>
-    <string name="PinRestoreEntryFragment_enter_alphanumeric_pin">Saisir un NIP alphanumérique</string>
-    <string name="PinRestoreEntryFragment_enter_numeric_pin">Saisir un NIP numérique</string>
+    <!-- Button label to prompt the user to switch between an alphanumeric and numeric-only keyboards -->
+    <string name="PinRestoreEntryFragment_switch_keyboard">Changer de clavier</string>
 
     <!-- PinRestoreLockedFragment -->
     <string name="PinRestoreLockedFragment_create_your_pin">Créer votre NIP</string>
@@ -1710,6 +1736,48 @@
     <string name="WebRtcCallActivity__open_settings">Ouvrir les paramètres</string>
     <!-- Negative action for bluetooth warning dialog to dismiss dialog -->
     <string name="WebRtcCallActivity__not_now">Pas maintenant</string>
+    <!-- Title for dialog to approve all requests -->
+    <plurals name="WebRtcCallActivity__approve_d_requests">
+        <item quantity="one">Approve %1$d request?</item>
+        <item quantity="other">Approve %1$d requests?</item>
+    </plurals>
+    <!-- Positive action for call link approve all dialog -->
+    <string name="WebRtcCallActivity__approve_all">Approve all</string>
+    <!-- Message for dialog to approve all requests -->
+    <plurals name="WebRtcCallActivity__d_people_will_be_added_to_the_call">
+        <item quantity="one">%1$d person will be added to the call.</item>
+        <item quantity="other">%1$d people will be added to the call.</item>
+    </plurals>
+    <!-- Title for dialog to deny all requests -->
+    <plurals name="WebRtcCallActivity__deny_d_requests">
+        <item quantity="one">Deny %1$d request?</item>
+        <item quantity="other">Deny %1$d requests?</item>
+    </plurals>
+    <!-- Message for dialog to deny all requests -->
+    <plurals name="WebRtcCallActivity__d_people_will_not_be_added_to_the_call">
+        <item quantity="one">%1$d person will not be added to the call.</item>
+        <item quantity="other">%1$d people will not be added to the call.</item>
+    </plurals>
+    <!-- Positive action for call link deny all dialog -->
+    <string name="WebRtcCallActivity__deny_all">Deny all</string>
+    <!-- Displayed in call status when users are pending -->
+    <plurals name="WebRtcCallActivity__d_people_waiting">
+        <item quantity="one">%1$d person waiting</item>
+        <item quantity="other">%1$d people waiting</item>
+    </plurals>
+    <!-- Displayed in call status during call link when no users are pending -->
+    <plurals name="WebRtcCallActivity__d_people">
+        <item quantity="one">%1$d person</item>
+        <item quantity="other">%1$d people</item>
+    </plurals>
+    <!-- Title of dialog displayed when a user\'s join request is denied for call link entry -->
+    <string name="WebRtcCallActivity__join_request_denied">Join request denied</string>
+    <!-- Message of dialog displayed when a user\'s join request is denied for call link entry -->
+    <string name="WebRtcCallActivity__your_request_to_join_this_call_has_been_denied">Your request to join this call has been denied.</string>
+    <!-- Title of dialog displayed when a user is removed from a call link -->
+    <string name="WebRtcCallActivity__removed_from_call">Removed from call</string>
+    <!-- Message of dialog displayed when a user is removed from a call link -->
+    <string name="WebRtcCallActivity__someone_has_removed_you_from_the_call">Someone has removed you from the call.</string>
 
     <!-- WebRtcCallView -->
     <string name="WebRtcCallView__signal_call">Appel Signal</string>
@@ -1722,6 +1790,12 @@
     <string name="WebRtcCallView__reconnecting">Reconnexion…</string>
     <string name="WebRtcCallView__joining">Connexion…</string>
     <string name="WebRtcCallView__disconnected">L’application est déconnectée</string>
+    <!-- Utilized in the lobby before joining a call link -->
+    <string name="WebRtcCallView__signal_call_link">Signal call link</string>
+    <!-- Warning displayed when entering a call via a link -->
+    <string name="WebRtcCallView__anyone_who_joins">Anyone who joins this call via the link will see your name, photo, and phone number.</string>
+    <!-- Displayed on the call screen as the status when waiting to be let into a call link by an admin -->
+    <string name="WebRtcCallView__waiting_to_be_let_in">Waiting to be let in…</string>
 
     <string name="WebRtcCallView__signal_will_ring_s">Signal sonnera chez %1$s</string>
     <string name="WebRtcCallView__signal_will_ring_s_and_s">Signal sonnera chez %1$s et %2$s</string>
@@ -1846,6 +1920,10 @@
     <!--    During registration, if the user attempts (and fails) to register, we display this error message with a number of minutes timer they are allowed to try again.-->
     <string name="RegistrationActivity_rate_limited_to_try_again">Vous avez atteint le nombre maximal de tentatives d’inscription de ce numéro. Veuillez réessayer dans %1$s.</string>
     <string name="RegistrationActivity_unable_to_connect_to_service">Impossible de se connecter au service. Veuillez vérifier la connexion réseau et réessayer.</string>
+    <!-- A description text for an alert dialog where we do not or can not explain the error to the user. -->
+    <string name="RegistrationActivity_generic_error">Une erreur inattendue s’est produite.</string>
+    <!-- A description text for an alert dialog when the entered phone number is not eligible for a verification SMS. -->
+    <string name="RegistrationActivity_we_couldnt_send_you_a_verification_code">Nous n’avons pas pu vous envoyer un code de vérification par SMS. Demandez plutôt de recevoir votre code par appel vocal.</string>
     <!-- Generic error when the app is unable to request an SMS code for an unknown reason. -->
     <string name="RegistrationActivity_unable_to_request_verification_code">Demande de code de vérification impossible. Vérifiez votre connexion réseau puis réessayez.</string>
     <string name="RegistrationActivity_non_standard_number_format">Format de numéro non standard</string>
@@ -1864,6 +1942,10 @@
     <string name="RegistrationActivity_we_need_to_verify_that_youre_human">Nous devons confirmer que vous êtes un être humain.</string>
     <!-- An error shown when the request was valid, but due to an issue with a partner vendor, the server is unable to send an SMS code -->
     <string name="RegistrationActivity_external_service_error">Signal n’a pas pu envoyer le code SMS en raison d’une défaillance externe.</string>
+    <!-- Button label to trigger a phone call to provide the registration code, in lieu of an SMS code -->
+    <string name="RegistrationActivity_voice_call">Appel vocal</string>
+    <!-- Dialog button to cancel the pending action and return to the previous state. -->
+    <string name="RegistrationActivity_cancel">Annuler</string>
     <string name="RegistrationActivity_next">Suivant</string>
     <string name="RegistrationActivity_continue">Poursuivre</string>
     <string name="RegistrationActivity_take_privacy_with_you_be_yourself_in_every_message">La confidentialité dans votre poche.\nPour que chaque message reflète qui vous êtes.</string>
@@ -2120,6 +2202,14 @@
     <string name="VerifyIdentityActivity_signal_needs_the_camera_permission_in_order_to_scan_a_qr_code_but_it_has_been_permanently_denied">Signal a besoin de l’autorisation Appareil photo afin de lire un code QR, mais elle a été refusée définitivement. Veuillez accéder aux paramètres de l’appli, sélectionner Autorisations et activer Appareil photo.</string>
     <string name="VerifyIdentityActivity_unable_to_scan_qr_code_without_camera_permission">Impossible de lire le code QR sans l’autorisation Appareil photo</string>
     <string name="VerifyIdentityActivity_you_must_first_exchange_messages_in_order_to_view">Vous devez d’abord échanger des messages afin d’afficher le numéro de sécurité de %1$s.</string>
+    <!-- Dialog message explaining to user they must exchange messages first to create a safety number -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_message">Un numéro de sécurité sera créé pour cette personne après un premier échange de messages.</string>
+    <!-- Confirmation option for dialog explaining to user they must exchange messages first to create a safety number  -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_ok">OK</string>
+    <!-- Learn more option for dialog explaining to user they must exchange messages first to create a safety number  -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_learn_more">En savoir plus</string>
+    <!-- Confirmation button on scan result dialogs -->
+    <string name="VerifyDisplayFragment__scan_result_dialog_ok">OK</string>
 
     <!-- ViewOnceMessageActivity -->
   <!-- Removed by excludeNonTranslatables <string name="ViewOnceMessageActivity_video_duration" translatable="false">%1$02d:%2$02d</string> -->
@@ -2241,6 +2331,8 @@
     <string name="NotificationChannel_call_status">État de l’appel</string>
     <!-- Notification channel name for occasional alerts to the user. Will appear in the system notification settings as the title of this notification channel. -->
     <string name="NotificationChannel_critical_app_alerts">Alertes d’applications critiques</string>
+    <!-- Notification channel name for other notifications related to messages. Will appear in the system notification settings as the title of this notification channel. -->
+    <string name="NotificationChannel_additional_message_notifications">Notifications supplémentaires de messages</string>
 
     <!-- ProfileEditNameFragment -->
 
@@ -2299,7 +2391,8 @@
 
     <!-- WebRtcCallActivity -->
     <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone">Pour répondre à l’appel, accordez à Signal l’accès à votre microphone.</string>
-    <string name="WebRtcCallActivity_to_answer_the_call_from_s_give_signal_access_to_your_microphone">Pour répondre à l’appel de %1$s, accordez à Signal l’accès à votre microphone.</string>
+    <!-- Message shown in permission dialog when attempting to answer a video call without camera or microphone permissions already granted. -->
+    <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone_and_camera">Pour répondre à l’appel vidéo, veuillez autoriser Signal à accéder à votre micro et votre appareil photo.</string>
     <string name="WebRtcCallActivity_signal_requires_microphone_and_camera_permissions_in_order_to_make_or_receive_calls">Signal exige les autorisations Microphone et Appareil photo afin d’effectuer et de recevoir des appels, mais elles ont été refusées définitivement. Veuillez accéder au menu des paramètres des applis, sélectionner « Autorisations » et activer « Microphone » et « Appareil photo ».</string>
     <string name="WebRtcCallActivity__answered_on_a_linked_device">L’appel a été pris sur un appareil relié.</string>
     <string name="WebRtcCallActivity__declined_on_a_linked_device">L’appel a été refusé sur un appareil relié.</string>
@@ -2327,7 +2420,9 @@
     <string name="WebRtcAudioOutputToggle__speaker">Haut-parleur</string>
     <!-- Audio output option referring to an external audio device connected via wireless Bluetooth -->
     <string name="WebRtcAudioOutputToggle__bluetooth">Bluetooth</string>
-    <!-- Audio output option referring to an external headset connected via a 3.5mm headphone jack -->
+    <!-- Audio output option referring to a pair of headphones that do not contain a microphone connected via a 3.5mm headphone jack -->
+    <string name="WebRtcAudioOutputToggle__wired_headphones">Écouteurs filaires</string>
+    <!-- Audio output option referring to an external headset that contains a microphone connected via a 3.5mm headphone jack -->
     <string name="WebRtcAudioOutputToggle__wired_headset">Casque filaire</string>
     <!-- Audio output option referring to an external headset connected via a USB-C data cable -->
     <string name="WebRtcAudioOutputToggle__wired_headset_usb">Casque filaire (USB)</string>
@@ -2679,12 +2774,25 @@
 
     <!-- verify_display_fragment -->
     <string name="verify_display_fragment__to_verify_the_security_of_your_end_to_end_encryption_with_s"><![CDATA[Pour confirmer la sécurité de votre chiffrement de bout en bout avec %1$s, comparez les chiffres ci-dessous avec ceux de son appareil. Vous pouvez aussi lire le code sur son téléphone. <a href=\"https://signal.org/redirect/safety-numbers\">En apprendre davantage.</a>]]></string>
+    <!-- Explanation of how to verify the safety numbers. %s is replaced with the name of the other recipient -->
+    <string name="verify_display_fragment__pnp_verify_safety_numbers_explanation_with_s">Pour vérifier le cryptage de bout en bout avec %1$s, faites correspondre la carte de couleur ci-dessus avec leur appareil et comparez les chiffres. Si ces numéros ne correspondent pas, passez à l\'autre paire de numéros de sécurité. Une seule paire doit être associée.</string>
     <string name="verify_display_fragment__tap_to_scan">Touchez pour lire</string>
     <string name="verify_display_fragment__successful_match">Correspondance effective</string>
     <string name="verify_display_fragment__failed_to_verify_safety_number">Échec de la confirmation du numéro de sécurité.</string>
     <string name="verify_display_fragment__loading">Chargement…</string>
     <string name="verify_display_fragment__mark_as_verified">Marquer comme confirmé</string>
     <string name="verify_display_fragment__clear_verification">Annuler la confirmation</string>
+    <!-- Banner at top of safety numbers screen explaining that we\'re updating how safety numbers work. -->
+    <string name="verify_display_fragment__safety_numbers_are_updating_banner_no_learn_more">Les numéros de sécurité sont mis à jour.</string>
+
+    <!-- Title for dialog explaining for how safety numbers are transitioning to support usernames -->
+    <string name="PnpSafetyNumberEducationDialog__title">Modifications des numéros de sécurité</string>
+    <!-- Message for dialog explaining for how safety numbers are transitioning to support usernames -->
+    <string name="PnpSafetyNumberEducationDialog__body">Les numéros de sécurité sont mis à jour au cours d\'une période de transition afin d\'activer les prochaines fonctions de confidentialité de Signal.\n\nPour vérifier les numéros de sécurité, faites correspondre la carte de couleur avec l\'appareil de votre contact. Si ces numéros ne correspondent pas, passez à l\'autre paire de numéros de sécurité. Une seule paire doit être associée.</string>
+    <!-- Button for more information about the safety number changes. Takes user to support article -->
+    <string name="PnpSafetyNumberEducationDialog__help">Besoin d’aide ?</string>
+    <!-- Confirmation button for educating users about new safety number changes -->
+    <string name="PnpSafetyNumberEducationDialog__confirm">Compris</string>
 
     <!-- verify_identity -->
     <string name="verify_identity__share_safety_number">Partager le numéro de sécurité</string>
@@ -2763,6 +2871,14 @@
         <item>Dons et macarons</item>
         <item>Exportation de SMS</item>
     </string-array>
+    <!-- Subject of email when submitting debug logs to help debug slow notifications -->
+    <string name="DebugLogsPromptDialogFragment__signal_android_support_request">Signal Android Debug Log Submission</string>
+    <!-- Category to organize the support email sent -->
+    <string name="DebugLogsPromptDialogFragment__slow_notifications_category">Slow notifications</string>
+    <!-- Action to submit logs and take user to send an e-mail -->
+    <string name="DebugLogsPromptDialogFragment__submit">Submit</string>
+    <!-- Action to decline to submit logs -->
+    <string name="DebugLogsPromptDialogFragment__no_thanks">No thanks</string>
 
     <!-- ReactWithAnyEmojiBottomSheetDialogFragment -->
     <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">Ce message</string>
@@ -3042,7 +3158,7 @@
     <string name="PaymentsAllActivityFragment__received">Reçu</string>
 
     <string name="PaymentsHomeFragment__introducing_payments">Nous présentons les paiements (bêta)</string>
-    <string name="PaymentsHomeFragment__use_signal_to_send_and_receive">Utilisez Signal pour envoyer et recevoir des MobileCoin, une nouvelle monnaie numérique centrée sur la protection des renseignements personnels. Activez pour commencer.</string>
+    <string name="PaymentsHomeFragment__use_signal_to_send_and_receive">Utilisez Signal pour envoyer et recevoir des MobileCoin, une monnaie numérique visant à protéger vos données. Activez pour commencer.</string>
     <string name="PaymentsHomeFragment__activate_payments">Activer les paiements</string>
     <string name="PaymentsHomeFragment__activating_payments">Activation des paiements…</string>
     <string name="PaymentsHomeFragment__restore_payments_account">Restaurer un compte de paiements</string>
@@ -3326,6 +3442,8 @@
     <string name="conversation__menu_conversation_settings">Paramètres de la conversation</string>
     <string name="conversation__menu_add_shortcut">Ajouter à l’écran d’accueil</string>
     <string name="conversation__menu_create_bubble">Créer une bulle</string>
+    <!-- Overflow menu option that allows formatting of text -->
+    <string name="conversation__menu_format_text">Mettre en forme le texte</string>
 
     <!-- conversation_popup -->
     <string name="conversation_popup__menu_expand_popup">Étendre la fenêtre surgissante</string>
@@ -3393,38 +3511,13 @@
     <string name="new_conversation_activity__refresh">Actualiser</string>
     <!-- redphone_audio_popup_menu -->
 
-    <!-- Insights -->
-    <string name="Insights__percent">%</string>
-    <string name="Insights__title">Aperçu</string>
-    <string name="InsightsDashboardFragment__title">Aperçu</string>
-    <!-- Body text for a page describing how many signal messages you\'ve sent. The first placeholder represents the number of signal messages sent, and the second placeholder represents how many days have passed. -->
-    <string name="InsightsDashboardFragment__signal_protocol_automatically_protected">Le protocole Signal a protégé automatiquement %1$d %% de vos messages sortants au cours des %2$d derniers jours. Les conversations entre les utilisateurs de Signal sont toujours chiffrées de bout en bout.</string>
-    <string name="InsightsDashboardFragment__spread_the_word">Faites passer le mot</string>
-    <string name="InsightsDashboardFragment__not_enough_data">Pas assez de données</string>
-    <string name="InsightsDashboardFragment__your_insights_percentage_is_calculated_based_on">Votre pourcentage d’Aperçu est calculé d’après le nombre de messages sortants qui n’ont ni disparu ni été supprimés au cours des %1$d derniers jours.</string>
-    <!-- Label for a button that, when pressed, will begin a chat with a person whose name is showed on the screen. -->
-    <string name="InsightsDashboardFragment__start_a_conversation">Démarrer une conversation</string>
-    <string name="InsightsDashboardFragment__invite_your_contacts">Commencez à communiquer en toute sécurité et activez de nouvelles fonctions qui dépassent les limites des textos non chiffrés en invitant plus de contacts à se joindre à Signal.</string>
-    <string name="InsightsDashboardFragment__this_stat_was_generated_locally">Ces statistiques ont été générées localement sur votre appareil et ne peuvent être vues que par vous. Elles ne sont jamais transmises où que ce soit.</string>
-    <string name="InsightsDashboardFragment__encrypted_messages">Messages chiffrés</string>
-    <string name="InsightsDashboardFragment__cancel">Annuler</string>
-    <string name="InsightsDashboardFragment__send">Envoyer</string>
-    <string name="InsightsModalFragment__title">Nous présentons Aperçu</string>
-    <string name="InsightsModalFragment__description">Découvrez combien de vos messages sortants ont été envoyés de manière sécurisée, puis invitez rapidement de nouveaux contacts pour améliorer votre pourcentage Signal.</string>
-    <string name="InsightsModalFragment__view_insights">Visualiser Aperçu</string>
-
-    <string name="FirstInviteReminder__title">Inviter à Signal</string>
-    <string name="FirstInviteReminder__description">Vous pourriez augmenter le nombre de messages chiffrés que vous envoyez de %1$d %%</string>
-    <string name="SecondInviteReminder__title">Améliorez vos fonctionnalités Signal</string>
-    <string name="SecondInviteReminder__description">Inviter %1$s</string>
-    <string name="InsightsReminder__view_insights">Visualiser Aperçu</string>
-    <string name="InsightsReminder__invite">Inviter</string>
-
     <!-- Edit KBS Pin -->
 
     <!-- BaseKbsPinFragment -->
     <string name="BaseKbsPinFragment__next">Suivant</string>
+    <!-- Button label to prompt them to create a password ("PIN") using numbers and letters rather than only numbers. -->
     <string name="BaseKbsPinFragment__create_alphanumeric_pin">Créer un NIP alphanumérique</string>
+    <!-- Button label to prompt them to return to creating a numbers-only password ("PIN") -->
     <string name="BaseKbsPinFragment__create_numeric_pin">Créer un NIP numérique</string>
   <!-- Removed by excludeNonTranslatables <string name="BaseKbsPinFragment__learn_more_url" translatable="false">https://support.signal.org/hc/articles/360007059792</string> -->
 
@@ -3486,8 +3579,8 @@
     <string name="RegistrationLockFragment__enter_the_pin_you_created">Saisissez le NIP que vous avez créé pour votre compte. Il est différent de votre code de confirmation reçu par texto.</string>
     <!-- Info text shown above a pin entry text box describing what pin they should be entering. -->
     <string name="RegistrationLockFragment__enter_the_pin_you_created_for_your_account">Saisissez le PIN choisi pour votre compte.</string>
-    <string name="RegistrationLockFragment__enter_alphanumeric_pin">Saisissez un NIP alphanumérique</string>
-    <string name="RegistrationLockFragment__enter_numeric_pin">Saisissez un NIP numérique</string>
+    <!-- Button label to prompt the user to switch between an alphanumeric and numeric-only keyboards -->
+    <string name="RegistrationLockFragment__switch_keyboard">Changer de clavier</string>
     <string name="RegistrationLockFragment__incorrect_pin_try_again">Le NIP est erroné. Veuillez réessayer.</string>
     <string name="RegistrationLockFragment__forgot_pin">Avez-vous oublié votre NIP ?</string>
     <string name="RegistrationLockFragment__incorrect_pin">Le NIP est erroné</string>
@@ -3527,6 +3620,20 @@
     <string name="KbsMegaphone__create_a_pin">Créer un NIP</string>
     <string name="KbsMegaphone__pins_keep_information_thats_stored_with_signal_encrytped">Les NIP font en sorte que les informations sont enregistrées chiffrées dans Signal.</string>
     <string name="KbsMegaphone__create_pin">Créer un NIP</string>
+
+    <!-- CallNotificationBuilder -->
+    <!-- Displayed in a notification when a Signal voice call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_voice_call">Appel vocal Signal entrant</string>
+    <!-- Displayed in a notification when a Signal video call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_video_call">Appel vidéo Signal entrant</string>
+    <!-- Displayed in a notification when a Signal group call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_group_call">Appel de groupe entrant sur Signal</string>
+    <!-- Displayed in a notification when a Signal voice call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_voice_call">Appel vocal Signal en cours</string>
+    <!-- Displayed in a notification when a Signal video call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_video_call">Appel vidéo Signal en cours</string>
+    <!-- Displayed in a notification when a Signal group call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_group_call">Appel de groupe Signal en cours</string>
 
     <!-- transport_selection_list_item -->
     <string name="transport_selection_list_item__transport_icon">Icône de transport</string>
@@ -5855,7 +5962,7 @@
     <!-- Title for screen describing that sms support is going to be removed soon -->
     <string name="SmsRemoval_title_going_away">Fin de la prise en charge des SMS</string>
     <!-- Bullet point message shown on describing screen as first bullet why sms is being removed, placeholder with be date of removal (e.g., March 21st) -->
-    <string name="SmsRemoval_info_bullet_1_s">Les SMS ne seront plus pris en charge dans l’appli Signal à partir du %1$s.</string>
+    <string name="SmsRemoval_info_bullet_1">Les SMS ne seront bientôt plus pris en charge dans l\'appli Signal.</string>
     <!-- Bullet point message shown on describing screen as second bullet why sms is being removed -->
     <string name="SmsRemoval_info_bullet_2">Les messages SMS sont différents des messages Signal. <b>Cela n\'affecte pas la messagerie cryptée Signal qui continuera à fonctionner.</b></string>
     <!-- Bullet point message shown on describing screen as third bullet why sms is being removed -->
@@ -5886,6 +5993,8 @@
     <string name="TextFormatting_monospace">Monospace</string>
     <!-- Popup menu label for applying spoiler style -->
     <string name="TextFormatting_spoiler">Floutage</string>
+    <!-- Popup menu label for clearing applied formatting -->
+    <string name="TextFormatting_clear_formatting">Effacer la mise en forme</string>
 
     <!-- UsernameEducationFragment -->
     <!-- Continue button which takes the user to the add a username screen -->
@@ -5932,6 +6041,10 @@
     <string name="CallLogAdapter__d_s">(%1$d) %2$s</string>
     <!-- Status text on call links -->
     <string name="CallLogAdapter__call_link">Lien d’appel</string>
+    <!-- Accessibility description for the video call button -->
+    <string name="CallLogAdapter__start_a_video_call">Start a video call</string>
+    <!-- Accessibility description for the voice call button -->
+    <string name="CallLogAdapter__start_a_voice_call">Start a voice call</string>
 
     <!-- Call Log context menu -->
     <!-- Displayed as a context menu item to start a video call -->
@@ -5952,6 +6065,23 @@
     <string name="CallContextMenu__delete">Supprimer</string>
 
     <!-- Call Log Fragment -->
+    <!-- Displayed when deleting call history items -->
+    <string name="CallLogFragment__deleting">Suppression…</string>
+    <!-- Displayed in a toast when a deletion fails for an unknown reason -->
+    <string name="CallLogFragment__deletion_failed">Échec de la suppression.</string>
+    <!-- Displayed as message in error dialog when can\'t delete links -->
+    <plurals name="CallLogFragment__cant_delete_call_link">
+        <item quantity="one">Impossible de supprimer le lien. Veuillez vérifier votre connexion et réessayer.</item>
+        <item quantity="other">Impossible de supprimer tous les liens d’appels. Veuillez vérifier votre connexion et réessayer.</item>
+    </plurals>
+    <!-- Snackbar text after clearing the call history -->
+    <string name="CallLogFragment__cleared_call_history">Historique des appels effacé</string>
+    <!-- Dialog title to clear all call events -->
+    <string name="CallLogFragment__clear_call_history_question">Effacer l’historique des appels ?</string>
+    <!-- Dialog body to clear all call events -->
+    <string name="CallLogFragment__this_will_permanently_delete_all_call_history">Cette action supprimera l’historique des appels de manière permanente.</string>
+    <!-- Action bar menu item to delete all call events -->
+    <string name="CallLogFragment__clear_call_history">Effacer l’historique des appels</string>
     <!-- Action bar menu item to only display missed calls -->
     <string name="CallLogFragment__filter_missed_calls">Filtrer les appels manqués</string>
     <!-- Action bar menu item to clear missed call filter -->
@@ -5966,14 +6096,12 @@
     <string name="CallLogFragment__filtered_by_missed">Appel manqué filtré</string>
     <!-- Bottom bar option to select all call entries -->
     <string name="CallLogFragment__select_all">Tout sélectionner</string>
-    <!-- Bottom bar option to delete all selected call entries -->
+    <!-- Bottom bar option to delete all selected call entries and dialog action to confirm deletion -->
     <string name="CallLogFragment__delete">Supprimer</string>
     <plurals name="CallLogFragment__delete_d_calls">
         <item quantity="one">Supprimer %1$d appel ?</item>
         <item quantity="other">Supprimer %1$d appels ?</item>
     </plurals>
-    <!-- Positive action on multi-delete protection dialog -->
-    <string name="CallLogFragment__delete_for_me">Supprimer pour moi</string>
     <!-- Snackbar label after deleting call logs -->
     <plurals name="CallLogFragment__d_calls_deleted">
         <item quantity="one">%1$d appel supprimé</item>
@@ -6001,6 +6129,10 @@
     <string name="CallStateUpdatePopupWindow__mic_on">Micro activé</string>
     <!-- Displayed when the user turns off their mic -->
     <string name="CallStateUpdatePopupWindow__mic_off">Micro désactivé</string>
+    <!-- Displayed when the user turns on their speakerphone -->
+    <string name="CallStateUpdatePopupWindow__speaker_on">Haut-parleur activé</string>
+    <!-- Displayed when the user turns off their speakerphone -->
+    <string name="CallStateUpdatePopupWindow__speaker_off">Haut-parleur désactivé</string>
 
     <!-- Accessibility label describing the capture button on the camera screen -->
     <string name="CameraControls_capture_button_accessibility_label">Bouton Capture</string>
@@ -6022,6 +6154,16 @@
     <string name="CreateCallLink__create_a_call_link">Créer un lien d’appel</string>
     <!-- Call link creation item description on calls tab -->
     <string name="CreateCallLink__share_a_link_for">Partager le lien d’un appel Signal</string>
+
+    <!-- CallLinkInfoSheet -->
+    <!-- Sheet title -->
+    <string name="CallLinkInfoSheet__call_info">Call info</string>
+    <!-- Dialog title for removing or blocking participants -->
+    <string name="CallLinkInfoSheet__remove_s_from_the_call">Remove %1$s from the call?</string>
+    <!-- Dialog action to remove participant from the call -->
+    <string name="CallLinkInfoSheet__remove">Remove</string>
+    <!-- Dialog action to block participant from the call -->
+    <string name="CallLinkInfoSheet__block_from_call">Block from call</string>
 
     <!-- CreateCallLinkBottomSheetDialogFragment -->
     <!-- Fragment title -->
@@ -6065,6 +6207,15 @@
 
     <!-- Title shown at top of bottom sheet dialog for displaying a message\'s edit history -->
     <string name="EditMessageHistoryDialog_title">Historique des modifications</string>
+    <!-- Title of dialog shown alerting user that edit message is in beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_title">Version bêta de Signal uniquement</string>
+    <!-- Body of dialog shown alerting user that edit message is in beta only and only sent to beta users. -->
+    <string name="SendingEditMessageBetaOnlyDialog_body">La fonction permettant de modifier les messages est disponible pour les utilisateurs de la version bêta de Signal uniquement. Les modifications apportées à un message ne seront visibles que pour les personnes utilisant la dernière version bêta de Signal.</string>
+    <!-- Button to cancel sending edit message as it is beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_cancel">Annuler</string>
+    <!-- Button to continue sending edit message despite it being beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_send">Envoyer</string>
+
 
     <!-- CallLinkDetailsFragment -->
     <!-- Displayed in action bar at the top of the fragment -->
@@ -6113,6 +6264,27 @@
     <!-- Body of a dialog that is displayed when we experienced a network error when looking up a username. -->
     <string name="UsernameLinkSettings_qr_result_network_error">Une erreur réseau est survenue. Veuillez réessayer.</string>
 
+    <!-- PendingParticipantsView -->
+    <!-- Displayed in the popup card when a remote user attempts to join a call link -->
+    <string name="PendingParticipantsView__would_like_to_join">Would like to join…</string>
+    <!-- Displayed in a button on the popup card denoting that there are other pending requests to join a call link -->
+    <plurals name="PendingParticipantsView__plus_d_requests">
+        <item quantity="one">+%1$d request</item>
+        <item quantity="other">+%1$d requests</item>
+    </plurals>
+
+    <!-- PendingParticipantsBottomSheet -->
+    <!-- Title of the bottom sheet displaying requests to join the call link -->
+    <string name="PendingParticipantsBottomSheet__requests_to_join_this_call">Requests to join this call</string>
+    <!-- Subtitle of the bottom sheet denoting the total number of people waiting -->
+    <plurals name="PendingParticipantsBottomSheet__d_people_waiting">
+        <item quantity="one">%1$d person waiting</item>
+        <item quantity="other">%1$d people waiting</item>
+    </plurals>
+    <!-- Content description for rejecting a user -->
+    <string name="PendingParticipantsBottomSheet__reject">Reject</string>
+    <!-- Content desccription for confirming a user -->
+    <string name="PendingParticipantsBottomSheet__approve">Approve</string>
 
     <!-- EOF -->
 </resources>

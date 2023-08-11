@@ -52,14 +52,18 @@ import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientId
 import org.whispersystems.signalservice.api.groupsv2.DecryptedGroupUtil
 import org.whispersystems.signalservice.api.groupsv2.GroupChangeReconstruct
+import org.whispersystems.signalservice.api.groupsv2.findMemberByAci
+import org.whispersystems.signalservice.api.groupsv2.findPendingByServiceId
+import org.whispersystems.signalservice.api.groupsv2.findRequestingByAci
+import org.whispersystems.signalservice.api.groupsv2.toAciList
+import org.whispersystems.signalservice.api.groupsv2.toAciListWithUnknowns
 import org.whispersystems.signalservice.api.messages.SignalServiceAttachmentPointer
 import org.whispersystems.signalservice.api.push.DistributionId
 import org.whispersystems.signalservice.api.push.ServiceId
-import org.whispersystems.signalservice.api.util.UuidUtil
+import org.whispersystems.signalservice.api.push.ServiceId.ACI
 import java.io.Closeable
 import java.security.SecureRandom
 import java.util.Optional
-import java.util.UUID
 import java.util.stream.Collectors
 import javax.annotation.CheckReturnValue
 
@@ -369,7 +373,7 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
       FROM $TABLE_NAME          
       INNER JOIN ${MembershipTable.TABLE_NAME} ON ${MembershipTable.TABLE_NAME}.${MembershipTable.GROUP_ID} = $TABLE_NAME.$GROUP_ID
       INNER JOIN ${ThreadTable.TABLE_NAME} ON ${ThreadTable.TABLE_NAME}.${ThreadTable.RECIPIENT_ID} = $TABLE_NAME.$RECIPIENT_ID
-      WHERE $ACTIVE = 1 AND ${MembershipTable.TABLE_NAME}.${MembershipTable.RECIPIENT_ID} IN (${subquery.where})
+      WHERE $TABLE_NAME.$ACTIVE = 1 AND ${MembershipTable.TABLE_NAME}.${MembershipTable.RECIPIENT_ID} IN (${subquery.where})
       GROUP BY ${MembershipTable.TABLE_NAME}.${MembershipTable.GROUP_ID}
       ORDER BY $TITLE COLLATE NOCASE ASC
     """
@@ -407,10 +411,10 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
     val queryArgs: Array<String>
 
     if (includeInactive) {
-      query = "${membershipQuery.where} AND ($ACTIVE = ? OR $TABLE_NAME.$RECIPIENT_ID IN (SELECT ${ThreadTable.RECIPIENT_ID} FROM ${ThreadTable.TABLE_NAME}))"
+      query = "${membershipQuery.where} AND ($TABLE_NAME.$ACTIVE = ? OR $TABLE_NAME.$RECIPIENT_ID IN (SELECT ${ThreadTable.RECIPIENT_ID} FROM ${ThreadTable.TABLE_NAME} WHERE ${ThreadTable.TABLE_NAME}.${ThreadTable.ACTIVE} = 1))"
       queryArgs = membershipQuery.whereArgs + buildArgs(1)
     } else {
-      query = "${membershipQuery.where} AND $ACTIVE = ?"
+      query = "${membershipQuery.where} AND $TABLE_NAME.$ACTIVE = ?"
       queryArgs = membershipQuery.whereArgs + buildArgs(1)
     }
 
@@ -464,10 +468,10 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
     val caseInsensitiveQuery = buildCaseInsensitiveGlobPattern(inputQuery)
 
     if (includeInactive) {
-      query = "$TITLE GLOB ? AND ($ACTIVE = ? OR $TABLE_NAME.$RECIPIENT_ID IN (SELECT ${ThreadTable.RECIPIENT_ID} FROM ${ThreadTable.TABLE_NAME}))"
+      query = "$TITLE GLOB ? AND ($TABLE_NAME.$ACTIVE = ? OR $TABLE_NAME.$RECIPIENT_ID IN (SELECT ${ThreadTable.RECIPIENT_ID} FROM ${ThreadTable.TABLE_NAME} WHERE ${ThreadTable.TABLE_NAME}.${ThreadTable.ACTIVE} = 1))"
       queryArgs = buildArgs(caseInsensitiveQuery, 1)
     } else {
-      query = "$TITLE GLOB ? AND $ACTIVE = ?"
+      query = "$TITLE GLOB ? AND $TABLE_NAME.$ACTIVE = ?"
       queryArgs = buildArgs(caseInsensitiveQuery, 1)
     }
 
@@ -590,7 +594,7 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
     }
 
     if (!includeInactive) {
-      query += " AND $ACTIVE = ?"
+      query += " AND $TABLE_NAME.$ACTIVE = ?"
       args = appendArg(args, "1")
     }
 
@@ -860,8 +864,8 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
     writableDatabase.withinTransaction { db ->
       val record = getGroup(groupIdV1).get()
 
-      val newMembers: MutableList<RecipientId> = DecryptedGroupUtil.membersToUuidList(decryptedGroup.membersList).toRecipientIds()
-      val pendingMembers: List<RecipientId> = DecryptedGroupUtil.pendingToUuidList(decryptedGroup.pendingMembersList).toRecipientIds()
+      val newMembers: MutableList<RecipientId> = decryptedGroup.membersList.toAciList().toRecipientIds()
+      val pendingMembers: List<RecipientId> = DecryptedGroupUtil.pendingToServiceIdList(decryptedGroup.pendingMembersList).toRecipientIds()
       newMembers.addAll(pendingMembers)
 
       val droppedMembers: List<RecipientId> = SetUtil.difference(record.members, newMembers).toList()
@@ -914,11 +918,11 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
 
       val change = GroupChangeReconstruct.reconstructGroupChange(existingGroup.get().requireV2GroupProperties().decryptedGroup, decryptedGroup)
 
-      val addedMembers: Set<RecipientId> = DecryptedGroupUtil.membersToUuidList(change.newMembersList).toRecipientIds().toSet()
-      val removedMembers: Set<RecipientId> = DecryptedGroupUtil.removedMembersUuidList(change).toRecipientIds().toSet()
-      val addedInvites: Set<RecipientId> = DecryptedGroupUtil.pendingToUuidList(change.newPendingMembersList).toRecipientIds().toSet()
-      val removedInvites: Set<RecipientId> = DecryptedGroupUtil.removedPendingMembersUuidList(change).toRecipientIds().toSet()
-      val acceptedInvites: Set<RecipientId> = DecryptedGroupUtil.membersToUuidList(change.promotePendingMembersList).toRecipientIds().toSet()
+      val addedMembers: Set<RecipientId> = change.newMembersList.toAciList().toRecipientIds().toSet()
+      val removedMembers: Set<RecipientId> = DecryptedGroupUtil.removedMembersServiceIdList(change).toRecipientIds().toSet()
+      val addedInvites: Set<RecipientId> = DecryptedGroupUtil.pendingToServiceIdList(change.newPendingMembersList).toRecipientIds().toSet()
+      val removedInvites: Set<RecipientId> = DecryptedGroupUtil.removedPendingMembersServiceIdList(change).toRecipientIds().toSet()
+      val acceptedInvites: Set<RecipientId> = change.promotePendingMembersList.toAciList().toRecipientIds().toSet()
 
       unmigratedV1Members -= addedMembers
       unmigratedV1Members -= removedMembers
@@ -933,7 +937,7 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
 
     if (existingGroup.isPresent && existingGroup.get().isV2Group) {
       val change = GroupChangeReconstruct.reconstructGroupChange(existingGroup.get().requireV2GroupProperties().decryptedGroup, decryptedGroup)
-      val removed: List<UUID> = DecryptedGroupUtil.removedMembersUuidList(change)
+      val removed: List<ServiceId> = DecryptedGroupUtil.removedMembersServiceIdList(change)
 
       if (removed.isNotEmpty()) {
         val distributionId = existingGroup.get().distributionId!!
@@ -1207,15 +1211,15 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
       DecryptedGroup.parseFrom(decryptedGroupBytes)
     }
 
-    val bannedMembers: Set<UUID> by lazy {
-      DecryptedGroupUtil.bannedMembersToUuidSet(decryptedGroup.bannedMembersList)
+    val bannedMembers: Set<ServiceId> by lazy {
+      DecryptedGroupUtil.bannedMembersToServiceIdSet(decryptedGroup.bannedMembersList)
     }
 
     fun isAdmin(recipient: Recipient): Boolean {
-      val serviceId = recipient.serviceId
+      val aci = recipient.aci
 
-      return if (serviceId.isPresent) {
-        DecryptedGroupUtil.findMemberByUuid(decryptedGroup.membersList, serviceId.get().uuid())
+      return if (aci.isPresent) {
+        decryptedGroup.membersList.findMemberByAci(aci.get())
           .map { it.role == Member.Role.ADMINISTRATOR }
           .orElse(false)
       } else {
@@ -1227,27 +1231,32 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
       return members.stream().filter { recipient: Recipient -> isAdmin(recipient) }.collect(Collectors.toList())
     }
 
-    fun memberLevel(serviceId: Optional<ServiceId>): MemberLevel {
-      if (!serviceId.isPresent) {
+    fun memberLevel(serviceIdOptional: Optional<ServiceId>): MemberLevel {
+      if (serviceIdOptional.isEmpty) {
         return MemberLevel.NOT_A_MEMBER
       }
 
-      var memberLevel: Optional<MemberLevel> = DecryptedGroupUtil.findMemberByUuid(decryptedGroup.membersList, serviceId.get().uuid())
-        .map { member ->
-          if (member.role == Member.Role.ADMINISTRATOR) {
-            MemberLevel.ADMINISTRATOR
-          } else {
-            MemberLevel.FULL_MEMBER
-          }
-        }
+      val serviceId: ServiceId = serviceIdOptional.get()
+      var memberLevel: Optional<MemberLevel> = Optional.empty()
 
-      if (memberLevel.isAbsent()) {
-        memberLevel = DecryptedGroupUtil.findPendingByUuid(decryptedGroup.pendingMembersList, serviceId.get().uuid())
-          .map { MemberLevel.PENDING_MEMBER }
+      if (serviceId is ACI) {
+        memberLevel = decryptedGroup.membersList.findMemberByAci(serviceId)
+          .map { member ->
+            if (member.role == Member.Role.ADMINISTRATOR) {
+              MemberLevel.ADMINISTRATOR
+            } else {
+              MemberLevel.FULL_MEMBER
+            }
+          }
       }
 
       if (memberLevel.isAbsent()) {
-        memberLevel = DecryptedGroupUtil.findRequestingByUuid(decryptedGroup.requestingMembersList, serviceId.get().uuid())
+        memberLevel = decryptedGroup.pendingMembersList.findPendingByServiceId(serviceId)
+          .map { MemberLevel.PENDING_MEMBER }
+      }
+
+      if (memberLevel.isAbsent() && serviceId is ACI) {
+        memberLevel = decryptedGroup.requestingMembersList.findRequestingByAci(serviceId)
           .map { _ -> MemberLevel.REQUESTING_MEMBER }
       }
 
@@ -1264,26 +1273,26 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
 
     fun getMemberRecipientIds(memberSet: MemberSet): List<RecipientId> {
       val includeSelf = memberSet.includeSelf
-      val selfUuid = SignalStore.account().requireAci().uuid()
+      val selfAci = SignalStore.account().requireAci()
       val recipients: MutableList<RecipientId> = ArrayList(decryptedGroup.membersCount + decryptedGroup.pendingMembersCount)
 
       var unknownMembers = 0
       var unknownPending = 0
 
-      for (uuid in DecryptedGroupUtil.toUuidList(decryptedGroup.membersList)) {
-        if (UuidUtil.UNKNOWN_UUID == uuid) {
+      for (aci in decryptedGroup.membersList.toAciListWithUnknowns()) {
+        if (aci.isUnknown) {
           unknownMembers++
-        } else if (includeSelf || selfUuid != uuid) {
-          recipients += RecipientId.from(ServiceId.from(uuid))
+        } else if (includeSelf || selfAci != aci) {
+          recipients += RecipientId.from(aci)
         }
       }
 
       if (memberSet.includePending) {
-        for (uuid in DecryptedGroupUtil.pendingToUuidList(decryptedGroup.pendingMembersList)) {
-          if (UuidUtil.UNKNOWN_UUID == uuid) {
+        for (serviceId in DecryptedGroupUtil.pendingToServiceIdList(decryptedGroup.pendingMembersList)) {
+          if (serviceId.isUnknown) {
             unknownPending++
-          } else if (includeSelf || selfUuid != uuid) {
-            recipients += RecipientId.from(ServiceId.from(uuid))
+          } else if (includeSelf || selfAci != serviceId) {
+            recipients += RecipientId.from(serviceId)
           }
         }
       }
@@ -1293,6 +1302,16 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
       }
 
       return recipients
+    }
+
+    fun getMemberServiceIds(): List<ServiceId> {
+      return decryptedGroup
+        .membersList
+        .asSequence()
+        .map { ACI.parseOrNull(it.aciBytes) }
+        .filterNotNull()
+        .sortedBy { it.toString() }
+        .toList()
     }
   }
 
@@ -1313,7 +1332,7 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
         ) AS active_timestamp 
       FROM $TABLE_NAME INNER JOIN ${ThreadTable.TABLE_NAME} ON ${ThreadTable.TABLE_NAME}.${ThreadTable.RECIPIENT_ID} = $TABLE_NAME.$RECIPIENT_ID 
       WHERE 
-        $ACTIVE = 1 AND 
+        $TABLE_NAME.$ACTIVE = 1 AND 
         (
           $SHOW_AS_STORY_STATE = ${ShowAsStoryState.ALWAYS.code} OR 
           (
@@ -1365,12 +1384,12 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
   private fun gv2GroupActive(decryptedGroup: DecryptedGroup): Boolean {
     val aci = SignalStore.account().requireAci()
 
-    return DecryptedGroupUtil.findMemberByUuid(decryptedGroup.membersList, aci.uuid()).isPresent ||
-      DecryptedGroupUtil.findPendingByUuid(decryptedGroup.pendingMembersList, aci.uuid()).isPresent
+    return decryptedGroup.membersList.findMemberByAci(aci).isPresent ||
+      DecryptedGroupUtil.findPendingByServiceId(decryptedGroup.pendingMembersList, aci).isPresent
   }
 
-  private fun List<UUID>.toRecipientIds(): MutableList<RecipientId> {
-    return uuidsToRecipientIds(this)
+  private fun List<ServiceId>.toRecipientIds(): MutableList<RecipientId> {
+    return serviceIdsToRecipientIds(this.asSequence())
   }
 
   private fun Collection<RecipientId>.serialize(): String {
@@ -1386,15 +1405,14 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
     }
   }
 
-  private fun uuidsToRecipientIds(uuids: List<UUID>): MutableList<RecipientId> {
-    return uuids
-      .asSequence()
-      .map { uuid ->
-        if (uuid == UuidUtil.UNKNOWN_UUID) {
+  private fun serviceIdsToRecipientIds(serviceIds: Sequence<ServiceId>): MutableList<RecipientId> {
+    return serviceIds
+      .map { serviceId ->
+        if (serviceId.isUnknown) {
           Log.w(TAG, "Saw an unknown UUID when mapping to RecipientIds!")
           null
         } else {
-          val id = RecipientId.from(ServiceId.from(uuid))
+          val id = RecipientId.from(serviceId)
           val remapped = RemappedRecords.getInstance().getRecipient(id)
           if (remapped.isPresent) {
             Log.w(TAG, "Saw that $id remapped to $remapped. Using the mapping.")
@@ -1410,8 +1428,7 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
   }
 
   private fun getV2GroupMembers(decryptedGroup: DecryptedGroup, shouldRetry: Boolean): List<RecipientId> {
-    val uuids: List<UUID> = DecryptedGroupUtil.membersToUuidList(decryptedGroup.membersList)
-    val ids: List<RecipientId> = uuidsToRecipientIds(uuids)
+    val ids: List<RecipientId> = decryptedGroup.membersList.toAciList().toRecipientIds()
 
     return if (RemappedRecords.getInstance().areAnyRemapped(ids)) {
       if (shouldRetry) {
@@ -1428,7 +1445,7 @@ class GroupTable(context: Context?, databaseHelper: SignalDatabase?) : DatabaseT
   }
 
   enum class MemberSet(val includeSelf: Boolean, val includePending: Boolean) {
-    FULL_MEMBERS_INCLUDING_SELF(true, false), FULL_MEMBERS_EXCLUDING_SELF(false, false), FULL_MEMBERS_AND_PENDING_INCLUDING_SELF(true, true), FULL_MEMBERS_AND_PENDING_EXCLUDING_SELF(false, true);
+    FULL_MEMBERS_INCLUDING_SELF(true, false), FULL_MEMBERS_EXCLUDING_SELF(false, false), FULL_MEMBERS_AND_PENDING_INCLUDING_SELF(true, true), FULL_MEMBERS_AND_PENDING_EXCLUDING_SELF(false, true)
   }
 
   /**

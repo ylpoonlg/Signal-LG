@@ -106,6 +106,10 @@
     <!-- BackgroundMessageRetriever -->
     <string name="BackgroundMessageRetriever_checking_for_messages">در حال بررسی موجود بودن پیام‌ها…</string>
 
+    <!-- Fcm notifications -->
+    <!-- Notification we show when there may be messages for you, but we cannot connect to the server to check -->
+    <string name="FcmFetchManager__you_may_have_messages">پیام‌ جدید دارید</string>
+
     <!-- BlockedUsersActivity -->
     <string name="BlockedUsersActivity__blocked_users">کاربران مسدود شده</string>
     <string name="BlockedUsersActivity__add_blocked_user">افزودن کاربر مسدود شده</string>
@@ -236,6 +240,12 @@
     <string name="CommunicationActions_call">تماس</string>
     <string name="CommunicationActions_insecure_call">تماس ناامن</string>
     <string name="CommunicationActions_carrier_charges_may_apply">هزینه‌های اپراتور ممکن است اعمال شود. شماره‌ای که می‌خواهید با آن تماس بگیرید در سیگنال ثبت‌نام نشده است. این تماس از طریق اپراتور تلفن همراه شما گرفته خواهد شد، نه از طریق اینترنت.</string>
+    <string name="CommunicationActions_cant_join_call">امکان پیوستن به تماس وجود ندارد</string>
+    <string name="CommunicationActions_this_call_link_is_no_longer_valid">این پیوند تماس دیگر معتبر نیست.</string>
+    <!-- Title on dialog when call link url cannot be parsed -->
+    <string name="CommunicationActions_invalid_link">Invalid link</string>
+    <!-- Message on dialog when call link url cannot be parsed -->
+    <string name="CommunicationActions_this_is_not_a_valid_call_link">This is not a valid call link. Make sure the entire link is intact and correct before attempting to join.</string>
 
     <!-- ConfirmIdentityDialog -->
 
@@ -316,6 +326,8 @@
     <string name="ConversationItem_cant_download_video_you_will_need_to_send_it_again">ویدیو بارگیری نمی‌شود. باید دوباره آن را ارسال کنید.</string>
     <!-- Display as the timestamp footer in a message bubble in a conversation when a message has been edited. The timestamp will go from \'11m\' to \'edited 11m\' -->
     <string name="ConversationItem_edited_timestamp_footer">ویرایش‌شده در %1$s</string>
+    <!-- Displayed if the link preview in the conversation item is for a call link call -->
+    <string name="ConversationItem__join_call">پیوستن به تماس</string>
 
     <!-- ConversationActivity -->
     <string name="ConversationActivity_add_attachment">افزودن پیوست</string>
@@ -334,6 +346,11 @@
     <plurals name="ConversationActivity_edit_message_too_old">
         <item quantity="one">ویرایش‌ها فقط %1$d ساعت بعد از ارسال این پیام قابل اعمال هستند.</item>
         <item quantity="other">ویرایش‌ها فقط %1$d ساعت بعد از ارسال این پیام قابل اعمال هستند.</item>
+    </plurals>
+    <!-- Warning dialog text shown to user if they try to edit a message too many times. Where %1$d is replaced with the number of edits -->
+    <plurals name="ConversationActivity_edit_message_too_many_edits">
+        <item quantity="one">فقط %1$d ویرایش قابل اعمال به این پیام است.</item>
+        <item quantity="other">فقط %1$d ویرایش قابل اعمال به این پیام است.</item>
     </plurals>
 
     <string name="ConversationActivity_invalid_recipient">گیرنده نامعتبر!</string>
@@ -503,6 +520,9 @@
     <string name="ConversationFragment__content_description_back_button">عقب رفتن.</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
     <string name="ConversationFragment__content_description_launch_signal_button">باز کردن سیگنال</string>
+    <!-- Dialog title shown when more than one contact in a group conversation is no longer verified -->
+    <string name="ConversationFragment__no_longer_verified">دیگر تأییدشده نیست</string>
+
     <!-- Label for a button displayed in conversation list to clear the chat filter -->
     <string name="ConversationListFragment__clear_filter">برداشتن فیلتر</string>
     <!-- Notice on chat list when no unread chats are available, centered on display -->
@@ -876,12 +896,19 @@
     <string name="LinkPreviewView_no_link_preview_available">هیچ پیش‌نمایش پیوند‌ی در دسترس نیست</string>
     <string name="LinkPreviewView_this_group_link_is_not_active">این پیوند گروه فعال نیست</string>
     <string name="LinkPreviewView_domain_date">%1$s · %2$s</string>
+    <!-- Description for Call Link url previews -->
+    <string name="LinkPreviewView__use_this_link_to_join_a_signal_call">از این پیوند برای پیوستن به یک تماس سیگنال استفاده کنید</string>
 
     <!-- LinkPreviewRepository -->
     <plurals name="LinkPreviewRepository_d_members">
         <item quantity="one">%1$d عضو</item>
         <item quantity="other">%1$d عضو</item>
     </plurals>
+
+    <!-- Title for dialog asking user to submit logs for debugging slow notification issues -->
+    <string name="PromptLogsSlowNotificationsDialog__title">We noticed notifications are delayed. Submit debug log?</string>
+    <!-- Message for dialog asking user to submit logs for debugging slow notification issues -->
+    <string name="PromptLogsSlowNotificationsDialog__message">Debug logs helps us diagnose and fix the issue, and do not contain identifying information.</string>
 
     <!-- PendingMembersActivity -->
     <string name="PendingMembersActivity_pending_group_invites">دعوت‌های در حال انتظار</string>
@@ -1104,7 +1131,7 @@
     <string name="ImageEditorHud_draw_to_blur_additional_faces_or_areas">برای محو کردن روی چهره‌ها و نواحی دیگر ترسیم کنید</string>
 
     <!-- InputPanel -->
-    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">برای ضبط کردن پیام صوتی ضربه زده و نگه دارید، برای ارسال رها کنید</string>
+    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">برای ضبط پیام ضربه زده و نگه دارید، برای ارسال رها کنید</string>
     <!-- Message shown if the user tries to switch a conversation from Signal to SMS -->
     <string name="InputPanel__sms_messaging_is_no_longer_supported_in_signal">پیامک دیگر در سیگنال پشتیبانی نمی‌شود.</string>
     <!-- When editing a message, label shown above the text input field in the composer -->
@@ -1210,10 +1237,7 @@
     <string name="MessageQuotesBottomSheet_replies">پاسخ‌ها</string>
 
     <!-- NotificationBarManager -->
-    <string name="NotificationBarManager_signal_call_in_progress">تماس سیگنال در جریان است</string>
     <string name="NotificationBarManager__establishing_signal_call">در حال برقراری تماس سیگنال</string>
-    <string name="NotificationBarManager__incoming_signal_call">تماس ورودی سیگنال</string>
-    <string name="NotificationBarManager__incoming_signal_group_call">تماس ورودی گروهی سیگنال</string>
     <!-- Temporary notification shown when starting the calling service -->
     <string name="NotificationBarManager__starting_signal_call_service">آغاز سرویس تماس سیگنال</string>
     <string name="NotificationBarManager__stopping_signal_call_service">در حال متوقف کردن سرویس تماس سیگنال</string>
@@ -1477,12 +1501,14 @@
 
     <!-- Group Calling update messages -->
     <string name="MessageRecord_s_started_a_group_call_s">%1$s یک تماس گروهی آغاز کرد · %2$s</string>
+    <string name="MessageRecord_you_started_a_group_call_s">شما یک تماس گروهی شروع کردید · %1$s</string>
     <string name="MessageRecord_s_is_in_the_group_call_s">%1$s در تماس گروهی است · %2$s</string>
     <string name="MessageRecord_you_are_in_the_group_call_s1">شما در تماس گروهی هستید · %1$s</string>
     <string name="MessageRecord_s_and_s_are_in_the_group_call_s1">%1$s و %2$s در تماس گروهی هستند · %3$s</string>
     <string name="MessageRecord_group_call_s">تماس گروهی · %1$s</string>
 
     <string name="MessageRecord_s_started_a_group_call">%1$s یک تماس گروهی آغاز کرد</string>
+    <string name="MessageRecord_you_started_a_group_call">شما یک تماس گروهی آغاز کردید</string>
     <string name="MessageRecord_s_is_in_the_group_call">%1$s در تماس گروهی است</string>
     <string name="MessageRecord_you_are_in_the_group_call">شما در تماس گروهی هستید</string>
     <string name="MessageRecord_s_and_s_are_in_the_group_call">%1$s و %2$s در تماس گروهی هستند</string>
@@ -1620,8 +1646,8 @@
         <item quantity="other">شما %1$d فرصت دیگر باقی دارید. اگر فرصت‌های شما تمام شوند، می‌توانید یک پین جدید بسازید. شما می‌توانید ثبت‌نام و از حساب کاربری خود استفاده کنید ولی برخی تنظیمات ذخیره‌شده مانند اطلاعات پروفایل خود را از دست می‌دهید.</item>
     </plurals>
     <string name="PinRestoreEntryFragment_signal_registration_need_help_with_pin">ثبت‌نام سیگنال - نیاز به راهنمایی در مورد پین اندروید</string>
-    <string name="PinRestoreEntryFragment_enter_alphanumeric_pin">وارد کردن پین حرفی‌عددی</string>
-    <string name="PinRestoreEntryFragment_enter_numeric_pin">پین عددی را وارد کنید</string>
+    <!-- Button label to prompt the user to switch between an alphanumeric and numeric-only keyboards -->
+    <string name="PinRestoreEntryFragment_switch_keyboard">تغییر صفحه‌کلید</string>
 
     <!-- PinRestoreLockedFragment -->
     <string name="PinRestoreLockedFragment_create_your_pin">پین خود را ایجاد کنید</string>
@@ -1710,6 +1736,48 @@
     <string name="WebRtcCallActivity__open_settings">بازکردن تنظیمات</string>
     <!-- Negative action for bluetooth warning dialog to dismiss dialog -->
     <string name="WebRtcCallActivity__not_now">حالا نه</string>
+    <!-- Title for dialog to approve all requests -->
+    <plurals name="WebRtcCallActivity__approve_d_requests">
+        <item quantity="one">Approve %1$d request?</item>
+        <item quantity="other">Approve %1$d requests?</item>
+    </plurals>
+    <!-- Positive action for call link approve all dialog -->
+    <string name="WebRtcCallActivity__approve_all">Approve all</string>
+    <!-- Message for dialog to approve all requests -->
+    <plurals name="WebRtcCallActivity__d_people_will_be_added_to_the_call">
+        <item quantity="one">%1$d person will be added to the call.</item>
+        <item quantity="other">%1$d people will be added to the call.</item>
+    </plurals>
+    <!-- Title for dialog to deny all requests -->
+    <plurals name="WebRtcCallActivity__deny_d_requests">
+        <item quantity="one">Deny %1$d request?</item>
+        <item quantity="other">Deny %1$d requests?</item>
+    </plurals>
+    <!-- Message for dialog to deny all requests -->
+    <plurals name="WebRtcCallActivity__d_people_will_not_be_added_to_the_call">
+        <item quantity="one">%1$d person will not be added to the call.</item>
+        <item quantity="other">%1$d people will not be added to the call.</item>
+    </plurals>
+    <!-- Positive action for call link deny all dialog -->
+    <string name="WebRtcCallActivity__deny_all">Deny all</string>
+    <!-- Displayed in call status when users are pending -->
+    <plurals name="WebRtcCallActivity__d_people_waiting">
+        <item quantity="one">%1$d person waiting</item>
+        <item quantity="other">%1$d people waiting</item>
+    </plurals>
+    <!-- Displayed in call status during call link when no users are pending -->
+    <plurals name="WebRtcCallActivity__d_people">
+        <item quantity="one">%1$d person</item>
+        <item quantity="other">%1$d people</item>
+    </plurals>
+    <!-- Title of dialog displayed when a user\'s join request is denied for call link entry -->
+    <string name="WebRtcCallActivity__join_request_denied">Join request denied</string>
+    <!-- Message of dialog displayed when a user\'s join request is denied for call link entry -->
+    <string name="WebRtcCallActivity__your_request_to_join_this_call_has_been_denied">Your request to join this call has been denied.</string>
+    <!-- Title of dialog displayed when a user is removed from a call link -->
+    <string name="WebRtcCallActivity__removed_from_call">Removed from call</string>
+    <!-- Message of dialog displayed when a user is removed from a call link -->
+    <string name="WebRtcCallActivity__someone_has_removed_you_from_the_call">Someone has removed you from the call.</string>
 
     <!-- WebRtcCallView -->
     <string name="WebRtcCallView__signal_call">تماس سیگنال</string>
@@ -1722,6 +1790,12 @@
     <string name="WebRtcCallView__reconnecting">در حال اتصال دوباره…</string>
     <string name="WebRtcCallView__joining">در حال پیوستن…</string>
     <string name="WebRtcCallView__disconnected">ارتباط قطع شد</string>
+    <!-- Utilized in the lobby before joining a call link -->
+    <string name="WebRtcCallView__signal_call_link">Signal call link</string>
+    <!-- Warning displayed when entering a call via a link -->
+    <string name="WebRtcCallView__anyone_who_joins">Anyone who joins this call via the link will see your name, photo, and phone number.</string>
+    <!-- Displayed on the call screen as the status when waiting to be let into a call link by an admin -->
+    <string name="WebRtcCallView__waiting_to_be_let_in">Waiting to be let in…</string>
 
     <string name="WebRtcCallView__signal_will_ring_s">سیگنال به %1$s زنگ خواهد زد</string>
     <string name="WebRtcCallView__signal_will_ring_s_and_s">سیگنال به %1$s و %2$s زنگ خواهد زد</string>
@@ -1846,6 +1920,10 @@
     <!--    During registration, if the user attempts (and fails) to register, we display this error message with a number of minutes timer they are allowed to try again.-->
     <string name="RegistrationActivity_rate_limited_to_try_again">دفعات تلاش‌تان برای ثبت این شماره بیش از حد مجاز بوده است. لطفاً بعد از %1$s دوباره تلاش کنید.</string>
     <string name="RegistrationActivity_unable_to_connect_to_service">اتصال به سرویس ممکن نیست. لطفاً اتصال شبکه را بررسی کرده و دوباره امتحان کنید.</string>
+    <!-- A description text for an alert dialog where we do not or can not explain the error to the user. -->
+    <string name="RegistrationActivity_generic_error">خطایی غیرمنتظره رخ داد.</string>
+    <!-- A description text for an alert dialog when the entered phone number is not eligible for a verification SMS. -->
+    <string name="RegistrationActivity_we_couldnt_send_you_a_verification_code">نتوانستیم کد تأییدی از طریق پیامک برایتان ارسال کنیم. به جای آن، دریافت کد از طریق تماس را امتحان کنید.</string>
     <!-- Generic error when the app is unable to request an SMS code for an unknown reason. -->
     <string name="RegistrationActivity_unable_to_request_verification_code">امکان درخواست کد تأیید وجود ندارد. لطفاً اتصال شبکه خود را بررسی و دوباره امتحان کنید.</string>
     <string name="RegistrationActivity_non_standard_number_format">قالب شمارهٔ غیر-استاندارد</string>
@@ -1864,6 +1942,10 @@
     <string name="RegistrationActivity_we_need_to_verify_that_youre_human">ما باید وارسی کنیم که شما یک انسان هستید.</string>
     <!-- An error shown when the request was valid, but due to an issue with a partner vendor, the server is unable to send an SMS code -->
     <string name="RegistrationActivity_external_service_error">به‌دلیل نقص خارجی، سیگنال قادر به ارسال کد پیامکی نبود.</string>
+    <!-- Button label to trigger a phone call to provide the registration code, in lieu of an SMS code -->
+    <string name="RegistrationActivity_voice_call">تماس صوتی</string>
+    <!-- Dialog button to cancel the pending action and return to the previous state. -->
+    <string name="RegistrationActivity_cancel">لغو</string>
     <string name="RegistrationActivity_next">بعدی</string>
     <string name="RegistrationActivity_continue">ادامه</string>
     <string name="RegistrationActivity_take_privacy_with_you_be_yourself_in_every_message">حریم خصوصی را همراه داشته باشید.\nدر هر پیام خودتان باشید.</string>
@@ -2120,6 +2202,14 @@
     <string name="VerifyIdentityActivity_signal_needs_the_camera_permission_in_order_to_scan_a_qr_code_but_it_has_been_permanently_denied">سیگنال جهت اسکن کردن کد QR نیاز به دسترسی به دوربین دارد، اما این دسترسی داده نشده است. لطفاً به بخش مدیریت برنامه‌ها در تنظیمات تلفن همراه خود رفته، در بخش «مجوزها» گزینهٔ «دوربین» را فعال کنید.</string>
     <string name="VerifyIdentityActivity_unable_to_scan_qr_code_without_camera_permission">اسکن کردن کد QR بدون مجوز دوربین ممکن نیست</string>
     <string name="VerifyIdentityActivity_you_must_first_exchange_messages_in_order_to_view">شما باید ابتدا چند پیام مبادله کنید تا شمارهٔ ایمنی %1$s را مشاهده کنید.</string>
+    <!-- Dialog message explaining to user they must exchange messages first to create a safety number -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_message">بعد از اینکه فردی با شما پیام رد و بدل کند، یک شمارۀ ایمنی برای او ایجاد خواهد شد.</string>
+    <!-- Confirmation option for dialog explaining to user they must exchange messages first to create a safety number  -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_ok">تأیید</string>
+    <!-- Learn more option for dialog explaining to user they must exchange messages first to create a safety number  -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_learn_more">اطلاعات بیشتر</string>
+    <!-- Confirmation button on scan result dialogs -->
+    <string name="VerifyDisplayFragment__scan_result_dialog_ok">تأیید</string>
 
     <!-- ViewOnceMessageActivity -->
   <!-- Removed by excludeNonTranslatables <string name="ViewOnceMessageActivity_video_duration" translatable="false">%1$02d:%2$02d</string> -->
@@ -2241,6 +2331,8 @@
     <string name="NotificationChannel_call_status">وضعیت تماس</string>
     <!-- Notification channel name for occasional alerts to the user. Will appear in the system notification settings as the title of this notification channel. -->
     <string name="NotificationChannel_critical_app_alerts">هشدارهای حیاتی برنامه</string>
+    <!-- Notification channel name for other notifications related to messages. Will appear in the system notification settings as the title of this notification channel. -->
+    <string name="NotificationChannel_additional_message_notifications">سایر اعلان‌های پیام</string>
 
     <!-- ProfileEditNameFragment -->
 
@@ -2299,7 +2391,8 @@
 
     <!-- WebRtcCallActivity -->
     <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone">برای پاسخ به تماس، به سیگنال دسترسی به میکروفون خود را بدهید.</string>
-    <string name="WebRtcCallActivity_to_answer_the_call_from_s_give_signal_access_to_your_microphone">برای پاسخ به تماس %1$s، به سیگنال اجازهٔ دسترسی به میکروفون خود را بدهید.</string>
+    <!-- Message shown in permission dialog when attempting to answer a video call without camera or microphone permissions already granted. -->
+    <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone_and_camera">برای پاسخ به تماس تصویری، دسترسی به میکروفون و دوربین را به سیگنال بدهید.</string>
     <string name="WebRtcCallActivity_signal_requires_microphone_and_camera_permissions_in_order_to_make_or_receive_calls">سیگنال برای برقراری و دریافت تماس نیاز مجوزها‌ی میکروفون و دوربین دارد، اما دسترسی به آن‌ها به طور دائم رد شده است. لطفاً به تنظیمات برنامه رفته، در قسمت «مجوزها»، «میکروفون» و «دوربین» را فعال کنید.</string>
     <string name="WebRtcCallActivity__answered_on_a_linked_device">برروی دستگاه پیوند داده شده پاسخ داده شد.</string>
     <string name="WebRtcCallActivity__declined_on_a_linked_device">بر روی دستگاه پیوند داده شده رد شد.</string>
@@ -2327,7 +2420,9 @@
     <string name="WebRtcAudioOutputToggle__speaker">بلندگو</string>
     <!-- Audio output option referring to an external audio device connected via wireless Bluetooth -->
     <string name="WebRtcAudioOutputToggle__bluetooth">بلوتوث</string>
-    <!-- Audio output option referring to an external headset connected via a 3.5mm headphone jack -->
+    <!-- Audio output option referring to a pair of headphones that do not contain a microphone connected via a 3.5mm headphone jack -->
+    <string name="WebRtcAudioOutputToggle__wired_headphones">هدفون‌های سیمی</string>
+    <!-- Audio output option referring to an external headset that contains a microphone connected via a 3.5mm headphone jack -->
     <string name="WebRtcAudioOutputToggle__wired_headset">هدست سیمی</string>
     <!-- Audio output option referring to an external headset connected via a USB-C data cable -->
     <string name="WebRtcAudioOutputToggle__wired_headset_usb">هدست سیمی (USB)</string>
@@ -2679,12 +2774,25 @@
 
     <!-- verify_display_fragment -->
     <string name="verify_display_fragment__to_verify_the_security_of_your_end_to_end_encryption_with_s"><![CDATA[ برای وارسی امنیت رمزگذاری سرتاسر خود با %1$s، ارقام بالا را با ارقام روی دستگاه آن‌ها مقایسه کنید. همچنین می‌توانید کد روی تلفن آن‌ها را اسکن کنید. <a href=\"https://signal.org/redirect/safety-numbers\">بیشتر یاد بگیرید.</a>]]></string>
+    <!-- Explanation of how to verify the safety numbers. %s is replaced with the name of the other recipient -->
+    <string name="verify_display_fragment__pnp_verify_safety_numbers_explanation_with_s">برای تأیید امنیت رمزگذاری سرتاسری خود با %1$s، کارت رنگی بالا را با دستگاه او تطبیق دهید و اعداد را مقایسه کنید. اگر رنگ و عددها مطابقت نداشتند، روی صفحه بکشید و جفت دیگری از شماره‌های ایمنی را امتحان کنید. فقط کافی است یک جفت شماره مطابقت داشته باشند.</string>
     <string name="verify_display_fragment__tap_to_scan">برای اسکن کردن ضربه بزنید</string>
     <string name="verify_display_fragment__successful_match">انطباق موفق</string>
     <string name="verify_display_fragment__failed_to_verify_safety_number">وارسی شمارهٔ ایمنی ناموفق بود</string>
     <string name="verify_display_fragment__loading">در حال بارگیری…</string>
     <string name="verify_display_fragment__mark_as_verified">علامت‌گذاری به عنوان وارسی شده</string>
     <string name="verify_display_fragment__clear_verification">پاک کردن وارسی</string>
+    <!-- Banner at top of safety numbers screen explaining that we\'re updating how safety numbers work. -->
+    <string name="verify_display_fragment__safety_numbers_are_updating_banner_no_learn_more">شماره‌های ایمنی در حال به‌روزرسانی هستند.</string>
+
+    <!-- Title for dialog explaining for how safety numbers are transitioning to support usernames -->
+    <string name="PnpSafetyNumberEducationDialog__title">تغییرات شماره‌های ایمنی</string>
+    <!-- Message for dialog explaining for how safety numbers are transitioning to support usernames -->
+    <string name="PnpSafetyNumberEducationDialog__body">برای فعال کردن قابلیت‌های حریم شخصی آتی در سیگنال، شماره‌های ایمنی در حال به‌روزرسانی در طول یک دوران گذار هستند.\n\nبرای تأیید شماره‌های ایمنی، کارت رنگی را با دستگاه مخاطب خود تطبیق دهید. اگر مطابقت نداشتند، روی صفحه بکشید و جفت دیگری از شماره‌های ایمنی را امتحان کنید. فقط کافی است یک جفت شماره مطابقت داشته باشند.</string>
+    <!-- Button for more information about the safety number changes. Takes user to support article -->
+    <string name="PnpSafetyNumberEducationDialog__help">به راهنمایی نیاز دارید؟</string>
+    <!-- Confirmation button for educating users about new safety number changes -->
+    <string name="PnpSafetyNumberEducationDialog__confirm">فهمیدم</string>
 
     <!-- verify_identity -->
     <string name="verify_identity__share_safety_number">اشتراک‌گذاری شمارهٔ ایمنی</string>
@@ -2763,6 +2871,14 @@
         <item>کمک‌های مالی و نشان‌ها</item>
         <item>صادر کردن پیامک</item>
     </string-array>
+    <!-- Subject of email when submitting debug logs to help debug slow notifications -->
+    <string name="DebugLogsPromptDialogFragment__signal_android_support_request">Signal Android Debug Log Submission</string>
+    <!-- Category to organize the support email sent -->
+    <string name="DebugLogsPromptDialogFragment__slow_notifications_category">Slow notifications</string>
+    <!-- Action to submit logs and take user to send an e-mail -->
+    <string name="DebugLogsPromptDialogFragment__submit">Submit</string>
+    <!-- Action to decline to submit logs -->
+    <string name="DebugLogsPromptDialogFragment__no_thanks">No thanks</string>
 
     <!-- ReactWithAnyEmojiBottomSheetDialogFragment -->
     <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">این پیام</string>
@@ -3326,6 +3442,8 @@
     <string name="conversation__menu_conversation_settings">تنظیمات گفتگو</string>
     <string name="conversation__menu_add_shortcut">افزودن به صفحهٔ اصلی</string>
     <string name="conversation__menu_create_bubble">ایجاد حباب</string>
+    <!-- Overflow menu option that allows formatting of text -->
+    <string name="conversation__menu_format_text">قالب‌بندی متن</string>
 
     <!-- conversation_popup -->
     <string name="conversation_popup__menu_expand_popup">گسترش پاپ آپ</string>
@@ -3393,38 +3511,13 @@
     <string name="new_conversation_activity__refresh">تازه‌سازی</string>
     <!-- redphone_audio_popup_menu -->
 
-    <!-- Insights -->
-    <string name="Insights__percent">٪</string>
-    <string name="Insights__title">بینش‌ها</string>
-    <string name="InsightsDashboardFragment__title">بینش‌ها</string>
-    <!-- Body text for a page describing how many signal messages you\'ve sent. The first placeholder represents the number of signal messages sent, and the second placeholder represents how many days have passed. -->
-    <string name="InsightsDashboardFragment__signal_protocol_automatically_protected">پروتکل سیگنال به‌طور خودکار از %1$d درصد از پیام‌های خروجی شما ظرف %2$d روز گذشته محافظت کرده است. گفتگو بین کاربران سیگنال همواره به طور سرتاسری رمزگذاری‌شده است.</string>
-    <string name="InsightsDashboardFragment__spread_the_word">خبر را انتشار دهید</string>
-    <string name="InsightsDashboardFragment__not_enough_data">داده‌ٔ کافی وجود ندارد</string>
-    <string name="InsightsDashboardFragment__your_insights_percentage_is_calculated_based_on">درصد بینش‌ها بر اساس تعداد پیام‌های خروجی در %1$d روز گذشته که پاک نشده‌اند یا ناپدید نشده‌اند محاسبه می‌شود.</string>
-    <!-- Label for a button that, when pressed, will begin a chat with a person whose name is showed on the screen. -->
-    <string name="InsightsDashboardFragment__start_a_conversation">شروع یک گفتگو</string>
-    <string name="InsightsDashboardFragment__invite_your_contacts">ارتباط امن برقرار کنید و قابلیت‌های جدید را که از محدودیت‌های پیامک رمزگذاری نشده فراتر می‌روند با دعوت مخاطبین بیشتر به سیگنال فعال کنید.</string>
-    <string name="InsightsDashboardFragment__this_stat_was_generated_locally">این آمارها به صورت محلی بر روی دستگاه شما تولید شده‌اند و فقط شما توانایی دیدن آن‌ها را دارید. آن‌ها هیچ‌گاه به جایی ارسال نمی‌شوند.</string>
-    <string name="InsightsDashboardFragment__encrypted_messages">پیام‌های رمزگذاری شده</string>
-    <string name="InsightsDashboardFragment__cancel">لغو</string>
-    <string name="InsightsDashboardFragment__send">ارسال</string>
-    <string name="InsightsModalFragment__title">معرفی بینش‌‌ها</string>
-    <string name="InsightsModalFragment__description">ببینید چه تعداد از پیام‌های خروجی شما به صورت امن ارسال شده‌اند، سپس درصد سیگنال خود را با دعوت مخاطبین جدید تقویت کنید.</string>
-    <string name="InsightsModalFragment__view_insights">مشاهدهٔ بینش‌ها</string>
-
-    <string name="FirstInviteReminder__title">دعوت به سیگنال</string>
-    <string name="FirstInviteReminder__description">شما می‌توانید پیام‌های رمزگذاری‌ شدهٔ ارسالی‌ خود را به میزان %1$d%% افزایش دهید</string>
-    <string name="SecondInviteReminder__title">سیگنال خود را تقویت کنید</string>
-    <string name="SecondInviteReminder__description">دعوت %1$s</string>
-    <string name="InsightsReminder__view_insights">مشاهدهٔ بینش‌ها</string>
-    <string name="InsightsReminder__invite">دعوت</string>
-
     <!-- Edit KBS Pin -->
 
     <!-- BaseKbsPinFragment -->
     <string name="BaseKbsPinFragment__next">بعدی</string>
+    <!-- Button label to prompt them to create a password ("PIN") using numbers and letters rather than only numbers. -->
     <string name="BaseKbsPinFragment__create_alphanumeric_pin">ایجاد پین حرفی‌عددی</string>
+    <!-- Button label to prompt them to return to creating a numbers-only password ("PIN") -->
     <string name="BaseKbsPinFragment__create_numeric_pin">ایجاد پین عددی</string>
   <!-- Removed by excludeNonTranslatables <string name="BaseKbsPinFragment__learn_more_url" translatable="false">https://support.signal.org/hc/articles/360007059792</string> -->
 
@@ -3486,8 +3579,8 @@
     <string name="RegistrationLockFragment__enter_the_pin_you_created">پین ایجاد شده برای حساب کاربری خود را وارد کنید. این کد با کد وارسی پیامکی شما تفاوت دارد.</string>
     <!-- Info text shown above a pin entry text box describing what pin they should be entering. -->
     <string name="RegistrationLockFragment__enter_the_pin_you_created_for_your_account">پینی که برای حسابتان ساخته‌اید را وارد کنید.</string>
-    <string name="RegistrationLockFragment__enter_alphanumeric_pin">وارد کردن پین حرفی‌عددی</string>
-    <string name="RegistrationLockFragment__enter_numeric_pin">پین عددی را وارد کنید</string>
+    <!-- Button label to prompt the user to switch between an alphanumeric and numeric-only keyboards -->
+    <string name="RegistrationLockFragment__switch_keyboard">تغییر صفحه‌کلید</string>
     <string name="RegistrationLockFragment__incorrect_pin_try_again">پین نادرست. دوباره تلاش کنید.</string>
     <string name="RegistrationLockFragment__forgot_pin">پین را فراموش کرده‌اید؟</string>
     <string name="RegistrationLockFragment__incorrect_pin">پین نادرست</string>
@@ -3527,6 +3620,20 @@
     <string name="KbsMegaphone__create_a_pin">یک پین جدید ایجاد کنید</string>
     <string name="KbsMegaphone__pins_keep_information_thats_stored_with_signal_encrytped">پین‌ها اطلاعات ذخیره شده در سیگنال را رمزگذاری می‌کنند.</string>
     <string name="KbsMegaphone__create_pin">ایجاد پین</string>
+
+    <!-- CallNotificationBuilder -->
+    <!-- Displayed in a notification when a Signal voice call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_voice_call">تماس صوتی ورودی سیگنال</string>
+    <!-- Displayed in a notification when a Signal video call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_video_call">تماس تصویری ورودی سیگنال</string>
+    <!-- Displayed in a notification when a Signal group call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_group_call">تماس ورودی گروهی سیگنال</string>
+    <!-- Displayed in a notification when a Signal voice call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_voice_call">تماس تصویری سیگنال در جریان است</string>
+    <!-- Displayed in a notification when a Signal video call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_video_call">تماس تصویری سیگنال در جریان است</string>
+    <!-- Displayed in a notification when a Signal group call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_group_call">تماس گروهی سیگنال در جریان است</string>
 
     <!-- transport_selection_list_item -->
     <string name="transport_selection_list_item__transport_icon">آیکون انتقال</string>
@@ -5855,7 +5962,7 @@
     <!-- Title for screen describing that sms support is going to be removed soon -->
     <string name="SmsRemoval_title_going_away">پشتیبانی پیامکی به‌زودی برداشته می‌شود</string>
     <!-- Bullet point message shown on describing screen as first bullet why sms is being removed, placeholder with be date of removal (e.g., March 21st) -->
-    <string name="SmsRemoval_info_bullet_1_s">ارسال پیامک از %1$s به بعد دیگر در برنامه سیگنال پشتیبانی نمی‌شود.</string>
+    <string name="SmsRemoval_info_bullet_1">به‌زودی دیگر از ارسال پیامک در برنامه سیگنال پشتیبانی نمی‌شود.</string>
     <!-- Bullet point message shown on describing screen as second bullet why sms is being removed -->
     <string name="SmsRemoval_info_bullet_2">پیامک‌ها با پیام‌های سیگنال تفاوت دارند. <b>این تغییر بر پیام‌های رمزگذاری‌شده سیگنال تأثیری نخواهد داشت و آن‌ها همچنان کار خواهند کرد.</b></string>
     <!-- Bullet point message shown on describing screen as third bullet why sms is being removed -->
@@ -5886,6 +5993,8 @@
     <string name="TextFormatting_monospace">تک‌فاصله</string>
     <!-- Popup menu label for applying spoiler style -->
     <string name="TextFormatting_spoiler">پنهان‌نوشته</string>
+    <!-- Popup menu label for clearing applied formatting -->
+    <string name="TextFormatting_clear_formatting">پاک کردن قالب‌بندی</string>
 
     <!-- UsernameEducationFragment -->
     <!-- Continue button which takes the user to the add a username screen -->
@@ -5932,6 +6041,10 @@
     <string name="CallLogAdapter__d_s">(%1$d) %2$s</string>
     <!-- Status text on call links -->
     <string name="CallLogAdapter__call_link">پیوند تماس</string>
+    <!-- Accessibility description for the video call button -->
+    <string name="CallLogAdapter__start_a_video_call">Start a video call</string>
+    <!-- Accessibility description for the voice call button -->
+    <string name="CallLogAdapter__start_a_voice_call">Start a voice call</string>
 
     <!-- Call Log context menu -->
     <!-- Displayed as a context menu item to start a video call -->
@@ -5952,6 +6065,23 @@
     <string name="CallContextMenu__delete">پاک کردن</string>
 
     <!-- Call Log Fragment -->
+    <!-- Displayed when deleting call history items -->
+    <string name="CallLogFragment__deleting">در حال پاک کردن…</string>
+    <!-- Displayed in a toast when a deletion fails for an unknown reason -->
+    <string name="CallLogFragment__deletion_failed">پاک نشد.</string>
+    <!-- Displayed as message in error dialog when can\'t delete links -->
+    <plurals name="CallLogFragment__cant_delete_call_link">
+        <item quantity="one">امکان پاک کردن پیوند وجود ندارد. اتصال خود را بررسی و دوباره امتحان کنید.</item>
+        <item quantity="other">همۀ پیوندهای تماس پاک نشدند. اتصال خود را بررسی و دوباره امتحان کنید.</item>
+    </plurals>
+    <!-- Snackbar text after clearing the call history -->
+    <string name="CallLogFragment__cleared_call_history">تاریخچه تماس پاک شد</string>
+    <!-- Dialog title to clear all call events -->
+    <string name="CallLogFragment__clear_call_history_question">تاریخچه تماس پاک شود؟</string>
+    <!-- Dialog body to clear all call events -->
+    <string name="CallLogFragment__this_will_permanently_delete_all_call_history">این کار همه تاریخچه تماس را به‌طور دائمی پاک خواهد کرد</string>
+    <!-- Action bar menu item to delete all call events -->
+    <string name="CallLogFragment__clear_call_history">پاک کردن تاریخچه تماس</string>
     <!-- Action bar menu item to only display missed calls -->
     <string name="CallLogFragment__filter_missed_calls">فیلتر کردن تماس‌های ازدست‌رفته</string>
     <!-- Action bar menu item to clear missed call filter -->
@@ -5966,14 +6096,12 @@
     <string name="CallLogFragment__filtered_by_missed">فیلترشده بر اساس ازدست‌رفته</string>
     <!-- Bottom bar option to select all call entries -->
     <string name="CallLogFragment__select_all">انتخاب همه</string>
-    <!-- Bottom bar option to delete all selected call entries -->
+    <!-- Bottom bar option to delete all selected call entries and dialog action to confirm deletion -->
     <string name="CallLogFragment__delete">پاک کردن</string>
     <plurals name="CallLogFragment__delete_d_calls">
         <item quantity="one">%1$d تماس پاک شود؟</item>
         <item quantity="other">%1$d تماس پاک شود؟</item>
     </plurals>
-    <!-- Positive action on multi-delete protection dialog -->
-    <string name="CallLogFragment__delete_for_me">پاک کردن برای من</string>
     <!-- Snackbar label after deleting call logs -->
     <plurals name="CallLogFragment__d_calls_deleted">
         <item quantity="one">%1$d تماس پاک شد</item>
@@ -6001,6 +6129,10 @@
     <string name="CallStateUpdatePopupWindow__mic_on">میکروفون روشن</string>
     <!-- Displayed when the user turns off their mic -->
     <string name="CallStateUpdatePopupWindow__mic_off">میکروفون خاموش</string>
+    <!-- Displayed when the user turns on their speakerphone -->
+    <string name="CallStateUpdatePopupWindow__speaker_on">بلندگو روشن شد</string>
+    <!-- Displayed when the user turns off their speakerphone -->
+    <string name="CallStateUpdatePopupWindow__speaker_off">بلندگو خاموش شد</string>
 
     <!-- Accessibility label describing the capture button on the camera screen -->
     <string name="CameraControls_capture_button_accessibility_label">دکمه ضبط</string>
@@ -6022,6 +6154,16 @@
     <string name="CreateCallLink__create_a_call_link">ایجاد یک پیوند تماس</string>
     <!-- Call link creation item description on calls tab -->
     <string name="CreateCallLink__share_a_link_for">اشتراک‌گذاری یک پیوند برای تماس سیگنال</string>
+
+    <!-- CallLinkInfoSheet -->
+    <!-- Sheet title -->
+    <string name="CallLinkInfoSheet__call_info">Call info</string>
+    <!-- Dialog title for removing or blocking participants -->
+    <string name="CallLinkInfoSheet__remove_s_from_the_call">Remove %1$s from the call?</string>
+    <!-- Dialog action to remove participant from the call -->
+    <string name="CallLinkInfoSheet__remove">Remove</string>
+    <!-- Dialog action to block participant from the call -->
+    <string name="CallLinkInfoSheet__block_from_call">Block from call</string>
 
     <!-- CreateCallLinkBottomSheetDialogFragment -->
     <!-- Fragment title -->
@@ -6065,6 +6207,15 @@
 
     <!-- Title shown at top of bottom sheet dialog for displaying a message\'s edit history -->
     <string name="EditMessageHistoryDialog_title">تاریخچه ویرایش</string>
+    <!-- Title of dialog shown alerting user that edit message is in beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_title">فقط سیگنال بتا</string>
+    <!-- Body of dialog shown alerting user that edit message is in beta only and only sent to beta users. -->
+    <string name="SendingEditMessageBetaOnlyDialog_body">ویرایش پیام‌ها فقط برای کاربران سیگنال بتا ممکن است. اگر پیامی را ویرایش کنید، فقط برای افرادی که از تازه‌ترین نسخۀ سیگنال بتا استفاده می‌کنند قابل مشاهده خواهد بود.</string>
+    <!-- Button to cancel sending edit message as it is beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_cancel">لغو</string>
+    <!-- Button to continue sending edit message despite it being beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_send">ارسال</string>
+
 
     <!-- CallLinkDetailsFragment -->
     <!-- Displayed in action bar at the top of the fragment -->
@@ -6113,6 +6264,27 @@
     <!-- Body of a dialog that is displayed when we experienced a network error when looking up a username. -->
     <string name="UsernameLinkSettings_qr_result_network_error">یک خطای شبکه رخ داد. لطفاً دوباره امتحان کنید.</string>
 
+    <!-- PendingParticipantsView -->
+    <!-- Displayed in the popup card when a remote user attempts to join a call link -->
+    <string name="PendingParticipantsView__would_like_to_join">Would like to join…</string>
+    <!-- Displayed in a button on the popup card denoting that there are other pending requests to join a call link -->
+    <plurals name="PendingParticipantsView__plus_d_requests">
+        <item quantity="one">+%1$d request</item>
+        <item quantity="other">+%1$d requests</item>
+    </plurals>
+
+    <!-- PendingParticipantsBottomSheet -->
+    <!-- Title of the bottom sheet displaying requests to join the call link -->
+    <string name="PendingParticipantsBottomSheet__requests_to_join_this_call">Requests to join this call</string>
+    <!-- Subtitle of the bottom sheet denoting the total number of people waiting -->
+    <plurals name="PendingParticipantsBottomSheet__d_people_waiting">
+        <item quantity="one">%1$d person waiting</item>
+        <item quantity="other">%1$d people waiting</item>
+    </plurals>
+    <!-- Content description for rejecting a user -->
+    <string name="PendingParticipantsBottomSheet__reject">Reject</string>
+    <!-- Content desccription for confirming a user -->
+    <string name="PendingParticipantsBottomSheet__approve">Approve</string>
 
     <!-- EOF -->
 </resources>

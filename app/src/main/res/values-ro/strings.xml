@@ -106,6 +106,10 @@
     <!-- BackgroundMessageRetriever -->
     <string name="BackgroundMessageRetriever_checking_for_messages">Se caută mesaje…</string>
 
+    <!-- Fcm notifications -->
+    <!-- Notification we show when there may be messages for you, but we cannot connect to the server to check -->
+    <string name="FcmFetchManager__you_may_have_messages">S-ar putea să ai mesaje noi</string>
+
     <!-- BlockedUsersActivity -->
     <string name="BlockedUsersActivity__blocked_users">Utilizatori blocați</string>
     <string name="BlockedUsersActivity__add_blocked_user">Adaugă un utilizator blocat</string>
@@ -237,6 +241,12 @@
     <string name="CommunicationActions_call">Apelează</string>
     <string name="CommunicationActions_insecure_call">Apel nesecurizat</string>
     <string name="CommunicationActions_carrier_charges_may_apply">Se pot percepe taxe de operator. Numărul apelat nu este înregistrat la Signal. Acest apel va fi plasat prin intermediul operatorului tău de telefonie mobilă, nu prin internet.</string>
+    <string name="CommunicationActions_cant_join_call">Nu se poate realiza alăturarea la apel</string>
+    <string name="CommunicationActions_this_call_link_is_no_longer_valid">Acest link de apel nu mai este valid.</string>
+    <!-- Title on dialog when call link url cannot be parsed -->
+    <string name="CommunicationActions_invalid_link">Invalid link</string>
+    <!-- Message on dialog when call link url cannot be parsed -->
+    <string name="CommunicationActions_this_is_not_a_valid_call_link">This is not a valid call link. Make sure the entire link is intact and correct before attempting to join.</string>
 
     <!-- ConfirmIdentityDialog -->
 
@@ -316,7 +326,9 @@
     <!-- Dialog error message shown when user can\'t download a their own video message via a linked device due to a permanent failure (e.g., unable to decrypt) -->
     <string name="ConversationItem_cant_download_video_you_will_need_to_send_it_again">Nu se poate descărca videoclipul. Va trebui să îl trimiți din nou.</string>
     <!-- Display as the timestamp footer in a message bubble in a conversation when a message has been edited. The timestamp will go from \'11m\' to \'edited 11m\' -->
-    <string name="ConversationItem_edited_timestamp_footer">editat la %1$s</string>
+    <string name="ConversationItem_edited_timestamp_footer">Editat la %1$s</string>
+    <!-- Displayed if the link preview in the conversation item is for a call link call -->
+    <string name="ConversationItem__join_call">Alătură-te apelului</string>
 
     <!-- ConversationActivity -->
     <string name="ConversationActivity_add_attachment">Adaugă atașament</string>
@@ -336,6 +348,12 @@
         <item quantity="one">Modificările pot fi aplicate numai în termen de %1$d oră de la momentul în care ați trimis acest mesaj.</item>
         <item quantity="few">Modificările pot fi aplicate numai în termen de %1$d ore de la momentul în care ai trimis acest mesaj.</item>
         <item quantity="other">Modificările pot fi aplicate numai în termen de %1$d de ore de la momentul în care ai trimis acest mesaj.</item>
+    </plurals>
+    <!-- Warning dialog text shown to user if they try to edit a message too many times. Where %1$d is replaced with the number of edits -->
+    <plurals name="ConversationActivity_edit_message_too_many_edits">
+        <item quantity="one">Numai %1$d modificare poate fi aplicată acestui mesaj.</item>
+        <item quantity="few">Numai %1$d modificări pot fi aplicate acestui mesaj.</item>
+        <item quantity="other">Numai %1$d de modificări pot fi aplicate acestui mesaj.</item>
     </plurals>
 
     <string name="ConversationActivity_invalid_recipient">Destinatar invalid!</string>
@@ -511,6 +529,9 @@
     <string name="ConversationFragment__content_description_back_button">Navighează înapoi.</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
     <string name="ConversationFragment__content_description_launch_signal_button">Deschide Signal</string>
+    <!-- Dialog title shown when more than one contact in a group conversation is no longer verified -->
+    <string name="ConversationFragment__no_longer_verified">Nu mai este verificat</string>
+
     <!-- Label for a button displayed in conversation list to clear the chat filter -->
     <string name="ConversationListFragment__clear_filter">Șterge filtru</string>
     <!-- Notice on chat list when no unread chats are available, centered on display -->
@@ -904,6 +925,8 @@
     <string name="LinkPreviewView_no_link_preview_available">Previzualizarea linkului nu este disponibilă</string>
     <string name="LinkPreviewView_this_group_link_is_not_active">Acest link de grup nu este activ</string>
     <string name="LinkPreviewView_domain_date">%1$s · %2$s</string>
+    <!-- Description for Call Link url previews -->
+    <string name="LinkPreviewView__use_this_link_to_join_a_signal_call">Folosește acest link pentru a te alătura unui Apel Signal</string>
 
     <!-- LinkPreviewRepository -->
     <plurals name="LinkPreviewRepository_d_members">
@@ -911,6 +934,11 @@
         <item quantity="few">%1$d membri</item>
         <item quantity="other">%1$d de membri</item>
     </plurals>
+
+    <!-- Title for dialog asking user to submit logs for debugging slow notification issues -->
+    <string name="PromptLogsSlowNotificationsDialog__title">We noticed notifications are delayed. Submit debug log?</string>
+    <!-- Message for dialog asking user to submit logs for debugging slow notification issues -->
+    <string name="PromptLogsSlowNotificationsDialog__message">Debug logs helps us diagnose and fix the issue, and do not contain identifying information.</string>
 
     <!-- PendingMembersActivity -->
     <string name="PendingMembersActivity_pending_group_invites">Invitații la grup în așteptare</string>
@@ -1141,7 +1169,7 @@
     <string name="ImageEditorHud_draw_to_blur_additional_faces_or_areas">Desenează pentru a estompa fețe sau zone adiționale</string>
 
     <!-- InputPanel -->
-    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">Atinge lung pentru a înregistra un mesaj vocal, eliberează pentru a-l trimite</string>
+    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">Atinge lung pentru mesaj vocal, eliberează și trimite</string>
     <!-- Message shown if the user tries to switch a conversation from Signal to SMS -->
     <string name="InputPanel__sms_messaging_is_no_longer_supported_in_signal">Mesajele SMS nu mai sunt acceptat în Signal.</string>
     <!-- When editing a message, label shown above the text input field in the composer -->
@@ -1253,10 +1281,7 @@
     <string name="MessageQuotesBottomSheet_replies">Răspunsuri</string>
 
     <!-- NotificationBarManager -->
-    <string name="NotificationBarManager_signal_call_in_progress">Apel Signal în curs</string>
     <string name="NotificationBarManager__establishing_signal_call">Se realizează un apel Signal</string>
-    <string name="NotificationBarManager__incoming_signal_call">Apel de intrare Signal</string>
-    <string name="NotificationBarManager__incoming_signal_group_call">Primire apel Signal de grup</string>
     <!-- Temporary notification shown when starting the calling service -->
     <string name="NotificationBarManager__starting_signal_call_service">Se inițializează serviciul de apel Signal</string>
     <string name="NotificationBarManager__stopping_signal_call_service">Se oprește serviciul de apel Signal</string>
@@ -1528,12 +1553,14 @@
 
     <!-- Group Calling update messages -->
     <string name="MessageRecord_s_started_a_group_call_s">%1$s a început un apel de grup · %2$s</string>
+    <string name="MessageRecord_you_started_a_group_call_s">Ai început un apel de grup · %1$s</string>
     <string name="MessageRecord_s_is_in_the_group_call_s">%1$s este în apelul de grup · %2$s</string>
     <string name="MessageRecord_you_are_in_the_group_call_s1">Ești în apelul de grup · %1$s</string>
     <string name="MessageRecord_s_and_s_are_in_the_group_call_s1">%1$s și %2$s sunt în apelul de grup · %3$s</string>
     <string name="MessageRecord_group_call_s">Apel de grup · %1$s</string>
 
     <string name="MessageRecord_s_started_a_group_call">%1$s a început un apel de grup</string>
+    <string name="MessageRecord_you_started_a_group_call">Ai început un apel de grup</string>
     <string name="MessageRecord_s_is_in_the_group_call">%1$s este în apelul de grup</string>
     <string name="MessageRecord_you_are_in_the_group_call">Ești în apelul de grup</string>
     <string name="MessageRecord_s_and_s_are_in_the_group_call">%1$s și %2$s sunt în apelul de grup</string>
@@ -1679,8 +1706,8 @@
         <item quantity="other">Mai ai %1$d de încercări rămase. Dacă rămâi fără încercări, poți crea un cod PIN nou. Poți înregistra și utiliza contul, dar vei pierde unele setări salvate, cum ar fi informațiile despre profil.</item>
     </plurals>
     <string name="PinRestoreEntryFragment_signal_registration_need_help_with_pin">Înregistrare Signal - Am nevoie de asistență pentru PIN Android</string>
-    <string name="PinRestoreEntryFragment_enter_alphanumeric_pin">Introdu un PIN alfanumeric</string>
-    <string name="PinRestoreEntryFragment_enter_numeric_pin">Introdu un PIN numeric</string>
+    <!-- Button label to prompt the user to switch between an alphanumeric and numeric-only keyboards -->
+    <string name="PinRestoreEntryFragment_switch_keyboard">Schimbă tastaturile</string>
 
     <!-- PinRestoreLockedFragment -->
     <string name="PinRestoreLockedFragment_create_your_pin">Creează-ți PIN-ul</string>
@@ -1769,6 +1796,54 @@
     <string name="WebRtcCallActivity__open_settings">Deschide setările</string>
     <!-- Negative action for bluetooth warning dialog to dismiss dialog -->
     <string name="WebRtcCallActivity__not_now">Nu acum</string>
+    <!-- Title for dialog to approve all requests -->
+    <plurals name="WebRtcCallActivity__approve_d_requests">
+        <item quantity="one">Approve %1$d request?</item>
+        <item quantity="few">Approve %1$d requests?</item>
+        <item quantity="other">Approve %1$d requests?</item>
+    </plurals>
+    <!-- Positive action for call link approve all dialog -->
+    <string name="WebRtcCallActivity__approve_all">Approve all</string>
+    <!-- Message for dialog to approve all requests -->
+    <plurals name="WebRtcCallActivity__d_people_will_be_added_to_the_call">
+        <item quantity="one">%1$d person will be added to the call.</item>
+        <item quantity="few">%1$d people will be added to the call.</item>
+        <item quantity="other">%1$d people will be added to the call.</item>
+    </plurals>
+    <!-- Title for dialog to deny all requests -->
+    <plurals name="WebRtcCallActivity__deny_d_requests">
+        <item quantity="one">Deny %1$d request?</item>
+        <item quantity="few">Deny %1$d requests?</item>
+        <item quantity="other">Deny %1$d requests?</item>
+    </plurals>
+    <!-- Message for dialog to deny all requests -->
+    <plurals name="WebRtcCallActivity__d_people_will_not_be_added_to_the_call">
+        <item quantity="one">%1$d person will not be added to the call.</item>
+        <item quantity="few">%1$d people will not be added to the call.</item>
+        <item quantity="other">%1$d people will not be added to the call.</item>
+    </plurals>
+    <!-- Positive action for call link deny all dialog -->
+    <string name="WebRtcCallActivity__deny_all">Deny all</string>
+    <!-- Displayed in call status when users are pending -->
+    <plurals name="WebRtcCallActivity__d_people_waiting">
+        <item quantity="one">%1$d person waiting</item>
+        <item quantity="few">%1$d people waiting</item>
+        <item quantity="other">%1$d people waiting</item>
+    </plurals>
+    <!-- Displayed in call status during call link when no users are pending -->
+    <plurals name="WebRtcCallActivity__d_people">
+        <item quantity="one">%1$d person</item>
+        <item quantity="few">%1$d people</item>
+        <item quantity="other">%1$d people</item>
+    </plurals>
+    <!-- Title of dialog displayed when a user\'s join request is denied for call link entry -->
+    <string name="WebRtcCallActivity__join_request_denied">Join request denied</string>
+    <!-- Message of dialog displayed when a user\'s join request is denied for call link entry -->
+    <string name="WebRtcCallActivity__your_request_to_join_this_call_has_been_denied">Your request to join this call has been denied.</string>
+    <!-- Title of dialog displayed when a user is removed from a call link -->
+    <string name="WebRtcCallActivity__removed_from_call">Removed from call</string>
+    <!-- Message of dialog displayed when a user is removed from a call link -->
+    <string name="WebRtcCallActivity__someone_has_removed_you_from_the_call">Someone has removed you from the call.</string>
 
     <!-- WebRtcCallView -->
     <string name="WebRtcCallView__signal_call">Apel Signal</string>
@@ -1781,6 +1856,12 @@
     <string name="WebRtcCallView__reconnecting">Se reconectează…</string>
     <string name="WebRtcCallView__joining">Se alătură…</string>
     <string name="WebRtcCallView__disconnected">Deconectat</string>
+    <!-- Utilized in the lobby before joining a call link -->
+    <string name="WebRtcCallView__signal_call_link">Signal call link</string>
+    <!-- Warning displayed when entering a call via a link -->
+    <string name="WebRtcCallView__anyone_who_joins">Anyone who joins this call via the link will see your name, photo, and phone number.</string>
+    <!-- Displayed on the call screen as the status when waiting to be let into a call link by an admin -->
+    <string name="WebRtcCallView__waiting_to_be_let_in">Waiting to be let in…</string>
 
     <string name="WebRtcCallView__signal_will_ring_s">Signal va suna pe %1$s</string>
     <string name="WebRtcCallView__signal_will_ring_s_and_s">Signal va suna pe %1$s și %2$s</string>
@@ -1911,6 +1992,10 @@
     <!--    During registration, if the user attempts (and fails) to register, we display this error message with a number of minutes timer they are allowed to try again.-->
     <string name="RegistrationActivity_rate_limited_to_try_again">Ai făcut prea multe încercări pentru înregistrarea acestui număr. Încearcă din nou în %1$s.</string>
     <string name="RegistrationActivity_unable_to_connect_to_service">Nu s-a putut realiza conexiunea la serviciu. Te rugăm verifică conexiunea la rețea și încearcă din nou.</string>
+    <!-- A description text for an alert dialog where we do not or can not explain the error to the user. -->
+    <string name="RegistrationActivity_generic_error">S-a petrecut o eroare neașteptată.</string>
+    <!-- A description text for an alert dialog when the entered phone number is not eligible for a verification SMS. -->
+    <string name="RegistrationActivity_we_couldnt_send_you_a_verification_code">Nu ți-am putut trimite un cod de verificare prin SMS. Încearcă să primești codul prin apel vocal.</string>
     <!-- Generic error when the app is unable to request an SMS code for an unknown reason. -->
     <string name="RegistrationActivity_unable_to_request_verification_code">Nu s-a putut cere un cod de verificare. Te rugăm să verifici conexiunea și să încerci din nou.</string>
     <string name="RegistrationActivity_non_standard_number_format">Număr cu format non-standard</string>
@@ -1930,6 +2015,10 @@
     <string name="RegistrationActivity_we_need_to_verify_that_youre_human">Trebuie să verificăm dacă ești om.</string>
     <!-- An error shown when the request was valid, but due to an issue with a partner vendor, the server is unable to send an SMS code -->
     <string name="RegistrationActivity_external_service_error">Signal nu a putut să trimită un cod SMS din cauza unui eșec extern.</string>
+    <!-- Button label to trigger a phone call to provide the registration code, in lieu of an SMS code -->
+    <string name="RegistrationActivity_voice_call">Apel vocal</string>
+    <!-- Dialog button to cancel the pending action and return to the previous state. -->
+    <string name="RegistrationActivity_cancel">Anulează</string>
     <string name="RegistrationActivity_next">Următorul</string>
     <string name="RegistrationActivity_continue">Continuare</string>
     <string name="RegistrationActivity_take_privacy_with_you_be_yourself_in_every_message">Ia-ți intimitatea cu tine.\nFii tu însuți în fiecare mesaj.</string>
@@ -2187,6 +2276,14 @@
     <string name="VerifyIdentityActivity_signal_needs_the_camera_permission_in_order_to_scan_a_qr_code_but_it_has_been_permanently_denied">Signal are nevoie de permisiunea pentru Cameră pentru a scana un cod QR dar i-a fost refuzat accesul permanent. Te rugăm mergi în meniul de setări al aplicației, selectează \"Permisiuni\" și activează \"Camera\".</string>
     <string name="VerifyIdentityActivity_unable_to_scan_qr_code_without_camera_permission">Codul QR nu poate fi scanat fără permisiunea pentru Cameră</string>
     <string name="VerifyIdentityActivity_you_must_first_exchange_messages_in_order_to_view">Mai întâi trebuie să faci schimb de mesaje pentru a vizualiza numărul de siguranță al lui %1$s</string>
+    <!-- Dialog message explaining to user they must exchange messages first to create a safety number -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_message">Un număr de siguranță va fi creat cu această persoană după ce schimbi mesaje cu ea.</string>
+    <!-- Confirmation option for dialog explaining to user they must exchange messages first to create a safety number  -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_ok">OK</string>
+    <!-- Learn more option for dialog explaining to user they must exchange messages first to create a safety number  -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_learn_more">Află mai multe</string>
+    <!-- Confirmation button on scan result dialogs -->
+    <string name="VerifyDisplayFragment__scan_result_dialog_ok">OK</string>
 
     <!-- ViewOnceMessageActivity -->
   <!-- Removed by excludeNonTranslatables <string name="ViewOnceMessageActivity_video_duration" translatable="false">%1$02d:%2$02d</string> -->
@@ -2310,6 +2407,8 @@
     <string name="NotificationChannel_call_status">Stare apel</string>
     <!-- Notification channel name for occasional alerts to the user. Will appear in the system notification settings as the title of this notification channel. -->
     <string name="NotificationChannel_critical_app_alerts">Alerte aplicație critică</string>
+    <!-- Notification channel name for other notifications related to messages. Will appear in the system notification settings as the title of this notification channel. -->
+    <string name="NotificationChannel_additional_message_notifications">Notificări suplimentare de mesaje</string>
 
     <!-- ProfileEditNameFragment -->
 
@@ -2369,7 +2468,8 @@
 
     <!-- WebRtcCallActivity -->
     <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone">Pentru a răspunde, permite lui Signal accesul la microfon.</string>
-    <string name="WebRtcCallActivity_to_answer_the_call_from_s_give_signal_access_to_your_microphone">Pentru a răspunde apelului de la %1$s, oferă-i Signal acces la microfonul tău.</string>
+    <!-- Message shown in permission dialog when attempting to answer a video call without camera or microphone permissions already granted. -->
+    <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone_and_camera">Ca să răspunzi la apelul video, dă Acces pentru Signal la microfon și cameră.</string>
     <string name="WebRtcCallActivity_signal_requires_microphone_and_camera_permissions_in_order_to_make_or_receive_calls">Signal are nevoie de permisiunile pentru Microfon și Cameră pentru a putea primi apeluri dar i-a fost refuzat accesul permanent. Te rugăm mergi în meniul de setări al aplicației, selectează \"Permisiuni\" și activează \"Microfon\" și \"Cameră\".</string>
     <string name="WebRtcCallActivity__answered_on_a_linked_device">Răspuns de pe un dispozitiv asociat.</string>
     <string name="WebRtcCallActivity__declined_on_a_linked_device">Respins de pe un dispozitiv asociat.</string>
@@ -2397,7 +2497,9 @@
     <string name="WebRtcAudioOutputToggle__speaker">Difuzor</string>
     <!-- Audio output option referring to an external audio device connected via wireless Bluetooth -->
     <string name="WebRtcAudioOutputToggle__bluetooth">Bluetooth</string>
-    <!-- Audio output option referring to an external headset connected via a 3.5mm headphone jack -->
+    <!-- Audio output option referring to a pair of headphones that do not contain a microphone connected via a 3.5mm headphone jack -->
+    <string name="WebRtcAudioOutputToggle__wired_headphones">Căști cu fir</string>
+    <!-- Audio output option referring to an external headset that contains a microphone connected via a 3.5mm headphone jack -->
     <string name="WebRtcAudioOutputToggle__wired_headset">Căști cu Fir</string>
     <!-- Audio output option referring to an external headset connected via a USB-C data cable -->
     <string name="WebRtcAudioOutputToggle__wired_headset_usb">Căști cu Fir (USB)</string>
@@ -2759,12 +2861,25 @@
 
     <!-- verify_display_fragment -->
     <string name="verify_display_fragment__to_verify_the_security_of_your_end_to_end_encryption_with_s"><![CDATA[Pentru a verifica securitatea criptării integrale între tine și %1$s, compară numerele de mai sus cu cele de pe dispozitivul acestora. Poți de asemenea scana codul de pe telefonul lor. <a href=\"https://signal.org/redirect/safety-numbers\">Află mai multe.</a>]]></string>
+    <!-- Explanation of how to verify the safety numbers. %s is replaced with the name of the other recipient -->
+    <string name="verify_display_fragment__pnp_verify_safety_numbers_explanation_with_s">Pentru a verifica criptarea integrală a conversației tale cu %1$s, potrivește cardul de culoare de mai sus cu dispozitivul său și compară numerele. Dacă nu se potrivesc, glisează și încearcă cealaltă pereche de numere de siguranță. Doar o pereche trebuie să se potrivească.</string>
     <string name="verify_display_fragment__tap_to_scan">Atinge pentru a scana</string>
     <string name="verify_display_fragment__successful_match">Potrivire reușită</string>
     <string name="verify_display_fragment__failed_to_verify_safety_number">Verificarea numărului de siguranță a eșuat</string>
     <string name="verify_display_fragment__loading">Se încarcă…</string>
     <string name="verify_display_fragment__mark_as_verified">Marchează ca verificat</string>
     <string name="verify_display_fragment__clear_verification">Șterge verificarea</string>
+    <!-- Banner at top of safety numbers screen explaining that we\'re updating how safety numbers work. -->
+    <string name="verify_display_fragment__safety_numbers_are_updating_banner_no_learn_more">Se actualizează numerele de siguranță.</string>
+
+    <!-- Title for dialog explaining for how safety numbers are transitioning to support usernames -->
+    <string name="PnpSafetyNumberEducationDialog__title">Modificări ale numerelor de siguranță</string>
+    <!-- Message for dialog explaining for how safety numbers are transitioning to support usernames -->
+    <string name="PnpSafetyNumberEducationDialog__body">Numerele de siguranță sunt actualizate într-o perioadă de tranziție pentru a activa viitoarele funcții de confidențialitate în Signal.\n\nPentru a verifica numerele de siguranță, potrivește cardul de culoare cu dispozitivul persoanei de contact. Dacă nu se potrivesc, glisează și încearcă cealaltă pereche de numere de siguranță. Doar o pereche trebuie să se potrivească.</string>
+    <!-- Button for more information about the safety number changes. Takes user to support article -->
+    <string name="PnpSafetyNumberEducationDialog__help">Ai nevoie de ajutor?</string>
+    <!-- Confirmation button for educating users about new safety number changes -->
+    <string name="PnpSafetyNumberEducationDialog__confirm">Am înțeles</string>
 
     <!-- verify_identity -->
     <string name="verify_identity__share_safety_number">Distribuie numărul de siguranță</string>
@@ -2843,6 +2958,14 @@
         <item>Donații și Insigne</item>
         <item>Export SMS-uri</item>
     </string-array>
+    <!-- Subject of email when submitting debug logs to help debug slow notifications -->
+    <string name="DebugLogsPromptDialogFragment__signal_android_support_request">Signal Android Debug Log Submission</string>
+    <!-- Category to organize the support email sent -->
+    <string name="DebugLogsPromptDialogFragment__slow_notifications_category">Slow notifications</string>
+    <!-- Action to submit logs and take user to send an e-mail -->
+    <string name="DebugLogsPromptDialogFragment__submit">Submit</string>
+    <!-- Action to decline to submit logs -->
+    <string name="DebugLogsPromptDialogFragment__no_thanks">No thanks</string>
 
     <!-- ReactWithAnyEmojiBottomSheetDialogFragment -->
     <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">Acest mesaj</string>
@@ -3409,6 +3532,8 @@
     <string name="conversation__menu_conversation_settings">Setări conversaţie</string>
     <string name="conversation__menu_add_shortcut">Adaugă pe ecranul principal</string>
     <string name="conversation__menu_create_bubble">Creează bulă</string>
+    <!-- Overflow menu option that allows formatting of text -->
+    <string name="conversation__menu_format_text">Formatează text</string>
 
     <!-- conversation_popup -->
     <string name="conversation_popup__menu_expand_popup">Extinde popup-ul</string>
@@ -3477,38 +3602,13 @@
     <string name="new_conversation_activity__refresh">Reîmprospătare</string>
     <!-- redphone_audio_popup_menu -->
 
-    <!-- Insights -->
-    <string name="Insights__percent">%</string>
-    <string name="Insights__title">Statistici</string>
-    <string name="InsightsDashboardFragment__title">Statistici</string>
-    <!-- Body text for a page describing how many signal messages you\'ve sent. The first placeholder represents the number of signal messages sent, and the second placeholder represents how many days have passed. -->
-    <string name="InsightsDashboardFragment__signal_protocol_automatically_protected">Protocolul Signal a protejat automat %1$d%% din mesajele tale expediate în ultimele %2$d zile. Conversațiile dintre utilizatorii de Signal sunt întotdeauna criptate integral.</string>
-    <string name="InsightsDashboardFragment__spread_the_word">Anunță-ți prietenii</string>
-    <string name="InsightsDashboardFragment__not_enough_data">Date insuficiente</string>
-    <string name="InsightsDashboardFragment__your_insights_percentage_is_calculated_based_on">Statisticile sunt calculate pe baza mesajelor expediate în ultimele %1$d zile care nu au dispărut sau au fost șterse.</string>
-    <!-- Label for a button that, when pressed, will begin a chat with a person whose name is showed on the screen. -->
-    <string name="InsightsDashboardFragment__start_a_conversation">Începe o conversație</string>
-    <string name="InsightsDashboardFragment__invite_your_contacts">Începe să comunici în siguranță și să activezi funcții noi care depășesc limitările mesajelor SMS necriptate, invitând mai multe persoane de contact să se alăture la Signal.</string>
-    <string name="InsightsDashboardFragment__this_stat_was_generated_locally">Aceste statistici au fost generate local pe dispozitivul tău și pot fi văzute doar de tine. Nu se transmit niciodată nicăieri.</string>
-    <string name="InsightsDashboardFragment__encrypted_messages">Mesaje criptate</string>
-    <string name="InsightsDashboardFragment__cancel">Anulare</string>
-    <string name="InsightsDashboardFragment__send">Trimite</string>
-    <string name="InsightsModalFragment__title">Îți prezentăm \'Statistici\'</string>
-    <string name="InsightsModalFragment__description">Află cât de multe dintre mesajele tale expediate au fost trimise în siguranță, apoi invită rapid noi contacte pentru a crește procentul de Signal.</string>
-    <string name="InsightsModalFragment__view_insights">Vezi Statistici</string>
-
-    <string name="FirstInviteReminder__title">Invită la Signal</string>
-    <string name="FirstInviteReminder__description">Poți crește numărul de mesaje criptate pe care le trimiți cu %1$d%%</string>
-    <string name="SecondInviteReminder__title">Îmbunătățește-ți Signal-ul</string>
-    <string name="SecondInviteReminder__description">Invită pe %1$s</string>
-    <string name="InsightsReminder__view_insights">Vezi Statistici</string>
-    <string name="InsightsReminder__invite">Invită</string>
-
     <!-- Edit KBS Pin -->
 
     <!-- BaseKbsPinFragment -->
     <string name="BaseKbsPinFragment__next">Următorul</string>
+    <!-- Button label to prompt them to create a password ("PIN") using numbers and letters rather than only numbers. -->
     <string name="BaseKbsPinFragment__create_alphanumeric_pin">Creează un PIN alfanumeric</string>
+    <!-- Button label to prompt them to return to creating a numbers-only password ("PIN") -->
     <string name="BaseKbsPinFragment__create_numeric_pin">Creează un PIN numeric</string>
   <!-- Removed by excludeNonTranslatables <string name="BaseKbsPinFragment__learn_more_url" translatable="false">https://support.signal.org/hc/articles/360007059792</string> -->
 
@@ -3572,8 +3672,8 @@
     <string name="RegistrationLockFragment__enter_the_pin_you_created">Introdu codul PIN pe care l-ai creat pentru contul tău. Acesta este diferit față de codul de verificare prin SMS.</string>
     <!-- Info text shown above a pin entry text box describing what pin they should be entering. -->
     <string name="RegistrationLockFragment__enter_the_pin_you_created_for_your_account">Introdu PIN-ul pe care l-ai creat pentru contul tău.</string>
-    <string name="RegistrationLockFragment__enter_alphanumeric_pin">Introdu un PIN alfanumeric</string>
-    <string name="RegistrationLockFragment__enter_numeric_pin">Introdu un PIN numeric</string>
+    <!-- Button label to prompt the user to switch between an alphanumeric and numeric-only keyboards -->
+    <string name="RegistrationLockFragment__switch_keyboard">Schimbă tastaturile</string>
     <string name="RegistrationLockFragment__incorrect_pin_try_again">PIN incorect. Încearcă din nou.</string>
     <string name="RegistrationLockFragment__forgot_pin">Ai uitat PIN-ul?</string>
     <string name="RegistrationLockFragment__incorrect_pin">PIN incorect</string>
@@ -3618,6 +3718,20 @@
     <string name="KbsMegaphone__create_a_pin">Creează un PIN</string>
     <string name="KbsMegaphone__pins_keep_information_thats_stored_with_signal_encrytped">PIN-urile păstrează informațiile stocate în Signal criptate.</string>
     <string name="KbsMegaphone__create_pin">Creează PIN</string>
+
+    <!-- CallNotificationBuilder -->
+    <!-- Displayed in a notification when a Signal voice call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_voice_call">Primire apel vocal Signal</string>
+    <!-- Displayed in a notification when a Signal video call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_video_call">Primire apel video Signal</string>
+    <!-- Displayed in a notification when a Signal group call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_group_call">Primire apel Signal de grup</string>
+    <!-- Displayed in a notification when a Signal voice call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_voice_call">Apel vocal Signal în desfășurare</string>
+    <!-- Displayed in a notification when a Signal video call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_video_call">Apel video Signal în desfășurare</string>
+    <!-- Displayed in a notification when a Signal group call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_group_call">Apel Signal de grup în desfășurare</string>
 
     <!-- transport_selection_list_item -->
     <string name="transport_selection_list_item__transport_icon">Pictogramă transport</string>
@@ -5978,7 +6092,7 @@
     <!-- Title for screen describing that sms support is going to be removed soon -->
     <string name="SmsRemoval_title_going_away">Sprijinul SMS dispare</string>
     <!-- Bullet point message shown on describing screen as first bullet why sms is being removed, placeholder with be date of removal (e.g., March 21st) -->
-    <string name="SmsRemoval_info_bullet_1_s">Trimiterea de mesaje SMS din aplicația Signal nu va mai fi acceptată începând cu %1$s.</string>
+    <string name="SmsRemoval_info_bullet_1">Trimiterea de mesaje SMS din aplicația Signal nu va mai fi acceptată în curând.</string>
     <!-- Bullet point message shown on describing screen as second bullet why sms is being removed -->
     <string name="SmsRemoval_info_bullet_2">Mesajele SMS sunt diferite față de mesajele Signal. <b>Trimiterea de mesaje criptate Signal nu va fi afectată și va continua să funcționeze.</b></string>
     <!-- Bullet point message shown on describing screen as third bullet why sms is being removed -->
@@ -6009,6 +6123,8 @@
     <string name="TextFormatting_monospace">Monospațiu</string>
     <!-- Popup menu label for applying spoiler style -->
     <string name="TextFormatting_spoiler">Spoiler</string>
+    <!-- Popup menu label for clearing applied formatting -->
+    <string name="TextFormatting_clear_formatting">Șterge formatarea</string>
 
     <!-- UsernameEducationFragment -->
     <!-- Continue button which takes the user to the add a username screen -->
@@ -6055,6 +6171,10 @@
     <string name="CallLogAdapter__d_s">(%1$d) %2$s</string>
     <!-- Status text on call links -->
     <string name="CallLogAdapter__call_link">Link de apel</string>
+    <!-- Accessibility description for the video call button -->
+    <string name="CallLogAdapter__start_a_video_call">Start a video call</string>
+    <!-- Accessibility description for the voice call button -->
+    <string name="CallLogAdapter__start_a_voice_call">Start a voice call</string>
 
     <!-- Call Log context menu -->
     <!-- Displayed as a context menu item to start a video call -->
@@ -6075,6 +6195,24 @@
     <string name="CallContextMenu__delete">Șterge</string>
 
     <!-- Call Log Fragment -->
+    <!-- Displayed when deleting call history items -->
+    <string name="CallLogFragment__deleting">Se șterge…</string>
+    <!-- Displayed in a toast when a deletion fails for an unknown reason -->
+    <string name="CallLogFragment__deletion_failed">Ștergerea a eșuat.</string>
+    <!-- Displayed as message in error dialog when can\'t delete links -->
+    <plurals name="CallLogFragment__cant_delete_call_link">
+        <item quantity="one">Nu se poate șterge linkul. Verifică conexiunea și încearcă din nou.</item>
+        <item quantity="few">Nu toate linkurile de apel au putut fi șterse. Verifică conexiunea și încearcă din nou.</item>
+        <item quantity="other">Nu toate linkurile de apel au putut fi șterse. Verifică conexiunea și încearcă din nou.</item>
+    </plurals>
+    <!-- Snackbar text after clearing the call history -->
+    <string name="CallLogFragment__cleared_call_history">S-a șters istoricul apelurilor</string>
+    <!-- Dialog title to clear all call events -->
+    <string name="CallLogFragment__clear_call_history_question">Ștergi istoricul apelurilor?</string>
+    <!-- Dialog body to clear all call events -->
+    <string name="CallLogFragment__this_will_permanently_delete_all_call_history">Aceasta va șterge definitiv tot istoricul apelurilor</string>
+    <!-- Action bar menu item to delete all call events -->
+    <string name="CallLogFragment__clear_call_history">Ștergeți istoricul apelurilor</string>
     <!-- Action bar menu item to only display missed calls -->
     <string name="CallLogFragment__filter_missed_calls">Filtrează apeluri ratate</string>
     <!-- Action bar menu item to clear missed call filter -->
@@ -6089,15 +6227,13 @@
     <string name="CallLogFragment__filtered_by_missed">Filtrat pe bază de ratate</string>
     <!-- Bottom bar option to select all call entries -->
     <string name="CallLogFragment__select_all">Selectează tot</string>
-    <!-- Bottom bar option to delete all selected call entries -->
+    <!-- Bottom bar option to delete all selected call entries and dialog action to confirm deletion -->
     <string name="CallLogFragment__delete">Șterge</string>
     <plurals name="CallLogFragment__delete_d_calls">
         <item quantity="one">Ștergi %1$d apel?</item>
         <item quantity="few">Ștergi %1$d apeluri?</item>
         <item quantity="other">Ștergi %1$d de apeluri?</item>
     </plurals>
-    <!-- Positive action on multi-delete protection dialog -->
-    <string name="CallLogFragment__delete_for_me">Șterge doar pentru mine</string>
     <!-- Snackbar label after deleting call logs -->
     <plurals name="CallLogFragment__d_calls_deleted">
         <item quantity="one">%1$d apel șters</item>
@@ -6126,6 +6262,10 @@
     <string name="CallStateUpdatePopupWindow__mic_on">Microfon activat</string>
     <!-- Displayed when the user turns off their mic -->
     <string name="CallStateUpdatePopupWindow__mic_off">Microfon dezactivat</string>
+    <!-- Displayed when the user turns on their speakerphone -->
+    <string name="CallStateUpdatePopupWindow__speaker_on">Difuzor pornit</string>
+    <!-- Displayed when the user turns off their speakerphone -->
+    <string name="CallStateUpdatePopupWindow__speaker_off">Difuzor oprit</string>
 
     <!-- Accessibility label describing the capture button on the camera screen -->
     <string name="CameraControls_capture_button_accessibility_label">Buton realizează fotografie</string>
@@ -6147,6 +6287,16 @@
     <string name="CreateCallLink__create_a_call_link">Creează un Link de Apel</string>
     <!-- Call link creation item description on calls tab -->
     <string name="CreateCallLink__share_a_link_for">Trimite un link pentru un apel Signal</string>
+
+    <!-- CallLinkInfoSheet -->
+    <!-- Sheet title -->
+    <string name="CallLinkInfoSheet__call_info">Call info</string>
+    <!-- Dialog title for removing or blocking participants -->
+    <string name="CallLinkInfoSheet__remove_s_from_the_call">Remove %1$s from the call?</string>
+    <!-- Dialog action to remove participant from the call -->
+    <string name="CallLinkInfoSheet__remove">Remove</string>
+    <!-- Dialog action to block participant from the call -->
+    <string name="CallLinkInfoSheet__block_from_call">Block from call</string>
 
     <!-- CreateCallLinkBottomSheetDialogFragment -->
     <!-- Fragment title -->
@@ -6190,6 +6340,15 @@
 
     <!-- Title shown at top of bottom sheet dialog for displaying a message\'s edit history -->
     <string name="EditMessageHistoryDialog_title">Istoricul mesajelor</string>
+    <!-- Title of dialog shown alerting user that edit message is in beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_title">Doar Signal beta</string>
+    <!-- Body of dialog shown alerting user that edit message is in beta only and only sent to beta users. -->
+    <string name="SendingEditMessageBetaOnlyDialog_body">Editarea mesajelor este disponibilă numai pentru utilizatorii Signal beta. Dacă editezi un mesaj, acesta va fi vizibil numai pentru persoanele care au cea mai recentă versiune de Signal beta.</string>
+    <!-- Button to cancel sending edit message as it is beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_cancel">Anulează</string>
+    <!-- Button to continue sending edit message despite it being beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_send">Trimite</string>
+
 
     <!-- CallLinkDetailsFragment -->
     <!-- Displayed in action bar at the top of the fragment -->
@@ -6238,6 +6397,29 @@
     <!-- Body of a dialog that is displayed when we experienced a network error when looking up a username. -->
     <string name="UsernameLinkSettings_qr_result_network_error">Am experimentat o eroare de rețea. Te rugăm încearcă din nou.</string>
 
+    <!-- PendingParticipantsView -->
+    <!-- Displayed in the popup card when a remote user attempts to join a call link -->
+    <string name="PendingParticipantsView__would_like_to_join">Would like to join…</string>
+    <!-- Displayed in a button on the popup card denoting that there are other pending requests to join a call link -->
+    <plurals name="PendingParticipantsView__plus_d_requests">
+        <item quantity="one">+%1$d request</item>
+        <item quantity="few">+%1$d requests</item>
+        <item quantity="other">+%1$d requests</item>
+    </plurals>
+
+    <!-- PendingParticipantsBottomSheet -->
+    <!-- Title of the bottom sheet displaying requests to join the call link -->
+    <string name="PendingParticipantsBottomSheet__requests_to_join_this_call">Requests to join this call</string>
+    <!-- Subtitle of the bottom sheet denoting the total number of people waiting -->
+    <plurals name="PendingParticipantsBottomSheet__d_people_waiting">
+        <item quantity="one">%1$d person waiting</item>
+        <item quantity="few">%1$d people waiting</item>
+        <item quantity="other">%1$d people waiting</item>
+    </plurals>
+    <!-- Content description for rejecting a user -->
+    <string name="PendingParticipantsBottomSheet__reject">Reject</string>
+    <!-- Content desccription for confirming a user -->
+    <string name="PendingParticipantsBottomSheet__approve">Approve</string>
 
     <!-- EOF -->
 </resources>

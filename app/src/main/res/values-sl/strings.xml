@@ -106,6 +106,10 @@
     <!-- BackgroundMessageRetriever -->
     <string name="BackgroundMessageRetriever_checking_for_messages">Pregled sporočil …</string>
 
+    <!-- Fcm notifications -->
+    <!-- Notification we show when there may be messages for you, but we cannot connect to the server to check -->
+    <string name="FcmFetchManager__you_may_have_messages">Lahko da imate nova sporočila Signal</string>
+
     <!-- BlockedUsersActivity -->
     <string name="BlockedUsersActivity__blocked_users">Blokirani_e uporabniki_ce</string>
     <string name="BlockedUsersActivity__add_blocked_user">Dodaj blokiranega_o uporabnika_co</string>
@@ -238,6 +242,12 @@
     <string name="CommunicationActions_call">Pokliči</string>
     <string name="CommunicationActions_insecure_call">Nezavarovan klic</string>
     <string name="CommunicationActions_carrier_charges_may_apply">Pozor, možni dodatni stroški za klic! Številka, ki jo kličete ni prijavljena v storitev Signal. Klic bo opravljen preko vašega ponudnika mobilne telefonije, ne prek interneta.</string>
+    <string name="CommunicationActions_cant_join_call">Pridružitev klicu ni mogoča</string>
+    <string name="CommunicationActions_this_call_link_is_no_longer_valid">Ta klicna povezava ni več veljavna.</string>
+    <!-- Title on dialog when call link url cannot be parsed -->
+    <string name="CommunicationActions_invalid_link">Invalid link</string>
+    <!-- Message on dialog when call link url cannot be parsed -->
+    <string name="CommunicationActions_this_is_not_a_valid_call_link">This is not a valid call link. Make sure the entire link is intact and correct before attempting to join.</string>
 
     <!-- ConfirmIdentityDialog -->
 
@@ -317,7 +327,9 @@
     <!-- Dialog error message shown when user can\'t download a their own video message via a linked device due to a permanent failure (e.g., unable to decrypt) -->
     <string name="ConversationItem_cant_download_video_you_will_need_to_send_it_again">Videoposnetka ni mogoče prenesti. Ponovno ga boste morali poslati.</string>
     <!-- Display as the timestamp footer in a message bubble in a conversation when a message has been edited. The timestamp will go from \'11m\' to \'edited 11m\' -->
-    <string name="ConversationItem_edited_timestamp_footer">urejeno pred %1$s</string>
+    <string name="ConversationItem_edited_timestamp_footer">Urejeno pred %1$s</string>
+    <!-- Displayed if the link preview in the conversation item is for a call link call -->
+    <string name="ConversationItem__join_call">Pridruži se klicu</string>
 
     <!-- ConversationActivity -->
     <string name="ConversationActivity_add_attachment">Dodaj priponko</string>
@@ -338,6 +350,13 @@
         <item quantity="two">Urejanje je mogoče uporabiti samo v %1$d urah od trenutka, ko ste poslali to sporočilo.</item>
         <item quantity="few">Urejanje je mogoče uporabiti samo v %1$d urah od trenutka, ko ste poslali to sporočilo.</item>
         <item quantity="other">Urejanje je mogoče uporabiti samo v %1$d urah od trenutka, ko ste poslali to sporočilo.</item>
+    </plurals>
+    <!-- Warning dialog text shown to user if they try to edit a message too many times. Where %1$d is replaced with the number of edits -->
+    <plurals name="ConversationActivity_edit_message_too_many_edits">
+        <item quantity="one">To sporočilo je mogoče urediti le %1$dx.</item>
+        <item quantity="two">To sporočilo je mogoče urediti le %1$dx.</item>
+        <item quantity="few">To sporočilo je mogoče urediti le %1$dx.</item>
+        <item quantity="other">To sporočilo je mogoče urediti le %1$dx.</item>
     </plurals>
 
     <string name="ConversationActivity_invalid_recipient">Neveljaven prejemnik!</string>
@@ -519,6 +538,9 @@
     <string name="ConversationFragment__content_description_back_button">Nazaj.</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
     <string name="ConversationFragment__content_description_launch_signal_button">Odpri Signal</string>
+    <!-- Dialog title shown when more than one contact in a group conversation is no longer verified -->
+    <string name="ConversationFragment__no_longer_verified">Ni več potrjeno</string>
+
     <!-- Label for a button displayed in conversation list to clear the chat filter -->
     <string name="ConversationListFragment__clear_filter">Počisti filter</string>
     <!-- Notice on chat list when no unread chats are available, centered on display -->
@@ -932,6 +954,8 @@
     <string name="LinkPreviewView_no_link_preview_available">Predogled ni na voljo</string>
     <string name="LinkPreviewView_this_group_link_is_not_active">Povezava do skupine ni aktivna</string>
     <string name="LinkPreviewView_domain_date">%1$s · %2$s</string>
+    <!-- Description for Call Link url previews -->
+    <string name="LinkPreviewView__use_this_link_to_join_a_signal_call">Uporabite to povezavo, da se pridružite Signalovemu klicu</string>
 
     <!-- LinkPreviewRepository -->
     <plurals name="LinkPreviewRepository_d_members">
@@ -940,6 +964,11 @@
         <item quantity="few">%1$d člani</item>
         <item quantity="other">%1$d članov</item>
     </plurals>
+
+    <!-- Title for dialog asking user to submit logs for debugging slow notification issues -->
+    <string name="PromptLogsSlowNotificationsDialog__title">We noticed notifications are delayed. Submit debug log?</string>
+    <!-- Message for dialog asking user to submit logs for debugging slow notification issues -->
+    <string name="PromptLogsSlowNotificationsDialog__message">Debug logs helps us diagnose and fix the issue, and do not contain identifying information.</string>
 
     <!-- PendingMembersActivity -->
     <string name="PendingMembersActivity_pending_group_invites">Čakajoča vabila v skupino</string>
@@ -1178,7 +1207,7 @@
     <string name="ImageEditorHud_draw_to_blur_additional_faces_or_areas">Za zabris drugih delov slike potegnite s prstom</string>
 
     <!-- InputPanel -->
-    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">Za snemanje glasovnega sporočila se dotaknite in držite, za pošiljanje spustite</string>
+    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">Pridržite za snemanje, spustite za pošiljanje</string>
     <!-- Message shown if the user tries to switch a conversation from Signal to SMS -->
     <string name="InputPanel__sms_messaging_is_no_longer_supported_in_signal">SMS sporočila niso več podprta v Signalu.</string>
     <!-- When editing a message, label shown above the text input field in the composer -->
@@ -1296,10 +1325,7 @@
     <string name="MessageQuotesBottomSheet_replies">Odgovori</string>
 
     <!-- NotificationBarManager -->
-    <string name="NotificationBarManager_signal_call_in_progress">Klic Signal poteka</string>
     <string name="NotificationBarManager__establishing_signal_call">Vzpostavljam klic Signal</string>
-    <string name="NotificationBarManager__incoming_signal_call">Dohodni klic Signal</string>
-    <string name="NotificationBarManager__incoming_signal_group_call">Dohodni skupinski klic Signal</string>
     <!-- Temporary notification shown when starting the calling service -->
     <string name="NotificationBarManager__starting_signal_call_service">Začetek klicanja Signal</string>
     <string name="NotificationBarManager__stopping_signal_call_service">Ustavljanje klicanja Signal</string>
@@ -1579,12 +1605,14 @@
 
     <!-- Group Calling update messages -->
     <string name="MessageRecord_s_started_a_group_call_s">%1$s je začel_a skupinski klic. · %2$s</string>
+    <string name="MessageRecord_you_started_a_group_call_s">Začeli ste skupinski klic · %1$s</string>
     <string name="MessageRecord_s_is_in_the_group_call_s">%1$s je v skupinskem klicu. · %2$s</string>
     <string name="MessageRecord_you_are_in_the_group_call_s1">Ste v skupinskem klicu · %1$s</string>
     <string name="MessageRecord_s_and_s_are_in_the_group_call_s1">%1$s in %2$s sta v skupinskem klicu · %3$s</string>
     <string name="MessageRecord_group_call_s">Skupinski klic · %1$s</string>
 
     <string name="MessageRecord_s_started_a_group_call">%1$s je začel_a skupinski klic</string>
+    <string name="MessageRecord_you_started_a_group_call">Začeki ste skupinski klic</string>
     <string name="MessageRecord_s_is_in_the_group_call">%1$s je v skupinskem klicu.</string>
     <string name="MessageRecord_you_are_in_the_group_call">Ste v skupinskem klicu</string>
     <string name="MessageRecord_s_and_s_are_in_the_group_call">%1$s in %2$s sta v skupinskem klicu</string>
@@ -1738,8 +1766,8 @@
         <item quantity="other">Na voljo imate še %1$d poskusov. Če boste ostali brez, lahko ustvarite novi PIN. Z njim se lahko ponovno registrirate in uporabljate svoj račun, izgubili pa boste nekatere nastavitve, kot so npr. informacije iz vašega profila.</item>
     </plurals>
     <string name="PinRestoreEntryFragment_signal_registration_need_help_with_pin">Registracija storitve Signal - Potrebujem pomoč pri vnosu PINa za Android</string>
-    <string name="PinRestoreEntryFragment_enter_alphanumeric_pin">Vnesite alfanumerični PIN</string>
-    <string name="PinRestoreEntryFragment_enter_numeric_pin">Vnesite številčni PIN</string>
+    <!-- Button label to prompt the user to switch between an alphanumeric and numeric-only keyboards -->
+    <string name="PinRestoreEntryFragment_switch_keyboard">Preklopi tipkovnico</string>
 
     <!-- PinRestoreLockedFragment -->
     <string name="PinRestoreLockedFragment_create_your_pin">Ustvarite svoj PIN</string>
@@ -1828,6 +1856,60 @@
     <string name="WebRtcCallActivity__open_settings">Odpri nastavitve</string>
     <!-- Negative action for bluetooth warning dialog to dismiss dialog -->
     <string name="WebRtcCallActivity__not_now">Ne zdaj</string>
+    <!-- Title for dialog to approve all requests -->
+    <plurals name="WebRtcCallActivity__approve_d_requests">
+        <item quantity="one">Approve %1$d request?</item>
+        <item quantity="two">Approve %1$d requests?</item>
+        <item quantity="few">Approve %1$d requests?</item>
+        <item quantity="other">Approve %1$d requests?</item>
+    </plurals>
+    <!-- Positive action for call link approve all dialog -->
+    <string name="WebRtcCallActivity__approve_all">Approve all</string>
+    <!-- Message for dialog to approve all requests -->
+    <plurals name="WebRtcCallActivity__d_people_will_be_added_to_the_call">
+        <item quantity="one">%1$d person will be added to the call.</item>
+        <item quantity="two">%1$d people will be added to the call.</item>
+        <item quantity="few">%1$d people will be added to the call.</item>
+        <item quantity="other">%1$d people will be added to the call.</item>
+    </plurals>
+    <!-- Title for dialog to deny all requests -->
+    <plurals name="WebRtcCallActivity__deny_d_requests">
+        <item quantity="one">Deny %1$d request?</item>
+        <item quantity="two">Deny %1$d requests?</item>
+        <item quantity="few">Deny %1$d requests?</item>
+        <item quantity="other">Deny %1$d requests?</item>
+    </plurals>
+    <!-- Message for dialog to deny all requests -->
+    <plurals name="WebRtcCallActivity__d_people_will_not_be_added_to_the_call">
+        <item quantity="one">%1$d person will not be added to the call.</item>
+        <item quantity="two">%1$d people will not be added to the call.</item>
+        <item quantity="few">%1$d people will not be added to the call.</item>
+        <item quantity="other">%1$d people will not be added to the call.</item>
+    </plurals>
+    <!-- Positive action for call link deny all dialog -->
+    <string name="WebRtcCallActivity__deny_all">Deny all</string>
+    <!-- Displayed in call status when users are pending -->
+    <plurals name="WebRtcCallActivity__d_people_waiting">
+        <item quantity="one">%1$d person waiting</item>
+        <item quantity="two">%1$d people waiting</item>
+        <item quantity="few">%1$d people waiting</item>
+        <item quantity="other">%1$d people waiting</item>
+    </plurals>
+    <!-- Displayed in call status during call link when no users are pending -->
+    <plurals name="WebRtcCallActivity__d_people">
+        <item quantity="one">%1$d person</item>
+        <item quantity="two">%1$d people</item>
+        <item quantity="few">%1$d people</item>
+        <item quantity="other">%1$d people</item>
+    </plurals>
+    <!-- Title of dialog displayed when a user\'s join request is denied for call link entry -->
+    <string name="WebRtcCallActivity__join_request_denied">Join request denied</string>
+    <!-- Message of dialog displayed when a user\'s join request is denied for call link entry -->
+    <string name="WebRtcCallActivity__your_request_to_join_this_call_has_been_denied">Your request to join this call has been denied.</string>
+    <!-- Title of dialog displayed when a user is removed from a call link -->
+    <string name="WebRtcCallActivity__removed_from_call">Removed from call</string>
+    <!-- Message of dialog displayed when a user is removed from a call link -->
+    <string name="WebRtcCallActivity__someone_has_removed_you_from_the_call">Someone has removed you from the call.</string>
 
     <!-- WebRtcCallView -->
     <string name="WebRtcCallView__signal_call">Signal klic</string>
@@ -1840,6 +1922,12 @@
     <string name="WebRtcCallView__reconnecting">Ponovno povezovanje …</string>
     <string name="WebRtcCallView__joining">Pridruževanje …</string>
     <string name="WebRtcCallView__disconnected">Povezava je prekinjena</string>
+    <!-- Utilized in the lobby before joining a call link -->
+    <string name="WebRtcCallView__signal_call_link">Signal call link</string>
+    <!-- Warning displayed when entering a call via a link -->
+    <string name="WebRtcCallView__anyone_who_joins">Anyone who joins this call via the link will see your name, photo, and phone number.</string>
+    <!-- Displayed on the call screen as the status when waiting to be let into a call link by an admin -->
+    <string name="WebRtcCallView__waiting_to_be_let_in">Waiting to be let in…</string>
 
     <string name="WebRtcCallView__signal_will_ring_s">Signal bo zvonil uporabniku_ci %1$s</string>
     <string name="WebRtcCallView__signal_will_ring_s_and_s">Signal bo zvonil uporabnikoma_cama %1$s in %2$s</string>
@@ -1976,6 +2064,10 @@
     <!--    During registration, if the user attempts (and fails) to register, we display this error message with a number of minutes timer they are allowed to try again.-->
     <string name="RegistrationActivity_rate_limited_to_try_again">Preveč neuspešnih poskusov registracije številke. Prosimo, poskusite znova čez %1$s.</string>
     <string name="RegistrationActivity_unable_to_connect_to_service">Povezava s storitvijo ni mogoča. Preverite omrežje in poskusite znova.</string>
+    <!-- A description text for an alert dialog where we do not or can not explain the error to the user. -->
+    <string name="RegistrationActivity_generic_error">Zgodila se je nepričakovana napaka.</string>
+    <!-- A description text for an alert dialog when the entered phone number is not eligible for a verification SMS. -->
+    <string name="RegistrationActivity_we_couldnt_send_you_a_verification_code">Nismo vam mogli poslati potrditvene kode prek SMS-a. Namesto tega poskusite prejeti kodo prek zvočnega klica.</string>
     <!-- Generic error when the app is unable to request an SMS code for an unknown reason. -->
     <string name="RegistrationActivity_unable_to_request_verification_code">Ni mogoče zahtevati kode za preverjanje. Preverite svojo omrežno povezavo in poskusite znova.</string>
     <string name="RegistrationActivity_non_standard_number_format">Nestandardni format številk</string>
@@ -1996,6 +2088,10 @@
     <string name="RegistrationActivity_we_need_to_verify_that_youre_human">Preveriti moramo, če ste človek.</string>
     <!-- An error shown when the request was valid, but due to an issue with a partner vendor, the server is unable to send an SMS code -->
     <string name="RegistrationActivity_external_service_error">Signal ni mogel poslati kode SMS zaradi zunanje napake.</string>
+    <!-- Button label to trigger a phone call to provide the registration code, in lieu of an SMS code -->
+    <string name="RegistrationActivity_voice_call">Zvočni klic</string>
+    <!-- Dialog button to cancel the pending action and return to the previous state. -->
+    <string name="RegistrationActivity_cancel">Prekliči</string>
     <string name="RegistrationActivity_next">Naprej</string>
     <string name="RegistrationActivity_continue">Nadaljuj</string>
     <string name="RegistrationActivity_take_privacy_with_you_be_yourself_in_every_message">Vzemite svojo zasebnost v lastne roke!\nDa boste v sporočilih lahko to kar ste.</string>
@@ -2254,6 +2350,14 @@
     <string name="VerifyIdentityActivity_signal_needs_the_camera_permission_in_order_to_scan_a_qr_code_but_it_has_been_permanently_denied">Dostop do kamere je bil trajno onemogočen. Aplikacija Signal potrebuje dovoljenje za dostop do kamere, da bi lahko skenirali kode QR. Prosimo, pojdite v meni Nastavitve aplikacij, izberite \"Dovoljenja\" in omogočite dovoljenje pod postavko \"Kamera\".</string>
     <string name="VerifyIdentityActivity_unable_to_scan_qr_code_without_camera_permission">Brez dovoljenja za dostop do kamere ne morem skenirati kode QR.</string>
     <string name="VerifyIdentityActivity_you_must_first_exchange_messages_in_order_to_view">Za ogled varnostnih števil člana_ice %1$s morate z njim_njo najprej izmenjati sporočili.</string>
+    <!-- Dialog message explaining to user they must exchange messages first to create a safety number -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_message">Varnostna številka s to osebo bo ustvarjena, potem ko bo z vami izmenjala sporočila.</string>
+    <!-- Confirmation option for dialog explaining to user they must exchange messages first to create a safety number  -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_ok">OK</string>
+    <!-- Learn more option for dialog explaining to user they must exchange messages first to create a safety number  -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_learn_more">Preberite več</string>
+    <!-- Confirmation button on scan result dialogs -->
+    <string name="VerifyDisplayFragment__scan_result_dialog_ok">OK</string>
 
     <!-- ViewOnceMessageActivity -->
   <!-- Removed by excludeNonTranslatables <string name="ViewOnceMessageActivity_video_duration" translatable="false">%1$02d:%2$02d</string> -->
@@ -2379,6 +2483,8 @@
     <string name="NotificationChannel_call_status">Stanje klica</string>
     <!-- Notification channel name for occasional alerts to the user. Will appear in the system notification settings as the title of this notification channel. -->
     <string name="NotificationChannel_critical_app_alerts">Kritična opozorila aplikacije</string>
+    <!-- Notification channel name for other notifications related to messages. Will appear in the system notification settings as the title of this notification channel. -->
+    <string name="NotificationChannel_additional_message_notifications">Dodatna obvestila o sporočilih</string>
 
     <!-- ProfileEditNameFragment -->
 
@@ -2439,7 +2545,8 @@
 
     <!-- WebRtcCallActivity -->
     <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone">Za prevzem klica omogočite aplikaciji Signal dostop do mikrofona naprave.</string>
-    <string name="WebRtcCallActivity_to_answer_the_call_from_s_give_signal_access_to_your_microphone">Za prevzem klica uporabnika_ce %1$s omogočite aplikaciji Signal dostop do mikrofona naprave.</string>
+    <!-- Message shown in permission dialog when attempting to answer a video call without camera or microphone permissions already granted. -->
+    <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone_and_camera">Če želite sprejeti video klic, omogočite Signalu dostop do svojega mikrofona in kamere.</string>
     <string name="WebRtcCallActivity_signal_requires_microphone_and_camera_permissions_in_order_to_make_or_receive_calls">Dostop do mikrofona in kamere je bil trajno onemogočen. Aplikacija Signal potrebuje dovoljenje za dostop do mikrofona in kamere za klicanje. Prosimo, pojdite v meni Nastavitve aplikacij, izberite \"Dovoljenja\" in omogočite dovoljenji pod postavkama \"Mikrofon\" in \"Kamera\".</string>
     <string name="WebRtcCallActivity__answered_on_a_linked_device">Odgovorjeno na povezani napravi.</string>
     <string name="WebRtcCallActivity__declined_on_a_linked_device">Zavrnjeno na povezani napravi.</string>
@@ -2467,7 +2574,9 @@
     <string name="WebRtcAudioOutputToggle__speaker">Zvočnik</string>
     <!-- Audio output option referring to an external audio device connected via wireless Bluetooth -->
     <string name="WebRtcAudioOutputToggle__bluetooth">Bluetooth</string>
-    <!-- Audio output option referring to an external headset connected via a 3.5mm headphone jack -->
+    <!-- Audio output option referring to a pair of headphones that do not contain a microphone connected via a 3.5mm headphone jack -->
+    <string name="WebRtcAudioOutputToggle__wired_headphones">Žične slušalke</string>
+    <!-- Audio output option referring to an external headset that contains a microphone connected via a 3.5mm headphone jack -->
     <string name="WebRtcAudioOutputToggle__wired_headset">Žične slušalke</string>
     <!-- Audio output option referring to an external headset connected via a USB-C data cable -->
     <string name="WebRtcAudioOutputToggle__wired_headset_usb">Žične slušalke (USB)</string>
@@ -2839,12 +2948,25 @@
 
     <!-- verify_display_fragment -->
     <string name="verify_display_fragment__to_verify_the_security_of_your_end_to_end_encryption_with_s"><![CDATA[Za varnostno potrditev šifriranja od-pošiljatelja-do-prejemnika z uporabnikom_co %1$s, primerjajte zgornja števila s števili na njegovi/njeni napravi. Lahko tudi skenirate kodo QR na njegovem/njenem telefonu. <a href=\"https://signal.org/redirect/safety-numbers\">Več o tem.</a>]]></string>
+    <!-- Explanation of how to verify the safety numbers. %s is replaced with the name of the other recipient -->
+    <string name="verify_display_fragment__pnp_verify_safety_numbers_explanation_with_s">Če želite preveriti šifriranje od-konca-do-konca z uporabnikom_co %1$s, povežite zgornjo barvno kartico z njegovo/njeno napravo in primerjajte številki. Če se ne ujemata, podrsajte in poskusite z drugim parom varnostnih številk. Samo en par se mora ujemati.</string>
     <string name="verify_display_fragment__tap_to_scan">Tapnite za skeniranje</string>
     <string name="verify_display_fragment__successful_match">Ujemanje potrjeno</string>
     <string name="verify_display_fragment__failed_to_verify_safety_number">Varnostnega števila ni bilo mogoče preveriti</string>
     <string name="verify_display_fragment__loading">Nalaganje …</string>
     <string name="verify_display_fragment__mark_as_verified">Označi kot potrjeno.</string>
     <string name="verify_display_fragment__clear_verification">Izbris potrditeve</string>
+    <!-- Banner at top of safety numbers screen explaining that we\'re updating how safety numbers work. -->
+    <string name="verify_display_fragment__safety_numbers_are_updating_banner_no_learn_more">Varnostne številke se posodabljajo.</string>
+
+    <!-- Title for dialog explaining for how safety numbers are transitioning to support usernames -->
+    <string name="PnpSafetyNumberEducationDialog__title">Spremembe varnostnih številk</string>
+    <!-- Message for dialog explaining for how safety numbers are transitioning to support usernames -->
+    <string name="PnpSafetyNumberEducationDialog__body">Varnostne številke se v prehodnem obdobju posodabljajo, da omogočijo prihajajoče funkcije zasebnosti v Signalu.\n\nČe želite preveriti varnostne številke, uskladite barvno kartico z napravo vašega kontakta. Če se ne ujemata, podrsajte in poskusite z drugim parom varnostnih številk. Samo en par se mora ujemati.</string>
+    <!-- Button for more information about the safety number changes. Takes user to support article -->
+    <string name="PnpSafetyNumberEducationDialog__help">Potrebujete pomoč?</string>
+    <!-- Confirmation button for educating users about new safety number changes -->
+    <string name="PnpSafetyNumberEducationDialog__confirm">Razumem</string>
 
     <!-- verify_identity -->
     <string name="verify_identity__share_safety_number">Deli varnostno število</string>
@@ -2923,6 +3045,14 @@
         <item>Donacije in značke</item>
         <item>Izvoz SMS-ov</item>
     </string-array>
+    <!-- Subject of email when submitting debug logs to help debug slow notifications -->
+    <string name="DebugLogsPromptDialogFragment__signal_android_support_request">Signal Android Debug Log Submission</string>
+    <!-- Category to organize the support email sent -->
+    <string name="DebugLogsPromptDialogFragment__slow_notifications_category">Slow notifications</string>
+    <!-- Action to submit logs and take user to send an e-mail -->
+    <string name="DebugLogsPromptDialogFragment__submit">Submit</string>
+    <!-- Action to decline to submit logs -->
+    <string name="DebugLogsPromptDialogFragment__no_thanks">No thanks</string>
 
     <!-- ReactWithAnyEmojiBottomSheetDialogFragment -->
     <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">To sporočilo</string>
@@ -3206,7 +3336,7 @@
     <string name="PaymentsAllActivityFragment__received">Prejeto</string>
 
     <string name="PaymentsHomeFragment__introducing_payments">Predstavljamo vam Plačila (Beta)</string>
-    <string name="PaymentsHomeFragment__use_signal_to_send_and_receive">Uporabljajte Signal za pošiljanje in prejemanje nove digitalne valute MobileCoin, ki daje poudarek zasebnosti. Vklopite in začnite.</string>
+    <string name="PaymentsHomeFragment__use_signal_to_send_and_receive">Uporabljajte Signal za pošiljanje in prejemanje nove digitalne valute MobileCoin, ki daje poudarek zasebnosti. Aktivirajte in začnite.</string>
     <string name="PaymentsHomeFragment__activate_payments">Vklopi Plačila</string>
     <string name="PaymentsHomeFragment__activating_payments">Vklapljanje Plačil …</string>
     <string name="PaymentsHomeFragment__restore_payments_account">Obnovitev računa za plačila</string>
@@ -3492,6 +3622,8 @@
     <string name="conversation__menu_conversation_settings">Nastavitve klepeta</string>
     <string name="conversation__menu_add_shortcut">Dodaj na domači zaslon</string>
     <string name="conversation__menu_create_bubble">Ustvari mehurček</string>
+    <!-- Overflow menu option that allows formatting of text -->
+    <string name="conversation__menu_format_text">Oblikuj besedilo</string>
 
     <!-- conversation_popup -->
     <string name="conversation_popup__menu_expand_popup">Razširi pojavno okno</string>
@@ -3561,38 +3693,13 @@
     <string name="new_conversation_activity__refresh">Osveži</string>
     <!-- redphone_audio_popup_menu -->
 
-    <!-- Insights -->
-    <string name="Insights__percent">%</string>
-    <string name="Insights__title">Pregled</string>
-    <string name="InsightsDashboardFragment__title">Pregled</string>
-    <!-- Body text for a page describing how many signal messages you\'ve sent. The first placeholder represents the number of signal messages sent, and the second placeholder represents how many days have passed. -->
-    <string name="InsightsDashboardFragment__signal_protocol_automatically_protected">S protokolom Signal ste avtomatično zaščitili %1$d %% vaših odhodnih sporočil v preteklih %2$d dneh. Klepeti med uporabniki_cami Signala so zmerom zaščiteni \"od-konca-do-konca\".</string>
-    <string name="InsightsDashboardFragment__spread_the_word">Povej naprej!</string>
-    <string name="InsightsDashboardFragment__not_enough_data">Ni dovolj podatkov</string>
-    <string name="InsightsDashboardFragment__your_insights_percentage_is_calculated_based_on">Pregled je narejen na podlagi vaših odhodnih sporočil v zadnjih %1$d dneh, z izjemo izginjajočih in izbrisanih.</string>
-    <!-- Label for a button that, when pressed, will begin a chat with a person whose name is showed on the screen. -->
-    <string name="InsightsDashboardFragment__start_a_conversation">Začnite klepet</string>
-    <string name="InsightsDashboardFragment__invite_your_contacts">Začnite komunicirati varno in vklopite zasebnosti prijazne funkcije, ki sežejo prek omejitev nešifriranih sporočil SMS. Povabite še več svojih stikov k uporabi aplikacije Signal.</string>
-    <string name="InsightsDashboardFragment__this_stat_was_generated_locally">Ta analiza je bila ustvarjena lokalno na vaši napravi. Vidite jo lahko le vi in nikoli ne bo posredovana nikamor.</string>
-    <string name="InsightsDashboardFragment__encrypted_messages">Šifrirana sporočila</string>
-    <string name="InsightsDashboardFragment__cancel">Prekliči</string>
-    <string name="InsightsDashboardFragment__send">Pošlji</string>
-    <string name="InsightsModalFragment__title">Predstavljamo vam Pregled</string>
-    <string name="InsightsModalFragment__description">Preverite koliko vaših sporočil je bilo poslanih na varen način, nato k varni uporabi povabite še druge uporabnike_ce in izboljšajte svoj Signal.</string>
-    <string name="InsightsModalFragment__view_insights">Odpri Pregled</string>
-
-    <string name="FirstInviteReminder__title">Povabi na Signal</string>
-    <string name="FirstInviteReminder__description">Število svojih šifriranih sporočil čahko izboljšate za %1$d%%</string>
-    <string name="SecondInviteReminder__title">Spodbudite svoj Signal</string>
-    <string name="SecondInviteReminder__description">Povabi uporabnika_co %1$s</string>
-    <string name="InsightsReminder__view_insights">Odpri Pregled</string>
-    <string name="InsightsReminder__invite">Povabi</string>
-
     <!-- Edit KBS Pin -->
 
     <!-- BaseKbsPinFragment -->
     <string name="BaseKbsPinFragment__next">Naprej</string>
+    <!-- Button label to prompt them to create a password ("PIN") using numbers and letters rather than only numbers. -->
     <string name="BaseKbsPinFragment__create_alphanumeric_pin">Ustvari alfanumerični PIN</string>
+    <!-- Button label to prompt them to return to creating a numbers-only password ("PIN") -->
     <string name="BaseKbsPinFragment__create_numeric_pin">Ustvari številčni PIN</string>
   <!-- Removed by excludeNonTranslatables <string name="BaseKbsPinFragment__learn_more_url" translatable="false">https://support.signal.org/hc/articles/360007059792</string> -->
 
@@ -3658,8 +3765,8 @@
     <string name="RegistrationLockFragment__enter_the_pin_you_created">Vnesite PIN, ki ste ga ustvarili za zaklep svojega računa. Tu ne gre za SMS potrditveno kodo.</string>
     <!-- Info text shown above a pin entry text box describing what pin they should be entering. -->
     <string name="RegistrationLockFragment__enter_the_pin_you_created_for_your_account">Vnesite PIN, ki ste ga ustvarili za svoj račun.</string>
-    <string name="RegistrationLockFragment__enter_alphanumeric_pin">Vnesite alfanumerični PIN</string>
-    <string name="RegistrationLockFragment__enter_numeric_pin">Vnesite številčni PIN</string>
+    <!-- Button label to prompt the user to switch between an alphanumeric and numeric-only keyboards -->
+    <string name="RegistrationLockFragment__switch_keyboard">Preklopi tipkovnico</string>
     <string name="RegistrationLockFragment__incorrect_pin_try_again">Napačen PIN. Poskusite znova.</string>
     <string name="RegistrationLockFragment__forgot_pin">Ste pozabili PIN?</string>
     <string name="RegistrationLockFragment__incorrect_pin">Napačen PIN</string>
@@ -3709,6 +3816,20 @@
     <string name="KbsMegaphone__create_a_pin">Ustvari PIN</string>
     <string name="KbsMegaphone__pins_keep_information_thats_stored_with_signal_encrytped">PIN zavaruje informacije shranjene na Signalu z uporabo šifriranja.</string>
     <string name="KbsMegaphone__create_pin">Ustvari PIN</string>
+
+    <!-- CallNotificationBuilder -->
+    <!-- Displayed in a notification when a Signal voice call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_voice_call">Dohodni klic</string>
+    <!-- Displayed in a notification when a Signal video call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_video_call">Dohodni video klic</string>
+    <!-- Displayed in a notification when a Signal group call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_group_call">Dohodni skupinski klic Signal</string>
+    <!-- Displayed in a notification when a Signal voice call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_voice_call">Klic v teku</string>
+    <!-- Displayed in a notification when a Signal video call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_video_call">Video klic v teku</string>
+    <!-- Displayed in a notification when a Signal group call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_group_call">Skupinski klic v teku</string>
 
     <!-- transport_selection_list_item -->
     <string name="transport_selection_list_item__transport_icon">Ikona transporta</string>
@@ -6101,7 +6222,7 @@
     <!-- Title for screen describing that sms support is going to be removed soon -->
     <string name="SmsRemoval_title_going_away">Podpora za SMS-e se ukinja</string>
     <!-- Bullet point message shown on describing screen as first bullet why sms is being removed, placeholder with be date of removal (e.g., March 21st) -->
-    <string name="SmsRemoval_info_bullet_1_s">SMS sporočila v aplikaciji Signal kmalu ne bodo več podprta na %1$s.</string>
+    <string name="SmsRemoval_info_bullet_1">SMS sporočila v aplikaciji Signal kmalu ne bodo več podprta.</string>
     <!-- Bullet point message shown on describing screen as second bullet why sms is being removed -->
     <string name="SmsRemoval_info_bullet_2">SMS sporočila se razlikujejo od sporočil Signal. <b>To ne vpliva na šifrirana sporočila Signal, ki bodo še naprej delovala.</b></string>
     <!-- Bullet point message shown on describing screen as third bullet why sms is being removed -->
@@ -6132,6 +6253,8 @@
     <string name="TextFormatting_monospace">Monospace</string>
     <!-- Popup menu label for applying spoiler style -->
     <string name="TextFormatting_spoiler">Skrito besedilo</string>
+    <!-- Popup menu label for clearing applied formatting -->
+    <string name="TextFormatting_clear_formatting">Počisti oblikovanje</string>
 
     <!-- UsernameEducationFragment -->
     <!-- Continue button which takes the user to the add a username screen -->
@@ -6178,6 +6301,10 @@
     <string name="CallLogAdapter__d_s">(%1$d) %2$s</string>
     <!-- Status text on call links -->
     <string name="CallLogAdapter__call_link">Povezava do klica</string>
+    <!-- Accessibility description for the video call button -->
+    <string name="CallLogAdapter__start_a_video_call">Start a video call</string>
+    <!-- Accessibility description for the voice call button -->
+    <string name="CallLogAdapter__start_a_voice_call">Start a voice call</string>
 
     <!-- Call Log context menu -->
     <!-- Displayed as a context menu item to start a video call -->
@@ -6198,6 +6325,25 @@
     <string name="CallContextMenu__delete">Izbriši</string>
 
     <!-- Call Log Fragment -->
+    <!-- Displayed when deleting call history items -->
+    <string name="CallLogFragment__deleting">Brisanje …</string>
+    <!-- Displayed in a toast when a deletion fails for an unknown reason -->
+    <string name="CallLogFragment__deletion_failed">Brisanje ni uspelo.</string>
+    <!-- Displayed as message in error dialog when can\'t delete links -->
+    <plurals name="CallLogFragment__cant_delete_call_link">
+        <item quantity="one">Povezave ni mogoče izbrisati. Preverite internetno povezavo in poskusite znova.</item>
+        <item quantity="two">Obeh povezav ni mogoče izbrisati. Preverite internetno povezavo in poskusite znova.</item>
+        <item quantity="few">Povezav ni mogoče izbrisati. Preverite internetno povezavo in poskusite znova.</item>
+        <item quantity="other">Povezav ni mogoče izbrisati. Preverite internetno povezavo in poskusite znova.</item>
+    </plurals>
+    <!-- Snackbar text after clearing the call history -->
+    <string name="CallLogFragment__cleared_call_history">Zgodovina klicev je izbrisana</string>
+    <!-- Dialog title to clear all call events -->
+    <string name="CallLogFragment__clear_call_history_question">Želite počistiti zgodovino klicev?</string>
+    <!-- Dialog body to clear all call events -->
+    <string name="CallLogFragment__this_will_permanently_delete_all_call_history">S tem boste nepovratno izbrisali celotno zgodovino klicev</string>
+    <!-- Action bar menu item to delete all call events -->
+    <string name="CallLogFragment__clear_call_history">Počisti zgodovino klicev</string>
     <!-- Action bar menu item to only display missed calls -->
     <string name="CallLogFragment__filter_missed_calls">Filtriraj zgrešene klice</string>
     <!-- Action bar menu item to clear missed call filter -->
@@ -6212,7 +6358,7 @@
     <string name="CallLogFragment__filtered_by_missed">Filtrirano po zgrešenih</string>
     <!-- Bottom bar option to select all call entries -->
     <string name="CallLogFragment__select_all">Označi vse</string>
-    <!-- Bottom bar option to delete all selected call entries -->
+    <!-- Bottom bar option to delete all selected call entries and dialog action to confirm deletion -->
     <string name="CallLogFragment__delete">Izbriši</string>
     <plurals name="CallLogFragment__delete_d_calls">
         <item quantity="one">Želite izbrisati %1$d klic?</item>
@@ -6220,8 +6366,6 @@
         <item quantity="few">Želite izbrisati %1$d klice?</item>
         <item quantity="other">Želite izbrisati %1$d klicev?</item>
     </plurals>
-    <!-- Positive action on multi-delete protection dialog -->
-    <string name="CallLogFragment__delete_for_me">Izbriši zame</string>
     <!-- Snackbar label after deleting call logs -->
     <plurals name="CallLogFragment__d_calls_deleted">
         <item quantity="one">%1$d izbrisan klic</item>
@@ -6251,6 +6395,10 @@
     <string name="CallStateUpdatePopupWindow__mic_on">Mikrofon je vključen</string>
     <!-- Displayed when the user turns off their mic -->
     <string name="CallStateUpdatePopupWindow__mic_off">Mikrofon je izključen</string>
+    <!-- Displayed when the user turns on their speakerphone -->
+    <string name="CallStateUpdatePopupWindow__speaker_on">Zvočnik je vključen</string>
+    <!-- Displayed when the user turns off their speakerphone -->
+    <string name="CallStateUpdatePopupWindow__speaker_off">Zvočnik je izključen</string>
 
     <!-- Accessibility label describing the capture button on the camera screen -->
     <string name="CameraControls_capture_button_accessibility_label">Gumb za zajem</string>
@@ -6272,6 +6420,16 @@
     <string name="CreateCallLink__create_a_call_link">Ustvari povezavo do klica</string>
     <!-- Call link creation item description on calls tab -->
     <string name="CreateCallLink__share_a_link_for">Deli povezavo do klica Signal</string>
+
+    <!-- CallLinkInfoSheet -->
+    <!-- Sheet title -->
+    <string name="CallLinkInfoSheet__call_info">Call info</string>
+    <!-- Dialog title for removing or blocking participants -->
+    <string name="CallLinkInfoSheet__remove_s_from_the_call">Remove %1$s from the call?</string>
+    <!-- Dialog action to remove participant from the call -->
+    <string name="CallLinkInfoSheet__remove">Remove</string>
+    <!-- Dialog action to block participant from the call -->
+    <string name="CallLinkInfoSheet__block_from_call">Block from call</string>
 
     <!-- CreateCallLinkBottomSheetDialogFragment -->
     <!-- Fragment title -->
@@ -6315,6 +6473,15 @@
 
     <!-- Title shown at top of bottom sheet dialog for displaying a message\'s edit history -->
     <string name="EditMessageHistoryDialog_title">Zgodovina urejanja</string>
+    <!-- Title of dialog shown alerting user that edit message is in beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_title">Samo Signal beta</string>
+    <!-- Body of dialog shown alerting user that edit message is in beta only and only sent to beta users. -->
+    <string name="SendingEditMessageBetaOnlyDialog_body">Urejanje sporočil je na voljo samo uporabnikom Signala beta. Če uredite sporočilo, bo vidno samo ljudem, ki uporabljajo najnovejšo različico Signala beta.</string>
+    <!-- Button to cancel sending edit message as it is beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_cancel">Prekliči</string>
+    <!-- Button to continue sending edit message despite it being beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_send">Pošlji</string>
+
 
     <!-- CallLinkDetailsFragment -->
     <!-- Displayed in action bar at the top of the fragment -->
@@ -6363,6 +6530,31 @@
     <!-- Body of a dialog that is displayed when we experienced a network error when looking up a username. -->
     <string name="UsernameLinkSettings_qr_result_network_error">Prišlo je do omrežne napake. Prosimo, poskusite znova.</string>
 
+    <!-- PendingParticipantsView -->
+    <!-- Displayed in the popup card when a remote user attempts to join a call link -->
+    <string name="PendingParticipantsView__would_like_to_join">Would like to join…</string>
+    <!-- Displayed in a button on the popup card denoting that there are other pending requests to join a call link -->
+    <plurals name="PendingParticipantsView__plus_d_requests">
+        <item quantity="one">+%1$d request</item>
+        <item quantity="two">+%1$d requests</item>
+        <item quantity="few">+%1$d requests</item>
+        <item quantity="other">+%1$d requests</item>
+    </plurals>
+
+    <!-- PendingParticipantsBottomSheet -->
+    <!-- Title of the bottom sheet displaying requests to join the call link -->
+    <string name="PendingParticipantsBottomSheet__requests_to_join_this_call">Requests to join this call</string>
+    <!-- Subtitle of the bottom sheet denoting the total number of people waiting -->
+    <plurals name="PendingParticipantsBottomSheet__d_people_waiting">
+        <item quantity="one">%1$d person waiting</item>
+        <item quantity="two">%1$d people waiting</item>
+        <item quantity="few">%1$d people waiting</item>
+        <item quantity="other">%1$d people waiting</item>
+    </plurals>
+    <!-- Content description for rejecting a user -->
+    <string name="PendingParticipantsBottomSheet__reject">Reject</string>
+    <!-- Content desccription for confirming a user -->
+    <string name="PendingParticipantsBottomSheet__approve">Approve</string>
 
     <!-- EOF -->
 </resources>

@@ -106,6 +106,10 @@
     <!-- BackgroundMessageRetriever -->
     <string name="BackgroundMessageRetriever_checking_for_messages">בודק אחר הודעות…</string>
 
+    <!-- Fcm notifications -->
+    <!-- Notification we show when there may be messages for you, but we cannot connect to the server to check -->
+    <string name="FcmFetchManager__you_may_have_messages">ייתכן שיש לך הודעות חדשות</string>
+
     <!-- BlockedUsersActivity -->
     <string name="BlockedUsersActivity__blocked_users">משתמשים חסומים</string>
     <string name="BlockedUsersActivity__add_blocked_user">הוספת משתמש/ת חסום/ה</string>
@@ -238,6 +242,12 @@
     <string name="CommunicationActions_call">התקשר</string>
     <string name="CommunicationActions_insecure_call">שיחה בלתי מאובטחת</string>
     <string name="CommunicationActions_carrier_charges_may_apply">חיובי מפעיל עשויים לחול. המספר שאתה מתקשר אליו אינו רשום ב־Signal. שיחה זו תתבצע באמצעות המפעיל הסלולרי שלך, לא על גבי האינטרנט.</string>
+    <string name="CommunicationActions_cant_join_call">אי אפשר להצטרף לשיחה</string>
+    <string name="CommunicationActions_this_call_link_is_no_longer_valid">לינק השיחה הזה לא תקף יותר.</string>
+    <!-- Title on dialog when call link url cannot be parsed -->
+    <string name="CommunicationActions_invalid_link">Invalid link</string>
+    <!-- Message on dialog when call link url cannot be parsed -->
+    <string name="CommunicationActions_this_is_not_a_valid_call_link">This is not a valid call link. Make sure the entire link is intact and correct before attempting to join.</string>
 
     <!-- ConfirmIdentityDialog -->
 
@@ -318,6 +328,8 @@
     <string name="ConversationItem_cant_download_video_you_will_need_to_send_it_again">הורדת הסרטון נכשלה. עליך לשלוח אותו שוב.</string>
     <!-- Display as the timestamp footer in a message bubble in a conversation when a message has been edited. The timestamp will go from \'11m\' to \'edited 11m\' -->
     <string name="ConversationItem_edited_timestamp_footer">נערך %1$s</string>
+    <!-- Displayed if the link preview in the conversation item is for a call link call -->
+    <string name="ConversationItem__join_call">הצטרפות לשיחה</string>
 
     <!-- ConversationActivity -->
     <string name="ConversationActivity_add_attachment">הוסף צרופה</string>
@@ -338,6 +350,13 @@
         <item quantity="two">ניתן לערוך רק עד שעתיים מזמן שליחת ההודעה.</item>
         <item quantity="many">ניתן לערוך רק עד %1$d שעות מזמן שליחת ההודעה.</item>
         <item quantity="other">ניתן לערוך רק עד %1$d שעות מזמן שליחת ההודעה.</item>
+    </plurals>
+    <!-- Warning dialog text shown to user if they try to edit a message too many times. Where %1$d is replaced with the number of edits -->
+    <plurals name="ConversationActivity_edit_message_too_many_edits">
+        <item quantity="one">אפשר לבצע רק עריכה %1$d בהודעה זו.</item>
+        <item quantity="two">אפשר לבצע רק %1$d עריכות בהודעה זו.</item>
+        <item quantity="many">אפשר לבצע רק %1$d עריכות בהודעה זו.</item>
+        <item quantity="other">אפשר לבצע רק %1$d עריכות בהודעה זו.</item>
     </plurals>
 
     <string name="ConversationActivity_invalid_recipient">מקבל בלתי תקף!</string>
@@ -519,6 +538,9 @@
     <string name="ConversationFragment__content_description_back_button">ניווט חזרה.</string>
     <!-- Label for a button displayed in the conversation toolbar to open the main screen of the app. -->
     <string name="ConversationFragment__content_description_launch_signal_button">פתיחת Signal</string>
+    <!-- Dialog title shown when more than one contact in a group conversation is no longer verified -->
+    <string name="ConversationFragment__no_longer_verified">כבר לא מאומת</string>
+
     <!-- Label for a button displayed in conversation list to clear the chat filter -->
     <string name="ConversationListFragment__clear_filter">ניקוי מסנן</string>
     <!-- Notice on chat list when no unread chats are available, centered on display -->
@@ -932,6 +954,8 @@
     <string name="LinkPreviewView_no_link_preview_available">תצוגה מקדימה של קישור אינה זמינה</string>
     <string name="LinkPreviewView_this_group_link_is_not_active">קישור קבוצה זה אינו פעיל</string>
     <string name="LinkPreviewView_domain_date">%1$s · %2$s</string>
+    <!-- Description for Call Link url previews -->
+    <string name="LinkPreviewView__use_this_link_to_join_a_signal_call">אפשר להשתמש בלינק הזה כדי להצטרף לשיחת Signal</string>
 
     <!-- LinkPreviewRepository -->
     <plurals name="LinkPreviewRepository_d_members">
@@ -940,6 +964,11 @@
         <item quantity="many">%1$d חברי קבוצה</item>
         <item quantity="other">%1$d חברי קבוצה</item>
     </plurals>
+
+    <!-- Title for dialog asking user to submit logs for debugging slow notification issues -->
+    <string name="PromptLogsSlowNotificationsDialog__title">We noticed notifications are delayed. Submit debug log?</string>
+    <!-- Message for dialog asking user to submit logs for debugging slow notification issues -->
+    <string name="PromptLogsSlowNotificationsDialog__message">Debug logs helps us diagnose and fix the issue, and do not contain identifying information.</string>
 
     <!-- PendingMembersActivity -->
     <string name="PendingMembersActivity_pending_group_invites">הזמנות קבוצה ממתינות</string>
@@ -1178,7 +1207,7 @@
     <string name="ImageEditorHud_draw_to_blur_additional_faces_or_areas">צייר כדי לטשטש פרצופים נוספים או אזורים נוספים</string>
 
     <!-- InputPanel -->
-    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">הקש והחזק כדי להקליט הודעה קולית, שחרר כדי לשלוח</string>
+    <string name="InputPanel_tap_and_hold_to_record_a_voice_message_release_to_send">צריך ללחוץ ולהחזיק להקלטת הודעה קולית, ולשחרר כדי לשלוח</string>
     <!-- Message shown if the user tries to switch a conversation from Signal to SMS -->
     <string name="InputPanel__sms_messaging_is_no_longer_supported_in_signal">הודעות SMS כבר לא נתמכות ב–Signal.</string>
     <!-- When editing a message, label shown above the text input field in the composer -->
@@ -1296,10 +1325,7 @@
     <string name="MessageQuotesBottomSheet_replies">תשובות</string>
 
     <!-- NotificationBarManager -->
-    <string name="NotificationBarManager_signal_call_in_progress">שיחת Signal בתהליך</string>
     <string name="NotificationBarManager__establishing_signal_call">מקים שיחת Signal</string>
-    <string name="NotificationBarManager__incoming_signal_call">שיחת Signal נכנסת</string>
-    <string name="NotificationBarManager__incoming_signal_group_call">שיחה קבוצתית נכנסת של Signal</string>
     <!-- Temporary notification shown when starting the calling service -->
     <string name="NotificationBarManager__starting_signal_call_service">שירות השיחות של Signal מופעל</string>
     <string name="NotificationBarManager__stopping_signal_call_service">עוצר את שירות השיחות של Signal</string>
@@ -1557,7 +1583,7 @@
     <string name="MessageRecord_you_marked_your_safety_number_with_s_verified">סימנת את מספר הביטחון שלך עם %1$s כמוודא</string>
     <string name="MessageRecord_you_marked_your_safety_number_with_s_verified_from_another_device">סימנת את מספר הביטחון שלך עם %1$s כמוודא ממכשיר אחר</string>
     <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified">סימנת את מספר הביטחון שלך עם %1$s כבלתי מוודא</string>
-    <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified_from_another_device">סימנת את מספר הביטחון שלך עם %1$s כבלתי מוודא ממכשיר אחר</string>
+    <string name="MessageRecord_you_marked_your_safety_number_with_s_unverified_from_another_device">סימנת את מספר הבטיחות שלך עם %1$s כבלתי מוודא ממכשיר אחר</string>
     <string name="MessageRecord_a_message_from_s_couldnt_be_delivered">הודעה מאת %1$s לא יכלה להימסר</string>
     <string name="MessageRecord_s_changed_their_phone_number">%1$s שינה/שינתה את המספר שלו/שלה.</string>
     <!-- Update item message shown in the release channel when someone is already a sustainer so we ask them if they want to boost. -->
@@ -1579,12 +1605,14 @@
 
     <!-- Group Calling update messages -->
     <string name="MessageRecord_s_started_a_group_call_s">%1$s התחיל/ה שיחה קבוצתית · %2$s</string>
+    <string name="MessageRecord_you_started_a_group_call_s">התחלת שיחה קבוצתית · %1$s</string>
     <string name="MessageRecord_s_is_in_the_group_call_s">%1$s בשיחה הקבוצתית · %2$s</string>
     <string name="MessageRecord_you_are_in_the_group_call_s1">את/ה בשיחה הקבוצתית · %1$s</string>
     <string name="MessageRecord_s_and_s_are_in_the_group_call_s1">%1$s וגם %2$s בשיחה הקבוצתית · %3$s</string>
     <string name="MessageRecord_group_call_s">שיחה קבוצתית · %1$s</string>
 
     <string name="MessageRecord_s_started_a_group_call">%1$s התחיל/ה שיחה קבוצתית</string>
+    <string name="MessageRecord_you_started_a_group_call">התחלת שיחה קבוצתית</string>
     <string name="MessageRecord_s_is_in_the_group_call">%1$s בשיחה הקבוצתית</string>
     <string name="MessageRecord_you_are_in_the_group_call">את/ה בשיחה הקבוצתית</string>
     <string name="MessageRecord_s_and_s_are_in_the_group_call">%1$s וגם %2$s בשיחה הקבוצתית</string>
@@ -1738,8 +1766,8 @@
         <item quantity="other">יש לך %1$d ניסינות נותרים. אם הניסיונות יאזלו לך, אתה יכול ליצור PIN חדש. אתה יכול להירשם ולהשתמש בחשבון שלך אבל תאבד מספר הגדרות מסוימות כמו מידע הפרופיל שלך.</item>
     </plurals>
     <string name="PinRestoreEntryFragment_signal_registration_need_help_with_pin">הרשמה אל Signal - עזרה עם PIN עבור Android</string>
-    <string name="PinRestoreEntryFragment_enter_alphanumeric_pin">הכנס PIN אלפאנומרי</string>
-    <string name="PinRestoreEntryFragment_enter_numeric_pin">הכנס PIN מספרי</string>
+    <!-- Button label to prompt the user to switch between an alphanumeric and numeric-only keyboards -->
+    <string name="PinRestoreEntryFragment_switch_keyboard">החלפת מקלדת</string>
 
     <!-- PinRestoreLockedFragment -->
     <string name="PinRestoreLockedFragment_create_your_pin">צור את ה־PIN שלך</string>
@@ -1828,6 +1856,60 @@
     <string name="WebRtcCallActivity__open_settings">פתח הגדרות</string>
     <!-- Negative action for bluetooth warning dialog to dismiss dialog -->
     <string name="WebRtcCallActivity__not_now">לא עכשיו</string>
+    <!-- Title for dialog to approve all requests -->
+    <plurals name="WebRtcCallActivity__approve_d_requests">
+        <item quantity="one">Approve %1$d request?</item>
+        <item quantity="two">Approve %1$d requests?</item>
+        <item quantity="many">Approve %1$d requests?</item>
+        <item quantity="other">Approve %1$d requests?</item>
+    </plurals>
+    <!-- Positive action for call link approve all dialog -->
+    <string name="WebRtcCallActivity__approve_all">Approve all</string>
+    <!-- Message for dialog to approve all requests -->
+    <plurals name="WebRtcCallActivity__d_people_will_be_added_to_the_call">
+        <item quantity="one">%1$d person will be added to the call.</item>
+        <item quantity="two">%1$d people will be added to the call.</item>
+        <item quantity="many">%1$d people will be added to the call.</item>
+        <item quantity="other">%1$d people will be added to the call.</item>
+    </plurals>
+    <!-- Title for dialog to deny all requests -->
+    <plurals name="WebRtcCallActivity__deny_d_requests">
+        <item quantity="one">Deny %1$d request?</item>
+        <item quantity="two">Deny %1$d requests?</item>
+        <item quantity="many">Deny %1$d requests?</item>
+        <item quantity="other">Deny %1$d requests?</item>
+    </plurals>
+    <!-- Message for dialog to deny all requests -->
+    <plurals name="WebRtcCallActivity__d_people_will_not_be_added_to_the_call">
+        <item quantity="one">%1$d person will not be added to the call.</item>
+        <item quantity="two">%1$d people will not be added to the call.</item>
+        <item quantity="many">%1$d people will not be added to the call.</item>
+        <item quantity="other">%1$d people will not be added to the call.</item>
+    </plurals>
+    <!-- Positive action for call link deny all dialog -->
+    <string name="WebRtcCallActivity__deny_all">Deny all</string>
+    <!-- Displayed in call status when users are pending -->
+    <plurals name="WebRtcCallActivity__d_people_waiting">
+        <item quantity="one">%1$d person waiting</item>
+        <item quantity="two">%1$d people waiting</item>
+        <item quantity="many">%1$d people waiting</item>
+        <item quantity="other">%1$d people waiting</item>
+    </plurals>
+    <!-- Displayed in call status during call link when no users are pending -->
+    <plurals name="WebRtcCallActivity__d_people">
+        <item quantity="one">%1$d person</item>
+        <item quantity="two">%1$d people</item>
+        <item quantity="many">%1$d people</item>
+        <item quantity="other">%1$d people</item>
+    </plurals>
+    <!-- Title of dialog displayed when a user\'s join request is denied for call link entry -->
+    <string name="WebRtcCallActivity__join_request_denied">Join request denied</string>
+    <!-- Message of dialog displayed when a user\'s join request is denied for call link entry -->
+    <string name="WebRtcCallActivity__your_request_to_join_this_call_has_been_denied">Your request to join this call has been denied.</string>
+    <!-- Title of dialog displayed when a user is removed from a call link -->
+    <string name="WebRtcCallActivity__removed_from_call">Removed from call</string>
+    <!-- Message of dialog displayed when a user is removed from a call link -->
+    <string name="WebRtcCallActivity__someone_has_removed_you_from_the_call">Someone has removed you from the call.</string>
 
     <!-- WebRtcCallView -->
     <string name="WebRtcCallView__signal_call">שיחת Signal</string>
@@ -1840,6 +1922,12 @@
     <string name="WebRtcCallView__reconnecting">מתחבר מחדש…</string>
     <string name="WebRtcCallView__joining">מצטרף…</string>
     <string name="WebRtcCallView__disconnected">מנותק</string>
+    <!-- Utilized in the lobby before joining a call link -->
+    <string name="WebRtcCallView__signal_call_link">Signal call link</string>
+    <!-- Warning displayed when entering a call via a link -->
+    <string name="WebRtcCallView__anyone_who_joins">Anyone who joins this call via the link will see your name, photo, and phone number.</string>
+    <!-- Displayed on the call screen as the status when waiting to be let into a call link by an admin -->
+    <string name="WebRtcCallView__waiting_to_be_let_in">Waiting to be let in…</string>
 
     <string name="WebRtcCallView__signal_will_ring_s">Signal יצלצל אל %1$s</string>
     <string name="WebRtcCallView__signal_will_ring_s_and_s">Signal יצלצל אל %1$s ואל %2$s</string>
@@ -1976,6 +2064,10 @@
     <!--    During registration, if the user attempts (and fails) to register, we display this error message with a number of minutes timer they are allowed to try again.-->
     <string name="RegistrationActivity_rate_limited_to_try_again">עשית יותר מדי ניסיונות להירשם עם המספר הזה. יש לנסות שוב עוד %1$s.</string>
     <string name="RegistrationActivity_unable_to_connect_to_service">לא היה ניתן להתחבר אל השירות. אנא בדוק את חיבור האינטרנט ונסה שוב.</string>
+    <!-- A description text for an alert dialog where we do not or can not explain the error to the user. -->
+    <string name="RegistrationActivity_generic_error">קרתה שגיאה לא צפויה.</string>
+    <!-- A description text for an alert dialog when the entered phone number is not eligible for a verification SMS. -->
+    <string name="RegistrationActivity_we_couldnt_send_you_a_verification_code">לא הצלחנו לשלוח לך קוד אימות דרך SMS. כדאי לנסות לקבל את הקוד שלך דרך שיחה קולית במקום.</string>
     <!-- Generic error when the app is unable to request an SMS code for an unknown reason. -->
     <string name="RegistrationActivity_unable_to_request_verification_code">לא ניתן לבקש קוד אימות. כדאי לבדוק את חיבור הרשת שלך ולנסות שוב.</string>
     <string name="RegistrationActivity_non_standard_number_format">תסדיר אי־תקני של מספר</string>
@@ -1996,6 +2088,10 @@
     <string name="RegistrationActivity_we_need_to_verify_that_youre_human">אנחנו צריכים לוודא שאתה בן־אדם.</string>
     <!-- An error shown when the request was valid, but due to an issue with a partner vendor, the server is unable to send an SMS code -->
     <string name="RegistrationActivity_external_service_error">Signal לא הצליחה לשלוח קוד SMS עקב תקלה חיצונית.</string>
+    <!-- Button label to trigger a phone call to provide the registration code, in lieu of an SMS code -->
+    <string name="RegistrationActivity_voice_call">שיחה קולית</string>
+    <!-- Dialog button to cancel the pending action and return to the previous state. -->
+    <string name="RegistrationActivity_cancel">ביטול</string>
     <string name="RegistrationActivity_next">הבא</string>
     <string name="RegistrationActivity_continue">המשך</string>
     <string name="RegistrationActivity_take_privacy_with_you_be_yourself_in_every_message">קח פרטיות איתך.\nהייה עצמך בכל הודעה.</string>
@@ -2084,7 +2180,7 @@
     <string name="SmsMessageRecord_received_key_exchange_message_for_invalid_protocol_version">
         הודעת החלפת מפתחות התקבלה עבור גרסת פרוטוקול בלתי־תקפה.
     </string>
-    <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">הודעה התקבלה עם מספר ביטחון חדש. הקש כדי לעבד ולהציג אותה.</string>
+    <string name="SmsMessageRecord_received_message_with_new_safety_number_tap_to_process">הודעה התקבלה עם מספר בטיחות חדש. יש ללחוץ כדי לעבד ולהציג אותה.</string>
     <string name="SmsMessageRecord_secure_session_reset">איפסת את השיח המאובטח.</string>
     <string name="SmsMessageRecord_secure_session_reset_s">%1$s איפס את השיח המאובטח.</string>
     <string name="SmsMessageRecord_duplicate_message">הודעה כפולה.</string>
@@ -2162,7 +2258,7 @@
     <string name="ThreadRecord_s_is_on_signal">%1$s נמצא ב־Signal!</string>
     <string name="ThreadRecord_disappearing_messages_disabled">הודעות נעלמות הושבתו</string>
     <string name="ThreadRecord_disappearing_message_time_updated_to_s">זמן הודעות נעלמות הוגדר אל %1$s</string>
-    <string name="ThreadRecord_safety_number_changed">מספר ביטחון השתנה</string>
+    <string name="ThreadRecord_safety_number_changed">מספר בטיחות השתנה</string>
     <string name="ThreadRecord_your_safety_number_with_s_has_changed">מספר הביטחון שלך עם %1$s השתנה.</string>
     <string name="ThreadRecord_you_marked_verified">סימנת כמוודא</string>
     <string name="ThreadRecord_you_marked_unverified">סימנת כבלתי מוודא</string>
@@ -2254,6 +2350,14 @@
     <string name="VerifyIdentityActivity_signal_needs_the_camera_permission_in_order_to_scan_a_qr_code_but_it_has_been_permanently_denied">Signal צריך את הרשאת המצלמה על מנת לסרוק קוד QR, אבל היא נדחתה לצמיתות. אנא המשך אל הגדרות היישום, בחר \"הרשאות\" ואפשר את \"מצלמה\".</string>
     <string name="VerifyIdentityActivity_unable_to_scan_qr_code_without_camera_permission">לא היה ניתן לסרוק קוד QR ללא הרשאת מצלמה</string>
     <string name="VerifyIdentityActivity_you_must_first_exchange_messages_in_order_to_view">אתה חייב תחילה להחליף הודעות על מנת להציג את מספר הביטחון של %1$s.</string>
+    <!-- Dialog message explaining to user they must exchange messages first to create a safety number -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_message">מספר בטיחות ייווצר עם אדם זה אחרי שתחליפו ביניכם הודעות.</string>
+    <!-- Confirmation option for dialog explaining to user they must exchange messages first to create a safety number  -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_ok">אישור</string>
+    <!-- Learn more option for dialog explaining to user they must exchange messages first to create a safety number  -->
+    <string name="VerifyIdentityActivity_dialog_exchange_messages_to_create_safety_number_learn_more">למידע נוסף</string>
+    <!-- Confirmation button on scan result dialogs -->
+    <string name="VerifyDisplayFragment__scan_result_dialog_ok">אישור</string>
 
     <!-- ViewOnceMessageActivity -->
   <!-- Removed by excludeNonTranslatables <string name="ViewOnceMessageActivity_video_duration" translatable="false">%1$02d:%2$02d</string> -->
@@ -2379,6 +2483,8 @@
     <string name="NotificationChannel_call_status">מעמד שיחה</string>
     <!-- Notification channel name for occasional alerts to the user. Will appear in the system notification settings as the title of this notification channel. -->
     <string name="NotificationChannel_critical_app_alerts">התראות אפליקציה קריטיות</string>
+    <!-- Notification channel name for other notifications related to messages. Will appear in the system notification settings as the title of this notification channel. -->
+    <string name="NotificationChannel_additional_message_notifications">עוד התראות של הודעות</string>
 
     <!-- ProfileEditNameFragment -->
 
@@ -2439,7 +2545,8 @@
 
     <!-- WebRtcCallActivity -->
     <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone">כדי לענות אל השיחה, תן אל Signal גישה אל המיקרופון שלך.</string>
-    <string name="WebRtcCallActivity_to_answer_the_call_from_s_give_signal_access_to_your_microphone">כדי לענות אל השיחה מאת %1$s, תן אל Signal גישה אל המיקרופון שלך.</string>
+    <!-- Message shown in permission dialog when attempting to answer a video call without camera or microphone permissions already granted. -->
+    <string name="WebRtcCallActivity_to_answer_the_call_give_signal_access_to_your_microphone_and_camera">כדי לענות לשיחת וידאו, Signal צריכה גישה למיקרופון ולמצלמה שלך.</string>
     <string name="WebRtcCallActivity_signal_requires_microphone_and_camera_permissions_in_order_to_make_or_receive_calls">Signal דורש את ההרשאות של המיקרופון והמצלמה על מנת לבצע שיחות ולענות לשיחות, אבל הן נדחו לצמיתות. אנא המשך אל הגדרות היישום, בחר \"הרשאות\" ואפשר את \"מיקרופון\" ואת \"מצלמה\".</string>
     <string name="WebRtcCallActivity__answered_on_a_linked_device">נענתה על מכשיר מקושר.</string>
     <string name="WebRtcCallActivity__declined_on_a_linked_device">נדחתה על מכשיר מקושר.</string>
@@ -2467,7 +2574,9 @@
     <string name="WebRtcAudioOutputToggle__speaker">רמקול</string>
     <!-- Audio output option referring to an external audio device connected via wireless Bluetooth -->
     <string name="WebRtcAudioOutputToggle__bluetooth">Bluetooth</string>
-    <!-- Audio output option referring to an external headset connected via a 3.5mm headphone jack -->
+    <!-- Audio output option referring to a pair of headphones that do not contain a microphone connected via a 3.5mm headphone jack -->
+    <string name="WebRtcAudioOutputToggle__wired_headphones">אוזניות חוטיות</string>
+    <!-- Audio output option referring to an external headset that contains a microphone connected via a 3.5mm headphone jack -->
     <string name="WebRtcAudioOutputToggle__wired_headset">אוזניות חוטיות</string>
     <!-- Audio output option referring to an external headset connected via a USB-C data cable -->
     <string name="WebRtcAudioOutputToggle__wired_headset_usb">אוזניות חוטיות (USB)</string>
@@ -2839,15 +2948,28 @@
 
     <!-- verify_display_fragment -->
     <string name="verify_display_fragment__to_verify_the_security_of_your_end_to_end_encryption_with_s"><![CDATA[כדי לוודא את האבטחה של ההצפנה מקצה־אל־קצה שלך עם %1$s, השווה את המספרים לעיל עם המכשיר של הצד השני. אתה יכול גם לסרוק את הקוד במכשיר של הצד שני. <a href=\"https://signal.org/redirect/safety-numbers\">למד עוד.</a>]]></string>
+    <!-- Explanation of how to verify the safety numbers. %s is replaced with the name of the other recipient -->
+    <string name="verify_display_fragment__pnp_verify_safety_numbers_explanation_with_s">כדי לאמת את האבטחה מקצה לקצה שלך עם %1$s, יש להתאים את כרטיסיית הצבע שלמעלה עם המכשיר שלו או שלה ולהשוות את המספרים. אם הם לא תואמים, אפשר להחליק ולנסות זוג אחר של מספרי בטיחות. רק זוג אחד צריך להתאים.</string>
     <string name="verify_display_fragment__tap_to_scan">הקש כדי לסרוק</string>
     <string name="verify_display_fragment__successful_match">התאמה מוצלחת</string>
-    <string name="verify_display_fragment__failed_to_verify_safety_number">נכשל בווידוא מספר ביטחון</string>
+    <string name="verify_display_fragment__failed_to_verify_safety_number">אימות מספר בטיחות נכשל</string>
     <string name="verify_display_fragment__loading">טוען…</string>
     <string name="verify_display_fragment__mark_as_verified">סמן כמוֻדא</string>
     <string name="verify_display_fragment__clear_verification">נקה וידוא</string>
+    <!-- Banner at top of safety numbers screen explaining that we\'re updating how safety numbers work. -->
+    <string name="verify_display_fragment__safety_numbers_are_updating_banner_no_learn_more">מספרי בטיחות מתעדכנים.</string>
+
+    <!-- Title for dialog explaining for how safety numbers are transitioning to support usernames -->
+    <string name="PnpSafetyNumberEducationDialog__title">שינויים במספרי בטיחות</string>
+    <!-- Message for dialog explaining for how safety numbers are transitioning to support usernames -->
+    <string name="PnpSafetyNumberEducationDialog__body">אנחנו מעדכנים את מספרי הבטיחות במהלך תקופת מעבר כדי לאפשר פיצ׳רים עתידיים של פרטיות ב–Signal.\n\nכדי לאמת מספרי בטיחות, יש להתאים את כרטיסיית הצבע שלמעלה עם המכשיר של איש הקשר. אם הם לא תואמים, אפשר להחליק ולנסות זוג אחר של מספרי בטיחות. רק זוג אחד צריך להתאים.</string>
+    <!-- Button for more information about the safety number changes. Takes user to support article -->
+    <string name="PnpSafetyNumberEducationDialog__help">צריך עזרה?</string>
+    <!-- Confirmation button for educating users about new safety number changes -->
+    <string name="PnpSafetyNumberEducationDialog__confirm">הבנתי</string>
 
     <!-- verify_identity -->
-    <string name="verify_identity__share_safety_number">שתף מספר ביטחון</string>
+    <string name="verify_identity__share_safety_number">שיתוף מספר בטיחות</string>
 
     <!-- verity_scan_fragment -->
     <string name="verify_scan_fragment__scan_the_qr_code_on_your_contact">סרוק את קוד ה־QR במכשיר של איש הקשר שלך.</string>
@@ -2883,7 +3005,7 @@
     <string name="AndroidManifest__create_passphrase">צור משפט־סיסמה</string>
     <string name="AndroidManifest__select_contacts">בחר אנשי קשר</string>
     <string name="AndroidManifest__change_passphrase">שנה משפט־סיסמה</string>
-    <string name="AndroidManifest__verify_safety_number">וודא מספר ביטחון</string>
+    <string name="AndroidManifest__verify_safety_number">אימות מספר בטיחות</string>
     <string name="AndroidManifest__media_preview">תצוגה מקדימה של מדיה</string>
     <string name="AndroidManifest__message_details">פרטי הודעה</string>
     <string name="AndroidManifest__linked_devices">מכשירים מקושרים</string>
@@ -2923,6 +3045,14 @@
         <item>תרומות ותגים</item>
         <item>ייצוא SMS</item>
     </string-array>
+    <!-- Subject of email when submitting debug logs to help debug slow notifications -->
+    <string name="DebugLogsPromptDialogFragment__signal_android_support_request">Signal Android Debug Log Submission</string>
+    <!-- Category to organize the support email sent -->
+    <string name="DebugLogsPromptDialogFragment__slow_notifications_category">Slow notifications</string>
+    <!-- Action to submit logs and take user to send an e-mail -->
+    <string name="DebugLogsPromptDialogFragment__submit">Submit</string>
+    <!-- Action to decline to submit logs -->
+    <string name="DebugLogsPromptDialogFragment__no_thanks">No thanks</string>
 
     <!-- ReactWithAnyEmojiBottomSheetDialogFragment -->
     <string name="ReactWithAnyEmojiBottomSheetDialogFragment__this_message">הודעה זו</string>
@@ -3492,6 +3622,8 @@
     <string name="conversation__menu_conversation_settings">הגדרות צ\'אט</string>
     <string name="conversation__menu_add_shortcut">הוסף אל מסך הבית</string>
     <string name="conversation__menu_create_bubble">צור בועה</string>
+    <!-- Overflow menu option that allows formatting of text -->
+    <string name="conversation__menu_format_text">עיצוב טקסט</string>
 
     <!-- conversation_popup -->
     <string name="conversation_popup__menu_expand_popup">הרחב חלון קופץ</string>
@@ -3561,38 +3693,13 @@
     <string name="new_conversation_activity__refresh">רענן</string>
     <!-- redphone_audio_popup_menu -->
 
-    <!-- Insights -->
-    <string name="Insights__percent">%</string>
-    <string name="Insights__title">תובנות</string>
-    <string name="InsightsDashboardFragment__title">תובנות</string>
-    <!-- Body text for a page describing how many signal messages you\'ve sent. The first placeholder represents the number of signal messages sent, and the second placeholder represents how many days have passed. -->
-    <string name="InsightsDashboardFragment__signal_protocol_automatically_protected">פרוטקול Signal הגן באופן אוטומטי על %1$d%% מההודעות היוצאות שלך במשך %2$d הימים האחרונים. צ׳אטים בין משתמשי Signal תמיד מוצפנים מקצה לקצה.</string>
-    <string name="InsightsDashboardFragment__spread_the_word">הפץ את המילה</string>
-    <string name="InsightsDashboardFragment__not_enough_data">אין מספיק נתונים</string>
-    <string name="InsightsDashboardFragment__your_insights_percentage_is_calculated_based_on">אחוז התובנות שלך מחושב על סמך הודעות יוצאות בטווח %1$d הימים האחרונים שלא נעלמו או לא נמחקו.</string>
-    <!-- Label for a button that, when pressed, will begin a chat with a person whose name is showed on the screen. -->
-    <string name="InsightsDashboardFragment__start_a_conversation">התחלת צ׳אט</string>
-    <string name="InsightsDashboardFragment__invite_your_contacts">התחל לתקשר באופן מאובטח ולאפשר מאפיינים חדשים שעוברים מעבר לגבולות של מסרונים בלתי מוצפנים על ידי הזמנת אנשי קשר נוספים להצטרף אל Signal.</string>
-    <string name="InsightsDashboardFragment__this_stat_was_generated_locally">סטטיסטיקה זו נוצרה באופן מקומי על המכשיר שלך ויכולה להיראות רק על ידך. היא אף פעם לא מועברת אל מקום כלשהו.</string>
-    <string name="InsightsDashboardFragment__encrypted_messages">הודעות מוצפנות</string>
-    <string name="InsightsDashboardFragment__cancel">בטל</string>
-    <string name="InsightsDashboardFragment__send">שלח</string>
-    <string name="InsightsModalFragment__title">היכרות עם תובנות</string>
-    <string name="InsightsModalFragment__description">גלה כמה מההודעות היוצאות שלך נשלחו באופן מאובטח, לאחר מכן הזמן בזריזות אנשי קשר חדשים כדי להמריץ את אחוז Signal שלך.</string>
-    <string name="InsightsModalFragment__view_insights">הצג תובנות</string>
-
-    <string name="FirstInviteReminder__title">הזמן אל Signal</string>
-    <string name="FirstInviteReminder__description">אתה יכול להגדיל את מספר ההודעות המוצפנות שאתה שולח ב־%1$d%%</string>
-    <string name="SecondInviteReminder__title">מתן בוסט ל–Signal שלך</string>
-    <string name="SecondInviteReminder__description">הזמן את %1$s</string>
-    <string name="InsightsReminder__view_insights">הצג תובנות</string>
-    <string name="InsightsReminder__invite">הזמן</string>
-
     <!-- Edit KBS Pin -->
 
     <!-- BaseKbsPinFragment -->
     <string name="BaseKbsPinFragment__next">הבא</string>
+    <!-- Button label to prompt them to create a password ("PIN") using numbers and letters rather than only numbers. -->
     <string name="BaseKbsPinFragment__create_alphanumeric_pin">צור PIN אלפאנומרי</string>
+    <!-- Button label to prompt them to return to creating a numbers-only password ("PIN") -->
     <string name="BaseKbsPinFragment__create_numeric_pin">צור PIN מספרי</string>
   <!-- Removed by excludeNonTranslatables <string name="BaseKbsPinFragment__learn_more_url" translatable="false">https://support.signal.org/hc/articles/360007059792</string> -->
 
@@ -3658,8 +3765,8 @@
     <string name="RegistrationLockFragment__enter_the_pin_you_created">הכנס את ה־PIN שיצרת עבור החשבון שלך. הוא שונה מקוד הווידוא שלך במסרון.</string>
     <!-- Info text shown above a pin entry text box describing what pin they should be entering. -->
     <string name="RegistrationLockFragment__enter_the_pin_you_created_for_your_account">צריך להזין את ה–PIN שיצרת עבור החשבון שלך.</string>
-    <string name="RegistrationLockFragment__enter_alphanumeric_pin">הכנס PIN אלפאנומרי</string>
-    <string name="RegistrationLockFragment__enter_numeric_pin">הכנס PIN מספרי</string>
+    <!-- Button label to prompt the user to switch between an alphanumeric and numeric-only keyboards -->
+    <string name="RegistrationLockFragment__switch_keyboard">החלפת מקלדת</string>
     <string name="RegistrationLockFragment__incorrect_pin_try_again">PIN שגוי. נסה שוב.</string>
     <string name="RegistrationLockFragment__forgot_pin">שכחת PIN?</string>
     <string name="RegistrationLockFragment__incorrect_pin">PIN שגוי</string>
@@ -3709,6 +3816,20 @@
     <string name="KbsMegaphone__create_a_pin">צור PIN</string>
     <string name="KbsMegaphone__pins_keep_information_thats_stored_with_signal_encrytped">קודי PIN שומרים על מידע שמאוחסן עם Signal מוצפן.</string>
     <string name="KbsMegaphone__create_pin">צור PIN</string>
+
+    <!-- CallNotificationBuilder -->
+    <!-- Displayed in a notification when a Signal voice call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_voice_call">שיחה קולית נכנסת של Signal</string>
+    <!-- Displayed in a notification when a Signal video call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_video_call">שיחת וידאו נכנסת של Signal</string>
+    <!-- Displayed in a notification when a Signal group call is ringing -->
+    <string name="CallNotificationBuilder__incoming_signal_group_call">שיחה קבוצתית נכנסת של Signal</string>
+    <!-- Displayed in a notification when a Signal voice call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_voice_call">שיחה קולית של Signal מתקיימת עכשיו</string>
+    <!-- Displayed in a notification when a Signal video call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_video_call">שיחת וידאו של Signal מתקיימת עכשיו</string>
+    <!-- Displayed in a notification when a Signal group call is in progress -->
+    <string name="CallNotificationBuilder__ongoing_signal_group_call">שיחה קבוצתית של Signal מתקיימת עכשיו</string>
 
     <!-- transport_selection_list_item -->
     <string name="transport_selection_list_item__transport_icon">איקון תעבורה</string>
@@ -5748,7 +5869,7 @@
     <!-- Message of safety number changes bottom sheet when not showing individual records -->
     <string name="SafetyNumberBottomSheetFragment__you_have_d_connections">יש לך %1$d חברי Signal שיתכן והתקינו מחדש את Signal או החליפו מכשירים. לפני שיתוף הסטורי שלך איתם, כדאי לסקור את מספרי הבטיחות שלהם או לשקול להסיר אותם מהסטורי שלך.</string>
     <!-- Menu action to launch safety number verification screen -->
-    <string name="SafetyNumberBottomSheetFragment__verify_safety_number">וודא מספר ביטחון</string>
+    <string name="SafetyNumberBottomSheetFragment__verify_safety_number">אימות מספר בטיחות</string>
     <!-- Menu action to remove user from story -->
     <string name="SafetyNumberBottomSheetFragment__remove_from_story">הסרה מסטורי</string>
     <!-- Action button at bottom of SafetyNumberBottomSheetFragment to send anyway -->
@@ -6101,7 +6222,7 @@
     <!-- Title for screen describing that sms support is going to be removed soon -->
     <string name="SmsRemoval_title_going_away">נפרדים מהתמיכה ב–SMS</string>
     <!-- Bullet point message shown on describing screen as first bullet why sms is being removed, placeholder with be date of removal (e.g., March 21st) -->
-    <string name="SmsRemoval_info_bullet_1_s">בקרוב לא תהיה תמיכה בהודעות SMS באפליקציית Signal, החל מתאריך %1$s.</string>
+    <string name="SmsRemoval_info_bullet_1">בקרוב לא תהיה תמיכה בהודעות SMS באפליקציית Signal.</string>
     <!-- Bullet point message shown on describing screen as second bullet why sms is being removed -->
     <string name="SmsRemoval_info_bullet_2">הודעות SMS שונות מהודעות Signal. <b>זה לא ישפיע על שליחת הודעות מוצפנת ב–Signal, שתמשיך לפעול.</b></string>
     <!-- Bullet point message shown on describing screen as third bullet why sms is being removed -->
@@ -6132,6 +6253,8 @@
     <string name="TextFormatting_monospace">רוחב אחיד</string>
     <!-- Popup menu label for applying spoiler style -->
     <string name="TextFormatting_spoiler">ספוילר</string>
+    <!-- Popup menu label for clearing applied formatting -->
+    <string name="TextFormatting_clear_formatting">ניקוי עיצוב</string>
 
     <!-- UsernameEducationFragment -->
     <!-- Continue button which takes the user to the add a username screen -->
@@ -6178,6 +6301,10 @@
     <string name="CallLogAdapter__d_s">(%1$d) %2$s</string>
     <!-- Status text on call links -->
     <string name="CallLogAdapter__call_link">לינק לשיחה</string>
+    <!-- Accessibility description for the video call button -->
+    <string name="CallLogAdapter__start_a_video_call">Start a video call</string>
+    <!-- Accessibility description for the voice call button -->
+    <string name="CallLogAdapter__start_a_voice_call">Start a voice call</string>
 
     <!-- Call Log context menu -->
     <!-- Displayed as a context menu item to start a video call -->
@@ -6198,6 +6325,25 @@
     <string name="CallContextMenu__delete">מחיקה</string>
 
     <!-- Call Log Fragment -->
+    <!-- Displayed when deleting call history items -->
+    <string name="CallLogFragment__deleting">מוחקים…</string>
+    <!-- Displayed in a toast when a deletion fails for an unknown reason -->
+    <string name="CallLogFragment__deletion_failed">מחיקה נכשלה.</string>
+    <!-- Displayed as message in error dialog when can\'t delete links -->
+    <plurals name="CallLogFragment__cant_delete_call_link">
+        <item quantity="one">מחיקת לינק נכשלה. כדאי לבדוק את החיבור שלך ולנסות שוב.</item>
+        <item quantity="two">לא כל הלינקים לשיחות נמחקו. כדאי לבדוק את החיבור שלך ולנסות שוב.</item>
+        <item quantity="many">לא כל הלינקים לשיחות נמחקו. כדאי לבדוק את החיבור שלך ולנסות שוב.</item>
+        <item quantity="other">לא כל הלינקים לשיחות נמחקו. כדאי לבדוק את החיבור שלך ולנסות שוב.</item>
+    </plurals>
+    <!-- Snackbar text after clearing the call history -->
+    <string name="CallLogFragment__cleared_call_history">היסטוריית שיחות נוקתה</string>
+    <!-- Dialog title to clear all call events -->
+    <string name="CallLogFragment__clear_call_history_question">לנקות היסטוריית שיחות?</string>
+    <!-- Dialog body to clear all call events -->
+    <string name="CallLogFragment__this_will_permanently_delete_all_call_history">זה ימחק לצמיתות את כל היסטוריית השיחות</string>
+    <!-- Action bar menu item to delete all call events -->
+    <string name="CallLogFragment__clear_call_history">ניקוי היסטוריית שיחות</string>
     <!-- Action bar menu item to only display missed calls -->
     <string name="CallLogFragment__filter_missed_calls">סינון שיחות שלא נענו</string>
     <!-- Action bar menu item to clear missed call filter -->
@@ -6212,7 +6358,7 @@
     <string name="CallLogFragment__filtered_by_missed">סינון לפי שיחות שלא נענו</string>
     <!-- Bottom bar option to select all call entries -->
     <string name="CallLogFragment__select_all">בחירת הכל</string>
-    <!-- Bottom bar option to delete all selected call entries -->
+    <!-- Bottom bar option to delete all selected call entries and dialog action to confirm deletion -->
     <string name="CallLogFragment__delete">מחיקה</string>
     <plurals name="CallLogFragment__delete_d_calls">
         <item quantity="one">למחוק שיחה %1$d?</item>
@@ -6220,8 +6366,6 @@
         <item quantity="many">למחוק %1$d שיחות?</item>
         <item quantity="other">למחוק %1$d שיחות?</item>
     </plurals>
-    <!-- Positive action on multi-delete protection dialog -->
-    <string name="CallLogFragment__delete_for_me">מחיקה עבורי</string>
     <!-- Snackbar label after deleting call logs -->
     <plurals name="CallLogFragment__d_calls_deleted">
         <item quantity="one">שיחה %1$d נמחקה</item>
@@ -6251,6 +6395,10 @@
     <string name="CallStateUpdatePopupWindow__mic_on">מיקרופון מופעל</string>
     <!-- Displayed when the user turns off their mic -->
     <string name="CallStateUpdatePopupWindow__mic_off">מיקרופון מושבת</string>
+    <!-- Displayed when the user turns on their speakerphone -->
+    <string name="CallStateUpdatePopupWindow__speaker_on">רמקול פועל</string>
+    <!-- Displayed when the user turns off their speakerphone -->
+    <string name="CallStateUpdatePopupWindow__speaker_off">רמקול כבוי</string>
 
     <!-- Accessibility label describing the capture button on the camera screen -->
     <string name="CameraControls_capture_button_accessibility_label">כפתור צילום</string>
@@ -6272,6 +6420,16 @@
     <string name="CreateCallLink__create_a_call_link">יצירת לינק לשיחה</string>
     <!-- Call link creation item description on calls tab -->
     <string name="CreateCallLink__share_a_link_for">שיתוף לינק לשיחת Signal</string>
+
+    <!-- CallLinkInfoSheet -->
+    <!-- Sheet title -->
+    <string name="CallLinkInfoSheet__call_info">Call info</string>
+    <!-- Dialog title for removing or blocking participants -->
+    <string name="CallLinkInfoSheet__remove_s_from_the_call">Remove %1$s from the call?</string>
+    <!-- Dialog action to remove participant from the call -->
+    <string name="CallLinkInfoSheet__remove">Remove</string>
+    <!-- Dialog action to block participant from the call -->
+    <string name="CallLinkInfoSheet__block_from_call">Block from call</string>
 
     <!-- CreateCallLinkBottomSheetDialogFragment -->
     <!-- Fragment title -->
@@ -6315,6 +6473,15 @@
 
     <!-- Title shown at top of bottom sheet dialog for displaying a message\'s edit history -->
     <string name="EditMessageHistoryDialog_title">היסטוריית עריכות</string>
+    <!-- Title of dialog shown alerting user that edit message is in beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_title">רק עבור Signal בטא</string>
+    <!-- Body of dialog shown alerting user that edit message is in beta only and only sent to beta users. -->
+    <string name="SendingEditMessageBetaOnlyDialog_body">עריכת הודעות זמינה למשתמשי גרסת הבטא של Signal בלבד. אם עורכים הודעה, היא תהיה זמינה רק לאנשים שמשתמשים בגרסת הבטא האחרונה של Signal.</string>
+    <!-- Button to cancel sending edit message as it is beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_cancel">ביטול</string>
+    <!-- Button to continue sending edit message despite it being beta only -->
+    <string name="SendingEditMessageBetaOnlyDialog_send">שלח</string>
+
 
     <!-- CallLinkDetailsFragment -->
     <!-- Displayed in action bar at the top of the fragment -->
@@ -6363,6 +6530,31 @@
     <!-- Body of a dialog that is displayed when we experienced a network error when looking up a username. -->
     <string name="UsernameLinkSettings_qr_result_network_error">הייתה שגיאת רשת. יש לנסות שוב.</string>
 
+    <!-- PendingParticipantsView -->
+    <!-- Displayed in the popup card when a remote user attempts to join a call link -->
+    <string name="PendingParticipantsView__would_like_to_join">Would like to join…</string>
+    <!-- Displayed in a button on the popup card denoting that there are other pending requests to join a call link -->
+    <plurals name="PendingParticipantsView__plus_d_requests">
+        <item quantity="one">+%1$d request</item>
+        <item quantity="two">+%1$d requests</item>
+        <item quantity="many">+%1$d requests</item>
+        <item quantity="other">+%1$d requests</item>
+    </plurals>
+
+    <!-- PendingParticipantsBottomSheet -->
+    <!-- Title of the bottom sheet displaying requests to join the call link -->
+    <string name="PendingParticipantsBottomSheet__requests_to_join_this_call">Requests to join this call</string>
+    <!-- Subtitle of the bottom sheet denoting the total number of people waiting -->
+    <plurals name="PendingParticipantsBottomSheet__d_people_waiting">
+        <item quantity="one">%1$d person waiting</item>
+        <item quantity="two">%1$d people waiting</item>
+        <item quantity="many">%1$d people waiting</item>
+        <item quantity="other">%1$d people waiting</item>
+    </plurals>
+    <!-- Content description for rejecting a user -->
+    <string name="PendingParticipantsBottomSheet__reject">Reject</string>
+    <!-- Content desccription for confirming a user -->
+    <string name="PendingParticipantsBottomSheet__approve">Approve</string>
 
     <!-- EOF -->
 </resources>

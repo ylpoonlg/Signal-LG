@@ -1,10 +1,11 @@
 package org.thoughtcrime.securesms.util
 
+import org.thoughtcrime.securesms.database.SignalDatabase
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientId
 import java.util.concurrent.TimeUnit
-import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Helpers for determining if a message send/receive is valid for those that
@@ -14,7 +15,7 @@ object MessageConstraintsUtil {
   private val RECEIVE_THRESHOLD = TimeUnit.DAYS.toMillis(1)
   private val SEND_THRESHOLD = TimeUnit.HOURS.toMillis(3)
 
-  private val MAX_EDIT_COUNT = 10
+  const val MAX_EDIT_COUNT = 10
 
   @JvmStatic
   fun isValidRemoteDeleteReceive(targetMessage: MessageRecord, deleteSenderId: RecipientId, deleteServerTimestamp: Long): Boolean {
@@ -42,8 +43,13 @@ object MessageConstraintsUtil {
   }
 
   @JvmStatic
+  fun isWithinMaxEdits(targetMessage: MessageRecord): Boolean {
+    return targetMessage.revisionNumber < MAX_EDIT_COUNT
+  }
+
+  @JvmStatic
   fun getEditMessageThresholdHours(): Int {
-    return SEND_THRESHOLD.hours.inWholeHours.toInt()
+    return SEND_THRESHOLD.milliseconds.inWholeHours.toInt()
   }
 
   /**
@@ -51,7 +57,12 @@ object MessageConstraintsUtil {
    */
   @JvmStatic
   fun isValidEditMessageSend(targetMessage: MessageRecord, currentTime: Long): Boolean {
-    return isValidRemoteDeleteSend(targetMessage, currentTime) &&
+    val originalMessage = if (targetMessage.isEditMessage && targetMessage.id != targetMessage.originalMessageId?.id) {
+      SignalDatabase.messages.getMessageRecord(targetMessage.originalMessageId!!.id)
+    } else {
+      targetMessage
+    }
+    return isValidRemoteDeleteSend(originalMessage, currentTime) &&
       targetMessage.revisionNumber < MAX_EDIT_COUNT &&
       !targetMessage.isViewOnceMessage() &&
       !targetMessage.hasAudio() &&

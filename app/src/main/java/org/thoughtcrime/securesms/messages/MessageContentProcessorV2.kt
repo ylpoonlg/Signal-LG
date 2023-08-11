@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms.messages
 
 import android.content.Context
-import org.signal.core.util.Stopwatch
 import org.signal.core.util.logging.Log
 import org.signal.core.util.orNull
 import org.signal.libsignal.protocol.SignalProtocolAddress
@@ -41,6 +40,7 @@ import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientId
 import org.thoughtcrime.securesms.util.EarlyMessageCacheEntry
 import org.thoughtcrime.securesms.util.FeatureFlags
+import org.thoughtcrime.securesms.util.SignalLocalMetrics
 import org.thoughtcrime.securesms.util.TextSecurePreferences
 import org.thoughtcrime.securesms.util.Util
 import org.whispersystems.signalservice.api.crypto.EnvelopeMetadata
@@ -196,7 +196,7 @@ open class MessageContentProcessorV2(private val context: Context) {
 
         val threadId = SignalDatabase.threads.getThreadIdFor(destination.id)
         if (threadId != null) {
-          val (lastSeen) = SignalDatabase.threads.getConversationMetadata(threadId)
+          val lastSeen = SignalDatabase.threads.getConversationMetadata(threadId).lastSeen
           val visibleThread = ApplicationDependencies.getMessageNotifier().visibleThread.map(ConversationId::threadId).orElse(-1L)
 
           if (threadId != visibleThread && lastSeen > 0 && lastSeen < pending.receivedTimestamp) {
@@ -284,12 +284,6 @@ open class MessageContentProcessorV2(private val context: Context) {
         null
       }
     }
-
-    private fun resetRecipientToPush(recipient: Recipient) {
-      if (recipient.isForceSmsSelection) {
-        SignalDatabase.recipients.setForceSmsSelection(recipient.id, false)
-      }
-    }
   }
 
   /**
@@ -303,12 +297,10 @@ open class MessageContentProcessorV2(private val context: Context) {
    * store or enqueue early content jobs if we detect this as being early, to avoid recursive scenarios.
    */
   @JvmOverloads
-  open fun process(envelope: Envelope, content: Content, metadata: EnvelopeMetadata, serverDeliveredTimestamp: Long, processingEarlyContent: Boolean = false) {
-    val stopwatch = Stopwatch("process-content")
-
+  open fun process(envelope: Envelope, content: Content, metadata: EnvelopeMetadata, serverDeliveredTimestamp: Long, processingEarlyContent: Boolean = false, localMetric: SignalLocalMetrics.MessageReceive? = null) {
     val senderRecipient = Recipient.externalPush(SignalServiceAddress(metadata.sourceServiceId, metadata.sourceE164))
 
-    handleMessage(senderRecipient, envelope, content, metadata, serverDeliveredTimestamp, processingEarlyContent, stopwatch)
+    handleMessage(senderRecipient, envelope, content, metadata, serverDeliveredTimestamp, processingEarlyContent, localMetric)
 
     val earlyCacheEntries: List<EarlyMessageCacheEntry>? = ApplicationDependencies
       .getEarlyMessageCache()
@@ -318,11 +310,9 @@ open class MessageContentProcessorV2(private val context: Context) {
     if (!processingEarlyContent && earlyCacheEntries != null) {
       log(envelope.timestamp, "Found " + earlyCacheEntries.size + " dependent item(s) that were retrieved earlier. Processing.")
       for (entry in earlyCacheEntries) {
-        handleMessage(senderRecipient, entry.envelope, entry.content, entry.metadata, entry.serverDeliveredTimestamp, processingEarlyContent = true, stopwatch)
+        handleMessage(senderRecipient, entry.envelope, entry.content, entry.metadata, entry.serverDeliveredTimestamp, processingEarlyContent = true, localMetric = null)
       }
-      stopwatch.split("early-entries")
     }
-    stopwatch.stop(TAG)
   }
 
   private fun handleMessage(
@@ -332,7 +322,7 @@ open class MessageContentProcessorV2(private val context: Context) {
     metadata: EnvelopeMetadata,
     serverDeliveredTimestamp: Long,
     processingEarlyContent: Boolean,
-    stopwatch: Stopwatch
+    localMetric: SignalLocalMetrics.MessageReceive?
   ) {
     val threadRecipient = getMessageDestination(content, senderRecipient)
 
@@ -345,7 +335,7 @@ open class MessageContentProcessorV2(private val context: Context) {
     val receivedTime: Long = handlePendingRetry(pending, envelope.timestamp, threadRecipient)
 
     log(envelope.timestamp, "Beginning message processing. Sender: " + formatSender(senderRecipient.id, metadata.sourceServiceId, metadata.sourceDeviceId))
-    stopwatch.split("pre-process")
+    localMetric?.onPreProcessComplete()
     when {
       content.hasDataMessage() -> {
         DataMessageProcessor.process(
@@ -356,9 +346,9 @@ open class MessageContentProcessorV2(private val context: Context) {
           content,
           metadata,
           receivedTime,
-          if (processingEarlyContent) null else EarlyMessageCacheEntry(envelope, content, metadata, serverDeliveredTimestamp)
+          if (processingEarlyContent) null else EarlyMessageCacheEntry(envelope, content, metadata, serverDeliveredTimestamp),
+          localMetric
         )
-        stopwatch.split("data-message")
       }
       content.hasSyncMessage() -> {
         TextSecurePreferences.setMultiDevice(context, true)
@@ -371,7 +361,6 @@ open class MessageContentProcessorV2(private val context: Context) {
           metadata,
           if (processingEarlyContent) null else EarlyMessageCacheEntry(envelope, content, metadata, serverDeliveredTimestamp)
         )
-        stopwatch.split("sync-message")
       }
       content.hasCallMessage() -> {
         log(envelope.timestamp, "Got call message...")
@@ -395,11 +384,9 @@ open class MessageContentProcessorV2(private val context: Context) {
           metadata,
           if (processingEarlyContent) null else EarlyMessageCacheEntry(envelope, content, metadata, serverDeliveredTimestamp)
         )
-        stopwatch.split("receipt-message")
       }
       content.hasTypingMessage() -> {
         handleTypingMessage(envelope, metadata, content.typingMessage, senderRecipient)
-        stopwatch.split("typing-message")
       }
       content.hasStoryMessage() -> {
         StoryMessageProcessor.process(
@@ -409,25 +396,20 @@ open class MessageContentProcessorV2(private val context: Context) {
           senderRecipient,
           threadRecipient
         )
-        stopwatch.split("story-message")
       }
       content.hasDecryptionErrorMessage() -> {
         handleRetryReceipt(envelope, metadata, content.decryptionErrorMessage!!.toDecryptionErrorMessage(metadata), senderRecipient)
       }
       content.hasEditMessage() -> {
-        if (FeatureFlags.editMessageReceiving()) {
-          EditMessageProcessor.process(
-            context,
-            senderRecipient,
-            threadRecipient,
-            envelope,
-            content,
-            metadata,
-            if (processingEarlyContent) null else EarlyMessageCacheEntry(envelope, content, metadata, serverDeliveredTimestamp)
-          )
-        } else {
-          warn(envelope.timestamp, "Got message edit, but processing is disabled")
-        }
+        EditMessageProcessor.process(
+          context,
+          senderRecipient,
+          threadRecipient,
+          envelope,
+          content,
+          metadata,
+          if (processingEarlyContent) null else EarlyMessageCacheEntry(envelope, content, metadata, serverDeliveredTimestamp)
+        )
       }
       content.hasSenderKeyDistributionMessage() || content.hasPniSignatureMessage() -> {
         // Already handled, here in order to prevent unrecognized message log
@@ -436,8 +418,6 @@ open class MessageContentProcessorV2(private val context: Context) {
         warn(envelope.timestamp, "Got unrecognized message!")
       }
     }
-
-    resetRecipientToPush(senderRecipient)
 
     if (pending != null) {
       warn(envelope.timestamp, "Pending retry was processed. Deleting.")
@@ -581,7 +561,7 @@ open class MessageContentProcessorV2(private val context: Context) {
       ratchetKeyMatches(requester, metadata.sourceDeviceId, decryptionErrorMessage.ratchetKey.get())
     ) {
       warn(envelope.timestamp, "[RetryReceipt-I] Ratchet key matches. Archiving the session.")
-      ApplicationDependencies.getProtocolStore().aci().sessions().archiveSession(requester.id, metadata.sourceDeviceId)
+      ApplicationDependencies.getProtocolStore().aci().sessions().archiveSession(requester.requireServiceId(), metadata.sourceDeviceId)
       archivedSession = true
     }
 
@@ -616,7 +596,7 @@ open class MessageContentProcessorV2(private val context: Context) {
   }
 
   private fun ratchetKeyMatches(recipient: Recipient, deviceId: Int, ratchetKey: ECPublicKey): Boolean {
-    val address = recipient.resolve().requireServiceId().toProtocolAddress(deviceId)
+    val address = recipient.resolve().requireAci().toProtocolAddress(deviceId)
     val session = ApplicationDependencies.getProtocolStore().aci().loadSession(address)
     return session.currentRatchetKeyMatches(ratchetKey)
   }
