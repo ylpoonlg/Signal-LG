@@ -451,7 +451,10 @@ class StoryViewerPageFragment :
         if (storyViewerPageArgs.source == StoryViewerPageArgs.Source.NOTIFICATION) {
           startReply(isFromNotification = true, groupReplyStartPosition = storyViewerPageArgs.groupReplyStartPosition)
         } else if (storyViewerPageArgs.source == StoryViewerPageArgs.Source.INFO_CONTEXT && state.selectedPostIndex in state.posts.indices) {
-          showInfo(state.posts[state.selectedPostIndex])
+          viewModel.setIsDisplayingInfoDialog(true)
+          lifecycleDisposable += sharedViewModel.postAfterLoadStateReady {
+            showInfo(state.posts[state.selectedPostIndex])
+          }
         }
       }
     }
@@ -905,7 +908,7 @@ class StoryViewerPageFragment :
   }
 
   private fun presentDate(date: TextView, storyPost: StoryPost) {
-    val formattedDate = DateUtils.getBriefRelativeTimeSpanString(context, Locale.getDefault(), storyPost.dateInMilliseconds)
+    val formattedDate = DateUtils.getBriefRelativeTimeSpanString(requireContext(), Locale.getDefault(), storyPost.dateInMilliseconds)
     if (date.text != formattedDate) {
       date.text = formattedDate
     }
@@ -1228,7 +1231,7 @@ class StoryViewerPageFragment :
       return true
     }
 
-    override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
+    override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
       val isFirstStory = sharedViewModel.stateSnapshot.page == 0
       val isLastStory = sharedViewModel.stateSnapshot.pages.lastIndex == sharedViewModel.stateSnapshot.page
       val isXMagnitudeGreaterThanYMagnitude = abs(distanceX) > abs(distanceY) || viewToTranslate.translationX > 0f
@@ -1237,7 +1240,7 @@ class StoryViewerPageFragment :
 
       sharedViewModel.setIsChildScrolling(isXMagnitudeGreaterThanYMagnitude || isFirstAndHasYTranslationOrNegativeY || isLastAndHasYTranslationOrNegativeY)
       if (isFirstStory) {
-        val delta = max(0f, (e2.rawY - e1.rawY)) / 3f
+        val delta = max(0f, (e2.rawY - (e1?.rawY ?: 0f))) / 3f
         val percent = INTERPOLATOR.getInterpolation(delta / maxSlide)
         val distance = maxSlide * percent
 
@@ -1246,7 +1249,7 @@ class StoryViewerPageFragment :
       }
 
       if (isLastStory) {
-        val delta = max(0f, (e1.rawY - e2.rawY)) / 3f
+        val delta = max(0f, ((e1?.rawY ?: 0f) - e2.rawY)) / 3f
         val percent = -INTERPOLATOR.getInterpolation(delta / maxSlide)
         val distance = maxSlide * percent
 
@@ -1254,7 +1257,7 @@ class StoryViewerPageFragment :
         viewToTranslate.translationY = distance
       }
 
-      val delta = max(0f, (e2.rawX - e1.rawX)) / 3f
+      val delta = max(0f, (e2.rawX - (e1?.rawX ?: 0f))) / 3f
       val percent = INTERPOLATOR.getInterpolation(delta / maxSlide)
       val distance = maxSlide * percent
 
@@ -1266,7 +1269,7 @@ class StoryViewerPageFragment :
       return true
     }
 
-    override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
+    override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
       val isSideSwipe = abs(velocityX) > abs(velocityY)
       if (!isSideSwipe) {
         return false

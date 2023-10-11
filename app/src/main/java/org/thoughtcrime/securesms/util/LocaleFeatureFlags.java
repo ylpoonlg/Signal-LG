@@ -66,8 +66,13 @@ public final class LocaleFeatureFlags {
   }
 
   public static boolean isDelayedNotificationPromptEnabled() {
-    return isEnabled(FeatureFlags.PROMPT_FOR_NOTIFICATION_LOGS, FeatureFlags.promptForDelayedNotificationLogs());
+    return FeatureFlags.internalUser() || isEnabled(FeatureFlags.PROMPT_FOR_NOTIFICATION_LOGS, FeatureFlags.promptForDelayedNotificationLogs());
   }
+
+  public static boolean isBatterySaverPromptEnabled() {
+    return FeatureFlags.internalUser() || isEnabled(FeatureFlags.PROMPT_BATTERY_SAVER, FeatureFlags.promptBatterySaver());
+  }
+
   /**
    * Parses a comma-separated list of country codes colon-separated from how many buckets out of 1 million
    * should be enabled to see this megaphone in that country code. At the end of the list, an optional

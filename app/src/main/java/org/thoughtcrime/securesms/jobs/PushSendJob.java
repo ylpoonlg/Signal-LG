@@ -1,3 +1,8 @@
+/*
+ * Copyright 2023 Signal Messenger, LLC
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 package org.thoughtcrime.securesms.jobs;
 
 import android.content.Context;
@@ -68,11 +73,10 @@ import org.whispersystems.signalservice.api.messages.SignalServiceDataMessage;
 import org.whispersystems.signalservice.api.messages.SignalServicePreview;
 import org.whispersystems.signalservice.api.messages.shared.SharedContact;
 import org.whispersystems.signalservice.api.push.ServiceId.ACI;
-import org.whispersystems.signalservice.api.push.ServiceId;
 import org.whispersystems.signalservice.api.push.exceptions.NonSuccessfulResponseCodeException;
 import org.whispersystems.signalservice.api.push.exceptions.ProofRequiredException;
 import org.whispersystems.signalservice.api.push.exceptions.ServerRejectedException;
-import org.whispersystems.signalservice.internal.push.SignalServiceProtos;
+import org.whispersystems.signalservice.internal.push.BodyRange;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -201,7 +205,17 @@ public abstract class PushSendJob extends SendJob {
                                     .withWidth(attachment.getWidth())
                                     .withHeight(attachment.getHeight())
                                     .withCaption(attachment.getCaption())
-                                    .withListener((total, progress) -> EventBus.getDefault().postSticky(new PartProgressEvent(attachment, PartProgressEvent.Type.NETWORK, total, progress)))
+                                    .withListener(new SignalServiceAttachment.ProgressListener() {
+                                      @Override
+                                      public void onAttachmentProgress(long total, long progress) {
+                                        EventBus.getDefault().postSticky(new PartProgressEvent(attachment, PartProgressEvent.Type.NETWORK, total, progress));
+                                      }
+
+                                      @Override
+                                      public boolean shouldCancel() {
+                                        return isCanceled();
+                                      }
+                                    })
                                     .build();
     } catch (IOException ioe) {
       Log.w(TAG, "Couldn't open attachment", ioe);
@@ -285,6 +299,7 @@ public abstract class PushSendJob extends SendJob {
                                                 height,
                                                 Optional.ofNullable(attachment.getDigest()),
                                                 Optional.ofNullable(attachment.getIncrementalDigest()),
+                                                attachment.getIncrementalMacChunkSize(),
                                                 Optional.ofNullable(attachment.getFileName()),
                                                 attachment.isVoiceNote(),
                                                 attachment.isBorderless(),
@@ -333,7 +348,7 @@ public abstract class PushSendJob extends SendJob {
     String                                                quoteBody            = message.getOutgoingQuote().getText();
     RecipientId                                           quoteAuthor          = message.getOutgoingQuote().getAuthor();
     List<SignalServiceDataMessage.Mention>                quoteMentions        = getMentionsFor(message.getOutgoingQuote().getMentions());
-    List<SignalServiceProtos.BodyRange>                   bodyRanges           = getBodyRanges(message.getOutgoingQuote().getBodyRanges());
+    List<BodyRange>                                       bodyRanges           = getBodyRanges(message.getOutgoingQuote().getBodyRanges());
     QuoteModel.Type                                       quoteType            = message.getOutgoingQuote().getType();
     List<SignalServiceDataMessage.Quote.QuotedAttachment> quoteAttachments     = new LinkedList<>();
     Optional<Attachment>                                  localQuoteAttachment = message.getOutgoingQuote()
@@ -366,8 +381,7 @@ public abstract class PushSendJob extends SendJob {
                                                                            .withHeight(thumbnailData.getHeight())
                                                                            .withLength(thumbnailData.getData().length)
                                                                            .withStream(new ByteArrayInputStream(thumbnailData.getData()))
-                                                                           .withResumableUploadSpec(ApplicationDependencies.getSignalServiceMessageSender().getResumableUploadSpec())
-                                                                           .withIncremental(attachment.getIncrementalDigest() != null);
+                                                                           .withResumableUploadSpec(ApplicationDependencies.getSignalServiceMessageSender().getResumableUploadSpec());
 
           thumbnail = builder.build();
         }
@@ -464,7 +478,7 @@ public abstract class PushSendJob extends SendJob {
     }
 
     try {
-      ReceiptCredentialPresentation presentation = new ReceiptCredentialPresentation(giftBadge.getRedemptionToken().toByteArray());
+      ReceiptCredentialPresentation presentation = new ReceiptCredentialPresentation(giftBadge.redemptionToken.toByteArray());
 
       return new SignalServiceDataMessage.GiftBadge(presentation);
     } catch (InvalidInputException invalidInputException) {
@@ -472,39 +486,37 @@ public abstract class PushSendJob extends SendJob {
     }
   }
 
-  protected @Nullable List<SignalServiceProtos.BodyRange> getBodyRanges(@NonNull OutgoingMessage message) {
+  protected @Nullable List<BodyRange> getBodyRanges(@NonNull OutgoingMessage message) {
     return getBodyRanges(message.getBodyRanges());
   }
 
-  protected @Nullable List<SignalServiceProtos.BodyRange> getBodyRanges(@Nullable BodyRangeList bodyRanges) {
-    if (bodyRanges == null || bodyRanges.getRangesCount() == 0) {
+  protected @Nullable List<BodyRange> getBodyRanges(@Nullable BodyRangeList bodyRanges) {
+    if (bodyRanges == null || bodyRanges.ranges.size() == 0) {
       return null;
     }
 
     return bodyRanges
-        .getRangesList()
+        .ranges
         .stream()
         .map(range -> {
-          SignalServiceProtos.BodyRange.Builder builder = SignalServiceProtos.BodyRange.newBuilder()
-                                                                                       .setStart(range.getStart())
-                                                                                       .setLength(range.getLength());
+          BodyRange.Builder builder = new BodyRange.Builder().start(range.start).length(range.length);
 
-          if (range.hasStyle()) {
-            switch (range.getStyle()) {
+          if (range.style != null) {
+            switch (range.style) {
               case BOLD:
-                builder.setStyle(SignalServiceProtos.BodyRange.Style.BOLD);
+                builder.style(BodyRange.Style.BOLD);
                 break;
               case ITALIC:
-                builder.setStyle(SignalServiceProtos.BodyRange.Style.ITALIC);
+                builder.style(BodyRange.Style.ITALIC);
                 break;
               case SPOILER:
-                builder.setStyle(SignalServiceProtos.BodyRange.Style.SPOILER);
+                builder.style(BodyRange.Style.SPOILER);
                 break;
               case STRIKETHROUGH:
-                builder.setStyle(SignalServiceProtos.BodyRange.Style.STRIKETHROUGH);
+                builder.style(BodyRange.Style.STRIKETHROUGH);
                 break;
               case MONOSPACE:
-                builder.setStyle(SignalServiceProtos.BodyRange.Style.MONOSPACE);
+                builder.style(BodyRange.Style.MONOSPACE);
                 break;
               default:
                 throw new IllegalArgumentException("Unrecognized style");

@@ -54,12 +54,11 @@ object CallLinks {
 
   @JvmStatic
   fun isCallLink(url: String): Boolean {
-    if (FeatureFlags.adHocCalling()) {
+    if (!FeatureFlags.adHocCalling()) {
       return false
     }
 
     if (!url.startsWith(HTTPS_LINK_PREFIX) && !url.startsWith(SNGL_LINK_PREFIX)) {
-      Log.w(TAG, "Invalid url prefix.")
       return false
     }
 

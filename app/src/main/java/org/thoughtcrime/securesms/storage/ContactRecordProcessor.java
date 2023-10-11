@@ -11,10 +11,8 @@ import org.thoughtcrime.securesms.jobs.RetrieveProfileJob;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
-import org.thoughtcrime.securesms.util.FeatureFlags;
 import org.whispersystems.signalservice.api.push.ServiceId.ACI;
 import org.whispersystems.signalservice.api.push.ServiceId.PNI;
-import org.whispersystems.signalservice.api.push.ServiceId;
 import org.whispersystems.signalservice.api.storage.SignalContactRecord;
 import org.whispersystems.signalservice.api.util.OptionalUtil;
 import org.whispersystems.signalservice.internal.storage.protos.ContactRecord.IdentityState;
@@ -67,11 +65,6 @@ public class ContactRecordProcessor extends DefaultStorageRecordProcessor<Signal
    */
   @Override
   public void process(@NonNull Collection<SignalContactRecord> remoteRecords, @NonNull StorageKeyGenerator keyGenerator) throws IOException {
-    if (!FeatureFlags.phoneNumberPrivacy()) {
-      super.process(remoteRecords, keyGenerator);
-      return;
-    }
-
     List<SignalContactRecord> unregisteredAciOnly = new ArrayList<>();
     List<SignalContactRecord> pniE164Only         = new ArrayList<>();
 
@@ -80,9 +73,9 @@ public class ContactRecordProcessor extends DefaultStorageRecordProcessor<Signal
         continue;
       }
 
-      if (remoteRecord.getUnregisteredTimestamp() > 0 && remoteRecord.getAci() != null && !remoteRecord.getPni().isPresent() && !remoteRecord.getNumber().isPresent()) {
+      if (remoteRecord.getUnregisteredTimestamp() > 0 && remoteRecord.getAci().isPresent() && remoteRecord.getPni().isEmpty() && remoteRecord.getNumber().isEmpty()) {
         unregisteredAciOnly.add(remoteRecord);
-      } else if (remoteRecord.getAci() != null && remoteRecord.getAci().equals(remoteRecord.getPni().orElse(null))) {
+      } else if (remoteRecord.getAci().isEmpty()) {
         pniE164Only.add(remoteRecord);
       }
     }
@@ -120,20 +113,20 @@ public class ContactRecordProcessor extends DefaultStorageRecordProcessor<Signal
 
   /**
    * Error cases:
-   * - You can't have a contact record without an address component.
+   * - You can't have a contact record without an ACI or PNI.
    * - You can't have a contact record for yourself. That should be an account record.
    *
    * Note: This method could be written more succinctly, but the logs are useful :)
    */
   @Override
   boolean isInvalid(@NonNull SignalContactRecord remote) {
-    if (remote.getAci() == null) {
-      Log.w(TAG, "No address on the ContentRecord -- marking as invalid.");
+    boolean hasAci = remote.getAci().isPresent() && remote.getAci().get().isValid();
+    boolean hasPni = remote.getPni().isPresent() && remote.getPni().get().isValid();
+
+    if (!hasAci && !hasPni) {
+      Log.w(TAG, "Found a ContactRecord with neither an ACI nor a PNI -- marking as invalid.");
       return true;
-    } else if (remote.getAci().isUnknown()) {
-      Log.w(TAG, "Found a ContactRecord without a UUID -- marking as invalid.");
-      return true;
-    } else if (remote.getAci().equals(selfAci) ||
+    } else if (selfAci != null && selfAci.equals(remote.getAci().orElse(null)) ||
                (selfPni != null && selfPni.equals(remote.getPni().orElse(null))) ||
                (selfE164 != null && remote.getNumber().isPresent() && remote.getNumber().get().equals(selfE164)))
     {
@@ -149,11 +142,7 @@ public class ContactRecordProcessor extends DefaultStorageRecordProcessor<Signal
 
   @Override
   @NonNull Optional<SignalContactRecord> getMatching(@NonNull SignalContactRecord remote, @NonNull StorageKeyGenerator keyGenerator) {
-    if (!FeatureFlags.phoneNumberPrivacy()) {
-      remote = remote.withoutPni();
-    }
-
-    Optional<RecipientId> found = recipientTable.getByAci(remote.getAci());
+    Optional<RecipientId> found = remote.getAci().isPresent() ? recipientTable.getByAci(remote.getAci().get()) : Optional.empty();
 
     if (found.isEmpty() && remote.getNumber().isPresent()) {
       found = recipientTable.getByE164(remote.getNumber().get());
@@ -180,11 +169,6 @@ public class ContactRecordProcessor extends DefaultStorageRecordProcessor<Signal
 
   @Override
   @NonNull SignalContactRecord merge(@NonNull SignalContactRecord remote, @NonNull SignalContactRecord local, @NonNull StorageKeyGenerator keyGenerator) {
-    if (!FeatureFlags.phoneNumberPrivacy()) {
-      local  = local.withoutPni();
-      remote = remote.withoutPni();
-    }
-
     String profileGivenName;
     String profileFamilyName;
 
@@ -200,7 +184,7 @@ public class ContactRecordProcessor extends DefaultStorageRecordProcessor<Signal
     byte[]        identityKey;
 
     if ((remote.getIdentityState() != local.getIdentityState() && remote.getIdentityKey().isPresent()) ||
-        (remote.getIdentityKey().isPresent() && !local.getIdentityKey().isPresent()))
+        (remote.getIdentityKey().isPresent() && local.getIdentityKey().isEmpty()))
     {
       identityState = remote.getIdentityState();
       identityKey   = remote.getIdentityKey().get();
@@ -209,48 +193,43 @@ public class ContactRecordProcessor extends DefaultStorageRecordProcessor<Signal
       identityKey   = local.getIdentityKey().orElse(null);
     }
 
-    if (identityKey != null && remote.getIdentityKey().isPresent() && !Arrays.equals(identityKey, remote.getIdentityKey().get())) {
-      Log.w(TAG, "The local and remote identity keys do not match for " + local.getAci() + ". Enqueueing a profile fetch.");
-      RetrieveProfileJob.enqueue(Recipient.trustedPush(local.getAci(), local.getPni().orElse(null), local.getNumber().orElse(null)).getId());
+    if (local.getAci().isPresent() && identityKey != null && remote.getIdentityKey().isPresent() && !Arrays.equals(identityKey, remote.getIdentityKey().get())) {
+      Log.w(TAG, "The local and remote identity keys do not match for " + local.getAci().orElse(null) + ". Enqueueing a profile fetch.");
+      RetrieveProfileJob.enqueue(Recipient.trustedPush(local.getAci().get(), local.getPni().orElse(null), local.getNumber().orElse(null)).getId());
     }
 
     PNI    pni;
     String e164;
 
-    if (FeatureFlags.phoneNumberPrivacy()) {
-      boolean e164sMatchButPnisDont = local.getNumber().isPresent() &&
-                                      local.getNumber().get().equals(remote.getNumber().orElse(null)) &&
-                                      local.getPni().isPresent() &&
-                                      remote.getPni().isPresent() &&
-                                      !local.getPni().get().equals(remote.getPni().get());
+    boolean e164sMatchButPnisDont = local.getNumber().isPresent() &&
+                                    local.getNumber().get().equals(remote.getNumber().orElse(null)) &&
+                                    local.getPni().isPresent() &&
+                                    remote.getPni().isPresent() &&
+                                    !local.getPni().get().equals(remote.getPni().get());
 
-      boolean pnisMatchButE164sDont = local.getPni().isPresent() &&
-                                      local.getPni().get().equals(remote.getPni().orElse(null)) &&
-                                      local.getNumber().isPresent() &&
-                                      remote.getNumber().isPresent() &&
-                                      !local.getNumber().get().equals(remote.getNumber().get());
+    boolean pnisMatchButE164sDont = local.getPni().isPresent() &&
+                                    local.getPni().get().equals(remote.getPni().orElse(null)) &&
+                                    local.getNumber().isPresent() &&
+                                    remote.getNumber().isPresent() &&
+                                    !local.getNumber().get().equals(remote.getNumber().get());
 
-      if (e164sMatchButPnisDont) {
-        Log.w(TAG, "Matching E164s, but the PNIs differ! Trusting our local pair.");
-        // TODO [pnp] Schedule CDS fetch?
-        pni  = local.getPni().get();
-        e164 = local.getNumber().get();
-      } else if (pnisMatchButE164sDont) {
-        Log.w(TAG, "Matching PNIs, but the E164s differ! Trusting our local pair.");
-        // TODO [pnp] Schedule CDS fetch?
-        pni  = local.getPni().get();
-        e164 = local.getNumber().get();
-      } else {
-        pni  = OptionalUtil.or(remote.getPni(), local.getPni()).orElse(null);
-        e164 = OptionalUtil.or(remote.getNumber(), local.getNumber()).orElse(null);
-      }
+    if (e164sMatchButPnisDont) {
+      Log.w(TAG, "Matching E164s, but the PNIs differ! Trusting our local pair.");
+      // TODO [pnp] Schedule CDS fetch?
+      pni  = local.getPni().get();
+      e164 = local.getNumber().get();
+    } else if (pnisMatchButE164sDont) {
+      Log.w(TAG, "Matching PNIs, but the E164s differ! Trusting our local pair.");
+      // TODO [pnp] Schedule CDS fetch?
+      pni  = local.getPni().get();
+      e164 = local.getNumber().get();
     } else {
-      pni  = null;
+      pni  = OptionalUtil.or(remote.getPni(), local.getPni()).orElse(null);
       e164 = OptionalUtil.or(remote.getNumber(), local.getNumber()).orElse(null);
     }
 
     byte[]               unknownFields         = remote.serializeUnknownFields();
-    ACI                  aci                   = local.getAci() == ACI.UNKNOWN ? remote.getAci() : local.getAci();
+    ACI                  aci                   = local.getAci().isEmpty() ? remote.getAci().orElse(null) : local.getAci().get();
     byte[]               profileKey            = OptionalUtil.or(remote.getProfileKey(), local.getProfileKey()).orElse(null);
     String               username              = OptionalUtil.or(remote.getUsername(), local.getUsername()).orElse("");
     boolean              blocked               = remote.isBlocked();
@@ -324,7 +303,7 @@ public class ContactRecordProcessor extends DefaultStorageRecordProcessor<Signal
 
   private static boolean doParamsMatch(@NonNull SignalContactRecord contact,
                                        @Nullable byte[] unknownFields,
-                                       @NonNull ServiceId serviceId,
+                                       @Nullable ACI aci,
                                        @Nullable PNI pni,
                                        @Nullable String e164,
                                        @NonNull String profileGivenName,
@@ -346,7 +325,7 @@ public class ContactRecordProcessor extends DefaultStorageRecordProcessor<Signal
                                        boolean hidden)
   {
     return Arrays.equals(contact.serializeUnknownFields(), unknownFields) &&
-           Objects.equals(contact.getAci(), serviceId) &&
+           Objects.equals(contact.getAci().orElse(null), aci) &&
            Objects.equals(contact.getPni().orElse(null), pni) &&
            Objects.equals(contact.getNumber().orElse(null), e164) &&
            Objects.equals(contact.getProfileGivenName().orElse(""), profileGivenName) &&

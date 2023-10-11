@@ -43,6 +43,7 @@ import com.google.common.collect.Sets;
 
 import org.signal.core.util.DimensionUnit;
 import org.signal.core.util.SetUtil;
+import org.signal.core.util.ThreadUtil;
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.R;
 import org.thoughtcrime.securesms.animation.ResizeAnimation;
@@ -472,6 +473,8 @@ public class WebRtcCallView extends ConstraintLayout {
       } else if (state.getGroupCallState().isRinging()) {
         callLinkWarningCard.setVisibility(View.GONE);
         setStatus(state.getIncomingRingingGroupDescription(getContext()));
+      } else {
+        callLinkWarningCard.setVisibility(View.GONE);
       }
     }
 
@@ -593,8 +596,17 @@ public class WebRtcCallView extends ConstraintLayout {
   }
 
   public void setStatus(@Nullable String status) {
+    ThreadUtil.assertMainThread();
     this.status.setText(status);
-    collapsedToolbar.setSubtitle(status);
+    try {
+      // Toolbar's subtitle view sometimes already has a parent somehow,
+      // so we clear it out first so that it removes the view from its parent.
+      // In addition, we catch the ISE to prevent a crash.
+      collapsedToolbar.setSubtitle(null);
+      collapsedToolbar.setSubtitle(status);
+    } catch (IllegalStateException e) {
+      Log.w(TAG, "IllegalStateException trying to set status on collapsed Toolbar.");
+    }
   }
 
   private void setStatus(@StringRes int statusRes) {

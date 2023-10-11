@@ -6,12 +6,12 @@
 package org.thoughtcrime.securesms.conversation.v2.items
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.conversation.ConversationMessage
+import org.thoughtcrime.securesms.conversation.v2.items.V2ConversationItemUtils.isThumbnailAtBottomOfBubble
 import org.thoughtcrime.securesms.util.hasNoBubble
 
 /**
@@ -32,20 +32,17 @@ class V2ConversationItemTheme(
   }
 
   @ColorInt
-  fun getFooterIconColor(
+  fun getFooterForegroundColor(
     conversationMessage: ConversationMessage
   ): Int {
-    return getColor(
-      conversationMessage,
-      conversationContext.getColorizer()::getOutgoingFooterIconColor,
-      conversationContext.getColorizer()::getIncomingFooterIconColor
-    )
-  }
+    if (conversationMessage.messageRecord.isThumbnailAtBottomOfBubble(context)) {
+      return ContextCompat.getColor(context, R.color.signal_colorOnCustom)
+    }
 
-  @ColorInt
-  fun getFooterTextColor(
-    conversationMessage: ConversationMessage
-  ): Int {
+    if (conversationMessage.messageRecord.isOutgoing && conversationMessage.messageRecord.hasNoBubble(context) && !conversationContext.hasWallpaper()) {
+      return conversationContext.getColorizer().getIncomingFooterTextColor(context, conversationContext.hasWallpaper())
+    }
+
     return getColor(
       conversationMessage,
       conversationContext.getColorizer()::getOutgoingFooterTextColor,
@@ -64,30 +61,30 @@ class V2ConversationItemTheme(
     )
   }
 
+  @ColorInt
   fun getBodyBubbleColor(
     conversationMessage: ConversationMessage
-  ): ColorStateList {
+  ): Int {
     if (conversationMessage.messageRecord.hasNoBubble(context)) {
-      return ColorStateList.valueOf(Color.TRANSPARENT)
+      return Color.TRANSPARENT
     }
 
     return getFooterBubbleColor(conversationMessage)
   }
 
+  @ColorInt
   fun getFooterBubbleColor(
     conversationMessage: ConversationMessage
-  ): ColorStateList {
-    return ColorStateList.valueOf(
-      if (conversationMessage.messageRecord.isOutgoing) {
-        Color.TRANSPARENT
+  ): Int {
+    return if (conversationMessage.messageRecord.isOutgoing) {
+      Color.TRANSPARENT
+    } else {
+      if (conversationContext.hasWallpaper()) {
+        ContextCompat.getColor(context, R.color.conversation_item_recv_bubble_color_wallpaper)
       } else {
-        if (conversationContext.hasWallpaper()) {
-          ContextCompat.getColor(context, R.color.signal_colorSurface)
-        } else {
-          ContextCompat.getColor(context, R.color.signal_colorSurface2)
-        }
+        ContextCompat.getColor(context, R.color.conversation_item_recv_bubble_color_normal)
       }
-    )
+    }
   }
 
   @ColorInt

@@ -113,9 +113,38 @@ sealed class DonationError(val source: DonationErrorSource, cause: Throwable) : 
       source to PublishSubject.create()
     }
 
+    private val donationErrorsSubjectUiSessionMap: MutableMap<Long, Subject<DonationError>> = mutableMapOf()
+
     @JvmStatic
     fun getErrorsForSource(donationErrorSource: DonationErrorSource): Observable<DonationError> {
       return donationErrorSubjectSourceMap[donationErrorSource]!!
+    }
+
+    fun getErrorsForUiSessionKey(uiSessionKey: Long): Observable<DonationError> {
+      val subject: Subject<DonationError> = donationErrorsSubjectUiSessionMap[uiSessionKey] ?: PublishSubject.create()
+      donationErrorsSubjectUiSessionMap[uiSessionKey] = subject
+
+      return subject
+    }
+
+    @JvmStatic
+    fun routeBackgroundError(context: Context, uiSessionKey: Long, error: DonationError) {
+      if (error.source == DonationErrorSource.GIFT_REDEMPTION) {
+        routeDonationError(context, error)
+        return
+      }
+
+      val subject: Subject<DonationError>? = donationErrorsSubjectUiSessionMap[uiSessionKey]
+      when {
+        subject != null && subject.hasObservers() -> {
+          Log.i(TAG, "Routing background donation error to uiSessionKey $uiSessionKey dialog", error)
+          subject.onNext(error)
+        }
+        else -> {
+          Log.i(TAG, "Routing background donation error to uiSessionKey $uiSessionKey notification", error)
+          DonationErrorNotifications.displayErrorNotification(context, error)
+        }
+      }
     }
 
     /**
@@ -149,17 +178,25 @@ sealed class DonationError(val source: DonationErrorSource, cause: Throwable) : 
      */
     @JvmStatic
     fun getPaymentSetupError(source: DonationErrorSource, throwable: Throwable, method: PaymentSourceType): DonationError {
-      return if (throwable is StripeError.PostError) {
-        val declineCode: StripeDeclineCode? = throwable.declineCode
-        val errorCode: String? = throwable.errorCode
+      return when (throwable) {
+        is StripeError.PostError -> {
+          val declineCode: StripeDeclineCode? = throwable.declineCode
+          val errorCode: String? = throwable.errorCode
 
-        when {
-          declineCode != null && method is PaymentSourceType.Stripe -> PaymentSetupError.StripeDeclinedError(source, throwable, declineCode, method)
-          errorCode != null && method is PaymentSourceType.Stripe -> PaymentSetupError.StripeCodedError(source, throwable, errorCode)
-          else -> PaymentSetupError.GenericError(source, throwable)
+          when {
+            declineCode != null && method is PaymentSourceType.Stripe -> PaymentSetupError.StripeDeclinedError(source, throwable, declineCode, method)
+            errorCode != null && method is PaymentSourceType.Stripe -> PaymentSetupError.StripeCodedError(source, throwable, errorCode)
+            else -> PaymentSetupError.GenericError(source, throwable)
+          }
         }
-      } else {
-        PaymentSetupError.GenericError(source, throwable)
+
+        is UserCancelledPaymentError -> {
+          return throwable
+        }
+
+        else -> {
+          PaymentSetupError.GenericError(source, throwable)
+        }
       }
     }
 

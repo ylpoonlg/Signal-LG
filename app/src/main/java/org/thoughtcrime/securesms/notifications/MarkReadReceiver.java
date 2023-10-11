@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import org.signal.core.util.Stopwatch;
 import org.signal.core.util.concurrent.SignalExecutors;
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.database.MessageTable.ExpirationInfo;
@@ -62,7 +61,7 @@ public class MarkReadReceiver extends BroadcastReceiver {
           messageIdsCollection.addAll(messageIds);
         }
 
-        process(context, messageIdsCollection);
+        process(messageIdsCollection);
 
         ApplicationDependencies.getMessageNotifier().updateNotification(context);
         finisher.finish();
@@ -70,7 +69,7 @@ public class MarkReadReceiver extends BroadcastReceiver {
     }
   }
 
-  public static void process(@NonNull Context context, @NonNull List<MarkedMessageInfo> markedReadMessages) {
+  public static void process(@NonNull List<MarkedMessageInfo> markedReadMessages) {
     if (markedReadMessages.isEmpty()) return;
 
     List<SyncMessageId>  syncMessageIds = Stream.of(markedReadMessages)

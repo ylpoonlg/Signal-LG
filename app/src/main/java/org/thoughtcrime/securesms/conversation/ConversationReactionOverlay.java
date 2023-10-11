@@ -206,7 +206,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
 
     contextMenu = new ConversationContextMenu(dropdownAnchor, getMenuActionItems(conversationMessage));
 
-    conversationItem.setX(selectedConversationModel.getBubbleX());
+    conversationItem.setX(selectedConversationModel.getSnapshotMetrics().getSnapshotOffset());
     conversationItem.setY(selectedConversationModel.getItemY() + selectedConversationModel.getBubbleY() - statusBarHeight);
 
     Bitmap  conversationItemSnapshot = selectedConversationModel.getBitmap();
@@ -215,7 +215,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
     int overlayHeight = getHeight() - bottomNavigationBarHeight;
     int bubbleWidth   = selectedConversationModel.getBubbleWidth();
 
-    float endX            = selectedConversationModel.getBubbleX();
+    float endX            = selectedConversationModel.getSnapshotMetrics().getSnapshotOffset();
     float endY            = conversationItem.getY();
     float endApparentTop  = endY;
     float endScale        = 1f;
@@ -346,7 +346,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
       float offsetX       = isMessageOnLeft ? scrubberRight + menuPadding : scrubberX - contextMenu.getMaxWidth() - menuPadding;
       contextMenu.show((int) offsetX, (int) Math.min(backgroundView.getY(), overlayHeight - contextMenu.getMaxHeight()));
     } else {
-      float contentX = selectedConversationModel.getBubbleX();
+      float contentX = selectedConversationModel.getSnapshotMetrics().getContextMenuPadding();
       float offsetX  = isMessageOnLeft ? contentX : -contextMenu.getMaxWidth() + contentX + bubbleWidth;
 
       float menuTop = endApparentTop + (conversationItemSnapshot.getHeight() * endScale);
@@ -444,11 +444,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
     animatorSet.start();
 
     if (onHideListener != null) {
-      onHideListener.startHide();
-    }
-
-    if (selectedConversationModel.getFocusedView() != null) {
-      ViewUtil.focusAndShowKeyboard(selectedConversationModel.getFocusedView());
+      onHideListener.startHide(selectedConversationModel.getFocusedView());
     }
 
     animatorSet.addListener(new AnimationCompleteListener() {
@@ -760,13 +756,15 @@ public final class ConversationReactionOverlay extends FrameLayout {
 
   private void handleActionItemClicked(@NonNull Action action) {
     hideInternal(new OnHideListener() {
-      @Override public void startHide() {
+      @Override
+      public void startHide(@Nullable View focusedView) {
         if (onHideListener != null) {
-          onHideListener.startHide();
+          onHideListener.startHide(focusedView);
         }
       }
 
-      @Override public void onHide() {
+      @Override
+      public void onHide() {
         if (onHideListener != null) {
           onHideListener.onHide();
         }
@@ -861,7 +859,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
 
     ObjectAnimator itemXAnim = new ObjectAnimator();
     itemXAnim.setProperty(View.X);
-    itemXAnim.setFloatValues(selectedConversationModel.getBubbleX());
+    itemXAnim.setFloatValues(selectedConversationModel.getSnapshotMetrics().getSnapshotOffset());
     itemXAnim.setTarget(conversationItem);
     itemXAnim.setDuration(duration);
     animators.add(itemXAnim);
@@ -893,7 +891,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
   }
 
   public interface OnHideListener {
-    void startHide();
+    void startHide(@Nullable View focusedView);
     void onHide();
   }
 
