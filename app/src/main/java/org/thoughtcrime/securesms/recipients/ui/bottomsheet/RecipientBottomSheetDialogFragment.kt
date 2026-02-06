@@ -23,6 +23,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.signal.core.ui.BottomSheetUtil
 import org.signal.core.util.logging.Log
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.avatar.view.AvatarView
@@ -41,12 +42,12 @@ import org.thoughtcrime.securesms.recipients.RecipientExporter
 import org.thoughtcrime.securesms.recipients.RecipientId
 import org.thoughtcrime.securesms.recipients.RecipientUtil
 import org.thoughtcrime.securesms.recipients.ui.about.AboutSheet
-import org.thoughtcrime.securesms.util.BottomSheetUtil
 import org.thoughtcrime.securesms.util.ContextUtil
 import org.thoughtcrime.securesms.util.SpanUtil
 import org.thoughtcrime.securesms.util.ViewUtil
 import org.thoughtcrime.securesms.util.WindowUtil
 import org.thoughtcrime.securesms.util.visible
+import org.signal.core.ui.R as CoreUiR
 
 /**
  * A bottom sheet that shows some simple recipient details, as well as some actions (like calling,
@@ -230,7 +231,7 @@ class RecipientBottomSheetDialogFragment : FixedRoundedCornerBottomSheetDialogFr
           requireContext(),
           SignalSymbols.Weight.BOLD,
           if (isLtr) SignalSymbols.Glyph.CHEVRON_RIGHT else SignalSymbols.Glyph.CHEVRON_LEFT,
-          R.color.signal_colorOutline
+          CoreUiR.color.signal_colorOutline
         )
 
         if (isLtr) {

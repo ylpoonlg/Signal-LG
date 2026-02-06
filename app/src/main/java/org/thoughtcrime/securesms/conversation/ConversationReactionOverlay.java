@@ -3,7 +3,6 @@ package org.thoughtcrime.securesms.conversation;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -16,7 +15,6 @@ import android.util.AttributeSet;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
@@ -34,6 +32,7 @@ import androidx.vectordrawable.graphics.drawable.AnimatorInflaterCompat;
 
 import com.annimon.stream.Stream;
 
+import org.signal.core.ui.compose.SignalIcons;
 import org.signal.core.util.DimensionUnit;
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.R;
@@ -45,13 +44,12 @@ import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.ReactionRecord;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.recipients.Recipient;
-import org.thoughtcrime.securesms.util.ThemeUtil;
 import org.thoughtcrime.securesms.util.Util;
 import org.thoughtcrime.securesms.util.ViewUtil;
-import org.thoughtcrime.securesms.util.WindowUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import kotlin.Unit;
 
@@ -68,12 +66,12 @@ public final class ConversationReactionOverlay extends FrameLayout {
   private final Boundary verticalScrubBoundary   = new Boundary();
   private final PointF   deadzoneTouchPoint      = new PointF();
 
-  private Activity                  activity;
   private Recipient                 conversationRecipient;
   private MessageRecord             messageRecord;
   private SelectedConversationModel selectedConversationModel;
   private OverlayState              overlayState = OverlayState.HIDDEN;
   private boolean                   isNonAdminInAnnouncementGroup;
+  private boolean                   canEditGroupInfo;
 
   private boolean downIsOurs;
   private int     selected = -1;
@@ -149,7 +147,8 @@ public final class ConversationReactionOverlay extends FrameLayout {
                    @NonNull ConversationMessage conversationMessage,
                    @NonNull PointF lastSeenDownPoint,
                    boolean isNonAdminInAnnouncementGroup,
-                   @NonNull SelectedConversationModel selectedConversationModel)
+                   @NonNull SelectedConversationModel selectedConversationModel,
+                   boolean canEditGroupInfo)
   {
     if (overlayState != OverlayState.HIDDEN) {
       return;
@@ -159,6 +158,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
     this.conversationRecipient         = conversationRecipient;
     this.selectedConversationModel     = selectedConversationModel;
     this.isNonAdminInAnnouncementGroup = isNonAdminInAnnouncementGroup;
+    this.canEditGroupInfo              = canEditGroupInfo;
     overlayState                       = OverlayState.UNINITAILIZED;
     selected                           = -1;
 
@@ -195,8 +195,6 @@ public final class ConversationReactionOverlay extends FrameLayout {
     conversationItem.setScaleY(ConversationItem.LONG_PRESS_SCALE_FACTOR);
 
     setVisibility(View.INVISIBLE);
-
-    this.activity = activity;
 
     ViewKt.doOnLayout(this, v -> {
       showAfterLayout(activity, conversationMessage, lastSeenDownPoint, isMessageOnLeft);
@@ -411,6 +409,10 @@ public final class ConversationReactionOverlay extends FrameLayout {
   }
 
   private void hideInternal(@Nullable OnHideListener onHideListener) {
+    if (overlayState == OverlayState.HIDDEN || selectedConversationModel == null) {
+      return;
+    }
+
     overlayState = OverlayState.HIDDEN;
 
     AnimatorSet animatorSet = newHideAnimatorSet();
@@ -681,7 +683,7 @@ public final class ConversationReactionOverlay extends FrameLayout {
   }
 
   private @NonNull List<ActionItem> getMenuActionItems(@NonNull ConversationMessage conversationMessage) {
-    MenuState menuState = MenuState.getMenuState(conversationRecipient, conversationMessage.getMultiselectCollection().toSet(), false, isNonAdminInAnnouncementGroup);
+    MenuState menuState = MenuState.getMenuState(conversationRecipient, conversationMessage.getMultiselectCollection().toSet(), false, isNonAdminInAnnouncementGroup, canEditGroupInfo);
 
     List<ActionItem> items = new ArrayList<>();
 
@@ -690,11 +692,11 @@ public final class ConversationReactionOverlay extends FrameLayout {
     }
 
     if (menuState.shouldShowEditAction()) {
-      items.add(new ActionItem(R.drawable.symbol_edit_24, getResources().getString(R.string.conversation_selection__menu_edit), () -> handleActionItemClicked(Action.EDIT)));
+      items.add(new ActionItem(org.signal.core.ui.R.drawable.symbol_edit_24, getResources().getString(R.string.conversation_selection__menu_edit), () -> handleActionItemClicked(Action.EDIT)));
     }
 
     if (menuState.shouldShowForwardAction()) {
-      items.add(new ActionItem(R.drawable.symbol_forward_24, getResources().getString(R.string.conversation_selection__menu_forward), () -> handleActionItemClicked(Action.FORWARD)));
+      items.add(new ActionItem(org.signal.core.ui.R.drawable.symbol_forward_24, getResources().getString(R.string.conversation_selection__menu_forward), () -> handleActionItemClicked(Action.FORWARD)));
     }
 
     if (menuState.shouldShowResendAction()) {
@@ -706,27 +708,35 @@ public final class ConversationReactionOverlay extends FrameLayout {
     }
 
     if (menuState.shouldShowCopyAction()) {
-      items.add(new ActionItem(R.drawable.symbol_copy_android_24, getResources().getString(R.string.conversation_selection__menu_copy), () -> handleActionItemClicked(Action.COPY)));
+      items.add(new ActionItem(org.signal.core.ui.R.drawable.symbol_copy_android_24, getResources().getString(R.string.conversation_selection__menu_copy), () -> handleActionItemClicked(Action.COPY)));
     }
 
     if (menuState.shouldShowPaymentDetails()) {
       items.add(new ActionItem(R.drawable.symbol_payment_24, getResources().getString(R.string.conversation_selection__menu_payment_details), () -> handleActionItemClicked(Action.PAYMENT_DETAILS)));
     }
 
-    items.add(new ActionItem(R.drawable.symbol_check_circle_24, getResources().getString(R.string.conversation_selection__menu_multi_select), () -> handleActionItemClicked(Action.MULTISELECT)));
+    items.add(new ActionItem(org.signal.core.ui.R.drawable.symbol_check_circle_24, getResources().getString(R.string.conversation_selection__menu_multi_select), () -> handleActionItemClicked(Action.MULTISELECT)));
 
     if (menuState.shouldShowDetailsAction()) {
-      items.add(new ActionItem(R.drawable.symbol_info_24, getResources().getString(R.string.conversation_selection__menu_message_details), () -> handleActionItemClicked(Action.VIEW_INFO)));
+      items.add(new ActionItem(org.signal.core.ui.R.drawable.symbol_info_24, getResources().getString(R.string.conversation_selection__menu_message_details), () -> handleActionItemClicked(Action.VIEW_INFO)));
     }
 
     if (menuState.shouldShowPollTerminateAction()) {
       items.add(new ActionItem(R.drawable.symbol_stop_24, getResources().getString(R.string.conversation_selection__menu_end_poll), () -> handleActionItemClicked(Action.END_POLL)));
     }
 
+    if (menuState.shouldShowPinMessage()) {
+      items.add(new ActionItem(R.drawable.symbol_pin_24, getResources().getString(R.string.conversation_selection__menu_pin_message), () -> handleActionItemClicked(Action.PIN_MESSAGE)));
+    }
+
+    if (menuState.showShowUnpinMessage()) {
+      items.add(new ActionItem(R.drawable.symbol_pin_slash_24, getResources().getString(R.string.conversation_selection__menu_unpin_message), () -> handleActionItemClicked(Action.UNPIN_MESSAGE)));
+    }
+
     backgroundView.setVisibility(menuState.shouldShowReactions() ? View.VISIBLE : View.INVISIBLE);
     foregroundView.setVisibility(menuState.shouldShowReactions() ? View.VISIBLE : View.INVISIBLE);
 
-    items.add(new ActionItem(R.drawable.symbol_trash_24, getResources().getString(R.string.conversation_selection__menu_delete), () -> handleActionItemClicked(Action.DELETE)));
+    items.add(new ActionItem(org.signal.core.ui.R.drawable.symbol_trash_24, getResources().getString(R.string.conversation_selection__menu_delete), () -> handleActionItemClicked(Action.DELETE)));
 
     return items;
   }
@@ -908,6 +918,8 @@ public final class ConversationReactionOverlay extends FrameLayout {
     PAYMENT_DETAILS,
     VIEW_INFO,
     DELETE,
-    END_POLL
+    END_POLL,
+    PIN_MESSAGE,
+    UNPIN_MESSAGE
   }
 }

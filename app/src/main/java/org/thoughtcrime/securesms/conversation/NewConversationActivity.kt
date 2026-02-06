@@ -9,6 +9,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -41,15 +42,16 @@ import org.signal.core.ui.compose.AllDevicePreviews
 import org.signal.core.ui.compose.Dialogs
 import org.signal.core.ui.compose.DropdownMenus
 import org.signal.core.ui.compose.Previews
-import org.signal.core.ui.compose.theme.SignalTheme
 import org.thoughtcrime.securesms.BlockUnblockDialog
 import org.thoughtcrime.securesms.PassphraseRequiredActivity
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.components.settings.app.AppSettingsActivity
+import org.thoughtcrime.securesms.compose.SignalTheme
 import org.thoughtcrime.securesms.conversation.NewConversationUiState.UserMessage
 import org.thoughtcrime.securesms.groups.ui.creategroup.CreateGroupActivity
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientId
+import org.thoughtcrime.securesms.recipients.ui.RecipientLookupFailureMessage
 import org.thoughtcrime.securesms.recipients.ui.RecipientPicker
 import org.thoughtcrime.securesms.recipients.ui.RecipientPickerCallbacks
 import org.thoughtcrime.securesms.recipients.ui.RecipientPickerScaffold
@@ -95,7 +97,7 @@ private fun NewConversationScreen(
   activityIntent: Intent,
   closeScreen: () -> Unit
 ) {
-  val context = LocalContext.current as FragmentActivity
+  val context = LocalActivity.current as FragmentActivity
 
   val createGroupLauncher: ActivityResultLauncher<Intent> = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.StartActivityForResult(),
@@ -274,7 +276,6 @@ private interface UiCallbacks :
   fun onRemoveConfirmed(recipient: Recipient)
   fun onBlockConfirmed(recipient: Recipient)
   fun onUserMessageDismissed(userMessage: UserMessage)
-  override fun onPendingRecipientSelectionsConsumed() = Unit
   fun onBackPressed()
 
   object Empty : UiCallbacks {
@@ -284,7 +285,6 @@ private interface UiCallbacks :
     override fun onFindByPhoneNumber() = Unit
     override suspend fun shouldAllowSelection(selection: RecipientSelection): Boolean = true
     override fun onRecipientSelected(selection: RecipientSelection) = Unit
-    override fun onPendingRecipientSelectionsConsumed() = Unit
     override fun onMessage(id: RecipientId) = Unit
     override fun onVoiceCall(recipient: Recipient) = Unit
     override fun onVideoCall(recipient: Recipient) = Unit
@@ -351,21 +351,23 @@ private fun UserMessagesHost(
       onDismiss(userMessage)
     }
 
-    is UserMessage.Info.NetworkError -> Dialogs.SimpleMessageDialog(
-      message = stringResource(R.string.NetworkFailure__network_error_check_your_connection_and_try_again),
-      dismiss = stringResource(android.R.string.ok),
-      onDismiss = { onDismiss(userMessage) }
-    )
-
-    is UserMessage.Info.RecipientNotSignalUser -> Dialogs.SimpleMessageDialog(
-      message = stringResource(R.string.NewConversationActivity__s_is_not_a_signal_user, userMessage.phone.displayText),
-      dismiss = stringResource(android.R.string.ok),
-      onDismiss = { onDismiss(userMessage) }
-    )
+    is UserMessage.Info.RecipientLookupFailed -> {
+      RecipientLookupFailureMessage(
+        failure = userMessage.failure,
+        onDismissed = { onDismiss(userMessage) }
+      )
+    }
 
     is UserMessage.Info.UserAlreadyInAnotherCall -> LaunchedEffect(userMessage) {
       snackbarHostState.showSnackbar(
         message = context.getString(R.string.CommunicationActions__you_are_already_in_a_call)
+      )
+      onDismiss(userMessage)
+    }
+
+    is UserMessage.Info.ContactsRefreshFailed -> LaunchedEffect(userMessage) {
+      snackbarHostState.showSnackbar(
+        message = context.getString(R.string.ContactSelectionListFragment_error_retrieving_contacts_check_your_network_connection)
       )
       onDismiss(userMessage)
     }

@@ -49,9 +49,9 @@ import androidx.compose.ui.unit.sp
 import org.signal.core.ui.compose.Buttons
 import org.signal.core.ui.compose.DayNightPreviews
 import org.signal.core.ui.compose.Previews
-import org.signal.core.ui.compose.theme.SignalTheme
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.components.compose.RoundCheckbox
+import org.thoughtcrime.securesms.compose.SignalTheme
 import org.thoughtcrime.securesms.keyvalue.SignalStore
 import org.thoughtcrime.securesms.polls.PollOption
 import org.thoughtcrime.securesms.polls.PollRecord
@@ -165,11 +165,13 @@ private fun PollOption(
       .padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
       .clickable(
         onClick = {
-          val added = option.voteState == VoteState.PENDING_ADD || option.voteState == VoteState.ADDED
-          if (VibrateUtil.isHapticFeedbackEnabled(context)) {
-            haptics.performHapticFeedback(if (added) HapticFeedbackType.ToggleOff else HapticFeedbackType.ToggleOn)
+          if (!hasEnded) {
+            val added = option.voteState == VoteState.PENDING_ADD || option.voteState == VoteState.ADDED
+            if (VibrateUtil.isHapticFeedbackEnabled(context)) {
+              haptics.performHapticFeedback(if (added) HapticFeedbackType.ToggleOff else HapticFeedbackType.ToggleOn)
+            }
+            onToggleVote(option, !added)
           }
-          onToggleVote(option, !added)
         },
         interactionSource = remember { MutableInteractionSource() },
         indication = null,
@@ -204,6 +206,7 @@ private fun PollOption(
               )
             }
           }
+
           VoteState.PENDING_REMOVE -> {
             CircularProgressIndicator(
               modifier = Modifier.padding(top = 4.dp, end = 8.dp).size(24.dp),
@@ -211,12 +214,18 @@ private fun PollOption(
               color = pollColors.checkbox
             )
           }
+
           VoteState.ADDED,
           VoteState.REMOVED,
           VoteState.NONE -> {
             RoundCheckbox(
               checked = voteState == VoteState.ADDED,
-              onCheckedChange = {},
+              onCheckedChange = { checked ->
+                if (VibrateUtil.isHapticFeedbackEnabled(context)) {
+                  haptics.performHapticFeedback(if (checked) HapticFeedbackType.ToggleOn else HapticFeedbackType.ToggleOff)
+                }
+                onToggleVote(option, checked)
+              },
               modifier = Modifier.padding(top = 4.dp, end = 8.dp).height(24.dp),
               outlineColor = pollColors.checkbox,
               checkedColor = pollColors.checkboxBackground
@@ -270,7 +279,7 @@ private fun PollOption(
             .fillMaxHeight()
             .background(
               color = pollColors.progress,
-              shape = if (progress == 1f) RoundedCornerShape(18.dp) else RoundedCornerShape(topStart = 18.dp, bottomStart = 18.dp)
+              shape = RoundedCornerShape(18.dp)
             )
         )
       }
@@ -316,7 +325,7 @@ private sealed interface PollColorsType {
         text = MaterialTheme.colorScheme.onSurface,
         caption = MaterialTheme.colorScheme.onSurfaceVariant,
         progress = MaterialTheme.colorScheme.primary,
-        progressBackground = SignalTheme.colors.colorTransparentInverse3,
+        progressBackground = if (DynamicTheme.isDarkTheme(LocalContext.current)) SignalTheme.colors.colorTransparent2 else SignalTheme.colors.colorTransparentInverse3,
         checkbox = MaterialTheme.colorScheme.outline,
         checkboxBackground = MaterialTheme.colorScheme.primary,
         button = MaterialTheme.colorScheme.onPrimaryContainer,

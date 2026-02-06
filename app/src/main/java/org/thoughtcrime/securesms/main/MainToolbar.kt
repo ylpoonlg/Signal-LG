@@ -71,6 +71,7 @@ import org.signal.core.ui.compose.DayNightPreviews
 import org.signal.core.ui.compose.DropdownMenus
 import org.signal.core.ui.compose.IconButtons
 import org.signal.core.ui.compose.Previews
+import org.signal.core.ui.compose.SignalIcons
 import org.signal.core.ui.compose.TextFields
 import org.signal.core.ui.compose.Tooltips
 import org.signal.core.ui.compose.circularReveal
@@ -188,7 +189,11 @@ fun MainToolbar(
             maxWidth.toPx()
           }
 
-          PrimaryToolbar(state, callback) {
+          PrimaryToolbar(
+            state = state,
+            callback = callback,
+            enabled = state.mode != MainToolbarMode.SEARCH
+          ) {
             revealOffset = Offset(it / maxWidth, 0.5f)
           }
 
@@ -251,7 +256,7 @@ private fun SearchToolbar(
           onClick = callback::onCloseSearchClick
         ) {
           Icon(
-            imageVector = ImageVector.vectorResource(R.drawable.symbol_arrow_start_24),
+            imageVector = SignalIcons.ArrowStart.imageVector,
             contentDescription = stringResource(R.string.MainToolbar__close_search_content_description)
           )
         }
@@ -322,7 +327,7 @@ private fun ArchiveToolbar(
         callback.onCloseArchiveClick()
       }) {
         Icon(
-          imageVector = ImageVector.vectorResource(R.drawable.symbol_arrow_start_24),
+          imageVector = SignalIcons.ArrowStart.imageVector,
           contentDescription = stringResource(R.string.CallScreenTopBar__go_back)
         )
       }
@@ -338,6 +343,7 @@ private fun ArchiveToolbar(
 private fun PrimaryToolbar(
   state: MainToolbarState,
   callback: MainToolbarCallback,
+  enabled: Boolean = true,
   onSearchButtonPositioned: (Float) -> Unit
 ) {
   TopAppBar(
@@ -365,6 +371,7 @@ private fun PrimaryToolbar(
           modifier = Modifier
             .fillMaxSize()
             .clickable(
+              enabled = enabled,
               onClick = callback::onSettingsClick,
               interactionSource = interactionSource,
               indication = ripple(radius = 14.dp)
@@ -405,7 +412,7 @@ private fun PrimaryToolbar(
         }
       ) {
         Icon(
-          imageVector = ImageVector.vectorResource(R.drawable.symbol_search_24),
+          imageVector = SignalIcons.Search.imageVector,
           contentDescription = stringResource(R.string.conversation_list_search_description)
         )
       }

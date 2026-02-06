@@ -100,6 +100,11 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.signal.core.models.media.Media
+import org.signal.core.models.media.TransformProperties
+import org.signal.core.ui.BottomSheetUtil
+import org.signal.core.ui.util.ThemeUtil
+import org.signal.core.ui.view.Stub
 import org.signal.core.util.ByteLimitInputFilter
 import org.signal.core.util.PendingIntentFlags
 import org.signal.core.util.Result
@@ -153,6 +158,7 @@ import org.thoughtcrime.securesms.components.settings.app.AppSettingsActivity
 import org.thoughtcrime.securesms.components.settings.app.subscription.donate.CheckoutFlowActivity
 import org.thoughtcrime.securesms.components.settings.app.subscription.donate.DonateToSignalFragment
 import org.thoughtcrime.securesms.components.settings.conversation.ConversationSettingsActivity
+import org.thoughtcrime.securesms.components.snackbars.makeSnackbar
 import org.thoughtcrime.securesms.components.spoiler.SpoilerAnnotation
 import org.thoughtcrime.securesms.components.voice.VoiceNoteDraft
 import org.thoughtcrime.securesms.components.voice.VoiceNoteMediaControllerOwner
@@ -188,6 +194,7 @@ import org.thoughtcrime.securesms.conversation.MarkReadHelper
 import org.thoughtcrime.securesms.conversation.MenuState
 import org.thoughtcrime.securesms.conversation.MessageSendType
 import org.thoughtcrime.securesms.conversation.MessageStyler.getStyling
+import org.thoughtcrime.securesms.conversation.PinnedMessagesBottomSheet
 import org.thoughtcrime.securesms.conversation.ReenableScheduledMessagesDialogFragment
 import org.thoughtcrime.securesms.conversation.ScheduleMessageContextMenu
 import org.thoughtcrime.securesms.conversation.ScheduleMessageDialogCallback
@@ -226,7 +233,6 @@ import org.thoughtcrime.securesms.conversation.v2.groups.ConversationGroupViewMo
 import org.thoughtcrime.securesms.conversation.v2.items.ChatColorsDrawable
 import org.thoughtcrime.securesms.conversation.v2.items.InteractiveConversationElement
 import org.thoughtcrime.securesms.conversation.v2.keyboard.AttachmentKeyboardFragment
-import org.thoughtcrime.securesms.database.AttachmentTable
 import org.thoughtcrime.securesms.database.DraftTable
 import org.thoughtcrime.securesms.database.model.IdentityRecord
 import org.thoughtcrime.securesms.database.model.InMemoryMessageRecord
@@ -273,10 +279,10 @@ import org.thoughtcrime.securesms.linkpreview.LinkPreviewViewModelV2
 import org.thoughtcrime.securesms.longmessage.LongMessageFragment
 import org.thoughtcrime.securesms.main.MainNavigationListLocation
 import org.thoughtcrime.securesms.main.MainNavigationViewModel
+import org.thoughtcrime.securesms.main.MainSnackbarHostKey
 import org.thoughtcrime.securesms.mediaoverview.MediaOverviewActivity
 import org.thoughtcrime.securesms.mediapreview.MediaIntentFactory
 import org.thoughtcrime.securesms.mediapreview.MediaPreviewV2Activity
-import org.thoughtcrime.securesms.mediasend.Media
 import org.thoughtcrime.securesms.mediasend.MediaSendActivityResult
 import org.thoughtcrime.securesms.messagedetails.MessageDetailsFragment
 import org.thoughtcrime.securesms.messagerequests.MessageRequestRepository
@@ -318,12 +324,11 @@ import org.thoughtcrime.securesms.safety.SafetyNumberBottomSheet
 import org.thoughtcrime.securesms.sms.MessageSender
 import org.thoughtcrime.securesms.stickers.StickerEventListener
 import org.thoughtcrime.securesms.stickers.StickerLocator
-import org.thoughtcrime.securesms.stickers.StickerManagementActivity
 import org.thoughtcrime.securesms.stickers.StickerPackInstallEvent
-import org.thoughtcrime.securesms.stickers.StickerPackPreviewActivity
+import org.thoughtcrime.securesms.stickers.manage.StickerManagementScreen
+import org.thoughtcrime.securesms.stickers.preview.StickerPackPreviewActivity
 import org.thoughtcrime.securesms.stories.StoryViewerArgs
 import org.thoughtcrime.securesms.stories.viewer.StoryViewerActivity
-import org.thoughtcrime.securesms.util.BottomSheetUtil
 import org.thoughtcrime.securesms.util.BubbleUtil
 import org.thoughtcrime.securesms.util.CommunicationActions
 import org.thoughtcrime.securesms.util.ContextUtil
@@ -344,9 +349,7 @@ import org.thoughtcrime.securesms.util.PlayStoreUtil
 import org.thoughtcrime.securesms.util.RemoteConfig
 import org.thoughtcrime.securesms.util.SignalLocalMetrics
 import org.thoughtcrime.securesms.util.TextSecurePreferences
-import org.thoughtcrime.securesms.util.ThemeUtil
 import org.thoughtcrime.securesms.util.ViewUtil
-import org.thoughtcrime.securesms.util.WindowUtil
 import org.thoughtcrime.securesms.util.atMidnight
 import org.thoughtcrime.securesms.util.atUTC
 import org.thoughtcrime.securesms.util.doAfterNextLayout
@@ -363,13 +366,12 @@ import org.thoughtcrime.securesms.util.padding
 import org.thoughtcrime.securesms.util.setIncognitoKeyboardEnabled
 import org.thoughtcrime.securesms.util.toMillis
 import org.thoughtcrime.securesms.util.viewModel
-import org.thoughtcrime.securesms.util.views.Stub
 import org.thoughtcrime.securesms.util.visible
+import org.thoughtcrime.securesms.verify.VerifyAutomaticallyEducationSheet
 import org.thoughtcrime.securesms.verify.VerifyIdentityActivity
 import org.thoughtcrime.securesms.wallpaper.ChatWallpaper
 import org.thoughtcrime.securesms.wallpaper.ChatWallpaperDimLevelUtil
 import org.thoughtcrime.securesms.window.getWindowSizeClass
-import org.thoughtcrime.securesms.window.isLargeScreenSupportEnabled
 import org.thoughtcrime.securesms.window.isSplitPane
 import java.time.Instant
 import java.time.LocalDateTime
@@ -377,7 +379,9 @@ import java.time.ZoneId
 import java.util.Locale
 import java.util.Optional
 import java.util.concurrent.ExecutionException
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.milliseconds
+import org.signal.core.ui.R as CoreUiR
 
 /**
  * A single unified fragment for Conversations.
@@ -405,6 +409,7 @@ class ConversationFragment :
   companion object {
     private val TAG = Log.tag(ConversationFragment::class.java)
     private val POLL_SPINNER_DELAY = 500.milliseconds
+    private val PIN_SPINNER_DELAY = 500.milliseconds
 
     private const val ACTION_PINNED_SHORTCUT = "action_pinned_shortcut"
     private const val SAVED_STATE_IS_SEARCH_REQUESTED = "is_search_requested"
@@ -413,6 +418,9 @@ class ConversationFragment :
     private const val SCROLL_HEADER_ANIMATION_DURATION: Long = 100L
     private const val SCROLL_HEADER_CLOSE_DELAY: Long = SCROLL_HEADER_ANIMATION_DURATION * 4
     private const val IS_SCROLLED_TO_BOTTOM_THRESHOLD: Int = 2
+
+    private const val ATTACHMENT_KEYBOARD_FRAGMENT_CREATOR_ID = 1
+    private const val MEDIA_KEYBOARD_FRAGMENT_CREATOR_ID = 2
   }
 
   private val args: ConversationArgs by lazy {
@@ -507,7 +515,7 @@ class ConversationFragment :
 
   private val shareDataTimestampViewModel: ShareDataTimestampViewModel by activityViewModels()
 
-  private val mainNavigationViewModel: MainNavigationViewModel by activityViewModels()
+  private val mainNavigationViewModel: MainNavigationViewModel by activityViewModels { MainNavigationViewModel.Factory() }
 
   private val inlineQueryController: InlineQueryResultsControllerV2 by lazy {
     InlineQueryResultsControllerV2(
@@ -565,7 +573,9 @@ class ConversationFragment :
   private var dataObserver: DataObserver? = null
   private var menuProvider: ConversationOptionsMenu.Provider? = null
   private var scrollListener: ScrollListener? = null
+  private var keyboardEvents: KeyboardEvents? = null
   private var progressDialog: ProgressCardDialogFragment? = null
+  private var firstPinRender: Boolean = true
 
   private val jumpAndPulseScrollStrategy = object : ScrollToPositionDelegate.ScrollStrategy {
     override fun performScroll(recyclerView: RecyclerView, layoutManager: LinearLayoutManager, position: Int, smooth: Boolean) {
@@ -708,11 +718,6 @@ class ConversationFragment :
   override fun onResume() {
     super.onResume()
 
-    if (!isLargeScreenSupportEnabled()) {
-      WindowUtil.setLightNavigationBarFromTheme(requireActivity())
-      WindowUtil.setLightStatusBarFromTheme(requireActivity())
-    }
-
     EventBus.getDefault().register(this)
 
     groupCallViewModel.peekGroupCall()
@@ -771,6 +776,12 @@ class ConversationFragment :
   }
 
   override fun onDestroyView() {
+    keyboardEvents?.let {
+      container.removeInputListener(it)
+      container.removeKeyboardStateListener(it)
+    }
+    keyboardEvents = null
+
     super.onDestroyView()
     if (pinnedShortcutReceiver != null) {
       requireActivity().unregisterReceiver(pinnedShortcutReceiver)
@@ -813,6 +824,22 @@ class ConversationFragment :
         moveToPosition(it)
       }
       .addTo(disposables)
+  }
+
+  override fun unpin(conversationMessage: ConversationMessage) {
+    handleUnpinMessage(conversationMessage.messageRecord.id)
+  }
+
+  override fun copy(conversationMessage: ConversationMessage) {
+    handleCopyMessage(conversationMessage.multiselectCollection.toSet())
+  }
+
+  override fun delete(conversationMessage: ConversationMessage) {
+    handleDeleteMessages(conversationMessage.multiselectCollection.toSet())
+  }
+
+  override fun save(conversationMessage: ConversationMessage) {
+    handleSaveAttachment(conversationMessage.messageRecord as MmsMessageRecord)
   }
 
   override fun onReactWithAnyEmojiDialogDismissed() {
@@ -870,7 +897,7 @@ class ConversationFragment :
   }
 
   override fun onStickerManagementClicked() {
-    startActivity(StickerManagementActivity.createIntent(requireContext()))
+    StickerManagementScreen.show(this)
     container.hideInput()
   }
 
@@ -1066,6 +1093,14 @@ class ConversationFragment :
       }
     }
 
+    mainNavigationViewModel.snackbarRegistry.register(
+      MainSnackbarHostKey.Chat,
+      viewLifecycleOwner
+    ) { state ->
+      makeSnackbar(state)
+      true
+    }
+
     menuProvider?.afterFirstRenderMode = true
 
     viewLifecycleOwner.lifecycle.addObserver(LastScrolledPositionUpdater(adapter, layoutManager, viewModel))
@@ -1139,9 +1174,10 @@ class ConversationFragment :
     dataObserver = DataObserver()
     adapter.registerAdapterDataObserver(dataObserver!!)
 
-    val keyboardEvents = KeyboardEvents()
-    container.addInputListener(keyboardEvents)
-    container.addKeyboardStateListener(keyboardEvents)
+    keyboardEvents = KeyboardEvents().also {
+      container.addInputListener(it)
+      container.addKeyboardStateListener(it)
+    }
 
     childFragmentManager.setFragmentResultListener(AttachmentKeyboardFragment.RESULT_KEY, viewLifecycleOwner, AttachmentKeyboardFragmentListener())
     motionEventRelay.setDrain(MotionEventRelayDrain(this))
@@ -1173,6 +1209,16 @@ class ConversationFragment :
         .flowOn(Dispatchers.Main)
         .collect {
           binding.conversationBanner.collectAndShowBanners(it)
+        }
+    }
+
+    lifecycleScope.launch {
+      viewModel
+        .pinnedMessages
+        .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+        .flowOn(Dispatchers.Main)
+        .collect {
+          presentPinnedMessage(it, args.wallpaper != null)
         }
     }
 
@@ -1235,7 +1281,9 @@ class ConversationFragment :
         .state
         .distinctUntilChanged { previous, next -> previous.voiceNoteDraft == next.voiceNoteDraft }
         .subscribe {
-          inputPanel.voiceNoteDraft = it.voiceNoteDraft
+          if (!voiceMessageRecordingDelegate.hasActiveSession()) {
+            inputPanel.voiceNoteDraft = it.voiceNoteDraft
+          }
           updateToggleButtonState()
         }
     )
@@ -1317,6 +1365,15 @@ class ConversationFragment :
       .addTo(disposables)
   }
 
+  private fun presentPinnedMessage(pinnedMessages: List<ConversationMessage>, hasWallpaper: Boolean) {
+    if (pinnedMessages.isNotEmpty()) {
+      binding.conversationBanner.showPinnedMessageStub(messages = pinnedMessages, canUnpin = conversationGroupViewModel.canEditGroupInfo() && RemoteConfig.sendPinnedMessages, hasWallpaper = hasWallpaper, shouldAnimate = !firstPinRender)
+    } else {
+      binding.conversationBanner.hidePinnedMessageStub()
+    }
+    firstPinRender = false
+  }
+
   private fun presentTypingIndicator() {
     typingIndicatorAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
       override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -1390,6 +1447,17 @@ class ConversationFragment :
   private fun presentIdentityRecordsState(identityRecordsState: IdentityRecordsState) {
     binding.conversationTitleView.root.setVerified(identityRecordsState.isVerified)
 
+    if (RemoteConfig.internalUser && SignalStore.settings.automaticVerificationEnabled && !SignalStore.uiHints.hasSeenVerifyAutomaticallySheet() && viewModel.recipientSnapshot?.isIndividual == true) {
+      VerifyAutomaticallyEducationSheet.show(parentFragmentManager)
+
+      parentFragmentManager.setFragmentResultListener(VerifyAutomaticallyEducationSheet.RESULT_KEY, requireActivity()) { _, bundle ->
+        val shouldVerify = bundle.getBoolean(VerifyAutomaticallyEducationSheet.RESULT_KEY, false)
+        if (shouldVerify) {
+          VerifyIdentityActivity.startOrShowExchangeMessagesDialog(requireContext(), identityRecordsState.identityRecords.identityRecords.first())
+        }
+      }
+    }
+
     if (identityRecordsState.isUnverified) {
       binding.conversationBanner.showUnverifiedBanner(identityRecordsState.identityRecords)
     } else {
@@ -1424,7 +1492,7 @@ class ConversationFragment :
         isVideoGif = videoGif,
         bucketId = null,
         caption = null,
-        transformProperties = AttachmentTable.TransformProperties.forSentMediaQuality(SignalStore.settings.sentMediaQuality.code),
+        transformProperties = TransformProperties.forSentMediaQuality(SignalStore.settings.sentMediaQuality.code),
         fileName = null
       )
       conversationActivityResultContracts.launchMediaEditor(listOf(media), recipientId, composeText.textTrimmed)
@@ -1466,28 +1534,31 @@ class ConversationFragment :
 
     when (args.conversationScreenType) {
       ConversationScreenType.NORMAL -> presentNavigationIconForNormal()
+
       ConversationScreenType.BUBBLE,
       ConversationScreenType.POPUP -> presentNavigationIconForBubble()
     }
   }
 
   private fun presentNavigationIconForNormal() {
-    if (isLargeScreenSupportEnabled()) {
-      lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.RESUMED) {
-          mainNavigationViewModel.isFullScreenPane.collect { isFullScreenPane ->
-            updateNavigationIconForNormal(isFullScreenPane)
-          }
+    lifecycleScope.launch {
+      repeatOnLifecycle(Lifecycle.State.RESUMED) {
+        mainNavigationViewModel.isFullScreenPane.collect { isFullScreenPane ->
+          updateNavigationIconForNormal(isFullScreenPane)
         }
       }
-    } else {
-      updateNavigationIconForNormal(true)
     }
   }
 
   private fun updateNavigationIconForNormal(isFullScreenPane: Boolean) {
     if (!resources.getWindowSizeClass().isSplitPane() || isFullScreenPane) {
-      binding.toolbar.setNavigationIcon(R.drawable.symbol_arrow_start_24)
+      binding.toolbar.setNavigationIcon(CoreUiR.drawable.symbol_arrow_start_24)
+      binding.toolbar.navigationIcon?.setTint(
+        ContextCompat.getColor(
+          requireContext(),
+          if (viewModel.wallpaperSnapshot != null) CoreUiR.color.signal_colorNeutralInverse else CoreUiR.color.signal_colorOnSurface
+        )
+      )
       binding.toolbar.setNavigationContentDescription(R.string.ConversationFragment__content_description_back_button)
       binding.toolbar.setNavigationOnClickListener {
         binding.root.hideKeyboard(composeText)
@@ -1570,14 +1641,15 @@ class ConversationFragment :
     val toolbarTint = ContextCompat.getColor(
       requireContext(),
       if (chatWallpaper != null) {
-        R.color.signal_colorNeutralInverse
+        CoreUiR.color.signal_colorNeutralInverse
       } else {
-        R.color.signal_colorOnSurface
+        CoreUiR.color.signal_colorOnSurface
       }
     )
 
     binding.toolbar.setTitleTextColor(toolbarTint)
     binding.toolbar.setActionItemTint(toolbarTint)
+    binding.toolbar.navigationIcon?.setTint(toolbarTint)
 
     val wallpaperEnabled = chatWallpaper != null
     binding.conversationWallpaper.visible = wallpaperEnabled
@@ -1599,7 +1671,7 @@ class ConversationFragment :
     binding.scrollDateHeader.setTextColor(
       ContextCompat.getColor(
         requireContext(),
-        if (wallpaperEnabled) R.color.sticky_header_foreground_wallpaper else R.color.signal_colorOnSurfaceVariant
+        if (wallpaperEnabled) R.color.sticky_header_foreground_wallpaper else CoreUiR.color.signal_colorOnSurfaceVariant
       )
     )
 
@@ -1612,7 +1684,7 @@ class ConversationFragment :
     val navColor = if (chatWallpaper != null) {
       R.color.conversation_navigation_wallpaper
     } else {
-      R.color.signal_colorBackground
+      CoreUiR.color.signal_colorBackground
     }
 
     binding.navBar.setBackgroundColor(ContextCompat.getColor(requireContext(), navColor))
@@ -1649,6 +1721,90 @@ class ConversationFragment :
         binding.conversationGroupCallJoin.setText(if (it.hasCapacity) R.string.ConversationActivity_join else R.string.ConversationActivity_full)
         invalidateOptionsMenu()
       }
+  }
+
+  private fun handlePinMessage(conversationMessage: ConversationMessage) {
+    if (viewModel.pinnedMessages.value.size >= RemoteConfig.pinLimit) {
+      MaterialAlertDialogBuilder(requireContext())
+        .setTitle(resources.getString(R.string.ConversationFragment__replace_title))
+        .setMessage(resources.getString(R.string.ConversationFragment__replace_body))
+        .setPositiveButton(R.string.ConversationFragment__replace) { _, _ ->
+          showPinForDialog(conversationMessage)
+        }
+        .setNegativeButton(R.string.ConversationFragment__cancel) { dialog, _ -> dialog.dismiss() }
+        .show()
+    } else {
+      showPinForDialog(conversationMessage)
+    }
+  }
+
+  private fun showPinForDialog(conversationMessage: ConversationMessage) {
+    val threadRecipient = viewModel.recipientSnapshot ?: return
+    var selection = 1
+    val labels = resources.getStringArray(R.array.ConversationFragment__pinned_for_labels)
+    val values = resources.getIntArray(R.array.ConversationFragment__pinned_for_values)
+
+    MaterialAlertDialogBuilder(requireContext())
+      .setTitle(resources.getString(R.string.ConversationFragment__keep_pinned))
+      .setSingleChoiceItems(labels, selection) { dialog, which ->
+        selection = which
+      }
+      .setPositiveButton(android.R.string.ok) { dialog, _ ->
+        if (conversationMessage.messageRecord.expiresIn > 0 && SignalStore.uiHints.shouldDisplayPinnedSheet()) {
+          PinDisappearingMessageBottomSheet.show(childFragmentManager)
+          SignalStore.uiHints.incrementSeenPinnedSheetCount()
+        }
+        disposables += viewModel
+          .pinMessage(
+            messageRecord = conversationMessage.messageRecord,
+            duration = if (values[selection] == -1) kotlin.time.Duration.INFINITE else values[selection].days,
+            threadRecipient = threadRecipient
+          )
+          .doOnSubscribe {
+            handler.postDelayed({ showSpinner() }, PIN_SPINNER_DELAY.inWholeMilliseconds)
+          }
+          .doFinally {
+            handler.removeCallbacksAndMessages(null)
+            hideSpinner()
+          }
+          .subscribeBy(
+            onError = {
+              Log.w(TAG, "Error received during pin message!", it)
+              MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.PinnedMessage__couldnt_pin)
+                .setMessage(getString(R.string.PinnedMessage__check_connection))
+                .setPositiveButton(android.R.string.ok) { dialog: DialogInterface?, which: Int -> dialog!!.dismiss() }
+                .show()
+            }
+          )
+        dialog.dismiss()
+      }
+      .setNegativeButton(android.R.string.cancel) { dialog, _ ->
+        dialog.dismiss()
+      }
+      .show()
+  }
+
+  private fun handleUnpinMessage(messageId: Long) {
+    disposables += viewModel
+      .unpinMessage(messageId)
+      .doOnSubscribe {
+        handler.postDelayed({ showSpinner() }, PIN_SPINNER_DELAY.inWholeMilliseconds)
+      }
+      .doFinally {
+        handler.removeCallbacksAndMessages(null)
+        hideSpinner()
+      }
+      .subscribeBy(
+        onError = {
+          Log.w(TAG, "Error received during unpin message!", it)
+          MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.PinnedMessage__couldnt_unpin)
+            .setMessage(getString(R.string.PinnedMessage__check_connection))
+            .setPositiveButton(android.R.string.ok) { dialog: DialogInterface?, which: Int -> dialog!!.dismiss() }
+            .show()
+        }
+      )
   }
 
   private fun handleVideoCall() {
@@ -2237,7 +2393,8 @@ class ConversationFragment :
       recipient,
       selectedParts,
       viewModel.hasMessageRequestState,
-      conversationGroupViewModel.isNonAdminInAnnouncementGroup()
+      conversationGroupViewModel.isNonAdminInAnnouncementGroup(),
+      conversationGroupViewModel.canEditGroupInfo()
     )
 
     val items = arrayListOf<ActionItem>()
@@ -2254,7 +2411,7 @@ class ConversationFragment :
 
     if (menuState.shouldShowEditAction()) {
       items.add(
-        ActionItem(R.drawable.symbol_edit_24, resources.getString(R.string.conversation_selection__menu_edit)) {
+        ActionItem(CoreUiR.drawable.symbol_edit_24, resources.getString(R.string.conversation_selection__menu_edit)) {
           handleEditMessage(getSelectedConversationMessage())
           finishActionMode()
         }
@@ -2263,7 +2420,7 @@ class ConversationFragment :
 
     if (menuState.shouldShowForwardAction()) {
       items.add(
-        ActionItem(R.drawable.symbol_forward_24, resources.getString(R.string.conversation_selection__menu_forward)) {
+        ActionItem(CoreUiR.drawable.symbol_forward_24, resources.getString(R.string.conversation_selection__menu_forward)) {
           handleForwardMessageParts(selectedParts)
         }
       )
@@ -2271,7 +2428,7 @@ class ConversationFragment :
 
     if (menuState.shouldShowSaveAttachmentAction()) {
       items.add(
-        ActionItem(R.drawable.symbol_save_android_24, getResources().getString(R.string.conversation_selection__menu_save)) {
+        ActionItem(R.drawable.symbol_save_android_24, resources.getString(R.string.conversation_selection__menu_save)) {
           handleSaveAttachment(getSelectedConversationMessage().messageRecord as MmsMessageRecord)
           finishActionMode()
         }
@@ -2280,7 +2437,7 @@ class ConversationFragment :
 
     if (menuState.shouldShowCopyAction()) {
       items.add(
-        ActionItem(R.drawable.symbol_copy_android_24, getResources().getString(R.string.conversation_selection__menu_copy)) {
+        ActionItem(CoreUiR.drawable.symbol_copy_android_24, resources.getString(R.string.conversation_selection__menu_copy)) {
           handleCopyMessage(selectedParts)
           finishActionMode()
         }
@@ -2289,7 +2446,7 @@ class ConversationFragment :
 
     if (menuState.shouldShowDetailsAction()) {
       items.add(
-        ActionItem(R.drawable.symbol_info_24, getResources().getString(R.string.conversation_selection__menu_message_details)) {
+        ActionItem(CoreUiR.drawable.symbol_info_24, resources.getString(R.string.conversation_selection__menu_message_details)) {
           handleDisplayDetails(getSelectedConversationMessage())
           finishActionMode()
         }
@@ -2298,7 +2455,7 @@ class ConversationFragment :
 
     if (menuState.shouldShowDeleteAction()) {
       items.add(
-        ActionItem(R.drawable.symbol_trash_24, getResources().getString(R.string.conversation_selection__menu_delete)) {
+        ActionItem(CoreUiR.drawable.symbol_trash_24, resources.getString(R.string.conversation_selection__menu_delete)) {
           handleDeleteMessages(selectedParts)
           finishActionMode()
         }
@@ -2321,14 +2478,17 @@ class ConversationFragment :
 
     val additionalScrollOffset = 54.dp
     if (isVisible) {
-      bottomActionBar.visibility = View.INVISIBLE
+      ViewUtil.animateIn(bottomActionBar, bottomActionBar.enterAnimation)
       animationsAllowed = false
 
       bottomActionBar.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {
+          if (bottomActionBar.measuredHeight == 0) {
+            return
+          }
+
           bottomActionBar.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-          ViewUtil.animateIn(bottomActionBar, bottomActionBar.enterAnimation)
           container.hideInput()
           inputPanel.setHideForSelection(true)
 
@@ -2381,7 +2541,7 @@ class ConversationFragment :
   ) {
     reactionDelegate.setOnActionSelectedListener(onActionSelectedListener)
     reactionDelegate.setOnHideListener(onHideListener)
-    reactionDelegate.show(requireActivity(), viewModel.recipientSnapshot!!, conversationMessage, conversationGroupViewModel.isNonAdminInAnnouncementGroup(), selectedConversationModel)
+    reactionDelegate.show(requireActivity(), viewModel.recipientSnapshot!!, conversationMessage, conversationGroupViewModel.isNonAdminInAnnouncementGroup(), selectedConversationModel, conversationGroupViewModel.canEditGroupInfo())
     viewModel.setIsReactionDelegateShowing(true)
     composeText.clearFocus()
   }
@@ -2702,6 +2862,15 @@ class ConversationFragment :
   private fun hideSpinner() {
     progressDialog?.dismissAllowingStateLoss()
     progressDialog = null
+  }
+
+  private fun viewPinnedMessage(messageId: Long) {
+    disposables += viewModel
+      .moveToMessage(messageId)
+      .subscribeBy(
+        onSuccess = { moveToPosition(it) },
+        onError = { Toast.makeText(requireContext(), R.string.PinnedMessage__not_found, Toast.LENGTH_LONG).show() }
+      )
   }
 
   private inner class SwipeAvailabilityProvider : ConversationItemSwipeCallback.SwipeAvailabilityProvider {
@@ -3235,6 +3404,10 @@ class ConversationFragment :
       viewModel.toggleVote(poll, pollOption, isChecked)
     }
 
+    override fun onViewPinnedMessage(messageId: Long) {
+      viewPinnedMessage(messageId)
+    }
+
     override fun onJoinGroupCallClicked() {
       val activity = activity ?: return
       val recipient = viewModel.recipientSnapshot ?: return
@@ -3534,11 +3707,6 @@ class ConversationFragment :
                   getVoiceNoteMediaController().resumePlayback(selectedConversationModel.audioUri, messageRecord.id)
                 }
 
-                if (!isLargeScreenSupportEnabled()) {
-                  WindowUtil.setLightStatusBarFromTheme(requireActivity())
-                  WindowUtil.setLightNavigationBarFromTheme(requireActivity())
-                }
-
                 clearFocusedItem()
 
                 if (mp4Holder != null) {
@@ -3697,9 +3865,9 @@ class ConversationFragment :
       val toolbarTextAndIconColor = ContextCompat.getColor(
         requireContext(),
         if (viewModel.wallpaperSnapshot != null) {
-          R.color.signal_colorNeutralInverse
+          CoreUiR.color.signal_colorNeutralInverse
         } else {
-          R.color.signal_colorOnSurface
+          CoreUiR.color.signal_colorOnSurface
         }
       )
 
@@ -3928,6 +4096,8 @@ class ConversationFragment :
         ConversationReactionOverlay.Action.VIEW_INFO -> handleDisplayDetails(conversationMessage)
         ConversationReactionOverlay.Action.DELETE -> handleDeleteMessages(conversationMessage.multiselectCollection.toSet())
         ConversationReactionOverlay.Action.END_POLL -> handleEndPoll(conversationMessage.messageRecord.getPoll()?.id)
+        ConversationReactionOverlay.Action.PIN_MESSAGE -> handlePinMessage(conversationMessage)
+        ConversationReactionOverlay.Action.UNPIN_MESSAGE -> handleUnpinMessage(conversationMessage.messageRecord.id)
       }
     }
   }
@@ -4127,6 +4297,23 @@ class ConversationFragment :
 
     override fun onDismissReview() {
       viewModel.onDismissReview()
+    }
+
+    override fun onUnpinMessage(messageId: Long) {
+      handleUnpinMessage(messageId)
+    }
+
+    override fun onGoToMessage(messageId: Long) {
+      viewPinnedMessage(messageId)
+    }
+
+    override fun onViewAllMessages() {
+      PinnedMessagesBottomSheet.show(
+        childFragmentManager,
+        threadId = args.threadId,
+        conversationRecipientId = viewModel.recipientSnapshot?.id!!,
+        canUnpin = conversationGroupViewModel.canEditGroupInfo() && RemoteConfig.sendPinnedMessages
+      )
     }
   }
 
@@ -4371,9 +4558,6 @@ class ConversationFragment :
     }
 
     override fun onRecorderCanceled(byUser: Boolean) {
-      if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
-        updateToggleButtonState()
-      }
       voiceMessageRecordingDelegate.onRecorderCanceled(byUser)
     }
 
@@ -4464,7 +4648,9 @@ class ConversationFragment :
 
   private inner class InputPanelMediaListener : InputPanel.MediaListener {
     override fun onMediaSelected(uri: Uri, contentType: String?) {
-      if (MediaUtil.isGif(contentType) || MediaUtil.isImageType(contentType)) {
+      if (inputPanel.inEditMessageMode()) {
+        Log.i(TAG, "Disregarding media because we are in edit mode")
+      } else if (MediaUtil.isGif(contentType) || MediaUtil.isImageType(contentType)) {
         disposables += viewModel.getKeyboardImageDetails(uri)
           .observeOn(AndroidSchedulers.mainThread())
           .subscribeBy(
@@ -4514,7 +4700,7 @@ class ConversationFragment :
   }
 
   private object AttachmentKeyboardFragmentCreator : InputAwareConstraintLayout.FragmentCreator {
-    override val id: Int = 1
+    override val id: Int = ATTACHMENT_KEYBOARD_FRAGMENT_CREATOR_ID
     override fun create(): Fragment = AttachmentKeyboardFragment()
   }
 
@@ -4553,7 +4739,7 @@ class ConversationFragment :
   }
 
   private object MediaKeyboardFragmentCreator : InputAwareConstraintLayout.FragmentCreator {
-    override val id: Int = 2
+    override val id: Int = MEDIA_KEYBOARD_FRAGMENT_CREATOR_ID
     override fun create(): Fragment = KeyboardPagerFragment().apply {
       arguments = bundleOf(KeyboardPagerFragment.ARG_SET_NAV_COLOR to false)
     }
@@ -4563,8 +4749,25 @@ class ConversationFragment :
     InputAwareConstraintLayout.Listener,
     InsetAwareConstraintLayout.KeyboardStateListener {
 
-    override fun onInputShown() {
-      binding.navBar.setBackgroundColor(ThemeUtil.getThemedColor(requireContext(), R.attr.mediaKeyboardBottomBarBackgroundColor))
+    override fun onInputShown(fragmentCreatorId: Int) {
+      when (fragmentCreatorId) {
+        ATTACHMENT_KEYBOARD_FRAGMENT_CREATOR_ID -> {
+          if (viewModel.recipientSnapshot?.wallpaper != null) {
+            binding.navBar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.wallpaper_compose_background))
+          } else {
+            binding.navBar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.signal_background_primary))
+          }
+        }
+
+        MEDIA_KEYBOARD_FRAGMENT_CREATOR_ID -> {
+          binding.navBar.setBackgroundColor(ThemeUtil.getThemedColor(requireContext(), R.attr.mediaKeyboardBottomBarBackgroundColor))
+        }
+
+        else -> {
+          Log.w(TAG, "Not setting navbar coloring for unknown creator id $fragmentCreatorId")
+        }
+      }
+
       viewModel.setIsMediaKeyboardShowing(true)
     }
 
@@ -4580,10 +4783,17 @@ class ConversationFragment :
     }
 
     override fun onKeyboardHidden() {
-      closeEmojiSearch()
-
       if (searchMenuItem?.isActionViewExpanded == true && searchMenuItem?.actionView?.hasFocus() == true) {
         searchMenuItem?.actionView?.clearFocus()
+      }
+    }
+
+    override fun onKeyboardAnimationEnded() {
+      if (view == null) {
+        return
+      }
+      if (!container.isKeyboardShowing) {
+        closeEmojiSearch()
       }
     }
   }

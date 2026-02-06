@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
+import org.signal.core.ui.BottomSheetUtil
 import org.signal.core.util.AppUtil
 import org.signal.core.util.ThreadUtil
 import org.signal.core.util.concurrent.SignalExecutors
@@ -23,6 +23,7 @@ import org.signal.core.util.readToList
 import org.signal.core.util.requireLong
 import org.signal.core.util.requireString
 import org.signal.ringrtc.CallManager
+import org.signal.storageservice.protos.calls.quality.SubmitCallQualitySurveyRequest
 import org.thoughtcrime.securesms.BuildConfig
 import org.thoughtcrime.securesms.R
 import org.thoughtcrime.securesms.calls.quality.CallQualityBottomSheetFragment
@@ -32,6 +33,8 @@ import org.thoughtcrime.securesms.components.settings.DSLSettingsText
 import org.thoughtcrime.securesms.components.settings.app.privacy.advanced.AdvancedPrivacySettingsRepository
 import org.thoughtcrime.securesms.components.settings.app.subscription.InAppPaymentsRepository
 import org.thoughtcrime.securesms.components.settings.configure
+import org.thoughtcrime.securesms.components.snackbars.SnackbarState
+import org.thoughtcrime.securesms.components.snackbars.makeSnackbar
 import org.thoughtcrime.securesms.conversation.ConversationIntents
 import org.thoughtcrime.securesms.database.JobDatabase
 import org.thoughtcrime.securesms.database.LocalMetricsDatabase
@@ -43,6 +46,7 @@ import org.thoughtcrime.securesms.database.model.InAppPaymentSubscriberRecord
 import org.thoughtcrime.securesms.database.model.MessageRecord
 import org.thoughtcrime.securesms.dependencies.AppDependencies
 import org.thoughtcrime.securesms.jobmanager.JobTracker
+import org.thoughtcrime.securesms.jobs.CheckKeyTransparencyJob
 import org.thoughtcrime.securesms.jobs.DownloadLatestEmojiDataJob
 import org.thoughtcrime.securesms.jobs.EmojiSearchIndexDownloadJob
 import org.thoughtcrime.securesms.jobs.InAppPaymentKeepAliveJob
@@ -98,7 +102,11 @@ class InternalSettingsFragment : DSLSettingsFragment(R.string.preferences__inter
 
     setFragmentResultListener(CallQualityBottomSheetFragment.REQUEST_KEY) { _, bundle ->
       if (bundle.getBoolean(CallQualityBottomSheetFragment.REQUEST_KEY, false)) {
-        Snackbar.make(requireView(), R.string.CallQualitySheet__thanks_for_your_feedback, Snackbar.LENGTH_SHORT).show()
+        makeSnackbar(
+          SnackbarState(
+            message = getString(R.string.CallQualitySheet__thanks_for_your_feedback)
+          )
+        )
       }
     }
   }
@@ -297,6 +305,15 @@ class InternalSettingsFragment : DSLSettingsFragment(R.string.preferences__inter
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+        }
+      )
+
+      clickPref(
+        title = DSLSettingsText.from("Run self-check key transparency"),
+        summary = DSLSettingsText.from("Automatically enqueues a job to run KT against yourself without waiting for the elapsed time."),
+        onClick = {
+          SignalStore.misc.lastKeyTransparencyTime = 0
+          CheckKeyTransparencyJob.enqueueIfNecessary(addDelay = false)
         }
       )
 
@@ -572,18 +589,12 @@ class InternalSettingsFragment : DSLSettingsFragment(R.string.preferences__inter
 
       sectionHeaderPref(DSLSettingsText.from("Calling options"))
 
-      switchPref(
-        title = DSLSettingsText.from("Use new calling UI"),
-        isChecked = state.newCallingUi,
-        onClick = {
-          viewModel.setUseNewCallingUi(!state.newCallingUi)
-        }
-      )
-
       clickPref(
-        title = DSLSettingsText.from("Display Call Quality Survey UX"),
+        title = DSLSettingsText.from("Display call quality survey"),
         onClick = {
-          CallQualityBottomSheetFragment().show(parentFragmentManager, null)
+          CallQualityBottomSheetFragment
+            .create(SubmitCallQualitySurveyRequest())
+            .show(parentFragmentManager, BottomSheetUtil.STANDARD_BOTTOM_SHEET_FRAGMENT_TAG)
         }
       )
 
@@ -910,6 +921,14 @@ class InternalSettingsFragment : DSLSettingsFragment(R.string.preferences__inter
         isChecked = state.useConversationItemV2ForMedia,
         onClick = {
           viewModel.setUseConversationItemV2Media(!state.useConversationItemV2ForMedia)
+        }
+      )
+
+      switchPref(
+        title = DSLSettingsText.from("Use new media activity"),
+        isChecked = state.useNewMediaActivity,
+        onClick = {
+          viewModel.setUseNewMediaActivity(!state.useNewMediaActivity)
         }
       )
     }

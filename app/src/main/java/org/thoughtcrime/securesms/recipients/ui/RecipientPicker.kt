@@ -28,6 +28,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.fragment.compose.rememberFragmentState
@@ -55,8 +56,12 @@ import org.thoughtcrime.securesms.recipients.PhoneNumber
 import org.thoughtcrime.securesms.recipients.Recipient
 import org.thoughtcrime.securesms.recipients.RecipientId
 import org.thoughtcrime.securesms.recipients.ui.RecipientPicker.DisplayMode.Companion.flag
+import org.thoughtcrime.securesms.recipients.ui.RecipientPicker.KeyboardType
 import java.util.Optional
 import java.util.function.Consumer
+import org.signal.core.ui.R as CoreUiR
+
+private typealias AndroidKeyboardType = androidx.compose.ui.text.input.KeyboardType
 
 /**
  * Provides a recipient search and selection UI.
@@ -65,11 +70,15 @@ import java.util.function.Consumer
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RecipientPicker(
+  searchBarHint: String = stringResource(R.string.RecipientSearchBar__search_name_or_number),
   searchQuery: String,
+  enabledKeyboardTypes: List<KeyboardType> = listOf(KeyboardType.Text, KeyboardType.Phone),
   displayModes: Set<RecipientPicker.DisplayMode> = setOf(RecipientPicker.DisplayMode.ALL),
   selectionLimits: SelectionLimits? = ContactSelectionArguments.Defaults.SELECTION_LIMITS,
+  includeRecents: Boolean = ContactSelectionArguments.Defaults.INCLUDE_RECENTS,
   isRefreshing: Boolean,
   focusAndShowKeyboard: Boolean = LocalConfiguration.current.screenHeightDp.dp > 600.dp,
+  preselectedRecipients: Set<RecipientId> = emptySet(),
   pendingRecipientSelections: Set<RecipientId> = emptySet(),
   shouldResetContactsList: Boolean = false,
   listBottomPadding: Dp? = null,
@@ -95,9 +104,11 @@ fun RecipientPicker(
     }
 
     RecipientSearchBar(
+      hint = searchBarHint,
       query = searchQuery,
       onQueryChange = { filter -> callbacks.listActions.onSearchQueryChanged(query = filter) },
       onSearch = {},
+      enabledKeyboardTypes = enabledKeyboardTypes,
       modifier = Modifier
         .focusRequester(focusRequester)
         .fillMaxWidth()
@@ -108,7 +119,9 @@ fun RecipientPicker(
       displayModes = displayModes,
       selectionLimits = selectionLimits,
       searchQuery = searchQuery,
+      includeRecents = includeRecents,
       isRefreshing = isRefreshing,
+      preselectedRecipients = preselectedRecipients,
       pendingRecipientSelections = pendingRecipientSelections,
       shouldResetContactsList = shouldResetContactsList,
       bottomPadding = listBottomPadding,
@@ -126,7 +139,9 @@ fun RecipientPicker(
 private fun RecipientSearchResultsList(
   displayModes: Set<RecipientPicker.DisplayMode>,
   searchQuery: String,
+  includeRecents: Boolean,
   isRefreshing: Boolean,
+  preselectedRecipients: Set<RecipientId>,
   pendingRecipientSelections: Set<RecipientId>,
   shouldResetContactsList: Boolean,
   selectionLimits: SelectionLimits? = ContactSelectionArguments.Defaults.SELECTION_LIMITS,
@@ -142,6 +157,8 @@ private fun RecipientSearchResultsList(
     enableFindByUsername = callbacks.findByUsername != null,
     enableFindByPhoneNumber = callbacks.findByPhoneNumber != null,
     showCallButtons = callbacks.newCall != null,
+    includeRecents = includeRecents,
+    currentSelection = preselectedRecipients,
     selectionLimits = selectionLimits,
     recyclerPadBottom = with(LocalDensity.current) { bottomPadding?.toPx()?.toInt() ?: ContactSelectionArguments.Defaults.RECYCLER_PADDING_BOTTOM },
     recyclerChildClipping = clipListToPadding
@@ -197,8 +214,7 @@ private fun RecipientSearchResultsList(
         callbacks.listActions.onPendingRecipientSelectionsConsumed()
 
         callbacks.listActions.onSelectionChanged(
-          newSelections = fragment.selectedContacts,
-          totalMembersCount = fragment.totalMemberCount
+          newSelections = fragment.selectedContacts
         )
       }
     }
@@ -274,8 +290,7 @@ private fun ContactSelectionListFragment.setUpCallbacks(
 
     override fun onSelectionChanged() {
       callbacks.listActions.onSelectionChanged(
-        newSelections = fragment.selectedContacts,
-        totalMembersCount = fragment.totalMemberCount
+        newSelections = fragment.selectedContacts
       )
     }
   })
@@ -307,7 +322,7 @@ private suspend fun showItemContextMenu(
     val messageItem = ActionItem(
       iconRes = R.drawable.ic_chat_message_24,
       title = context.getString(R.string.NewConversationActivity__message),
-      tintRes = R.color.signal_colorOnSurface,
+      tintRes = CoreUiR.color.signal_colorOnSurface,
       action = { callbacks.onMessage(recipient.id) }
     )
     add(messageItem)
@@ -316,7 +331,7 @@ private suspend fun showItemContextMenu(
       val voiceCallItem = ActionItem(
         iconRes = R.drawable.ic_phone_right_24,
         title = context.getString(R.string.NewConversationActivity__audio_call),
-        tintRes = R.color.signal_colorOnSurface,
+        tintRes = CoreUiR.color.signal_colorOnSurface,
         action = { callbacks.onVoiceCall(recipient) }
       )
       add(voiceCallItem)
@@ -326,7 +341,7 @@ private suspend fun showItemContextMenu(
       val videoCallItem = ActionItem(
         iconRes = R.drawable.ic_video_call_24,
         title = context.getString(R.string.NewConversationActivity__video_call),
-        tintRes = R.color.signal_colorOnSurface,
+        tintRes = CoreUiR.color.signal_colorOnSurface,
         action = { callbacks.onVideoCall(recipient) }
       )
       add(videoCallItem)
@@ -336,7 +351,7 @@ private suspend fun showItemContextMenu(
       val removeItem = ActionItem(
         iconRes = R.drawable.ic_minus_circle_20,
         title = context.getString(R.string.NewConversationActivity__remove),
-        tintRes = R.color.signal_colorOnSurface,
+        tintRes = CoreUiR.color.signal_colorOnSurface,
         action = { callbacks.onRemove(recipient) }
       )
       add(removeItem)
@@ -346,7 +361,7 @@ private suspend fun showItemContextMenu(
       val blockItem = ActionItem(
         iconRes = R.drawable.ic_block_tinted_24,
         title = context.getString(R.string.NewConversationActivity__block),
-        tintRes = R.color.signal_colorError,
+        tintRes = CoreUiR.color.signal_colorError,
         action = { callbacks.onBlock(recipient) }
       )
       add(blockItem)
@@ -395,8 +410,8 @@ class RecipientPickerCallbacks(
     fun onSearchQueryChanged(query: String)
     suspend fun shouldAllowSelection(selection: RecipientSelection): Boolean
     fun onRecipientSelected(selection: RecipientSelection)
-    fun onSelectionChanged(newSelections: List<SelectedContact>, totalMembersCount: Int) = Unit
-    fun onPendingRecipientSelectionsConsumed()
+    fun onSelectionChanged(newSelections: List<SelectedContact>) = Unit
+    fun onPendingRecipientSelectionsConsumed() = Unit
     fun onContactsListReset() = Unit
 
     object Empty : ListActions {
@@ -460,5 +475,12 @@ object RecipientPicker {
       val Set<DisplayMode>.flag: Int
         get() = fold(initial = 0) { acc, displayMode -> acc or displayMode.flag }
     }
+  }
+
+  enum class KeyboardType(
+    val wrappedType: AndroidKeyboardType
+  ) {
+    Text(wrappedType = AndroidKeyboardType.Text),
+    Phone(wrappedType = AndroidKeyboardType.Phone)
   }
 }

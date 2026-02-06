@@ -21,9 +21,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
@@ -34,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -48,14 +45,15 @@ import org.signal.core.ui.compose.AllDevicePreviews
 import org.signal.core.ui.compose.Buttons
 import org.signal.core.ui.compose.Dialogs
 import org.signal.core.ui.compose.Previews
-import org.signal.core.ui.compose.theme.SignalTheme
 import org.thoughtcrime.securesms.PassphraseRequiredActivity
 import org.thoughtcrime.securesms.R
+import org.thoughtcrime.securesms.compose.SignalTheme
 import org.thoughtcrime.securesms.contacts.SelectedContact
 import org.thoughtcrime.securesms.groups.SelectionLimits
 import org.thoughtcrime.securesms.groups.ui.creategroup.CreateGroupUiState.NavTarget
 import org.thoughtcrime.securesms.groups.ui.creategroup.CreateGroupUiState.UserMessage
 import org.thoughtcrime.securesms.groups.ui.creategroup.details.AddGroupDetailsActivity
+import org.thoughtcrime.securesms.recipients.ui.RecipientLookupFailureMessage
 import org.thoughtcrime.securesms.recipients.ui.RecipientPicker
 import org.thoughtcrime.securesms.recipients.ui.RecipientPickerCallbacks
 import org.thoughtcrime.securesms.recipients.ui.RecipientPickerScaffold
@@ -119,7 +117,7 @@ private fun CreateGroupScreen(
       override fun onFindByUsername() = findByLauncher.launch(FindByMode.USERNAME)
       override fun onFindByPhoneNumber() = findByLauncher.launch(FindByMode.PHONE_NUMBER)
       override suspend fun shouldAllowSelection(selection: RecipientSelection): Boolean = viewModel.shouldAllowSelection(selection)
-      override fun onSelectionChanged(newSelections: List<SelectedContact>, totalMembersCount: Int) = viewModel.onSelectionChanged(newSelections, totalMembersCount)
+      override fun onSelectionChanged(newSelections: List<SelectedContact>) = viewModel.onSelectionChanged(newSelections)
       override fun onPendingRecipientSelectionsConsumed() = viewModel.clearPendingRecipientSelections()
       override fun onNextClicked(): Unit = viewModel.continueToGroupDetails()
       override fun onUserMessageDismissed(userMessage: UserMessage) = viewModel.clearUserMessage()
@@ -157,8 +155,8 @@ private fun CreateGroupScreenUi(
   val title = if (uiState.newSelections.isNotEmpty()) {
     pluralStringResource(
       id = R.plurals.CreateGroupActivity__s_members,
-      count = uiState.totalMembersCount,
-      NumberFormat.getInstance().format(uiState.totalMembersCount)
+      count = uiState.newSelections.size,
+      NumberFormat.getInstance().format(uiState.newSelections.size)
     )
   } else {
     stringResource(R.string.CreateGroupActivity__select_members)
@@ -184,6 +182,35 @@ private fun CreateGroupScreenUi(
       if (uiState.isLookingUpRecipient) {
         Dialogs.IndeterminateProgressDialog()
       }
+    },
+    floatingActionButton = {
+      AnimatedContent(
+        targetState = uiState.newSelections.isNotEmpty(),
+        transitionSpec = {
+          ContentTransform(
+            targetContentEnter = EnterTransition.None,
+            initialContentExit = ExitTransition.None
+          ) using SizeTransform(sizeAnimationSpec = { _, _ -> tween(300) })
+        }
+      ) { hasSelectedContacts ->
+        if (hasSelectedContacts) {
+          FilledTonalIconButton(
+            onClick = callbacks::onNextClicked,
+            content = {
+              Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_end_24),
+                contentDescription = stringResource(R.string.CreateGroupActivity__accessibility_next)
+              )
+            }
+          )
+        } else {
+          Buttons.MediumTonal(
+            onClick = callbacks::onNextClicked
+          ) {
+            Text(text = stringResource(R.string.CreateGroupActivity__skip))
+          }
+        }
+      }
     }
   )
 }
@@ -194,56 +221,23 @@ private fun CreateGroupRecipientPicker(
   callbacks: UiCallbacks,
   modifier: Modifier = Modifier
 ) {
-  Box(modifier = modifier) {
-    RecipientPicker(
-      searchQuery = uiState.searchQuery,
-      displayModes = setOf(RecipientPicker.DisplayMode.PUSH),
-      selectionLimits = uiState.selectionLimits,
-      pendingRecipientSelections = uiState.pendingRecipientSelections,
-      isRefreshing = false,
-      listBottomPadding = 64.dp,
-      clipListToPadding = false,
-      callbacks = remember(callbacks) {
-        RecipientPickerCallbacks(
-          listActions = callbacks,
-          findByUsername = callbacks,
-          findByPhoneNumber = callbacks
-        )
-      },
-      modifier = modifier.fillMaxSize()
-    )
-
-    AnimatedContent(
-      targetState = uiState.newSelections.isNotEmpty(),
-      transitionSpec = {
-        ContentTransform(
-          targetContentEnter = EnterTransition.None,
-          initialContentExit = ExitTransition.None
-        ) using SizeTransform(sizeAnimationSpec = { _, _ -> tween(300) })
-      },
-      modifier = Modifier
-        .align(Alignment.BottomEnd)
-        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-    ) { hasSelectedContacts ->
-      if (hasSelectedContacts) {
-        FilledTonalIconButton(
-          onClick = callbacks::onNextClicked,
-          content = {
-            Icon(
-              imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_end_24),
-              contentDescription = stringResource(R.string.CreateGroupActivity__accessibility_next)
-            )
-          }
-        )
-      } else {
-        Buttons.MediumTonal(
-          onClick = callbacks::onNextClicked
-        ) {
-          Text(text = stringResource(R.string.CreateGroupActivity__skip))
-        }
-      }
-    }
-  }
+  RecipientPicker(
+    searchQuery = uiState.searchQuery,
+    displayModes = setOf(RecipientPicker.DisplayMode.PUSH),
+    selectionLimits = uiState.selectionLimits,
+    pendingRecipientSelections = uiState.pendingRecipientSelections,
+    isRefreshing = false,
+    listBottomPadding = 64.dp,
+    clipListToPadding = false,
+    callbacks = remember(callbacks) {
+      RecipientPickerCallbacks(
+        listActions = callbacks,
+        findByUsername = callbacks,
+        findByPhoneNumber = callbacks
+      )
+    },
+    modifier = modifier.fillMaxSize()
+  )
 }
 
 private interface UiCallbacks :
@@ -275,31 +269,15 @@ private fun UserMessagesHost(
   userMessage: UserMessage?,
   onDismiss: (UserMessage) -> Unit
 ) {
-  val context: Context = LocalContext.current
   when (userMessage) {
     null -> {}
 
-    is UserMessage.Info.NetworkError -> Dialogs.SimpleMessageDialog(
-      message = stringResource(R.string.NetworkFailure__network_error_check_your_connection_and_try_again),
-      dismiss = stringResource(android.R.string.ok),
-      onDismiss = { onDismiss(userMessage) }
-    )
-
-    is UserMessage.Info.RecipientNotSignalUser -> Dialogs.SimpleMessageDialog(
-      message = stringResource(R.string.NewConversationActivity__s_is_not_a_signal_user, userMessage.phone.displayText),
-      dismiss = stringResource(android.R.string.ok),
-      onDismiss = { onDismiss(userMessage) }
-    )
-
-    is UserMessage.Info.RecipientsNotSignalUsers -> Dialogs.SimpleMessageDialog(
-      message = pluralStringResource(
-        id = R.plurals.CreateGroupActivity_not_signal_users,
-        count = userMessage.recipients.size,
-        userMessage.recipients.joinToString(", ") { it.getDisplayName(context) }
-      ),
-      dismiss = stringResource(android.R.string.ok),
-      onDismiss = { onDismiss(userMessage) }
-    )
+    is UserMessage.RecipientLookupFailed -> {
+      RecipientLookupFailureMessage(
+        failure = userMessage.failure,
+        onDismissed = { onDismiss(userMessage) }
+      )
+    }
   }
 }
 
